@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Input Component - NSSportsClub Design System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        
+        .component-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            border-left: 4px solid #0066cc;
+            padding-left: 15px;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .input-demo {
+            padding: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        
+        .input-label {
+            font-size: 0.875rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: white;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+        
+        /* Input States */
+        .form-input.default {
+            border-color: #e0e0e0;
+            background: white;
+            color: #1a1a1a;
+        }
+        
+        .form-input.default::placeholder {
+            color: #9aa0a6;
+        }
+        
+        .form-input.focus,
+        .form-input:focus {
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+            background: white;
+        }
+        
+        .form-input.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+            background: #fdf2f2;
+        }
+        
+        .form-input.success {
+            border-color: #28a745;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+            background: #f2f8f2;
+        }
+        
+        .form-input.disabled,
+        .form-input:disabled {
+            background: #f1f3f4;
+            border-color: #e0e0e0;
+            color: #9aa0a6;
+            cursor: not-allowed;
+        }
+        
+        .form-input.disabled::placeholder,
+        .form-input:disabled::placeholder {
+            color: #bbb;
+        }
+        
+        .input-specs {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: #666;
+            background: #f0f0f0;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        
+        .helper-text {
+            font-size: 0.75rem;
+            margin-top: 6px;
+        }
+        
+        .helper-text.error {
+            color: #dc3545;
+        }
+        
+        .helper-text.success {
+            color: #28a745;
+        }
+        
+        .helper-text.default {
+            color: #666;
+        }
+        
+        .input-icon {
+            position: relative;
+        }
+        
+        .input-icon .form-input {
+            padding-left: 44px;
+        }
+        
+        .icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: #666;
+        }
+        
+        .specifications {
+            background: #f8f9fa;
+            border-left: 4px solid #0066cc;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+        
+        .specifications h3 {
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+        
+        .specs-list {
+            list-style: none;
+            margin: 10px 0;
+        }
+        
+        .specs-list li {
+            margin: 5px 0;
+            padding-left: 20px;
+            position: relative;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+        
+        .specs-list li:before {
+            content: "•";
+            color: #0066cc;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Form Input Component</h1>
+        <p>Standard input fields with comprehensive state management and accessibility</p>
+    </div>
+
+    <div class="component-section">
+        <h2 class="section-title">Basic Input States</h2>
+        <div class="input-grid">
+            <div class="input-demo">
+                <div class="input-label">Default State</div>
+                <div class="form-group">
+                    <label class="form-label">Wager Amount</label>
+                    <input type="text" class="form-input default" placeholder="Enter amount">
+                    <div class="helper-text default">Enter your wager amount</div>
+                </div>
+                <div class="input-specs">
+Border: 2px solid #e0e0e0
+Background: white
+Color: #1a1a1a
+Padding: 12px 16px
+Border-radius: 8px
+                </div>
+            </div>
+
+            <div class="input-demo">
+                <div class="input-label">Focus/Active State</div>
+                <div class="form-group">
+                    <label class="form-label">Wager Amount</label>
+                    <input type="text" class="form-input focus" value="$25.00">
+                    <div class="helper-text default">Amount looks good</div>
+                </div>
+                <div class="input-specs">
+Border: 2px solid #0066cc
+Box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1)
+Background: white
+                </div>
+            </div>
+
+            <div class="input-demo">
+                <div class="input-label">Error State</div>
+                <div class="form-group">
+                    <label class="form-label">Wager Amount</label>
+                    <input type="text" class="form-input error" value="$2500.00">
+                    <div class="helper-text error">Amount exceeds maximum limit of $1000</div>
+                </div>
+                <div class="input-specs">
+Border: 2px solid #dc3545
+Box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1)
+Background: #fdf2f2
+                </div>
+            </div>
+
+            <div class="input-demo">
+                <div class="input-label">Success State</div>
+                <div class="form-group">
+                    <label class="form-label">Wager Amount</label>
+                    <input type="text" class="form-input success" value="$25.00">
+                    <div class="helper-text success">Valid amount entered</div>
+                </div>
+                <div class="input-specs">
+Border: 2px solid #28a745
+Box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1)
+Background: #f2f8f2
+                </div>
+            </div>
+
+            <div class="input-demo">
+                <div class="input-label">Disabled State</div>
+                <div class="form-group">
+                    <label class="form-label">Wager Amount</label>
+                    <input type="text" class="form-input disabled" value="$25.00" disabled>
+                    <div class="helper-text default">Betting temporarily unavailable</div>
+                </div>
+                <div class="input-specs">
+Background: #f1f3f4
+Border: 2px solid #e0e0e0
+Color: #9aa0a6
+Cursor: not-allowed
+                </div>
+            </div>
+
+            <div class="input-demo">
+                <div class="input-label">With Placeholder</div>
+                <div class="form-group">
+                    <label class="form-label">Search Games</label>
+                    <input type="text" class="form-input default" placeholder="Enter team or league name">
+                    <div class="helper-text default">Search for games to bet on</div>
+                </div>
+                <div class="input-specs">
+Placeholder color: #9aa0a6
+Font-style: normal
+Opacity maintained for accessibility
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="component-section">
+        <h2 class="section-title">Input Variants</h2>
+        <div class="input-grid">
+            <div class="input-demo">
+                <div class="input-label">With Icon</div>
+                <div class="form-group">
+                    <label class="form-label">Search</label>
+                    <div class="input-icon">
+                        <span class="icon">🔍</span>
+                        <input type="text" class="form-input default" placeholder="Search games...">
+                    </div>
+                </div>
+                <div class="input-specs">
+Icon position: absolute left 12px
+Input padding-left: 44px
+Icon color: #666
+                </div>
+            </div>
+
+            <div class="input-demo">
+                <div class="input-label">Number Input</div>
+                <div class="form-group">
+                    <label class="form-label">Bet Amount</label>
+                    <input type="number" class="form-input default" placeholder="0.00" step="0.01" min="1">
+                    <div class="helper-text default">Minimum bet: $1.00</div>
+                </div>
+                <div class="input-specs">
+Type: number
+Step: 0.01 (for currency)
+Min: 1 (minimum bet)
+                </div>
+            </div>
+
+            <div class="input-demo">
+                <div class="input-label">Email Input</div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input default" placeholder="Enter your email">
+                    <div class="helper-text default">We'll send bet confirmations here</div>
+                </div>
+                <div class="input-specs">
+Type: email
+Auto-validation on blur
+Keyboard optimization on mobile
+                </div>
+            </div>
+
+            <div class="input-demo">
+                <div class="input-label">Password Input</div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input default" placeholder="Enter password">
+                    <div class="helper-text default">Password is hidden for security</div>
+                </div>
+                <div class="input-specs">
+Type: password
+Text masked automatically
+Security best practices applied
+                </div>
+            </div>
+
+            <div class="input-demo">
+                <div class="input-label">Large Input</div>
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-input default" rows="4" placeholder="Add any betting notes..."></textarea>
+                    <div class="helper-text default">Optional notes for your bet</div>
+                </div>
+                <div class="input-specs">
+Element: textarea
+Rows: 4 (adjustable)
+Resize: vertical only
+                </div>
+            </div>
+
+            <div class="input-demo">
+                <div class="input-label">Select Dropdown</div>
+                <div class="form-group">
+                    <label class="form-label">Bet Type</label>
+                    <select class="form-input default">
+                        <option>Straight Bet</option>
+                        <option>Parlay</option>
+                        <option>Teaser</option>
+                    </select>
+                    <div class="helper-text default">Choose your betting strategy</div>
+                </div>
+                <div class="input-specs">
+Element: select
+Styled consistently with inputs
+Native dropdown behavior
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="specifications">
+        <h3>Design Specifications</h3>
+        <p><strong>Basic Structure:</strong></p>
+        <ul class="specs-list">
+            <li>Border: 2px solid (various colors for states)</li>
+            <li>Border-radius: 8px</li>
+            <li>Padding: 12px 16px</li>
+            <li>Font-size: 1rem</li>
+            <li>Transition: all 0.2s ease</li>
+        </ul>
+        
+        <p><strong>State Colors:</strong></p>
+        <ul class="specs-list">
+            <li>Default: Border #e0e0e0, Background white</li>
+            <li>Focus: Border #0066cc, Shadow rgba(0, 102, 204, 0.1)</li>
+            <li>Error: Border #dc3545, Background #fdf2f2</li>
+            <li>Success: Border #28a745, Background #f2f8f2</li>
+            <li>Disabled: Border #e0e0e0, Background #f1f3f4</li>
+        </ul>
+        
+        <p><strong>Accessibility:</strong></p>
+        <ul class="specs-list">
+            <li>Minimum touch target: 44px height</li>
+            <li>Clear focus indicators with 3px shadow</li>
+            <li>Proper label association with for/id</li>
+            <li>ARIA attributes for error states</li>
+            <li>Color + text/icon for status indication</li>
+        </ul>
+    </div>
+</body>
+</html>

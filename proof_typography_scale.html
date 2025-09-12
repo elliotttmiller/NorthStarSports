@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typography Scale - NSSportsClub Design System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #ffffff;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        
+        .font-proposal {
+            background: #f8f9fa;
+            border-left: 4px solid #0066cc;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        
+        .font-proposal h2 {
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+        
+        .typography-item {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .type-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .type-label {
+            font-size: 0.875rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+        
+        .type-specs {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #666;
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .type-sample {
+            margin-bottom: 10px;
+        }
+        
+        .type-usage {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        
+        /* Typography Classes */
+        .h1-sample {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #1a1a1a;
+        }
+        
+        .h2-sample {
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #1a1a1a;
+        }
+        
+        .h3-sample {
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #1a1a1a;
+        }
+        
+        .body-sample {
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+        
+        .label-sample {
+            font-size: 0.875rem;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #1a1a1a;
+        }
+        
+        .caption-sample {
+            font-size: 0.75rem;
+            font-weight: 400;
+            line-height: 1.4;
+            color: #666666;
+        }
+        
+        .mobile-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+        
+        .mobile-note h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .responsive-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .responsive-table th,
+        .responsive-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .responsive-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>NSSportsClub Typography Scale</h1>
+        <p>Complete typography hierarchy for consistent, readable interfaces</p>
+    </div>
+
+    <div class="font-proposal">
+        <h2>Font Selection: System Font Stack</h2>
+        <p><strong>Proposed Family:</strong> -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif</p>
+        <p><strong>Rationale:</strong> System fonts provide optimal readability across all devices, faster loading times, and native OS integration. This clean, modern sans-serif stack ensures consistent rendering on iOS, Android, Windows, and macOS while maintaining professional aesthetic suitable for financial applications.</p>
+    </div>
+
+    <div class="typography-item">
+        <div class="type-meta">
+            <div class="type-label">H1 - Large Heading</div>
+            <div class="type-specs">Font: System Font | Size: 40px (2.5rem) | Weight: 700 | Line Height: 1.2</div>
+        </div>
+        <div class="type-sample h1-sample">Place Your Winning Bet</div>
+        <div class="type-usage">Used for: Main page headlines, primary hero text, major section headers</div>
+    </div>
+
+    <div class="typography-item">
+        <div class="type-meta">
+            <div class="type-label">H2 - Section Heading</div>
+            <div class="type-specs">Font: System Font | Size: 32px (2rem) | Weight: 600 | Line Height: 1.3</div>
+        </div>
+        <div class="type-sample h2-sample">Live Games & Upcoming Matches</div>
+        <div class="type-usage">Used for: Section headers, card titles, major content divisions</div>
+    </div>
+
+    <div class="typography-item">
+        <div class="type-meta">
+            <div class="type-label">H3 - Subsection Heading</div>
+            <div class="type-specs">Font: System Font | Size: 24px (1.5rem) | Weight: 600 | Line Height: 1.4</div>
+        </div>
+        <div class="type-sample h3-sample">Kansas City Chiefs vs Buffalo Bills</div>
+        <div class="type-usage">Used for: Game titles, subsection headers, component titles</div>
+    </div>
+
+    <div class="typography-item">
+        <div class="type-meta">
+            <div class="type-label">Body - Regular Text</div>
+            <div class="type-specs">Font: System Font | Size: 16px (1rem) | Weight: 400 | Line Height: 1.6</div>
+        </div>
+        <div class="type-sample body-sample">This is the standard body text used throughout the application for regular content, descriptions, game details, and general information. It provides optimal readability for extended reading while maintaining clear hierarchy within the interface.</div>
+        <div class="type-usage">Used for: General content, descriptions, bet details, informational text</div>
+    </div>
+
+    <div class="typography-item">
+        <div class="type-meta">
+            <div class="type-label">Label - Form Labels</div>
+            <div class="type-specs">Font: System Font | Size: 14px (0.875rem) | Weight: 500 | Line Height: 1.4</div>
+        </div>
+        <div class="type-sample label-sample">Wager Amount | Current Balance | Game Status</div>
+        <div class="type-usage">Used for: Form labels, navigation items, button text, important UI labels</div>
+    </div>
+
+    <div class="typography-item">
+        <div class="type-meta">
+            <div class="type-label">Caption - Small Text</div>
+            <div class="type-specs">Font: System Font | Size: 12px (0.75rem) | Weight: 400 | Line Height: 1.4</div>
+        </div>
+        <div class="type-sample caption-sample">Last updated: 2 minutes ago | Terms apply | ID: #BET123456</div>
+        <div class="type-usage">Used for: Timestamps, helper text, disclaimers, secondary information</div>
+    </div>
+
+    <div class="mobile-note">
+        <h3>Mobile-First Responsive Considerations</h3>
+        <p>All typography sizes are defined in rem units for responsive scaling. The system automatically adjusts based on user preferences and device capabilities.</p>
+        
+        <table class="responsive-table">
+            <thead>
+                <tr>
+                    <th>Element</th>
+                    <th>Mobile (320px+)</th>
+                    <th>Tablet (768px+)</th>
+                    <th>Desktop (1024px+)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>H1</td>
+                    <td>2rem (32px)</td>
+                    <td>2.25rem (36px)</td>
+                    <td>2.5rem (40px)</td>
+                </tr>
+                <tr>
+                    <td>H2</td>
+                    <td>1.75rem (28px)</td>
+                    <td>1.875rem (30px)</td>
+                    <td>2rem (32px)</td>
+                </tr>
+                <tr>
+                    <td>H3</td>
+                    <td>1.25rem (20px)</td>
+                    <td>1.375rem (22px)</td>
+                    <td>1.5rem (24px)</td>
+                </tr>
+                <tr>
+                    <td>Body</td>
+                    <td>1rem (16px)</td>
+                    <td>1rem (16px)</td>
+                    <td>1rem (16px)</td>
+                </tr>
+                <tr>
+                    <td>Label</td>
+                    <td>0.875rem (14px)</td>
+                    <td>0.875rem (14px)</td>
+                    <td>0.875rem (14px)</td>
+                </tr>
+                <tr>
+                    <td>Caption</td>
+                    <td>0.75rem (12px)</td>
+                    <td>0.75rem (12px)</td>
+                    <td>0.75rem (12px)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

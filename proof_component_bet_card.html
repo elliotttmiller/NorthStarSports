@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bet Card Component - NSSportsClub Design System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        
+        .component-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            border-left: 4px solid #0066cc;
+            padding-left: 15px;
+        }
+        
+        .bet-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        
+        .bet-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        
+        .bet-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        .bet-card-header {
+            background: #f8f9fa;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .bet-type {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .bet-amount {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        
+        .bet-card-body {
+            padding: 20px;
+        }
+        
+        .game-matchup {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        .bet-selection {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .odds {
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+        
+        .bet-card-footer {
+            background: #f8f9fa;
+            padding: 16px 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+        
+        .risk-amount {
+            color: #666;
+        }
+        
+        .potential-win {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        /* Status specific styles */
+        .bet-card.active {
+            border-color: #ffc107;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
+        }
+        
+        .bet-card.active .bet-card-header {
+            background: #fff3cd;
+        }
+        
+        .bet-card.won {
+            border-color: #28a745;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+        }
+        
+        .bet-card.won .bet-card-header {
+            background: #d4edda;
+        }
+        
+        .bet-card.won .potential-win {
+            color: #28a745;
+        }
+        
+        .bet-card.lost {
+            border-color: #dc3545;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+        }
+        
+        .bet-card.lost .bet-card-header {
+            background: #f8d7da;
+        }
+        
+        .bet-card.lost .potential-win {
+            color: #dc3545;
+        }
+        
+        .status-icon {
+            font-size: 1.2rem;
+            margin-left: 8px;
+        }
+        
+        .won .status-icon {
+            color: #28a745;
+        }
+        
+        .lost .status-icon {
+            color: #dc3545;
+        }
+        
+        .card-label {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .specifications {
+            background: #f8f9fa;
+            border-left: 4px solid #0066cc;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+        
+        .specifications h3 {
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+        
+        .specs-list {
+            list-style: none;
+            margin: 10px 0;
+        }
+        
+        .specs-list li {
+            margin: 5px 0;
+            padding-left: 20px;
+            position: relative;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+        
+        .specs-list li:before {
+            content: "•";
+            color: #0066cc;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Bet Card Component</h1>
+        <p>Comprehensive betting card design for displaying wager information and status</p>
+    </div>
+
+    <div class="component-section">
+        <h2 class="section-title">Bet Card States</h2>
+        <div class="bet-card-grid">
+            <div>
+                <div class="card-label">Active/Pending Bet</div>
+                <div class="bet-card active">
+                    <div class="bet-card-header">
+                        <span class="bet-type">STRAIGHT</span>
+                        <span class="bet-amount">$25.00</span>
+                    </div>
+                    <div class="bet-card-body">
+                        <div class="game-matchup">Kansas City Chiefs vs Buffalo Bills</div>
+                        <div class="bet-selection">
+                            Chiefs +3.5 <span class="odds">(-110)</span>
+                        </div>
+                    </div>
+                    <div class="bet-card-footer">
+                        <span class="risk-amount">Risk: $25.00</span>
+                        <span class="potential-win">To Win: $22.73</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="card-label">Won Bet</div>
+                <div class="bet-card won">
+                    <div class="bet-card-header">
+                        <span class="bet-type">STRAIGHT</span>
+                        <span class="bet-amount">$25.00</span>
+                    </div>
+                    <div class="bet-card-body">
+                        <div class="game-matchup">Kansas City Chiefs vs Buffalo Bills</div>
+                        <div class="bet-selection">
+                            Chiefs +3.5 <span class="odds">(-110)</span>
+                            <span class="status-icon">✓</span>
+                        </div>
+                    </div>
+                    <div class="bet-card-footer">
+                        <span class="risk-amount">Risk: $25.00</span>
+                        <span class="potential-win">Won: $22.73</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="card-label">Lost Bet</div>
+                <div class="bet-card lost">
+                    <div class="bet-card-header">
+                        <span class="bet-type">STRAIGHT</span>
+                        <span class="bet-amount">$25.00</span>
+                    </div>
+                    <div class="bet-card-body">
+                        <div class="game-matchup">Kansas City Chiefs vs Buffalo Bills</div>
+                        <div class="bet-selection">
+                            Chiefs +3.5 <span class="odds">(-110)</span>
+                            <span class="status-icon">✗</span>
+                        </div>
+                    </div>
+                    <div class="bet-card-footer">
+                        <span class="risk-amount">Risk: $25.00</span>
+                        <span class="potential-win">Lost: $25.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="component-section">
+        <h2 class="section-title">Alternative Bet Types</h2>
+        <div class="bet-card-grid">
+            <div>
+                <div class="card-label">Parlay Bet</div>
+                <div class="bet-card active">
+                    <div class="bet-card-header">
+                        <span class="bet-type">PARLAY (3 PICKS)</span>
+                        <span class="bet-amount">$50.00</span>
+                    </div>
+                    <div class="bet-card-body">
+                        <div class="game-matchup">Chiefs +3.5 (-110)</div>
+                        <div class="game-matchup">Cowboys -7 (-115)</div>
+                        <div class="game-matchup">Patriots U47.5 (-108)</div>
+                    </div>
+                    <div class="bet-card-footer">
+                        <span class="risk-amount">Risk: $50.00</span>
+                        <span class="potential-win">To Win: $295.50</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="card-label">Teaser Bet</div>
+                <div class="bet-card active">
+                    <div class="bet-card-header">
+                        <span class="bet-type">6-PT TEASER</span>
+                        <span class="bet-amount">$30.00</span>
+                    </div>
+                    <div class="bet-card-body">
+                        <div class="game-matchup">Chiefs +9.5 (-110)</div>
+                        <div class="game-matchup">Cowboys -1 (-110)</div>
+                    </div>
+                    <div class="bet-card-footer">
+                        <span class="risk-amount">Risk: $30.00</span>
+                        <span class="potential-win">To Win: $25.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="card-label">Live Bet</div>
+                <div class="bet-card active">
+                    <div class="bet-card-header">
+                        <span class="bet-type">LIVE BET</span>
+                        <span class="bet-amount">$20.00</span>
+                    </div>
+                    <div class="bet-card-body">
+                        <div class="game-matchup">Chiefs vs Bills (Q2 - 7:45)</div>
+                        <div class="bet-selection">
+                            Next Score: Touchdown <span class="odds">(+180)</span>
+                        </div>
+                    </div>
+                    <div class="bet-card-footer">
+                        <span class="risk-amount">Risk: $20.00</span>
+                        <span class="potential-win">To Win: $36.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="specifications">
+        <h3>Design Specifications</h3>
+        <p><strong>Structure:</strong></p>
+        <ul class="specs-list">
+            <li>Border-radius: 12px</li>
+            <li>Border: 1px solid #e0e0e0 (default)</li>
+            <li>Box-shadow: 0 2px 8px rgba(0,0,0,0.1)</li>
+            <li>Hover transform: translateY(-2px)</li>
+        </ul>
+        
+        <p><strong>Color States:</strong></p>
+        <ul class="specs-list">
+            <li>Active: Border #ffc107, Background #fff3cd</li>
+            <li>Won: Border #28a745, Background #d4edda</li>
+            <li>Lost: Border #dc3545, Background #f8d7da</li>
+        </ul>
+        
+        <p><strong>Typography:</strong></p>
+        <ul class="specs-list">
+            <li>Bet Type: 0.75rem, weight 700, uppercase</li>
+            <li>Game Matchup: 1.1rem, weight 600</li>
+            <li>Selection: 0.95rem, color #666</li>
+            <li>Odds: Monaco font, weight 600</li>
+        </ul>
+    </div>
+</body>
+</html>
