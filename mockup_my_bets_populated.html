@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bets - NSSportsClub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+        
+        /* Mobile First - 375px viewport */
+        .mobile-container {
+            width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: #f8f9fa;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            background: #ffffff;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0066cc;
+        }
+        
+        .wallet-balance {
+            background: #f8f9fa;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .wallet-icon {
+            font-size: 1rem;
+            color: #0066cc;
+        }
+        
+        .balance-amount {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 0.95rem;
+        }
+        
+        .profile-icon {
+            width: 36px;
+            height: 36px;
+            background: #0066cc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        /* Page Title */
+        .page-title {
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .page-title h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        
+        .page-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            background: white;
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 16px 20px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .tab-btn.active {
+            color: #0066cc;
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #0066cc;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+            padding-bottom: 90px;
+            height: calc(812px - 160px);
+            overflow-y: auto;
+        }
+        
+        /* Bet Card */
+        .bet-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+        }
+        
+        .bet-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        
+        .bet-card.won {
+            border-color: #28a745;
+            box-shadow: 0 2px 8px rgba(40,167,69,0.2);
+        }
+        
+        .bet-card.lost {
+            border-color: #dc3545;
+            box-shadow: 0 2px 8px rgba(220,53,69,0.2);
+        }
+        
+        .bet-card.pending {
+            border-color: #ffc107;
+            box-shadow: 0 2px 8px rgba(255,193,7,0.2);
+        }
+        
+        .bet-header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .bet-type-badge {
+            background: #0066cc;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .bet-card.won .bet-type-badge {
+            background: #28a745;
+        }
+        
+        .bet-card.lost .bet-type-badge {
+            background: #dc3545;
+        }
+        
+        .bet-card.pending .bet-type-badge {
+            background: #ffc107;
+            color: #1a1a1a;
+        }
+        
+        .bet-amount {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1a1a1a;
+        }
+        
+        .bet-details {
+            padding: 20px;
+        }
+        
+        .bet-game {
+            margin-bottom: 12px;
+        }
+        
+        .game-teams {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        
+        .game-date {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .bet-selection {
+            background: #f8f9fa;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+            margin-bottom: 12px;
+        }
+        
+        .bet-card.won .bet-selection {
+            border-left-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .bet-card.lost .bet-selection {
+            border-left-color: #dc3545;
+            background: #fff8f8;
+        }
+        
+        .bet-card.pending .bet-selection {
+            border-left-color: #ffc107;
+            background: #fffdf5;
+        }
+        
+        .selection-text {
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+        
+        .selection-odds {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .bet-footer {
+            padding: 16px 20px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .bet-risk {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .bet-payout {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .bet-payout.won {
+            color: #28a745;
+        }
+        
+        .bet-payout.lost {
+            color: #dc3545;
+        }
+        
+        .bet-payout.pending {
+            color: #0066cc;
+        }
+        
+        .bet-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: white;
+        }
+        
+        .status-icon.won {
+            background: #28a745;
+        }
+        
+        .status-icon.lost {
+            background: #dc3545;
+        }
+        
+        .status-icon.pending {
+            background: #ffc107;
+            color: #1a1a1a;
+        }
+        
+        .status-text {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status-text.won {
+            color: #28a745;
+        }
+        
+        .status-text.lost {
+            color: #dc3545;
+        }
+        
+        .status-text.pending {
+            color: #ffc107;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 375px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            padding: 12px 20px 20px 20px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .nav-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .nav-item.active {
+            background: #e8f4fd;
+        }
+        
+        .nav-item.active .nav-icon {
+            color: #0066cc;
+        }
+        
+        .nav-item.active .nav-label {
+            color: #0066cc;
+            font-weight: 500;
+        }
+        
+        .nav-icon {
+            font-size: 1.2rem;
+            color: #666;
+            transition: color 0.2s ease;
+        }
+        
+        .nav-label {
+            font-size: 0.7rem;
+            color: #666;
+            font-weight: 400;
+            transition: color 0.2s ease;
+        }
+        
+        /* Summary Stats */
+        .summary-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value.positive {
+            color: #28a745;
+        }
+        
+        .stat-value.negative {
+            color: #dc3545;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Scrollbar styling */
+        .main-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .main-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .main-content::-webkit-scrollbar-thumb {
+            background: #e0e0e0;
+            border-radius: 2px;
+        }
+        
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: #cccccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">NSSports</div>
+            <div class="wallet-balance">
+                <span class="wallet-icon">💰</span>
+                <span class="balance-amount">$1,250.00</span>
+            </div>
+            <div class="profile-icon">👤</div>
+        </div>
+        
+        <!-- Page Title -->
+        <div class="page-title">
+            <h1>My Bets</h1>
+            <p class="page-subtitle">Track all your wagers and results</p>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active">Active (3)</button>
+            <button class="tab-btn">Settled (12)</button>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Summary Stats -->
+            <div class="summary-stats">
+                <div class="stat-card">
+                    <div class="stat-value positive">+$127.50</div>
+                    <div class="stat-label">Active Potential</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$75.00</div>
+                    <div class="stat-label">Total Risked</div>
+                </div>
+            </div>
+            
+            <!-- Active Bet 1 -->
+            <div class="bet-card pending">
+                <div class="bet-header">
+                    <div class="bet-type-badge">Straight</div>
+                    <div class="bet-amount">$25.00</div>
+                </div>
+                <div class="bet-details">
+                    <div class="bet-game">
+                        <div class="game-teams">Kansas City Chiefs vs Buffalo Bills</div>
+                        <div class="game-date">Sun, Jan 14 • 4:30 PM ET</div>
+                        <div class="bet-selection">
+                            <div class="selection-text">Kansas City Chiefs +3.5</div>
+                            <div class="selection-odds">-110 odds</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bet-footer">
+                    <div class="bet-risk">Risk: $25.00</div>
+                    <div class="bet-payout pending">To Win: $22.73</div>
+                </div>
+            </div>
+            
+            <!-- Active Bet 2 -->
+            <div class="bet-card pending">
+                <div class="bet-header">
+                    <div class="bet-type-badge">Parlay</div>
+                    <div class="bet-amount">$20.00</div>
+                </div>
+                <div class="bet-details">
+                    <div class="bet-game">
+                        <div class="game-teams">3-Team Parlay</div>
+                        <div class="game-date">Various games • Sun, Jan 14</div>
+                        <div class="bet-selection">
+                            <div class="selection-text">Miami Dolphins -6.5</div>
+                            <div class="selection-odds">vs New England Patriots</div>
+                        </div>
+                        <div class="bet-selection">
+                            <div class="selection-text">Green Bay Packers -4.0</div>
+                            <div class="selection-odds">vs Chicago Bears</div>
+                        </div>
+                        <div class="bet-selection">
+                            <div class="selection-text">Tampa Bay Buccaneers -8.5</div>
+                            <div class="selection-odds">vs Carolina Panthers</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bet-footer">
+                    <div class="bet-risk">Risk: $20.00</div>
+                    <div class="bet-payout pending">To Win: $104.77</div>
+                </div>
+            </div>
+            
+            <!-- Active Bet 3 -->
+            <div class="bet-card pending">
+                <div class="bet-header">
+                    <div class="bet-type-badge">Over/Under</div>
+                    <div class="bet-amount">$30.00</div>
+                </div>
+                <div class="bet-details">
+                    <div class="bet-game">
+                        <div class="game-teams">San Francisco 49ers vs Dallas Cowboys</div>
+                        <div class="game-date">Sun, Jan 14 • 8:20 PM ET</div>
+                        <div class="bet-selection">
+                            <div class="selection-text">Total Points Over 42.5</div>
+                            <div class="selection-odds">-110 odds</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bet-footer">
+                    <div class="bet-risk">Risk: $30.00</div>
+                    <div class="bet-payout pending">To Win: $27.27</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-item">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">⚽</div>
+                <div class="nav-label">A-Z Sports</div>
+            </a>
+            <a href="#" class="nav-item active">
+                <div class="nav-icon">📋</div>
+                <div class="nav-label">My Bets</div>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">🎁</div>
+                <div class="nav-label">Promos</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
