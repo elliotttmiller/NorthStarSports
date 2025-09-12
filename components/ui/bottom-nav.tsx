@@ -34,6 +34,7 @@ export function BottomNav({ className }: BottomNavProps) {
     <nav className={cn(
       'fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 z-40',
       'flex justify-around items-center py-2 px-4 safe-area-pb',
+      'lg:hidden', // Hide on large screens (desktop)
       className
     )}>
       {navItems.map((item) => {

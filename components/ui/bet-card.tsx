@@ -17,6 +17,8 @@ export interface BetCardData {
 interface BetCardProps {
   bet: BetCardData;
   className?: string;
+  onClick?: (bet: BetCardData) => void;
+  clickable?: boolean;
 }
 
 const statusStyles = {
@@ -40,17 +42,25 @@ const statusStyles = {
   },
 };
 
-export function BetCard({ bet, className }: BetCardProps) {
+export function BetCard({ bet, className, onClick, clickable = true }: BetCardProps) {
   const statusStyle = statusStyles[bet.status];
+  
+  const handleClick = () => {
+    if (onClick && clickable && bet.status === 'active') {
+      onClick(bet);
+    }
+  };
   
   return (
     <div 
       className={cn(
         'bet-card border border-neutral-200 rounded-card bg-white shadow-card overflow-hidden transition-all duration-200',
         'hover:shadow-card-hover hover:-translate-y-1',
+        clickable && bet.status === 'active' && 'cursor-pointer hover:border-primary',
         statusStyle.card,
         className
       )}
+      onClick={handleClick}
     >
       {/* Header */}
       <div className={cn(
@@ -60,9 +70,16 @@ export function BetCard({ bet, className }: BetCardProps) {
         <span className="text-xs font-bold text-neutral-600 uppercase tracking-wide">
           {bet.betType}
         </span>
-        <span className="text-base font-bold text-neutral-900">
-          ${bet.riskAmount}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-base font-bold text-neutral-900">
+            ${bet.riskAmount}
+          </span>
+          {clickable && bet.status === 'active' && (
+            <span className="text-xs text-primary font-semibold">
+              + Add
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Body */}

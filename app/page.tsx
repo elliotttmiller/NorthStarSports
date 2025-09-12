@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
 import { BetCard, BetCardData } from '@/components/ui/bet-card';
 import { Button } from '@/components/ui/button';
+import { useBetSlip } from './layout';
 
 // Sample data for the featured games
 const liveGames: BetCardData[] = [
@@ -129,17 +132,43 @@ const upcomingGames: BetCardData[] = [
   }
 ];
 
+// Convert odds string to decimal for calculations
+const oddsToDecimal = (oddsString: string): number => {
+  const odds = parseInt(oddsString.replace('+', ''));
+  if (odds > 0) {
+    return (odds / 100) + 1;
+  } else {
+    return (100 / Math.abs(odds)) + 1;
+  }
+};
+
 export default function HomePage() {
+  const { addBet } = useBetSlip();
+
+  const handleBetClick = (bet: BetCardData) => {
+    const betSelection = {
+      id: bet.id,
+      gameTeams: bet.gameMatchup,
+      gameTime: bet.gameTime || '',
+      betType: bet.betType,
+      selection: bet.betSelection,
+      odds: bet.odds,
+      decimalOdds: oddsToDecimal(bet.odds),
+    };
+    
+    addBet(betSelection);
+  };
+
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Page Header */}
-      <div className="bg-white border-b border-neutral-200 px-5 py-6">
+      <div className="bg-white border-b border-neutral-200 py-6">
         <h1 className="text-2xl font-bold text-neutral-900">Featured Games</h1>
         <p className="text-neutral-600 mt-1">Live betting and upcoming opportunities</p>
       </div>
 
       {/* Live Games Section */}
-      <section className="px-5 py-6">
+      <section className="py-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-neutral-900">🔴 Live Now</h2>
           <Button variant="secondary" size="sm">
@@ -147,11 +176,12 @@ export default function HomePage() {
           </Button>
         </div>
         
-        <div className="overflow-x-auto">
-          <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+        {/* Mobile: horizontal scroll, Desktop: responsive grid */}
+        <div className="overflow-x-auto lg:overflow-visible">
+          <div className="flex gap-4 pb-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:pb-0 lg:w-full" style={{ width: 'max-content' }}>
             {liveGames.map((game) => (
-              <div key={game.id} className="w-80 flex-shrink-0">
-                <BetCard bet={game} />
+              <div key={game.id} className="w-80 flex-shrink-0 lg:w-full">
+                <BetCard bet={game} onClick={handleBetClick} />
               </div>
             ))}
           </div>
@@ -159,7 +189,7 @@ export default function HomePage() {
       </section>
 
       {/* Popular Upcoming Games Section */}
-      <section className="px-5 py-6">
+      <section className="py-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-neutral-900">⭐ Popular Upcoming</h2>
           <Button variant="secondary" size="sm">
@@ -167,11 +197,12 @@ export default function HomePage() {
           </Button>
         </div>
         
-        <div className="overflow-x-auto">
-          <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+        {/* Mobile: horizontal scroll, Desktop: responsive grid */}
+        <div className="overflow-x-auto lg:overflow-visible">
+          <div className="flex gap-4 pb-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:pb-0 lg:w-full" style={{ width: 'max-content' }}>
             {upcomingGames.map((game) => (
-              <div key={game.id} className="w-80 flex-shrink-0">
-                <BetCard bet={game} />
+              <div key={game.id} className="w-80 flex-shrink-0 lg:w-full">
+                <BetCard bet={game} onClick={handleBetClick} />
               </div>
             ))}
           </div>
@@ -179,9 +210,9 @@ export default function HomePage() {
       </section>
 
       {/* Contests Section */}
-      <section className="px-5 py-6">
+      <section className="py-6">
         <div className="bg-gradient-to-r from-primary to-primary-light rounded-card p-6 text-white">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-0">
             <div>
               <h2 className="text-xl font-bold mb-2">🏆 Upcoming Contests</h2>
               <p className="text-blue-100 mb-4">

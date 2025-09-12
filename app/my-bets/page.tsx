@@ -108,14 +108,14 @@ export default function MyBetsPage() {
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Page Header */}
-      <div className="bg-white border-b border-neutral-200 px-5 py-6">
+      <div className="bg-white border-b border-neutral-200 py-6">
         <h1 className="text-2xl font-bold text-neutral-900">My Bets</h1>
         <p className="text-neutral-600 mt-1">Track your active and settled wagers</p>
       </div>
 
-      {/* Summary Cards */}
-      <div className="px-5 py-4">
-        <div className="grid grid-cols-2 gap-4">
+      {/* Summary Cards - Responsive Layout */}
+      <div className="py-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg border border-neutral-200 p-4">
             <div className="text-sm text-neutral-600">Total Risk</div>
             <div className="text-xl font-bold text-neutral-900">${totalRisk}</div>
@@ -126,12 +126,21 @@ export default function MyBetsPage() {
             </div>
             <div className="text-xl font-bold text-success">${totalPotentialWin.toFixed(2)}</div>
           </div>
+          {/* Additional stats for desktop */}
+          <div className="hidden lg:block bg-white rounded-lg border border-neutral-200 p-4">
+            <div className="text-sm text-neutral-600">Active Bets</div>
+            <div className="text-xl font-bold text-primary">{activeBets.length}</div>
+          </div>
+          <div className="hidden lg:block bg-white rounded-lg border border-neutral-200 p-4">
+            <div className="text-sm text-neutral-600">Settled Bets</div>
+            <div className="text-xl font-bold text-neutral-600">{settledBets.length}</div>
+          </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="px-5 py-2">
-        <div className="flex bg-neutral-100 rounded-lg p-1">
+      <div className="py-2">
+        <div className="flex bg-neutral-100 rounded-lg p-1 lg:max-w-md">
           <button
             onClick={() => setActiveTab('active')}
             className={cn(
@@ -157,12 +166,12 @@ export default function MyBetsPage() {
         </div>
       </div>
 
-      {/* Bet Cards */}
-      <div className="px-5 py-4">
+      {/* Bet Cards - Responsive Layout */}
+      <div className="py-4">
         {currentBets.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-4 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:space-y-0 lg:gap-6">
             {currentBets.map((bet) => (
-              <BetCard key={bet.id} bet={bet} />
+              <BetCard key={bet.id} bet={bet} clickable={false} />
             ))}
           </div>
         ) : (
@@ -190,10 +199,10 @@ export default function MyBetsPage() {
 
       {/* Quick Actions */}
       {currentBets.length > 0 && activeTab === 'active' && (
-        <div className="px-5 py-4">
+        <div className="py-4">
           <div className="bg-white rounded-lg border border-neutral-200 p-4">
             <h3 className="font-semibold text-neutral-900 mb-3">Quick Actions</h3>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Button variant="secondary" size="sm" className="flex-1">
                 Cash Out All
               </Button>
