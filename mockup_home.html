@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Dashboard - NSSportsClub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+        
+        /* Mobile First - 375px viewport */
+        .mobile-container {
+            width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: #ffffff;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            background: #ffffff;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0066cc;
+        }
+        
+        .wallet-balance {
+            background: #f8f9fa;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .wallet-icon {
+            font-size: 1rem;
+            color: #0066cc;
+        }
+        
+        .balance-amount {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 0.95rem;
+        }
+        
+        .profile-icon {
+            width: 36px;
+            height: 36px;
+            background: #0066cc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 0 0 90px 0;
+        }
+        
+        /* Promotional Banner */
+        .promo-banner {
+            background: linear-gradient(135deg, #0066cc, #3385d6);
+            margin: 20px;
+            padding: 24px;
+            border-radius: 12px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .promo-content h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .promo-content p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+        
+        .promo-cta {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .promo-cta:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Section Headers */
+        .section-header {
+            padding: 0 20px;
+            margin: 32px 0 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .view-all {
+            font-size: 0.85rem;
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        /* Game Cards Carousel */
+        .games-carousel {
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+        
+        .games-scroll {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .games-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .game-card {
+            min-width: 280px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .game-card.live {
+            border-color: #ff6b35;
+            box-shadow: 0 2px 8px rgba(255,107,53,0.2);
+        }
+        
+        .live-indicator {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #ff6b35;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .game-time {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .game-matchup {
+            margin-bottom: 16px;
+        }
+        
+        .team {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+        
+        .team-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .team-logo {
+            width: 24px;
+            height: 24px;
+            background: #0066cc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .team-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .team-record {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .game-score {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1a1a1a;
+        }
+        
+        .bet-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .bet-option {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .bet-option:hover {
+            background: #e8f4fd;
+            border-color: #0066cc;
+        }
+        
+        .bet-label {
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 2px;
+        }
+        
+        .bet-value {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1a1a1a;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 375px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            padding: 12px 20px 20px 20px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .nav-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .nav-item.active {
+            background: #e8f4fd;
+        }
+        
+        .nav-item.active .nav-icon {
+            color: #0066cc;
+        }
+        
+        .nav-item.active .nav-label {
+            color: #0066cc;
+            font-weight: 500;
+        }
+        
+        .nav-icon {
+            font-size: 1.2rem;
+            color: #666;
+            transition: color 0.2s ease;
+        }
+        
+        .nav-label {
+            font-size: 0.7rem;
+            color: #666;
+            font-weight: 400;
+            transition: color 0.2s ease;
+        }
+        
+        /* Live games have special styling */
+        .live-games .game-card {
+            border-color: #ff6b35;
+            background: linear-gradient(145deg, #ffffff, #fef8f6);
+        }
+        
+        /* Upcoming games styling */
+        .upcoming-games .game-card {
+            background: white;
+        }
+        
+        /* Responsive for larger screens */
+        @media (min-width: 768px) {
+            .mobile-container {
+                width: 375px;
+                margin: 40px auto;
+            }
+        }
+        
+        /* Custom scrollbar for webkit browsers */
+        .games-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #e0e0e0 transparent;
+        }
+        
+        /* Add some animations */
+        .game-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">NSSports</div>
+            <div class="wallet-balance">
+                <span class="wallet-icon">💰</span>
+                <span class="balance-amount">$1,250.00</span>
+            </div>
+            <div class="profile-icon">👤</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Promotional Banner -->
+            <div class="promo-banner">
+                <div class="promo-content">
+                    <h2>New Player Bonus!</h2>
+                    <p>Get 100% match up to $500 on your first deposit</p>
+                    <button class="promo-cta">Claim Now</button>
+                </div>
+            </div>
+            
+            <!-- Live Now Section -->
+            <div class="section-header">
+                <h2 class="section-title">🔴 Live Now</h2>
+                <a href="#" class="view-all">View All</a>
+            </div>
+            
+            <div class="games-carousel live-games">
+                <div class="games-scroll">
+                    <div class="game-card live">
+                        <div class="live-indicator">LIVE</div>
+                        <div class="game-time">Q3 • 7:42</div>
+                        <div class="game-matchup">
+                            <div class="team">
+                                <div class="team-info">
+                                    <div class="team-logo">KC</div>
+                                    <div>
+                                        <div class="team-name">Kansas City</div>
+                                        <div class="team-record">11-6</div>
+                                    </div>
+                                </div>
+                                <div class="game-score">21</div>
+                            </div>
+                            <div class="team">
+                                <div class="team-info">
+                                    <div class="team-logo">BUF</div>
+                                    <div>
+                                        <div class="team-name">Buffalo</div>
+                                        <div class="team-record">13-4</div>
+                                    </div>
+                                </div>
+                                <div class="game-score">14</div>
+                            </div>
+                        </div>
+                        <div class="bet-options">
+                            <div class="bet-option">
+                                <div class="bet-label">KC Spread</div>
+                                <div class="bet-value">+2.5 (-110)</div>
+                            </div>
+                            <div class="bet-option">
+                                <div class="bet-label">Total</div>
+                                <div class="bet-value">O 47.5 (-105)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card live">
+                        <div class="live-indicator">LIVE</div>
+                        <div class="game-time">Q2 • 3:15</div>
+                        <div class="game-matchup">
+                            <div class="team">
+                                <div class="team-info">
+                                    <div class="team-logo">SF</div>
+                                    <div>
+                                        <div class="team-name">San Francisco</div>
+                                        <div class="team-record">12-5</div>
+                                    </div>
+                                </div>
+                                <div class="game-score">7</div>
+                            </div>
+                            <div class="team">
+                                <div class="team-info">
+                                    <div class="team-logo">DAL</div>
+                                    <div>
+                                        <div class="team-name">Dallas</div>
+                                        <div class="team-record">9-8</div>
+                                    </div>
+                                </div>
+                                <div class="game-score">10</div>
+                            </div>
+                        </div>
+                        <div class="bet-options">
+                            <div class="bet-option">
+                                <div class="bet-label">SF Spread</div>
+                                <div class="bet-value">-3.5 (-110)</div>
+                            </div>
+                            <div class="bet-option">
+                                <div class="bet-label">Total</div>
+                                <div class="bet-value">U 42.5 (-110)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Popular Upcoming Section -->
+            <div class="section-header">
+                <h2 class="section-title">🏆 Popular Upcoming</h2>
+                <a href="#" class="view-all">View All</a>
+            </div>
+            
+            <div class="games-carousel upcoming-games">
+                <div class="games-scroll">
+                    <div class="game-card">
+                        <div class="game-time">Sun 1:00 PM ET</div>
+                        <div class="game-matchup">
+                            <div class="team">
+                                <div class="team-info">
+                                    <div class="team-logo">MIA</div>
+                                    <div>
+                                        <div class="team-name">Miami</div>
+                                        <div class="team-record">9-8</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="team">
+                                <div class="team-info">
+                                    <div class="team-logo">NE</div>
+                                    <div>
+                                        <div class="team-name">New England</div>
+                                        <div class="team-record">4-13</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bet-options">
+                            <div class="bet-option">
+                                <div class="bet-label">MIA Spread</div>
+                                <div class="bet-value">-6.5 (-110)</div>
+                            </div>
+                            <div class="bet-option">
+                                <div class="bet-label">Total</div>
+                                <div class="bet-value">O 39.5 (-110)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card">
+                        <div class="game-time">Sun 4:25 PM ET</div>
+                        <div class="game-matchup">
+                            <div class="team">
+                                <div class="team-info">
+                                    <div class="team-logo">GB</div>
+                                    <div>
+                                        <div class="team-name">Green Bay</div>
+                                        <div class="team-record">10-7</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="team">
+                                <div class="team-info">
+                                    <div class="team-logo">CHI</div>
+                                    <div>
+                                        <div class="team-name">Chicago</div>
+                                        <div class="team-record">7-10</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bet-options">
+                            <div class="bet-option">
+                                <div class="bet-label">GB Spread</div>
+                                <div class="bet-value">-4.0 (-105)</div>
+                            </div>
+                            <div class="bet-option">
+                                <div class="bet-label">Total</div>
+                                <div class="bet-value">O 44.5 (-110)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card">
+                        <div class="game-time">Sun 8:20 PM ET</div>
+                        <div class="game-matchup">
+                            <div class="team">
+                                <div class="team-info">
+                                    <div class="team-logo">TB</div>
+                                    <div>
+                                        <div class="team-name">Tampa Bay</div>
+                                        <div class="team-record">8-9</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="team">
+                                <div class="team-info">
+                                    <div class="team-logo">CAR</div>
+                                    <div>
+                                        <div class="team-name">Carolina</div>
+                                        <div class="team-record">2-15</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bet-options">
+                            <div class="bet-option">
+                                <div class="bet-label">TB Spread</div>
+                                <div class="bet-value">-8.5 (-110)</div>
+                            </div>
+                            <div class="bet-option">
+                                <div class="bet-label">Total</div>
+                                <div class="bet-value">U 41.0 (-110)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">⚽</div>
+                <div class="nav-label">A-Z Sports</div>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">📋</div>
+                <div class="nav-label">My Bets</div>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">🎁</div>
+                <div class="nav-label">Promos</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

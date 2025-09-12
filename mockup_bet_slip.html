@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bet Slip - NSSportsClub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+        
+        /* Mobile First - 375px viewport */
+        .mobile-container {
+            width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: #ffffff;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            background: #0066cc;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            background: white;
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 20px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 16px 12px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .tab-btn.active {
+            color: #0066cc;
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #0066cc;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+            height: calc(812px - 160px);
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+        
+        /* Selection List */
+        .selections-section {
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .selection-count {
+            background: #0066cc;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .selection-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        .selection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .game-info {
+            flex: 1;
+        }
+        
+        .game-teams {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        
+        .game-time {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .remove-btn {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .remove-btn:hover {
+            background: #fee;
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        
+        .bet-selection {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+            margin-bottom: 12px;
+        }
+        
+        .selection-text {
+            font-weight: 500;
+            color: #1a1a1a;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+        
+        .selection-odds {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        /* Wager Input Section */
+        .wager-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .wager-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: border-color 0.2s ease;
+            background: #ffffff;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+        
+        .quick-amounts {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .quick-amount {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .quick-amount:hover {
+            background: #e8f4fd;
+            border-color: #0066cc;
+            color: #0066cc;
+        }
+        
+        /* Calculations */
+        .calculations {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .calc-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-top: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .calc-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .calc-value {
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+        
+        .potential-payout {
+            color: #28a745;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        /* Place Bet Button */
+        .place-bet-btn {
+            width: 100%;
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 18px 24px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,102,204,0.3);
+            margin-bottom: 16px;
+        }
+        
+        .place-bet-btn:hover {
+            background: #004499;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,102,204,0.4);
+        }
+        
+        .place-bet-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Terms */
+        .terms {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #888;
+            line-height: 1.4;
+        }
+        
+        .terms a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .terms a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Parlay odds display */
+        .parlay-odds {
+            background: #e8f4fd;
+            border: 1px solid #0066cc;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            text-align: center;
+        }
+        
+        .parlay-odds-label {
+            font-size: 0.8rem;
+            color: #0066cc;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .parlay-odds-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0066cc;
+        }
+        
+        /* Scrollbar styling */
+        .main-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .main-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .main-content::-webkit-scrollbar-thumb {
+            background: #e0e0e0;
+            border-radius: 2px;
+        }
+        
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: #cccccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-btn">←</button>
+            <div class="header-title">Bet Slip</div>
+            <button class="close-btn">✕</button>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active">Straight</button>
+            <button class="tab-btn">Parlay</button>
+            <button class="tab-btn">Teaser</button>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Selections Section -->
+            <div class="selections-section">
+                <h2 class="section-title">
+                    Your Selections
+                    <span class="selection-count">2</span>
+                </h2>
+                
+                <!-- Selection 1 -->
+                <div class="selection-card">
+                    <div class="selection-header">
+                        <div class="game-info">
+                            <div class="game-teams">Kansas City Chiefs vs Buffalo Bills</div>
+                            <div class="game-time">Sun, Jan 14 • 4:30 PM ET</div>
+                        </div>
+                        <button class="remove-btn">✕</button>
+                    </div>
+                    <div class="bet-selection">
+                        <div class="selection-text">Kansas City Chiefs +3.5</div>
+                        <div class="selection-odds">-110 odds</div>
+                    </div>
+                    
+                    <!-- Individual wager input for straight bets -->
+                    <div class="form-group">
+                        <label class="form-label">Wager Amount</label>
+                        <input type="text" class="form-input" value="$25.00" placeholder="$0.00">
+                        <div class="quick-amounts">
+                            <button class="quick-amount">$10</button>
+                            <button class="quick-amount">$25</button>
+                            <button class="quick-amount">$50</button>
+                            <button class="quick-amount">$100</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Individual calculation -->
+                    <div class="calc-row" style="border: none; padding: 8px 0 0 0; margin: 0;">
+                        <span class="calc-label">To Win:</span>
+                        <span class="calc-value" style="color: #28a745; font-weight: 600;">$22.73</span>
+                    </div>
+                </div>
+                
+                <!-- Selection 2 -->
+                <div class="selection-card">
+                    <div class="selection-header">
+                        <div class="game-info">
+                            <div class="game-teams">San Francisco 49ers vs Dallas Cowboys</div>
+                            <div class="game-time">Sun, Jan 14 • 8:20 PM ET</div>
+                        </div>
+                        <button class="remove-btn">✕</button>
+                    </div>
+                    <div class="bet-selection">
+                        <div class="selection-text">Total Points Over 42.5</div>
+                        <div class="selection-odds">-110 odds</div>
+                    </div>
+                    
+                    <!-- Individual wager input for straight bets -->
+                    <div class="form-group">
+                        <label class="form-label">Wager Amount</label>
+                        <input type="text" class="form-input" value="$30.00" placeholder="$0.00">
+                        <div class="quick-amounts">
+                            <button class="quick-amount">$10</button>
+                            <button class="quick-amount">$25</button>
+                            <button class="quick-amount">$50</button>
+                            <button class="quick-amount">$100</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Individual calculation -->
+                    <div class="calc-row" style="border: none; padding: 8px 0 0 0; margin: 0;">
+                        <span class="calc-label">To Win:</span>
+                        <span class="calc-value" style="color: #28a745; font-weight: 600;">$27.27</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Total Calculations -->
+            <div class="calculations">
+                <div class="calc-row">
+                    <span class="calc-label">Total Risk</span>
+                    <span class="calc-value">$55.00</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">Total Potential Win</span>
+                    <span class="potential-payout">$50.00</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">Total Payout</span>
+                    <span class="potential-payout">$105.00</span>
+                </div>
+            </div>
+            
+            <!-- Place Bet Button -->
+            <button class="place-bet-btn">Place Bets ($55.00)</button>
+            
+            <!-- Terms -->
+            <p class="terms">
+                By placing this bet, you agree to our <a href="#">Terms & Conditions</a> and confirm you are 21+. Please bet responsibly.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

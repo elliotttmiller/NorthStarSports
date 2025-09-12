@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Flow Diagram - NSSportsClub</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: #fafafa;
+            position: relative;
+        }
+        
+        .flow-step.highlight {
+            border-color: #0066cc;
+            background: #f0f8ff;
+        }
+        
+        .step-number {
+            background: #0066cc;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        .step-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .step-screen {
+            width: 120px;
+            height: 180px;
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .screen-header {
+            background: #0066cc;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.6rem;
+        }
+        
+        .screen-content {
+            flex: 1;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .screen-icon {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+        
+        .screen-text {
+            font-size: 0.6rem;
+            color: #666;
+        }
+        
+        .arrow {
+            display: flex;
+            justify-content: center;
+            margin: -10px 0;
+            z-index: 1;
+        }
+        
+        .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 20px solid #0066cc;
+        }
+        
+        .decision-branch {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .branch-option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            text-align: center;
+        }
+        
+        .branch-option.left {
+            border-color: #28a745;
+        }
+        
+        .branch-option.right {
+            border-color: #dc3545;
+        }
+        
+        .branch-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .branch-option.left .branch-title {
+            color: #28a745;
+        }
+        
+        .branch-option.right .branch-title {
+            color: #dc3545;
+        }
+        
+        .branch-desc {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .legend {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .legend h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+        
+        .legend-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+        
+        .legend-color.primary { background: #0066cc; }
+        .legend-color.success { background: #28a745; }
+        .legend-color.danger { background: #dc3545; }
+        .legend-color.gray { background: #e0e0e0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>NSSportsClub User Flow Diagram</h1>
+            <p>Complete Primary Betting Journey - From Login to Bet Tracking</p>
+        </div>
+        
+        <div class="flow-diagram">
+            <!-- Step 1: User Login -->
+            <div class="flow-step highlight">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">User Authentication</div>
+                    <div class="step-description">
+                        User logs in with system credentials (Username/Password). No third-party authentication integrations.
+                    </div>
+                </div>
+                <div class="step-screen">
+                    <div class="screen-header">Login</div>
+                    <div class="screen-content">
+                        <div class="screen-icon">🔐</div>
+                        <div class="screen-text">Login Screen</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">
+                <div class="arrow-down"></div>
+            </div>
+            
+            <!-- Step 2: Home Dashboard -->
+            <div class="flow-step highlight">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">Home Dashboard Landing</div>
+                    <div class="step-description">
+                        User arrives at personalized home dashboard featuring live games, upcoming matches, promotional banners, and persistent wallet balance display.
+                    </div>
+                </div>
+                <div class="step-screen">
+                    <div class="screen-header">Home</div>
+                    <div class="screen-content">
+                        <div class="screen-icon">🏠</div>
+                        <div class="screen-text">Dashboard<br>Live Games</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">
+                <div class="arrow-down"></div>
+            </div>
+            
+            <!-- Step 3: Browse & Select Bets -->
+            <div class="flow-step highlight">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">Browse Sports & Select Bets</div>
+                    <div class="step-description">
+                        User explores game cards in "Live Now" and "Popular Upcoming" carousels. Clicks on bet options (spreads, totals, moneylines) to add to bet slip.
+                    </div>
+                </div>
+                <div class="step-screen">
+                    <div class="screen-header">Games</div>
+                    <div class="screen-content">
+                        <div class="screen-icon">⚽</div>
+                        <div class="screen-text">Game Cards<br>Bet Options</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">
+                <div class="arrow-down"></div>
+            </div>
+            
+            <!-- Step 4: Minimized Bet Slip Appears -->
+            <div class="flow-step highlight">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">Minimized Bet Slip Activation</div>
+                    <div class="step-description">
+                        After selecting first bet, minimized bet slip appears as floating overlay showing selection count. Allows continued browsing while maintaining bet context.
+                    </div>
+                </div>
+                <div class="step-screen">
+                    <div class="screen-header">Home</div>
+                    <div class="screen-content">
+                        <div class="screen-icon">📋</div>
+                        <div class="screen-text">Floating<br>Bet Slip (2)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">
+                <div class="arrow-down"></div>
+            </div>
+            
+            <!-- Step 5: Decision Point -->
+            <div class="flow-step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-title">User Decision Point</div>
+                    <div class="step-description">
+                        User can either click the minimized bet slip to place bets immediately, or navigate to "My Bets" to review their betting activity.
+                    </div>
+                </div>
+                <div class="step-screen">
+                    <div class="screen-header">Choice</div>
+                    <div class="screen-content">
+                        <div class="screen-icon">🤔</div>
+                        <div class="screen-text">Navigation<br>Decision</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Decision Branches -->
+            <div class="decision-branch">
+                <div class="branch-option left">
+                    <div class="branch-title">Path A: Place Bets</div>
+                    <div class="branch-desc">Click minimized bet slip → Maximized bet slip</div>
+                </div>
+                <div class="branch-option right">
+                    <div class="branch-title">Path B: Review Activity</div>
+                    <div class="branch-desc">Click "My Bets" → Activity tracking</div>
+                </div>
+            </div>
+            
+            <!-- Step 6A: Maximized Bet Slip -->
+            <div class="flow-step highlight">
+                <div class="step-number">6A</div>
+                <div class="step-content">
+                    <div class="step-title">Maximized Bet Slip Interface</div>
+                    <div class="step-description">
+                        Full-screen bet slip with all selections, wager type tabs (Straight, Parlay, Teaser), amount inputs, risk/win calculations, and "Place Bet" CTA.
+                    </div>
+                </div>
+                <div class="step-screen">
+                    <div class="screen-header">Bet Slip</div>
+                    <div class="screen-content">
+                        <div class="screen-icon">💰</div>
+                        <div class="screen-text">Wager<br>Interface</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">
+                <div class="arrow-down"></div>
+            </div>
+            
+            <!-- Step 7: Bet Placement -->
+            <div class="flow-step highlight">
+                <div class="step-number">7</div>
+                <div class="step-content">
+                    <div class="step-title">Bet Confirmation & Placement</div>
+                    <div class="step-description">
+                        User confirms wager amounts and clicks "Place Bet". System processes the bet and provides confirmation feedback.
+                    </div>
+                </div>
+                <div class="step-screen">
+                    <div class="screen-header">Confirm</div>
+                    <div class="screen-content">
+                        <div class="screen-icon">✅</div>
+                        <div class="screen-text">Bet<br>Confirmed</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">
+                <div class="arrow-down"></div>
+            </div>
+            
+            <!-- Step 6B/8: My Bets Tracking -->
+            <div class="flow-step highlight">
+                <div class="step-number">8</div>
+                <div class="step-content">
+                    <div class="step-title">My Bets Activity Tracking</div>
+                    <div class="step-description">
+                        User can view all active and settled bets in organized card format with "Active" and "Settled" tabs. Shows empty state when no bets are placed.
+                    </div>
+                </div>
+                <div class="step-screen">
+                    <div class="screen-header">My Bets</div>
+                    <div class="screen-content">
+                        <div class="screen-icon">📊</div>
+                        <div class="screen-text">Bet<br>Tracking</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">
+                <div class="arrow-down"></div>
+            </div>
+            
+            <!-- Step 9: Cycle Completion -->
+            <div class="flow-step highlight">
+                <div class="step-number">9</div>
+                <div class="step-content">
+                    <div class="step-title">Return to Home Dashboard</div>
+                    <div class="step-description">
+                        User returns to home dashboard to place additional bets or explore more games. Wallet balance is updated, and cycle begins again.
+                    </div>
+                </div>
+                <div class="step-screen">
+                    <div class="screen-header">Home</div>
+                    <div class="screen-content">
+                        <div class="screen-icon">🔄</div>
+                        <div class="screen-text">Cycle<br>Continues</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h3>Flow Legend</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color primary"></div>
+                    <span>Primary User Path</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color success"></div>
+                    <span>Place Bets Path</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color danger"></div>
+                    <span>Review Activity Path</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color gray"></div>
+                    <span>Decision Points</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

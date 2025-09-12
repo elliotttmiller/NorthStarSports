@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Prototype - NSSportsClub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f0f0f0;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+        
+        /* Prototype Container */
+        .prototype-container {
+            width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: #ffffff;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Screen System */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            transition: transform 0.3s ease-in-out;
+            opacity: 1;
+        }
+        
+        .screen.hidden {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        
+        .screen.slide-left {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        
+        /* Common Header Styles */
+        .header {
+            background: #ffffff;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .header.blue {
+            background: #0066cc;
+            color: white;
+            border-bottom: none;
+        }
+        
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0066cc;
+        }
+        
+        .header.blue .logo {
+            color: white;
+        }
+        
+        .wallet-balance {
+            background: #f8f9fa;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .header.blue .wallet-balance {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+            color: white;
+        }
+        
+        .balance-amount {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 0.95rem;
+        }
+        
+        .header.blue .balance-amount {
+            color: white;
+        }
+        
+        .profile-icon {
+            width: 36px;
+            height: 36px;
+            background: #0066cc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .header.blue .profile-icon {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        /* Navigation Buttons */
+        .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        /* Home Screen Specific Styles */
+        .home-screen {
+            background: #f8f9fa;
+        }
+        
+        .main-content {
+            padding: 0 0 90px 0;
+        }
+        
+        .promo-banner {
+            background: linear-gradient(135deg, #0066cc, #3385d6);
+            margin: 20px;
+            padding: 24px;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .promo-banner:hover {
+            transform: translateY(-2px);
+        }
+        
+        .section-header {
+            padding: 0 20px;
+            margin: 32px 0 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .games-carousel {
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+        
+        .games-scroll {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+        
+        .games-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .game-card {
+            min-width: 280px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .live-indicator {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #ff6b35;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .game-time {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .team {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+        
+        .team-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .team-logo {
+            width: 24px;
+            height: 24px;
+            background: #0066cc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .team-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .team-record {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .game-score {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1a1a1a;
+        }
+        
+        .bet-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .bet-option {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .bet-option:hover {
+            background: #e8f4fd;
+            border-color: #0066cc;
+        }
+        
+        .bet-option.selected {
+            background: #e8f4fd;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 2px rgba(0,102,204,0.2);
+        }
+        
+        .bet-label {
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 2px;
+        }
+        
+        .bet-value {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1a1a1a;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 375px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            padding: 12px 20px 20px 20px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .nav-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .nav-item.active {
+            background: #e8f4fd;
+        }
+        
+        .nav-item.active .nav-icon {
+            color: #0066cc;
+        }
+        
+        .nav-item.active .nav-label {
+            color: #0066cc;
+            font-weight: 500;
+        }
+        
+        .nav-icon {
+            font-size: 1.2rem;
+            color: #666;
+            transition: color 0.2s ease;
+        }
+        
+        .nav-label {
+            font-size: 0.7rem;
+            color: #666;
+            font-weight: 400;
+            transition: color 0.2s ease;
+        }
+        
+        /* Minimized Bet Slip */
+        .minimized-bet-slip {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: #0066cc;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,102,204,0.4);
+            transition: all 0.2s ease;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            z-index: 99;
+        }
+        
+        .minimized-bet-slip.show {
+            display: flex;
+        }
+        
+        .minimized-bet-slip:hover {
+            background: #004499;
+            transform: translateY(-2px);
+        }
+        
+        .bet-count {
+            background: #ff6b35;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        /* My Bets Screen */
+        .page-title {
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .page-title h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        
+        .page-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .tab-nav {
+            background: white;
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 16px 20px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .tab-btn.active {
+            color: #0066cc;
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #0066cc;
+        }
+        
+        .bets-content {
+            padding: 20px;
+            height: calc(812px - 200px);
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+        
+        .bet-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .bet-header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .bet-type-badge {
+            background: #ffc107;
+            color: #1a1a1a;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .bet-amount {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1a1a1a;
+        }
+        
+        .bet-details {
+            padding: 20px;
+        }
+        
+        .game-teams {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        
+        .game-date {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .bet-selection {
+            background: #fffdf5;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin-bottom: 12px;
+        }
+        
+        .selection-text {
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+        
+        .selection-odds {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .bet-footer {
+            padding: 16px 20px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .bet-risk {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .bet-payout {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #0066cc;
+        }
+        
+        /* Bet Slip Screen Styles */
+        .bet-slip-content {
+            padding: 20px;
+            height: calc(812px - 120px);
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+        
+        .selections-section {
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .selection-count-badge {
+            background: #0066cc;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .selection-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        
+        .remove-btn {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .remove-btn:hover {
+            background: #fee;
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        
+        .calculations {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .calc-row:last-child {
+            border-bottom: none;
+            margin-top: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .calc-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .calc-value {
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+        
+        .potential-payout {
+            color: #28a745;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .place-bet-btn {
+            width: 100%;
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 18px 24px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,102,204,0.3);
+            margin-bottom: 16px;
+        }
+        
+        .place-bet-btn:hover {
+            background: #004499;
+            transform: translateY(-2px);
+        }
+        
+        .terms {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #888;
+            line-height: 1.4;
+        }
+        
+        /* Empty State Styles */
+        .empty-state-content {
+            padding: 40px 20px;
+            height: calc(812px - 200px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #f8f9fa;
+        }
+        
+        .empty-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px solid #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 32px auto;
+            position: relative;
+        }
+        
+        .empty-icon::before {
+            content: '📋';
+            font-size: 3rem;
+            opacity: 0.4;
+        }
+        
+        .empty-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+        
+        .empty-description {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 32px;
+            max-width: 280px;
+        }
+        
+        .cta-button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,102,204,0.3);
+        }
+        
+        .cta-button:hover {
+            background: #004499;
+            transform: translateY(-2px);
+        }
+        
+        /* Instructions */
+        .instructions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            z-index: 1000;
+            max-width: 200px;
+        }
+        
+        /* Transitions */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive */
+        @media (min-width: 768px) {
+            .prototype-container {
+                margin: 40px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Instructions -->
+    <div class="instructions">
+        Click on bet options to add to slip, then click the floating bet slip or "My Bets" to navigate
+    </div>
+
+    <div class="prototype-container">
+        <!-- Home Screen -->
+        <div id="home-screen" class="screen">
+            <div class="header">
+                <div class="logo">NSSports</div>
+                <div class="wallet-balance">
+                    <span>💰</span>
+                    <span class="balance-amount">$1,250.00</span>
+                </div>
+                <div class="profile-icon">👤</div>
+            </div>
+            
+            <div class="main-content">
+                <div class="promo-banner">
+                    <h2>New Player Bonus!</h2>
+                    <p>Get 100% match up to $500 on your first deposit</p>
+                </div>
+                
+                <div class="section-header">
+                    <h2 class="section-title">🔴 Live Now</h2>
+                </div>
+                
+                <div class="games-carousel">
+                    <div class="games-scroll">
+                        <div class="game-card">
+                            <div class="live-indicator">LIVE</div>
+                            <div class="game-time">Q3 • 7:42</div>
+                            <div style="margin-bottom: 16px;">
+                                <div class="team">
+                                    <div class="team-info">
+                                        <div class="team-logo">KC</div>
+                                        <div>
+                                            <div class="team-name">Kansas City</div>
+                                            <div class="team-record">11-6</div>
+                                        </div>
+                                    </div>
+                                    <div class="game-score">21</div>
+                                </div>
+                                <div class="team">
+                                    <div class="team-info">
+                                        <div class="team-logo">BUF</div>
+                                        <div>
+                                            <div class="team-name">Buffalo</div>
+                                            <div class="team-record">13-4</div>
+                                        </div>
+                                    </div>
+                                    <div class="game-score">14</div>
+                                </div>
+                            </div>
+                            <div class="bet-options">
+                                <div class="bet-option" onclick="addBet('KC +2.5 (-110)', 'Kansas City Chiefs vs Buffalo Bills')">
+                                    <div class="bet-label">KC Spread</div>
+                                    <div class="bet-value">+2.5 (-110)</div>
+                                </div>
+                                <div class="bet-option" onclick="addBet('O 47.5 (-105)', 'Kansas City Chiefs vs Buffalo Bills')">
+                                    <div class="bet-label">Total</div>
+                                    <div class="bet-value">O 47.5 (-105)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="game-card">
+                            <div class="live-indicator">LIVE</div>
+                            <div class="game-time">Q2 • 3:15</div>
+                            <div style="margin-bottom: 16px;">
+                                <div class="team">
+                                    <div class="team-info">
+                                        <div class="team-logo">SF</div>
+                                        <div>
+                                            <div class="team-name">San Francisco</div>
+                                            <div class="team-record">12-5</div>
+                                        </div>
+                                    </div>
+                                    <div class="game-score">7</div>
+                                </div>
+                                <div class="team">
+                                    <div class="team-info">
+                                        <div class="team-logo">DAL</div>
+                                        <div>
+                                            <div class="team-name">Dallas</div>
+                                            <div class="team-record">9-8</div>
+                                        </div>
+                                    </div>
+                                    <div class="game-score">10</div>
+                                </div>
+                            </div>
+                            <div class="bet-options">
+                                <div class="bet-option" onclick="addBet('SF -3.5 (-110)', 'San Francisco 49ers vs Dallas Cowboys')">
+                                    <div class="bet-label">SF Spread</div>
+                                    <div class="bet-value">-3.5 (-110)</div>
+                                </div>
+                                <div class="bet-option" onclick="addBet('U 42.5 (-110)', 'San Francisco 49ers vs Dallas Cowboys')">
+                                    <div class="bet-label">Total</div>
+                                    <div class="bet-value">U 42.5 (-110)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-header">
+                    <h2 class="section-title">🏆 Popular Upcoming</h2>
+                </div>
+                
+                <div class="games-carousel">
+                    <div class="games-scroll">
+                        <div class="game-card">
+                            <div class="game-time">Sun 1:00 PM ET</div>
+                            <div style="margin-bottom: 16px;">
+                                <div class="team">
+                                    <div class="team-info">
+                                        <div class="team-logo">MIA</div>
+                                        <div>
+                                            <div class="team-name">Miami</div>
+                                            <div class="team-record">9-8</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="team">
+                                    <div class="team-info">
+                                        <div class="team-logo">NE</div>
+                                        <div>
+                                            <div class="team-name">New England</div>
+                                            <div class="team-record">4-13</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bet-options">
+                                <div class="bet-option" onclick="addBet('MIA -6.5 (-110)', 'Miami Dolphins vs New England Patriots')">
+                                    <div class="bet-label">MIA Spread</div>
+                                    <div class="bet-value">-6.5 (-110)</div>
+                                </div>
+                                <div class="bet-option" onclick="addBet('O 39.5 (-110)', 'Miami Dolphins vs New England Patriots')">
+                                    <div class="bet-label">Total</div>
+                                    <div class="bet-value">O 39.5 (-110)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bottom-nav">
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Home</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">⚽</div>
+                    <div class="nav-label">A-Z Sports</div>
+                </a>
+                <a href="#" class="nav-item" onclick="goToMyBets()">
+                    <div class="nav-icon">📋</div>
+                    <div class="nav-label">My Bets</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">🎁</div>
+                    <div class="nav-label">Promos</div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- My Bets Screen (Populated) -->
+        <div id="my-bets-populated" class="screen hidden">
+            <div class="header">
+                <div class="logo">NSSports</div>
+                <div class="wallet-balance">
+                    <span>💰</span>
+                    <span class="balance-amount">$1,250.00</span>
+                </div>
+                <div class="profile-icon">👤</div>
+            </div>
+            
+            <div class="page-title">
+                <h1>My Bets</h1>
+                <p class="page-subtitle">Track all your wagers and results</p>
+            </div>
+            
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="showPopulatedBets()">Active (<span id="active-count">0</span>)</button>
+                <button class="tab-btn" onclick="showEmptyBets()">Settled (0)</button>
+            </div>
+            
+            <div id="populated-content" class="bets-content">
+                <!-- Bets will be populated here by JavaScript -->
+            </div>
+            
+            <div class="bottom-nav">
+                <a href="#" class="nav-item" onclick="goToHome()">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Home</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">⚽</div>
+                    <div class="nav-label">A-Z Sports</div>
+                </a>
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">📋</div>
+                    <div class="nav-label">My Bets</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">🎁</div>
+                    <div class="nav-label">Promos</div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- My Bets Screen (Empty) -->
+        <div id="my-bets-empty" class="screen hidden">
+            <div class="header">
+                <div class="logo">NSSports</div>
+                <div class="wallet-balance">
+                    <span>💰</span>
+                    <span class="balance-amount">$1,250.00</span>
+                </div>
+                <div class="profile-icon">👤</div>
+            </div>
+            
+            <div class="page-title">
+                <h1>My Bets</h1>
+                <p class="page-subtitle">Track all your wagers and results</p>
+            </div>
+            
+            <div class="tab-nav">
+                <button class="tab-btn active">Active (0)</button>
+                <button class="tab-btn">Settled (0)</button>
+            </div>
+            
+            <div class="empty-state-content">
+                <div class="empty-icon"></div>
+                <h2 class="empty-title">No Active Bets</h2>
+                <p class="empty-description">
+                    You haven't placed any bets yet. Start exploring games and make your first wager to get started!
+                </p>
+                <button class="cta-button" onclick="goToHome()">Browse Games</button>
+            </div>
+            
+            <div class="bottom-nav">
+                <a href="#" class="nav-item" onclick="goToHome()">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Home</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">⚽</div>
+                    <div class="nav-label">A-Z Sports</div>
+                </a>
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">📋</div>
+                    <div class="nav-label">My Bets</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">🎁</div>
+                    <div class="nav-label">Promos</div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Bet Slip Screen -->
+        <div id="bet-slip" class="screen hidden">
+            <div class="header blue">
+                <button class="nav-btn" onclick="goToHome()">←</button>
+                <div class="header-title">Bet Slip</div>
+                <button class="nav-btn" onclick="goToHome()">✕</button>
+            </div>
+            
+            <div class="tab-nav">
+                <button class="tab-btn active">Straight</button>
+                <button class="tab-btn">Parlay</button>
+                <button class="tab-btn">Teaser</button>
+            </div>
+            
+            <div class="bet-slip-content">
+                <div class="selections-section">
+                    <h2 class="section-title">
+                        Your Selections
+                        <span id="selections-count" class="selection-count-badge">0</span>
+                    </h2>
+                    
+                    <div id="selections-list">
+                        <!-- Selections will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="calculations">
+                    <div class="calc-row">
+                        <span class="calc-label">Total Risk</span>
+                        <span id="total-risk" class="calc-value">$0.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">Total Potential Win</span>
+                        <span id="total-win" class="potential-payout">$0.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">Total Payout</span>
+                        <span id="total-payout" class="potential-payout">$0.00</span>
+                    </div>
+                </div>
+                
+                <button id="place-bet-button" class="place-bet-btn" onclick="placeBets()">Place Bets ($0.00)</button>
+                
+                <p class="terms">
+                    By placing this bet, you agree to our <a href="#">Terms & Conditions</a> and confirm you are 21+. Please bet responsibly.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Minimized Bet Slip -->
+        <div id="minimized-bet-slip" class="minimized-bet-slip" onclick="goToBetSlip()">
+            <span class="bet-count" id="bet-count">0</span>
+            <span>Bet Slip</span>
+        </div>
+    </div>
+
+    <script>
+        let selectedBets = [];
+        let currentScreen = 'home-screen';
+        
+        // Add bet to slip
+        function addBet(betText, gameText) {
+            const bet = {
+                id: Date.now(),
+                bet: betText,
+                game: gameText,
+                amount: 25.00,
+                toWin: 22.73
+            };
+            
+            selectedBets.push(bet);
+            updateBetSlip();
+            
+            // Show feedback animation
+            event.target.classList.add('selected');
+            setTimeout(() => {
+                event.target.classList.remove('selected');
+            }, 500);
+        }
+        
+        // Update bet slip display
+        function updateBetSlip() {
+            const count = selectedBets.length;
+            
+            // Update minimized bet slip
+            const betCount = document.getElementById('bet-count');
+            const minimizedSlip = document.getElementById('minimized-bet-slip');
+            
+            if (count > 0) {
+                betCount.textContent = count;
+                minimizedSlip.classList.add('show');
+            } else {
+                minimizedSlip.classList.remove('show');
+            }
+            
+            // Update bet slip screen
+            updateBetSlipScreen();
+            updateMyBetsScreen();
+            
+            // Update active count in My Bets
+            document.getElementById('active-count').textContent = count;
+        }
+        
+        // Update bet slip screen
+        function updateBetSlipScreen() {
+            const selectionsCount = document.getElementById('selections-count');
+            const selectionsList = document.getElementById('selections-list');
+            const totalRisk = document.getElementById('total-risk');
+            const totalWin = document.getElementById('total-win');
+            const totalPayout = document.getElementById('total-payout');
+            const placeButton = document.getElementById('place-bet-button');
+            
+            selectionsCount.textContent = selectedBets.length;
+            
+            let totalRiskAmount = 0;
+            let totalWinAmount = 0;
+            
+            selectionsList.innerHTML = selectedBets.map(bet => {
+                totalRiskAmount += bet.amount;
+                totalWinAmount += bet.toWin;
+                
+                return `
+                    <div class="selection-card">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                            <div>
+                                <div style="font-weight: 500; font-size: 0.9rem; margin-bottom: 4px;">${bet.game}</div>
+                                <div style="font-size: 0.75rem; color: #666;">Sun, Jan 14 • 4:30 PM ET</div>
+                            </div>
+                            <button class="remove-btn" onclick="removeBet(${bet.id})">✕</button>
+                        </div>
+                        <div class="bet-selection">
+                            <div style="font-weight: 500; color: #1a1a1a; font-size: 0.9rem; margin-bottom: 2px;">${bet.bet}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                            <span style="color: #666; font-size: 0.9rem;">To Win:</span>
+                            <span style="color: #28a745; font-weight: 600;">$${bet.toWin.toFixed(2)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            totalRisk.textContent = `$${totalRiskAmount.toFixed(2)}`;
+            totalWin.textContent = `$${totalWinAmount.toFixed(2)}`;
+            totalPayout.textContent = `$${(totalRiskAmount + totalWinAmount).toFixed(2)}`;
+            placeButton.textContent = `Place Bets ($${totalRiskAmount.toFixed(2)})`;
+        }
+        
+        // Update My Bets screen
+        function updateMyBetsScreen() {
+            const populatedContent = document.getElementById('populated-content');
+            
+            if (selectedBets.length === 0) {
+                populatedContent.innerHTML = '<div style="padding: 40px 20px; text-align: center; color: #666;">No active bets</div>';
+                return;
+            }
+            
+            populatedContent.innerHTML = selectedBets.map(bet => `
+                <div class="bet-card">
+                    <div class="bet-header">
+                        <div class="bet-type-badge">STRAIGHT</div>
+                        <div class="bet-amount">$${bet.amount.toFixed(2)}</div>
+                    </div>
+                    <div class="bet-details">
+                        <div class="bet-game">
+                            <div class="game-teams">${bet.game}</div>
+                            <div class="game-date">Sun, Jan 14 • 4:30 PM ET</div>
+                            <div class="bet-selection">
+                                <div class="selection-text">${bet.bet}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bet-footer">
+                        <div class="bet-risk">Risk: $${bet.amount.toFixed(2)}</div>
+                        <div class="bet-payout">To Win: $${bet.toWin.toFixed(2)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Remove bet
+        function removeBet(betId) {
+            selectedBets = selectedBets.filter(bet => bet.id !== betId);
+            updateBetSlip();
+        }
+        
+        // Navigation functions
+        function goToHome() {
+            showScreen('home-screen');
+        }
+        
+        function goToMyBets() {
+            if (selectedBets.length > 0) {
+                showScreen('my-bets-populated');
+            } else {
+                showScreen('my-bets-empty');
+            }
+        }
+        
+        function goToBetSlip() {
+            showScreen('bet-slip');
+        }
+        
+        function showPopulatedBets() {
+            showScreen('my-bets-populated');
+        }
+        
+        function showEmptyBets() {
+            showScreen('my-bets-empty');
+        }
+        
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            
+            // Show target screen
+            document.getElementById(screenId).classList.remove('hidden');
+            document.getElementById(screenId).classList.add('fade-in');
+            
+            currentScreen = screenId;
+        }
+        
+        function placeBets() {
+            if (selectedBets.length > 0) {
+                alert('🎉 Bets placed successfully!');
+                // In a real app, this would submit to backend
+                goToMyBets();
+            }
+        }
+        
+        // Initialize
+        updateBetSlip();
+    </script>
+</body>
+</html>
