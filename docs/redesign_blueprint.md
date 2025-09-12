@@ -1,4 +1,4 @@
-# NSSportsClub Redesign Initiative: Official Blueprint & Roadmap
+# NorthStar Sports Redesign Initiative: Official Blueprint & Roadmap
 
 **Document ID:** NSS-RBP-2025-09-12
 **Version:** 1.1
