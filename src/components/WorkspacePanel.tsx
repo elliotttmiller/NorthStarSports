@@ -2,18 +2,18 @@ import { Badge } from '@/components/ui/badge'
 import { List, Receipt } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { GameLinesTable } from './GameLinesTable'
-import { PropBuilder } from './PropBuilder'
-import { useBetting } from '@/contexts/BettingContext'
-import { cn } from '@/lib/utils'
+import { useBetting } from '@/contexts/Bet
 
-interface WorkspacePanelProps {
   isMobile?: boolean
-  onToggleLeftPanel?: () => void
-  onToggleRightPanel?: () => void
-  className?: string
-}
 
-export function WorkspacePanel({
+}
+export function Work
+  onToggleLeftPanel,
+  className = ''
+  const { activeView
+ 
+
+        {isMobile ? (
   isMobile = false,
   onToggleLeftPanel,
   onToggleRightPanel,
@@ -30,38 +30,38 @@ export function WorkspacePanel({
             <Button
               variant="ghost"
               size="sm"
-              onClick={onToggleLeftPanel}
-              className="nav-button"
             >
-              <List className="h-5 w-5" />
-            </Button>
-            
-            <h1 className="font-semibold text-lg">NorthStar Sports</h1>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onToggleRightPanel}
-              className="nav-button relative"
-            >
-              <Receipt className="h-5 w-5" />
               {bets.length > 0 && (
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+             
                 >
-                  {bets.length}
-                </Badge>
-              )}
-            </Button>
-          </>
+                </Bad
+            
         ) : (
-          <>
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onToggleLeftPanel}
+            
+                var
+                onClick={onTo
+              >
+              </Button>
+            </div>
+            <
+                variant={activeView === 'game
+                onClick={() => setA
+              >
+              </Button>
+                variant={activeView === 'props' ? 'default' : 'ghost'}
+                o
+              >
+              </Button>
+              <B
+                size=
+             
+             
+            
+                    className="absolute -top-2 -right
+                    {
+                )}
+            </div>
+        )}
                 className="nav-button"
               >
                 <List className="h-5 w-5" />
@@ -79,9 +79,9 @@ export function WorkspacePanel({
                 Games
               </Button>
               <Button
-                variant={activeView === 'props' ? 'default' : 'ghost'}
+                variant={activeView === 'propbuilder' ? 'default' : 'ghost'}
                 size="sm"
-                onClick={() => setActiveView('props')}
+                onClick={() => setActiveView('propbuilder')}
                 className="nav-button"
               >
                 Prop Builder
@@ -107,6 +107,18 @@ export function WorkspacePanel({
           </>
         )}
       </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 min-h-0 overflow-auto">
+        {activeView === 'games' ? (
+          <GameLinesTable />
+        ) : (
+          <PropBuilder />
+        )}
+      </div>
+    </div>
+  )
+}      </div>
 
       {/* Main Content Area */}
       <div className="flex-1 min-h-0 overflow-auto">
