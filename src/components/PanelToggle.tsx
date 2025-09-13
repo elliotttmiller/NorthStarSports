@@ -1,75 +1,75 @@
 import React from 'react'
-import { Button } from '@/components/ui/button'
+import { motion, AnimatePresence } from 'framer
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  CaretLeft,
-  CaretRight,
-  PushPin,
-} from '@phosphor-icons/react'
 
-interface PanelToggleProps {
-  isOpen: boolean
-  onToggle: () => void
-  side: 'left' | 'right'
-  className?: string
+  isOpen: boo
+  side: 'l
   onTogglePin?: () => void
-  isPinned?: boolean
-}
 
-export function PanelToggle({ 
-  isOpen, 
+export function PanelToggle(
   onToggle, 
-  side, 
   className = '',
-  onTogglePin,
   isPinned = false,
-}: PanelToggleProps) {
-  const isLeft = side === 'left'
-  
+  const isLeft = sid
   return (
-    <div className={`absolute ${
-      isLeft ? 'left-4 top-4' : 'right-4 top-4'
-    } z-30 flex ${isLeft ? 'flex-row' : 'flex-row-reverse'} gap-2 ${className}`}>
-      
-      {/* Main Toggle Button */}
-      <motion.div
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="relative"
-      >
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onToggle}
-          className={`h-9 w-9 p-0 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-background/90 hover:border-border/70`}
-          title={`${isOpen ? 'Hide' : 'Show'} ${isLeft ? 'navigation' : 'bet slip'}`}
-        >
-          <motion.div
-            animate={{ 
-              rotate: isOpen ? (isLeft ? 0 : 180) : (isLeft ? 180 : 0),
-              scale: [1, 1.2, 1]
-            }}
-            transition={{ 
-              rotate: { duration: 0.3, ease: [0.4, 0.0, 0.2, 1] },
-              scale: { duration: 0.4, times: [0, 0.6, 1] }
-            }}
-          >
-            {isLeft ? <CaretRight size={16} /> : <CaretLeft size={16} />}
-          </motion.div>
-        </Button>
-      </motion.div>
+      isLeft ? 'left
+ 
 
-      {/* Pin/Unpin Button - Only show when panel is open */}
+        whileTap={{ scale: 0.9
+      >
+          va
+        
+          title={
+          <mot
+              rotat
+            }}
+              rotate: { duration
+  
+          
+        </Button>
+
       <AnimatePresence>
-        {isOpen && onTogglePin && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.2, delay: 0.1 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
+      
+            animate={{ opacity: 
+            trans
+            whileTap={{ scale: 0.95 
+            <Button
+              size="sm"
+       
+               
+              }`}
+            >
+                animate={{ 
+                  scale: [1, 1.1, 1]
+                transition={{ 
+         
+              >
+              </motion.
+          </motion.div>
+      </AnimatePresence>
+  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <Button
               variant="ghost"
               size="sm"
