@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 // Global type definitions for the NorthStarSports Wagering Studio
 export {}
 
@@ -31,7 +33,7 @@ export type { UserInfo }
 // Component prop type helpers
 export interface BaseComponentProps {
   className?: string
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
 // Animation easing presets
