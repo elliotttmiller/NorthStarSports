@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useBetting, Game, Bet } from '@/contexts/BettingContext'
 import { sampleLeagues } from '@/data/sampleData'
 import { cn } from '@/lib/utils'
+import { useState, useEffect } from 'react'
 
 interface GameLinesTableProps {
   className?: string
@@ -13,9 +14,20 @@ interface GameLinesTableProps {
 
 export function GameLinesTable({ className }: GameLinesTableProps) {
   const { selectedLeague, addBet, bets } = useBetting()
+  const [isLoading, setIsLoading] = useState(true)
   
   const league = sampleLeagues.find(l => l.id === selectedLeague)
   const games = league?.games || []
+
+  // Simulate loading when league changes
+  useEffect(() => {
+    setIsLoading(true)
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 800)
+    
+    return () => clearTimeout(timer)
+  }, [selectedLeague])
 
   const formatOdds = (odds: number) => {
     if (odds > 0) return `+${odds}`
@@ -46,6 +58,87 @@ export function GameLinesTable({ className }: GameLinesTableProps) {
       isOver
     }
     addBet(bet)
+  }
+
+  // Loading skeleton component
+  const LoadingSkeleton = () => (
+    <Card className={cn("flex flex-col h-full", className)}>
+      <div className="p-4 border-b bg-accent/5">
+        <div className="flex items-center justify-between">
+          <div>
+            <Skeleton className="h-6 w-20 mb-2" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+          <Skeleton className="h-8 w-24" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-12 gap-4 p-4 border-b bg-muted/30 text-sm font-medium">
+        <div className="col-span-3">TIME</div>
+        <div className="col-span-2">TEAM</div>
+        <div className="col-span-2 text-center">SPREAD</div>
+        <div className="col-span-2 text-center">TOTAL</div>
+        <div className="col-span-2 text-center">MONEY LINE</div>
+        <div className="col-span-1 text-center">MORE</div>
+      </div>
+
+      <div className="flex-1 overflow-auto">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="border-b">
+            {/* Away Team Row */}
+            <div className="grid grid-cols-12 gap-4 p-3">
+              <div className="col-span-3">
+                <Skeleton className="h-4 w-12" />
+              </div>
+              <div className="col-span-2 flex items-center gap-2">
+                <Skeleton className="w-6 h-6 rounded" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+              <div className="col-span-2 flex gap-1">
+                <Skeleton className="h-8 flex-1" />
+                <Skeleton className="h-8 flex-1" />
+              </div>
+              <div className="col-span-2 flex gap-1">
+                <Skeleton className="h-8 flex-1" />
+                <Skeleton className="h-8 flex-1" />
+              </div>
+              <div className="col-span-2">
+                <Skeleton className="h-8 w-full" />
+              </div>
+              <div className="col-span-1 flex justify-center">
+                <Skeleton className="h-8 w-8" />
+              </div>
+            </div>
+            {/* Home Team Row */}
+            <div className="grid grid-cols-12 gap-4 p-3">
+              <div className="col-span-3"></div>
+              <div className="col-span-2 flex items-center gap-2">
+                <Skeleton className="w-6 h-6 rounded" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+              <div className="col-span-2 flex gap-1">
+                <Skeleton className="h-8 flex-1" />
+                <Skeleton className="h-8 flex-1" />
+              </div>
+              <div className="col-span-2 flex gap-1">
+                <Skeleton className="h-8 flex-1" />
+                <Skeleton className="h-8 flex-1" />
+              </div>
+              <div className="col-span-2">
+                <Skeleton className="h-8 w-full" />
+              </div>
+              <div className="col-span-1 flex justify-center">
+                <Skeleton className="h-8 w-8" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Card>
+  )
+
+  if (isLoading) {
+    return <LoadingSkeleton />
   }
 
   if (games.length === 0) {
