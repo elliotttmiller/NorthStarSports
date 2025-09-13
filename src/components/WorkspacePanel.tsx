@@ -1,11 +1,11 @@
 import React from 'react'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { List, Receipt } from '@phosphor-icons/react'
-import { GameLinesTable } from './GameLinesTable'
-import { PropBuilder } from './PropBuilder'
-import { useBetting } from '@/contexts/BettingContext'
-import { cn } from '@/lib/utils'
+import { GameLinesTable } from './GameLinesTa
+import { useBetting } from '@/contexts/BettingContext
+
+  className?: string
+  onToggleLeftPanel?: () => void
+}
 
 interface WorkspacePanelProps {
   className?: string
@@ -34,42 +34,42 @@ export function WorkspacePanel({
               size="sm"
               className="h-9 px-3 nav-button hover:bg-secondary/50"
               onClick={onToggleLeftPanel}
-            >
-              <List className="w-4 h-4 mr-2" />
-              Sports
-            </Button>
-            
-            <h1 className="text-lg font-semibold">NorthStar Sports</h1>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-9 px-3 nav-button hover:bg-secondary/50"
+             
               onClick={onToggleRightPanel}
-            >
-              <Receipt className="w-4 h-4 mr-2" />
-              Bet Slip
-              {bets.length > 0 && (
-                <Badge 
-                  variant="default" 
-                  className="ml-2 h-5 px-1.5 bg-accent text-accent-foreground"
+              <Recei
+              {bets.l
+            
                 >
-                  {bets.length}
-                </Badge>
-              )}
-            </Button>
-          </>
+            
+            </Butto
         ) : (
-          // Desktop Header
           <>
-            <div className="flex items-center gap-2">
               <Button
-                variant="ghost"
                 size="sm"
-                className="h-9 px-3 nav-button hover:bg-secondary/50"
-                onClick={onToggleLeftPanel}
-              >
+             
                 <List className="w-4 h-4" />
+              <h1 clas
+
+              <Button
+                size="sm"
+                className="nav-button"
+                G
+              <Button
+                size="sm
+                
+                Prop 
+            <
+            <
+                variant="gh
+            
+              >
+              </Butto
+          </>
+      </div>
+      {/* Main Content Area */}
+        {activeView === 'games' ? (
+        ) : (
+        )}
               </Button>
               <h1 className="text-lg font-semibold">Sports Center</h1>
             </div>
@@ -115,6 +115,9 @@ export function WorkspacePanel({
           <PropBuilder />
         )}
       </div>
+    </div>
+  )
+}      </div>
     </div>
   )
 }
