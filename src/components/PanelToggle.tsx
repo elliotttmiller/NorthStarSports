@@ -1,67 +1,67 @@
 import React from 'react'
-import { motion } from 'framer-motion'
+import { Button } from '@/components/u
 import { Button } from '@/components/ui/button'
 import { 
   CaretLeft, 
   CaretRight,
   PushPin,
   PushPinSlash
-} from '@phosphor-icons/react'
-
 interface PanelToggleProps {
-  isOpen: boolean
-  onToggle: () => void
-  side: 'left' | 'right'
+
   className?: string
-  isPinned?: boolean
-  onTogglePin?: () => void
-}
+  onTogglePin?: (
 
-export function PanelToggle({ 
   isOpen, 
-  onToggle, 
   side, 
-  className = '',
   isPinned = false,
-  onTogglePin 
 }: PanelToggleProps) {
-  const Icon = side === 'left' 
-    ? (isOpen ? CaretLeft : CaretRight)
-    : (isOpen ? CaretRight : CaretLeft)
+ 
 
-  return (
-    <div className={`absolute top-4 ${side === 'left' ? 'left-2' : 'right-2'} z-10 flex flex-col gap-2 ${className}`}>
-      {/* Main toggle button */}
-      <motion.div
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onToggle}
-          className={`h-8 w-8 p-0 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 shadow-lg transition-all duration-300 hover:bg-muted/80 hover:border-border hover:shadow-xl ${
-            isOpen ? 'opacity-100' : 'opacity-40 hover:opacity-100'
+    <div className={`absolute 
+      <mot
+        whil
+        
+          size="s
+          className
           }`}
-          title={`${isOpen ? 'Hide' : 'Show'} ${side === 'left' ? 'Navigation' : 'Bet Slip'}`}
         >
-          <motion.div
             animate={{ 
-              rotate: isOpen ? 0 : 180,
               scale: [1, 1.2, 1]
-            }}
             transition={{ 
-              duration: 0.3, 
-              ease: [0.4, 0.0, 0.2, 1]
-            }}
-          >
-            <Icon size={16} />
-          </motion.div>
-        </Button>
-      </motion.div>
 
-      {/* Pin/Unpin button - only show when panel is open */}
-      {isOpen && onTogglePin && (
+          
+          </motion.div>
+      </motion.div>
+      {/* Pin/Unp
+        <motion.div
+          animate={{ opacity: 1, y
+       
+          while
+          <Button
+            size="s
+            className={`h-7 
+                ? 'border-accent/50 text-accent hover:bg-accent/10' 
+            }`}
+          >
+              animate={{ 
+         
+              transit
+              {isPinned
+          </Button>
+      )}
+  )
+
+
+
+
+
+
+
+
+
+
+
+
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
