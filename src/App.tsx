@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { Toaster } from 'sonner'
 import { Toaster } from 'sonner'
 
-// Context providers
-import { BettingProvider } from './contexts/BettingContext'
 
-// Panel components
+import { SideNavPanel } from './components/SideNavPanel'
+
+import { MobileBott
 import { SideNavPanel } from './components/SideNavPanel'
 import { WorkspacePanel } from './components/WorkspacePanel'
 import { ActionHubPanel } from './components/ActionHubPanel'
@@ -62,70 +62,70 @@ function App() {
     }
   }
 
-  return (
-    <BettingProvider>
-      <div className="flex flex-col h-screen bg-background text-foreground">
-        {/* Desktop Layout */}
-        {!isMobile ? (
-          <div 
-            className="flex-1 grid min-h-0 relative transition-all duration-300 ease-in-out"
-            style={{
-              gridTemplateColumns: `${showLeftPanel ? `${leftPanelWidth}px` : '0px'} 1fr ${showRightPanel ? `${rightPanelWidth}px` : '0px'}`
-            }}
+          
+              gridTem
           >
-            {/* Left Panel */}
-            <AnimatePresence mode="wait">
-              {showLeftPanel && (
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
+            <AnimatePresence m
+                <motio
+               
                   transition={{ duration: 0.2 }}
-                  className="min-h-0 border-r border-border bg-card relative"
-                  style={{
-                    boxShadow: showLeftPanel ? '4px 0 8px -2px rgba(0, 0, 0, 0.1)' : 'none'
+                  st
                   }}
-                >
-                  <SideNavPanel />
-                  <ResizeHandle
-                    side="right"
-                    currentWidth={leftPanelWidth}
-                    onResize={setLeftPanelWidth}
-                    minWidth={250}
-                    maxWidth={400}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Center Panel - Workspace */}
-            <div className="min-h-0 relative flex flex-col">
-              {/* Panel Toggle Buttons */}
-              <PanelToggle
-                isOpen={showLeftPanel}
-                onToggle={toggleLeftPanel}
-                side="left"
-                className="absolute left-2 top-4 z-10"
-              />
-              <PanelToggle
-                isOpen={showRightPanel}
-                onToggle={toggleRightPanel}
-                side="right"
-                className="absolute right-2 top-4 z-10"
-              />
               
-              {/* Main Workspace */}
-              <WorkspacePanel />
+           
+                    onResize={
+                    maxWidth={400}
+                </motion.div>
+            </AnimatePresen
+            {/* Center Panel - Workspace */}
+              {/* Panel Toggle Buttons */}
+                isOpen={showLeftPanel}
+                side="left"
+              />
+                isOpen={sh
+                side="right"
+              />
+              {/*
             </div>
-
             {/* Right Panel */}
-            <AnimatePresence mode="wait">
-              {showRightPanel && (
-                <motion.div
+              {showRightPanel &&
                   initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.2 }}
+                  className="min-h
+                    boxShadow: sho
+                >
+                  <ResizeHand
+                
+                    minWidth={
+
+              )}
+          </div>
+          /* Mobile Layout */
+            {/* Panel Togg
+              <PanelToggle
+                onToggle={() => setActiveM
+              />
+                isOpen={activeMobilePanel === 'betslip
+                
+            </div>
+            {/* Main Mobile Workspace *
+
+            <MobileOverlay
+              onClose={() => setActiveMobilePanel(null)
+              sl
+              
+
+              isOpen={activeMobi
+              titl
+
+            </MobileOverlay>
+            {/* Bottom Navigation */}
+              onNavClick={handleMo
+            />
+        )}
+        {/* Global Toast Notifications */}
+      </div>
+  )
                   className="min-h-0 border-l border-border bg-card relative"
                   style={{
                     boxShadow: showRightPanel ? '-4px 0 8px -2px rgba(0, 0, 0, 0.1)' : 'none'
@@ -135,7 +135,7 @@ function App() {
                   <ResizeHandle
                     side="left"
                     currentWidth={rightPanelWidth}
-                    onResize={setRightPanelWidth}
+                    onWidthChange={setRightPanelWidth}
                     minWidth={300}
                     maxWidth={500}
                   />
@@ -167,8 +167,7 @@ function App() {
             <MobileOverlay
               isOpen={activeMobilePanel === 'nav'}
               onClose={() => setActiveMobilePanel(null)}
-              title="Sports Navigation"
-              slideFrom="left"
+              side="left"
             >
               <SideNavPanel />
             </MobileOverlay>
@@ -176,16 +175,14 @@ function App() {
             <MobileOverlay
               isOpen={activeMobilePanel === 'betslip'}
               onClose={() => setActiveMobilePanel(null)}
-              title="Bet Slip"
-              slideFrom="right"
+              side="right"
             >
               <ActionHubPanel />
             </MobileOverlay>
 
             {/* Bottom Navigation */}
             <MobileBottomNav
-              onNavClick={handleMobileNavigation}
-              activePanel={activeMobilePanel || 'workspace'}
+              onNavigate={handleMobileNavigation}
             />
           </div>
         )}
@@ -196,5 +193,7 @@ function App() {
     </BettingProvider>
   )
 }
+
+export default App}
 
 export default App
