@@ -7,7 +7,7 @@ import { WorkspacePanel } from './components/WorkspacePanel'
 import { ActionHubPanel } from './components/ActionHubPanel'
 import { MobileBottomNav } from './components/MobileBottomNav'
 import { MobileOverlay } from './components/MobileOverlay'
-import { PanelToggle } from './components/PanelToggle'
+
 import { ResizeHandle } from './components/ResizeHandle'
 import { useIsMobile } from './hooks/useIsMobile'
 import { usePanelState } from './hooks/usePanelState'
@@ -108,13 +108,6 @@ function App() {
                   >
                     <SideNavPanel className="h-full" />
                     
-                    {/* Floating toggle for left panel */}
-                    <PanelToggle
-                      isOpen={showLeftPanel}
-                      onToggle={toggleLeftPanel}
-                      side="left"
-                    />
-                    
                     {/* Resize handle for left panel */}
                     <ResizeHandle
                       side="left"
@@ -141,25 +134,6 @@ function App() {
               transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
             >
               <WorkspacePanel className="h-full" />
-              
-              {/* Floating toggles when panels are hidden */}
-              {!showLeftPanel && (
-                <PanelToggle
-                  isOpen={showLeftPanel}
-                  onToggle={toggleLeftPanel}
-                  side="left"
-                  className="!left-4"
-                />
-              )}
-              
-              {!showRightPanel && (
-                <PanelToggle
-                  isOpen={showRightPanel}
-                  onToggle={toggleRightPanel}
-                  side="right"
-                  className="!right-4"
-                />
-              )}
             </motion.div>
 
             {/* Right Panel - Action Hub */}
@@ -188,13 +162,6 @@ function App() {
                     className="h-full relative"
                   >
                     <ActionHubPanel className="h-full" />
-                    
-                    {/* Floating toggle for right panel */}
-                    <PanelToggle
-                      isOpen={showRightPanel}
-                      onToggle={toggleRightPanel}
-                      side="right"
-                    />
                     
                     {/* Resize handle for right panel */}
                     <ResizeHandle
