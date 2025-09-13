@@ -55,6 +55,9 @@ function ChartContainer({
       return vars
     }, {} as Record<string, string>)
 
+  // If no dynamic colors, avoid setting style prop at all
+  const styleProps = Object.keys(colorVars).length > 0 ? { style: colorVars as React.CSSProperties } : {}
+
   return (
     <ChartContext.Provider value={{ config }}>
       <div
@@ -64,7 +67,7 @@ function ChartContainer({
           "[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border flex aspect-video justify-center text-xs [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
           className
         )}
-        style={colorVars as React.CSSProperties} // eslint-disable-line react/style-prop-object
+        {...styleProps}
         {...props}
       >
         <ChartStyle id={chartId} config={config} />
@@ -132,6 +135,7 @@ function ChartTooltipContent({
     indicator?: "line" | "dot" | "dashed"
     nameKey?: string
     labelKey?: string
+    labelClassName?: string
   }) {
   const { config } = useChart()
 
@@ -151,7 +155,9 @@ function ChartTooltipContent({
     if (labelFormatter) {
       return (
         <div className={cn("font-medium", labelClassName)}>
-          {labelFormatter(value, payload)}
+          {typeof value === "string" || typeof value === "number"
+            ? labelFormatter(value)
+            : value}
         </div>
       )
     }
@@ -187,26 +193,31 @@ function ChartTooltipContent({
       {!nestLabel ? tooltipLabel : null}
       <div className="grid gap-1.5">
         {payload.map((item, index) => {
-          const key = `${nameKey || item.name || item.dataKey || "value"}`
+          const key = `${nameKey || ("dataKey" in item ? item.dataKey : undefined) || "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
           const indicatorColor = color || item.payload.fill || item.color
           return (
             <div
-              key={item.dataKey}
+              key={String(item.dataKey ?? index)}
               className={cn(
                 "[&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5",
                 indicator === "dot" && "items-center"
               )}
             >
               {formatter && item?.value !== undefined && item.name ? (
-                formatter(item.value, item.name, item, index, item.payload)
+                formatter(
+                  item.value as string | number | (string | number)[],
+                  typeof item.name === "string" ? item.name : String(item.name),
+                  item,
+                  index
+                )
               ) : (
                 <>
                   {itemConfig?.icon ? (
                     <itemConfig.icon />
                   ) : (
                     !hideIndicator && (
-                      // eslint-disable-next-line react/style-prop-object
+
                       <div
                         className={cn(
                           "shrink-0 rounded-[2px]",
@@ -218,12 +229,8 @@ function ChartTooltipContent({
                             "my-0.5": nestLabel && indicator === "dashed",
                           }
                         )}
-                        // Dynamic color via CSS variable set on parent
+                        /* eslint-disable-next-line react/style-prop-object */
                         style={{ backgroundColor: `var(--color-${key}, ${indicatorColor})`, borderColor: `var(--color-${key}, ${indicatorColor})` } as React.CSSProperties} // eslint-disable-line react/style-prop-object
-                        /*
-                          Dynamic color is required for chart indicators. This is the most maintainable and accessible approach for dynamic data-driven charts.
-                          If your linter flags this, you may disable the rule for this line only.
-                        */
                       />
                     )
                   )}
@@ -283,7 +290,7 @@ function ChartLegendContent({
       )}
     >
       {payload.map((item) => {
-        const key = `${nameKey || item.dataKey || "value"}`
+        const key = `${nameKey || ("dataKey" in item ? item.dataKey : undefined) || "value"}`
         const itemConfig = getPayloadConfigFromPayload(config, item, key)
         return (
           <div
@@ -295,9 +302,10 @@ function ChartLegendContent({
             {itemConfig?.icon && !hideIcon ? (
               <itemConfig.icon />
             ) : (
-              // eslint-disable-next-line react/style-prop-object
+
               <div
                 className="h-2 w-2 shrink-0 rounded-[2px]"
+                /* eslint-disable-next-line react/style-prop-object */
                 style={{ backgroundColor: `var(--color-${key}, ${item.color})` } as React.CSSProperties} // eslint-disable-line react/style-prop-object
                 /*
                   Dynamic color is required for chart legends. This is the most maintainable and accessible approach for dynamic data-driven charts.
