@@ -1,13 +1,14 @@
 /**
  * GameRow - Atomic Component
  * Represents a single game with betting options
- * Follows Protocol of Radical Reusability
+ * Follows Protocol of Radical Reusability with Quick Bet integration
  */
 
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useBettingUtils } from '@/hooks'
+import { useQuickBet } from '@/contexts/QuickBetContext'
 import type { GameRowProps, Bet } from '@/types'
 
 function GameRowComponent({ 
@@ -17,16 +18,32 @@ function GameRowComponent({
   ...props 
 }: GameRowProps & React.HTMLAttributes<HTMLDivElement>) {
   const { formatOdds } = useBettingUtils()
+  const { showQuickBet } = useQuickBet()
 
-  const handleBetClick = (betType: Bet['betType'], teamName: string, odds: number, line?: number, isOver?: boolean) => {
-    onBetClick({
+  const handleBetClick = (event: React.MouseEvent, betType: Bet['betType'], teamName: string, odds: number, line?: number, isOver?: boolean) => {
+    event.preventDefault()
+    
+    // Get button position for modal placement
+    const rect = (event.target as HTMLElement).getBoundingClientRect()
+    const position = {
+      x: rect.left + rect.width / 2,
+      y: rect.bottom + 10
+    }
+
+    const bet = {
       gameId: game.id,
       teamName,
       betType,
       odds,
       line,
       isOver,
-    })
+    }
+    
+    // Show QuickBet modal
+    showQuickBet(bet, position)
+    
+    // Also call legacy handler for compatibility
+    onBetClick(bet)
   }
 
   return (
@@ -56,7 +73,7 @@ function GameRowComponent({
           variant="outline"
           size="sm"
           className="h-8 px-2 text-xs font-mono overflow-safe"
-          onClick={() => handleBetClick('spread', game.awayTeam, game.awaySpreadOdds, game.awaySpread)}
+          onClick={(e) => handleBetClick(e, 'spread', game.awayTeam, game.awaySpreadOdds, game.awaySpread)}
         >
           {game.awaySpread > 0 ? '+' : ''}{game.awaySpread} {formatOdds(game.awaySpreadOdds)}
         </Button>
@@ -64,7 +81,7 @@ function GameRowComponent({
           variant="outline"
           size="sm"
           className="h-8 px-2 text-xs font-mono overflow-safe"
-          onClick={() => handleBetClick('spread', game.homeTeam, game.homeSpreadOdds, game.homeSpread)}
+          onClick={(e) => handleBetClick(e, 'spread', game.homeTeam, game.homeSpreadOdds, game.homeSpread)}
         >
           {game.homeSpread > 0 ? '+' : ''}{game.homeSpread} {formatOdds(game.homeSpreadOdds)}
         </Button>
@@ -76,7 +93,7 @@ function GameRowComponent({
           variant="outline"
           size="sm"
           className="h-8 px-2 text-xs font-mono overflow-safe"
-          onClick={() => handleBetClick('total', `${game.awayTeam} vs ${game.homeTeam}`, game.overOdds, game.total, true)}
+          onClick={(e) => handleBetClick(e, 'total', `${game.awayTeam} vs ${game.homeTeam}`, game.overOdds, game.total, true)}
         >
           O{game.total} {formatOdds(game.overOdds)}
         </Button>
@@ -84,7 +101,7 @@ function GameRowComponent({
           variant="outline"
           size="sm"
           className="h-8 px-2 text-xs font-mono overflow-safe"
-          onClick={() => handleBetClick('total', `${game.awayTeam} vs ${game.homeTeam}`, game.underOdds, game.total, false)}
+          onClick={(e) => handleBetClick(e, 'total', `${game.awayTeam} vs ${game.homeTeam}`, game.underOdds, game.total, false)}
         >
           U{game.total} {formatOdds(game.underOdds)}
         </Button>
@@ -96,7 +113,7 @@ function GameRowComponent({
           variant="outline"
           size="sm"
           className="h-8 px-2 text-xs font-mono overflow-safe"
-          onClick={() => handleBetClick('moneyline', game.awayTeam, game.awayMoneyline)}
+          onClick={(e) => handleBetClick(e, 'moneyline', game.awayTeam, game.awayMoneyline)}
         >
           {formatOdds(game.awayMoneyline)}
         </Button>
@@ -104,7 +121,7 @@ function GameRowComponent({
           variant="outline"
           size="sm"
           className="h-8 px-2 text-xs font-mono overflow-safe"
-          onClick={() => handleBetClick('moneyline', game.homeTeam, game.homeMoneyline)}
+          onClick={(e) => handleBetClick(e, 'moneyline', game.homeTeam, game.homeMoneyline)}
         >
           {formatOdds(game.homeMoneyline)}
         </Button>
