@@ -1,15 +1,15 @@
 import React from 'react'
-
+import { Toaster } from 'sonner'
 
 // Context
 import { BettingProvider } from './contexts/BettingContext'
 
-import { Work
-import { MobileOverlay } from './components/MobileOverla
-
-import { useIsMobile } from './hooks/useIsMobile'
-import { useKeyboardShortcuts } from './hooks/useKeyboardSho
-function App() {
+// Components
+import { HeaderNavbar } from './components/HeaderNavbar'
+import { SideNavPanel } from './components/SideNavPanel'
+import { WorkspacePanel } from './components/WorkspacePanel'
+import { ActionHubPanel } from './components/ActionHubPanel'
+import { MobileOverlay } from './components/MobileOverlay'
 import { MobileBottomNav } from './components/MobileBottomNav'
 
 // Hooks
@@ -26,8 +26,6 @@ function App() {
     rightPanelWidth,
     toggleLeftPanel,
     toggleRightPanel,
-    setLeftPanelWidth,
-    setRightPanelWidth,
     showSportsOverlay,
     showBetSlipOverlay,
     setShowSportsOverlay,
@@ -46,53 +44,48 @@ function App() {
 
   // Mobile navigation handlers
   const handleMobileNavigation = (panel: string) => {
-      case 'betslip'
+    switch (panel) {
+      case 'sports':
+        setShowSportsOverlay(true)
+        setActivePanel('sports')
         break
-        setActivePanel('profil
-        setShowBetSlipOverlay(false
+      case 'betslip':
+        setShowBetSlipOverlay(true)
+        setActivePanel('betslip')
+        break
+      case 'home':
+        setActivePanel('home')
+        setShowSportsOverlay(false)
+        setShowBetSlipOverlay(false)
+        break
       default:
-        setSh
+        setActivePanel('home')
         break
+    }
   }
-  const close
-    setShowBetSlipOve
 
-    <BettingP
-        {/* He
-          onToggleLeftPanel={t
-          showLeftPanel={showLeftPa
+  return (
+    <BettingProvider>
+      <div className="flex flex-col h-screen bg-background text-foreground">
+        {/* Header */}
+        <HeaderNavbar
+          onToggleLeftPanel={toggleLeftPanel}
+          onToggleRightPanel={toggleRightPanel}
+          showLeftPanel={showLeftPanel}
+          showRightPanel={showRightPanel}
         />
-        {/* M
-     
-   
 
+        {/* Main Content Area */}
+        <div className="flex flex-1 min-h-0">
+          {!isMobile ? (
+            // Desktop layout - Three panel studio
+            <>
+              {/* Left Panel */}
+              {showLeftPanel && (
+                <div className="flex-shrink-0 border-r bg-card" style={{ width: leftPanelWidth }}>
                   <SideNavPanel />
+                </div>
               )}
-              {/* Center Panel *
-   
-
-          
-                  <Ac
-              )}
-          ) : (
-            <div class
-              <div className="flex-1 min-h-0"
-              </div>
-              {/* Mobile Sports Overlay
-                isOpen={showSportsOverlay
-          
-
-
-              <MobileOverlay
-                onClose=
-              >
-              </MobileOverlay>
-              {/* Mobile Bottom 
-                activePanel={acti
-              />
-          )}
-
-        <Toaster
 
               {/* Center Panel */}
               <div className="flex-1 min-w-0">
@@ -105,7 +98,7 @@ function App() {
                   <ActionHubPanel />
                 </div>
               )}
-            </div>
+            </>
           ) : (
             // Mobile layout
             <div className="flex flex-col flex-1">
@@ -135,7 +128,7 @@ function App() {
               {/* Mobile Bottom Navigation */}
               <MobileBottomNav
                 activePanel={activePanel}
-                onNavigate={handleMobileNavigation}
+                onNavClick={handleMobileNavigation}
               />
             </div>
           )}
@@ -145,18 +138,6 @@ function App() {
         <Toaster
           toastOptions={{
             style: {
-              background: 'var(--card)',
-              border: '1px solid var(--border)',
-              color: 'var(--foreground)'
-            }
-          }}
-        />
-      </div>
-    </BettingProvider>
-  )
-}
-
-export default App            style: {
               background: 'var(--card)',
               border: '1px solid var(--border)',
               color: 'var(--foreground)'

@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useBetting } from '@/contexts/BettingContext'
 import { cn } from '@/lib/utils'
+import { ActivePanel } from '@/hooks/usePanelState'
 
 interface MobileBottomNavProps {
   className?: string
   onNavClick: (panel: 'home' | 'sports' | 'betslip' | 'profile') => void
-  activePanel: string
+  activePanel: ActivePanel
 }
 
 export function MobileBottomNav({ className, onNavClick, activePanel }: MobileBottomNavProps) {
