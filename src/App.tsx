@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { Toaster } from 'sonner'
 
-
-// Compone
-import { SideNavPanel } from './components/SideNavPanel'
+// Context
+import { BettingProvider } from './contexts/BettingContext'
 
 // Components
 import { HeaderNavbar } from './components/HeaderNavbar'
@@ -14,20 +14,33 @@ import { MobileBottomNav } from './components/MobileBottomNav'
 
 // Hooks
 import { useIsMobile } from './hooks/useIsMobile'
+import { usePanelState, ActivePanel } from './hooks/usePanelState'
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 
 function App() {
   const isMobile = useIsMobile()
-  
-  // Desktop panel states
-  const [showLeftPanel, setShowLeftPanel] = useState(true)
-  const [showRightPanel, setShowRightPanel] = useState(true)
-  
-  // Mobile overlay states
-  const [showSportsOverlay, setShowSportsOverlay] = useState(false)
-  const [showBetSlipOverlay, setShowBetSlipOverlay] = useState(false)
-  const [activePanel, setActivePanel] = useState<'home' | 'sports' | 'betslip'>('home')
+  const {
+    showLeftPanel,
+    showRightPanel,
+    toggleLeftPanel,
+    toggleRightPanel,
+    showSportsOverlay,
+    showBetSlipOverlay,
+    setShowSportsOverlay,
+    setShowBetSlipOverlay,
+    activePanel,
+    setActivePanel
+  } = usePanelState()
 
-  const handleMobileNavigation = (panel: 'home' | 'sports' | 'betslip') => {
+  // Enable keyboard shortcuts for desktop
+  useKeyboardShortcuts({
+    onToggleLeftPanel: toggleLeftPanel,
+    onToggleRightPanel: toggleRightPanel,
+    showLeftPanel,
+    showRightPanel
+  })
+
+  const handleMobileNavigation = (panel: ActivePanel) => {
     switch (panel) {
       case 'sports':
         setShowSportsOverlay(true)
@@ -42,43 +55,27 @@ function App() {
         setShowBetSlipOverlay(false)
         setActivePanel('home')
         break
-  }
+      case 'profile':
+        // Handle profile if needed
+        setActivePanel('profile')
+        break
+    }
   }
 
   return (
-        <HeaderNavbar
+    <BettingProvider>
       <div className="flex flex-col h-screen bg-background">
-          showLeftPane
+        {/* Header */}
         <HeaderNavbar 
-          onToggleLeft={() => setShowLeftPanel(!showLeftPanel)}
-          onToggleRight={() => setShowRightPanel(!showRightPanel)}
+          onToggleLeftPanel={toggleLeftPanel}
+          onToggleRightPanel={toggleRightPanel}
           showLeftPanel={showLeftPanel}
           showRightPanel={showRightPanel}
         />
 
+        {/* Main Content Area */}
         <div className="flex flex-1 min-h-0">
-              {/* Center
-              
-              {/* Desktop Layout */}
-              {showLeftPanel && (
-                <div className="flex-shrink-0 w-80 border-r bg-card">
-                  <SideNavPanel />
-                </div>
-            </>
-
-              {/* Center Panel */}
-              <div className="flex-1 min-w-0">
-                <WorkspacePanel />
-                >
-
-
-
-                <div className="flex-shrink-0 w-96 border-l bg-card">
-
-
-
-
-
+          {isMobile ? (
             <>
               {/* Mobile Layout */}
               <div className="flex flex-col flex-1">
@@ -108,25 +105,40 @@ function App() {
                 {/* Mobile Bottom Navigation */}
                 <MobileBottomNav
                   activePanel={activePanel}
-                  onNavigate={handleMobileNavigation}
+                  onNavClick={handleMobileNavigation}
                 />
-
+              </div>
             </>
+          ) : (
+            <>
+              {/* Desktop Layout */}
+              {/* Left Panel */}
+              {showLeftPanel && (
+                <div className="flex-shrink-0 w-80 border-r bg-card">
+                  <SideNavPanel />
+                </div>
+              )}
 
+              {/* Center Panel */}
+              <div className="flex-1 min-w-0">
+                <WorkspacePanel />
+              </div>
 
+              {/* Right Panel */}
+              {showRightPanel && (
+                <div className="flex-shrink-0 w-96 border-l bg-card">
+                  <ActionHubPanel />
+                </div>
+              )}
+            </>
+          )}
+        </div>
 
+        {/* Toast notifications */}
+        <Toaster position="top-right" />
+      </div>
+    </BettingProvider>
+  )
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default App
