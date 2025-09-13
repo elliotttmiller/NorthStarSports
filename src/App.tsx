@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Toaster } from 'sonner'
 
 // Context
-import { BettingProvider } from './contexts/BettingContext'
+import { BettingProvider } from './contexts/BetSlipContext'
 
 // Components
 import { SideNavPanel } from './components/SideNavPanel'
@@ -109,12 +109,12 @@ function App() {
               <div className="flex justify-between items-center p-2 border-b border-border bg-card">
                 <PanelToggle
                   isOpen={showLeftPanel}
-                  onToggle={toggleLeftPanel}
+                  onClick={toggleLeftPanel}
                   side="left"
                 />
                 <PanelToggle
                   isOpen={showRightPanel}
-                  onToggle={toggleRightPanel}
+                  onClick={toggleRightPanel}
                   side="right"
                 />
               </div>
@@ -142,67 +142,66 @@ function App() {
                     maxWidth={500}
                     side="left"
                   />
-                  <ActionHubPanel />
                 </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+            </AnimatePresence
         ) : (
-          // Mobile focused layout
           <>
-            {/* Main Content Area */}
-            <div className="flex-1 min-h-0 overflow-hidden">
-              {activePanel === 'home' && (
-                <div className="h-full bg-card">
-                  <WorkspacePanel />
+            <div
+             
                 </div>
+            
+                  <p className="text-
               )}
-              {activePanel === 'profile' && (
-                <div className="h-full bg-card p-4">
-                  <p className="text-muted-foreground">Profile content coming soon...</p>
-                </div>
-              )}
-            </div>
 
-            {/* Mobile Sports Overlay */}
             <MobileOverlay
-              isOpen={showSportsOverlay}
-              onClose={handleSportsOverlayClose}
-              title="Sports"
+              onClose={handleSportsO
             >
-              <SideNavPanel />
-            </MobileOverlay>
-
+            </Mo
             {/* Mobile Bet Slip Overlay */}
-            <MobileOverlay
               isOpen={showBetSlipOverlay}
-              onClose={handleBetSlipOverlayClose}
               title="Bet Slip"
-            >
-              <ActionHubPanel />
-            </MobileOverlay>
+              <ActionH
 
-            {/* Mobile Bottom Navigation */}
-            <MobileBottomNav
-              activePanel={activePanel}
-              onNavClick={handleMobileNavClick}
-            />
+            <Mobil
+
           </>
-        )}
 
-        <Toaster
           toastOptions={{
-            duration: 3000,
             style: {
-              background: 'var(--card)',
-              color: 'var(--card-foreground)',
-              border: '1px solid var(--border)'
+              color: 'var(--
             }
-          }}
         />
-      </div>
     </BettingProvider>
-  )
-}
 
 export default App
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
