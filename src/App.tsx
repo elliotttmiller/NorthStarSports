@@ -1,20 +1,13 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Toaster } from 'sonner'
-
-// Context
 import { BettingProvider } from '@/contexts/BettingContext'
-
-// Components
 import { WorkspacePanel } from '@/components/WorkspacePanel'
 import { SideNavPanel } from '@/components/SideNavPanel'
 import { ActionHubPanel } from '@/components/ActionHubPanel'
 import { MobileOverlay } from '@/components/MobileOverlay'
 import { MobileBottomNav } from '@/components/MobileBottomNav'
-
-// Hooks
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 
-// Types
 type MobilePanelType = 'sports' | 'betslip' | null
 
 export default function App() {
@@ -91,25 +84,25 @@ export default function App() {
           // Desktop Experience - Three Panel Layout with Smooth Resizing
           <div className="h-screen overflow-hidden">
             <div 
-              className={`panel-grid grid h-full ${
+              className={`grid h-full transition-all duration-300 ease-out ${
                 showLeftPanel && showRightPanel 
                   ? 'grid-cols-[320px,1fr,380px]' 
                   : showLeftPanel && !showRightPanel 
-                  ? 'grid-cols-[320px,1fr]' 
+                  ? 'grid-cols-[320px,1fr,0px]' 
                   : !showLeftPanel && showRightPanel 
-                  ? 'grid-cols-[1fr,380px]' 
-                  : 'grid-cols-1'
+                  ? 'grid-cols-[0px,1fr,380px]' 
+                  : 'grid-cols-[0px,1fr,0px]'
               }`}
             >
               {/* Left Panel - Sports Navigation */}
-              {showLeftPanel && (
-                <div className="border-r border-border bg-card panel-transition">
-                  <SideNavPanel />
-                </div>
-              )}
+              <div className={`border-r border-border bg-card overflow-hidden transition-all duration-300 ${
+                showLeftPanel ? 'opacity-100' : 'opacity-0'
+              }`}>
+                {showLeftPanel && <SideNavPanel />}
+              </div>
 
               {/* Center Panel - Main Workspace */}
-              <div className="flex flex-col min-w-0 panel-transition">
+              <div className="flex flex-col min-w-0 bg-background">
                 <WorkspacePanel
                   isMobile={false}
                   onToggleLeftPanel={toggleLeftPanel}
@@ -118,11 +111,11 @@ export default function App() {
               </div>
 
               {/* Right Panel - Action Hub */}
-              {showRightPanel && (
-                <div className="border-l border-border bg-card panel-transition">
-                  <ActionHubPanel />
-                </div>
-              )}
+              <div className={`border-l border-border bg-card overflow-hidden transition-all duration-300 ${
+                showRightPanel ? 'opacity-100' : 'opacity-0'
+              }`}>
+                {showRightPanel && <ActionHubPanel />}
+              </div>
             </div>
           </div>
         )}

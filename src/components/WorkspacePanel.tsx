@@ -1,9 +1,9 @@
-import { List, Receipt, SidebarSimple } from '@phosphor-icons/react'
+import { List, Receipt } from '@phosphor-icons/react'
+import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { GameLinesTable } from './GameLinesTa
-import { cn } from '@/lib/utils'
 import { GameLinesTable } from './GameLinesTable'
 import { PropBuilder } from './PropBuilder'
+import { useBetting } from '@/contexts/BettingContext'
 import { cn } from '@/lib/utils'
 
 interface WorkspacePanelProps {
@@ -14,91 +14,93 @@ interface WorkspacePanelProps {
 }
 
 export function WorkspacePanel({ 
-}: WorkspaceP
+  className,
+  isMobile = false,
+  onToggleLeftPanel,
+  onToggleRightPanel 
+}: WorkspacePanelProps) {
+  const { activeView, setActiveView, bets } = useBetting()
 
-    <div className={
-      <div className=
+  return (
+    <div className={cn("flex flex-col h-full bg-background", className)}>
+      {/* Header with Navigation Controls */}
+      <div className="flex items-center justify-between p-4 border-b bg-card">
+        {isMobile ? (
+          // Mobile Header
           <>
-              variant="ghost"
-
-          
-            </Button>
-            <h1 className="text-lg font-
             <Button
-              size="s
-            
-              <Rece
+              variant="ghost"
+              size="sm"
+              className="h-9 px-3 nav-button hover:bg-secondary/50"
+              onClick={onToggleLeftPanel}
+            >
+              <List className="w-4 h-4 mr-2" />
+              Sports
+            </Button>
+            <h1 className="text-lg font-semibold">NorthStar Sports</h1>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 px-3 nav-button hover:bg-secondary/50"
+              onClick={onToggleRightPanel}
+            >
+              <Receipt className="w-4 h-4 mr-2" />
+              Bet Slip
+              {bets.length > 0 && (
                 <Badge 
-                  class
+                  variant="default" 
+                  className="ml-2 h-5 px-1.5 bg-accent text-accent-foreground"
+                >
                   {bets.length}
+                </Badge>
               )}
+            </Button>
           </>
+        ) : (
+          // Desktop Header
           <>
-            <div clas
-            
-                className="h-9 px-3 nav-button hover:bg-secondary/50"
-            
-                Spo
-            </div>
-            <h1 classNa
-            <div className="flex items-center 
+            <div className="flex items-center gap-2">
+              <Button
                 variant="ghost"
-             
+                size="sm"
+                className="h-9 px-3 nav-button hover:bg-secondary/50"
+                onClick={onToggleLeftPanel}
               >
-                Bet Slip
-                  <Badg
-                    className="ml-2 h-5 
-                    {bets.length}
-                )
+                <List className="w-4 h-4" />
+              </Button>
+              <h1 className="text-lg font-semibold">Sports Center</h1>
             </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-9 px-3 nav-button hover:bg-secondary/50"
+                onClick={onToggleRightPanel}
+              >
+                <Receipt className="w-4 h-4 mr-2" />
+                Bet Slip
+                {bets.length > 0 && (
+                  <Badge 
+                    variant="default" 
+                    className="ml-2 h-5 px-1.5 bg-accent text-accent-foreground"
+                  >
+                    {bets.length}
+                  </Badge>
+                )}
+              </Button>
+            </div>
+          </>
         )}
-      
-      <div className=
-        {acti
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 min-h-0">
+        {activeView === 'games' ? (
+          <GameLinesTable />
+        ) : (
+          <PropBuilder />
+        )}
+      </div>
     </div>
+  )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
