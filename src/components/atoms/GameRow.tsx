@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useBettingUtils } from '@/hooks'
 import { useQuickBet } from '@/contexts/QuickBetContext'
+import { useBetting } from '@/contexts/BettingContext'
 import type { GameRowProps, Bet } from '@/types'
 
 function GameRowComponent({ 
@@ -19,6 +20,7 @@ function GameRowComponent({
 }: GameRowProps & React.HTMLAttributes<HTMLDivElement>) {
   const { formatOdds } = useBettingUtils()
   const { showQuickBet } = useQuickBet()
+  const { setActiveView } = useBetting()
 
   const handleBetClick = (event: React.MouseEvent, betType: Bet['betType'], teamName: string, odds: number, line?: number, isOver?: boolean) => {
     event.preventDefault()
@@ -44,6 +46,11 @@ function GameRowComponent({
     
     // Also call legacy handler for compatibility
     onBetClick(bet)
+  }
+
+  const handleMoreBetsClick = () => {
+    // Switch to Prop Builder view
+    setActiveView('props')
   }
 
   return (
@@ -132,10 +139,8 @@ function GameRowComponent({
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 px-2 text-xs text-muted-foreground overflow-safe"
-          onClick={() => {
-            // Future: Open prop builder or more betting options
-          }}
+          className="h-8 px-2 text-xs text-primary hover:text-primary-foreground hover:bg-primary overflow-safe"
+          onClick={handleMoreBetsClick}
         >
           +{Math.floor(Math.random() * 50) + 100}
         </Button>
