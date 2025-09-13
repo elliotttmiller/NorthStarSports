@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Toaster } from 'sonner'
-import { Toaster } from 'sonner'
 
+// Contexts
+import { BettingProvider } from './contexts/BettingContext'
 
-import { SideNavPanel } from './components/SideNavPanel'
-
-import { MobileBott
-import { SideNavPanel } from './components/SideNavPanel'
-import { WorkspacePanel } from './components/WorkspacePanel'
+// Components
 import { ActionHubPanel } from './components/ActionHubPanel'
-import { PanelToggle } from './components/PanelToggle'
 import { MobileBottomNav } from './components/MobileBottomNav'
 import { MobileOverlay } from './components/MobileOverlay'
+import { PanelToggle } from './components/PanelToggle'
 import { ResizeHandle } from './components/ResizeHandle'
+import { SideNavPanel } from './components/SideNavPanel'
+import { WorkspacePanel } from './components/WorkspacePanel'
 
 // Hooks
 import { useIsMobile } from './hooks/useIsMobile'
@@ -62,70 +62,73 @@ function App() {
     }
   }
 
-          
-              gridTem
+  return (
+    <BettingProvider>
+      <div className="min-h-screen bg-background text-foreground flex flex-col">
+        {!isMobile ? (
+          /* Desktop Layout - Three Panel Studio */
+          <div 
+            className="flex-1 grid transition-all duration-200 ease-in-out"
+            style={{
+              gridTemplateColumns: `${showLeftPanel ? `${leftPanelWidth}px` : '0px'} 1fr ${showRightPanel ? `${rightPanelWidth}px` : '0px'}`
+            }}
           >
-            <AnimatePresence m
-                <motio
-               
+            {/* Left Panel - Sports Library */}
+            <AnimatePresence mode="wait">
+              {showLeftPanel && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.2 }}
-                  st
+                  className="min-h-0 border-r border-border bg-card relative"
+                  style={{
+                    boxShadow: showLeftPanel ? '4px 0 8px -2px rgba(0, 0, 0, 0.1)' : 'none'
                   }}
-              
-           
-                    onResize={
-                    maxWidth={400}
-                </motion.div>
-            </AnimatePresen
-            {/* Center Panel - Workspace */}
-              {/* Panel Toggle Buttons */}
-                isOpen={showLeftPanel}
-                side="left"
-              />
-                isOpen={sh
-                side="right"
-              />
-              {/*
-            </div>
-            {/* Right Panel */}
-              {showRightPanel &&
-                  initial={{ opacity: 0, x: 20 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="min-h
-                    boxShadow: sho
                 >
-                  <ResizeHand
-                
-                    minWidth={
-
+                  <SideNavPanel />
+                  <ResizeHandle
+                    side="right"
+                    currentWidth={leftPanelWidth}
+                    onResize={setLeftPanelWidth}
+                    minWidth={250}
+                    maxWidth={400}
+                  />
+                </motion.div>
               )}
-          </div>
-          /* Mobile Layout */
-            {/* Panel Togg
-              <PanelToggle
-                onToggle={() => setActiveM
-              />
-                isOpen={activeMobilePanel === 'betslip
-                
+            </AnimatePresence>
+
+            {/* Center Panel - Workspace */}
+            <div className="min-h-0 relative flex flex-col">
+              {/* Panel Toggle Buttons */}
+              <div className="absolute top-4 left-4 right-4 flex justify-between z-20 pointer-events-none">
+                <div className="pointer-events-auto">
+                  <PanelToggle
+                    isOpen={showLeftPanel}
+                    onToggle={toggleLeftPanel}
+                    side="left"
+                  />
+                </div>
+                <div className="pointer-events-auto">
+                  <PanelToggle
+                    isOpen={showRightPanel}
+                    onToggle={toggleRightPanel}
+                    side="right"
+                  />
+                </div>
+              </div>
+
+              <WorkspacePanel />
             </div>
-            {/* Main Mobile Workspace *
 
-            <MobileOverlay
-              onClose={() => setActiveMobilePanel(null)
-              sl
-              
-
-              isOpen={activeMobi
-              titl
-
-            </MobileOverlay>
-            {/* Bottom Navigation */}
-              onNavClick={handleMo
-            />
-        )}
-        {/* Global Toast Notifications */}
-      </div>
-  )
+            {/* Right Panel - Action Hub */}
+            <AnimatePresence mode="wait">
+              {showRightPanel && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.2 }}
                   className="min-h-0 border-l border-border bg-card relative"
                   style={{
                     boxShadow: showRightPanel ? '-4px 0 8px -2px rgba(0, 0, 0, 0.1)' : 'none'
@@ -135,7 +138,7 @@ function App() {
                   <ResizeHandle
                     side="left"
                     currentWidth={rightPanelWidth}
-                    onWidthChange={setRightPanelWidth}
+                    onResize={setRightPanelWidth}
                     minWidth={300}
                     maxWidth={500}
                   />
@@ -167,7 +170,8 @@ function App() {
             <MobileOverlay
               isOpen={activeMobilePanel === 'nav'}
               onClose={() => setActiveMobilePanel(null)}
-              side="left"
+              title="Sports Navigation"
+              slideFrom="left"
             >
               <SideNavPanel />
             </MobileOverlay>
@@ -175,14 +179,16 @@ function App() {
             <MobileOverlay
               isOpen={activeMobilePanel === 'betslip'}
               onClose={() => setActiveMobilePanel(null)}
-              side="right"
+              title="Bet Slip"
+              slideFrom="right"
             >
               <ActionHubPanel />
             </MobileOverlay>
 
             {/* Bottom Navigation */}
             <MobileBottomNav
-              onNavigate={handleMobileNavigation}
+              onNavClick={handleMobileNavigation}
+              activePanel={activeMobilePanel || 'workspace'}
             />
           </div>
         )}
@@ -193,7 +199,5 @@ function App() {
     </BettingProvider>
   )
 }
-
-export default App}
 
 export default App
