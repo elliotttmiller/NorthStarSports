@@ -12,7 +12,13 @@ import type { Bet } from '@/types'
  * Responsive design utilities
  */
 export function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(false)
+  const [matches, setMatches] = useState(() => {
+    // Only check on client-side to avoid hydration issues
+    if (typeof window !== 'undefined') {
+      return window.matchMedia(query).matches
+    }
+    return false
+  })
 
   useEffect(() => {
     const media = window.matchMedia(query)

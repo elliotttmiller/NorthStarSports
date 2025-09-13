@@ -13,7 +13,7 @@
   If we ever want to remove these styles, we need to add an explicit border
   color utility to any element that depends on these defaults.
 */
-@layer base {
+/* Removed @layer to fix Tailwind v4 compatibility */
 
   *,
   ::after,
@@ -22,7 +22,6 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
-}
 
 /*
   ---break---
@@ -171,12 +170,14 @@
 /*
   ---break---
 */
-@layer base {
+/* Removed @layer and @apply to fix Tailwind v4 compatibility */
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--color-border);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
   }
-}
