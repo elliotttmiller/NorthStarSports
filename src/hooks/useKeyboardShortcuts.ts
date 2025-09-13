@@ -1,13 +1,19 @@
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 
+interface KeyboardShortcutsProps {
+  onToggleLeftPanel: () => void
+  onToggleRightPanel: () => void
+  showLeftPanel?: boolean
+  showRightPanel?: boolean
+}
+
 export function useKeyboardShortcuts({
   onToggleLeftPanel,
   onToggleRightPanel,
-}: {
-  onToggleLeftPanel: () => void
-  onToggleRightPanel: () => void
-}) {
+  showLeftPanel = false,
+  showRightPanel = false
+}: KeyboardShortcutsProps) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Only handle shortcuts when no input is focused
@@ -15,7 +21,8 @@ export function useKeyboardShortcuts({
       if (
         activeElement?.tagName === 'INPUT' ||
         activeElement?.tagName === 'TEXTAREA' ||
-        activeElement?.contentEditable === 'true'
+        activeElement?.contentEditable === 'true' ||
+        activeElement?.role === 'textbox'
       ) {
         return
       }
@@ -24,35 +31,59 @@ export function useKeyboardShortcuts({
       if ((event.metaKey || event.ctrlKey) && event.key === '[') {
         event.preventDefault()
         onToggleLeftPanel()
-        toast.success('Navigation panel toggled', {
-          duration: 1000,
+        toast.success(`Navigation panel ${showLeftPanel ? 'hidden' : 'shown'}`, {
+          duration: 1200,
           className: 'text-sm'
         })
+        return
       }
 
       // Cmd/Ctrl + ] for right panel toggle  
       if ((event.metaKey || event.ctrlKey) && event.key === ']') {
         event.preventDefault()
         onToggleRightPanel()
-        toast.success('Bet slip panel toggled', {
-          duration: 1000,
+        toast.success(`Bet slip panel ${showRightPanel ? 'hidden' : 'shown'}`, {
+          duration: 1200,
           className: 'text-sm'
         })
+        return
       }
 
-      // Escape key to hide all panels
-      if (event.key === 'Escape' && (event.metaKey || event.ctrlKey)) {
+      // Cmd/Ctrl + \ to hide all open panels or show both if both are closed
+      if ((event.metaKey || event.ctrlKey) && event.key === '\\') {
         event.preventDefault()
-        onToggleLeftPanel()
-        onToggleRightPanel()
-        toast.info('All panels hidden', {
-          duration: 1000,
-          className: 'text-sm'
-        })
+        
+        // If both panels are open, close both
+        if (showLeftPanel && showRightPanel) {
+          onToggleLeftPanel()
+          onToggleRightPanel()
+          toast.info('All panels hidden', {
+            duration: 1200,
+            className: 'text-sm'
+          })
+        }
+        // If both panels are closed, open both  
+        else if (!showLeftPanel && !showRightPanel) {
+          onToggleLeftPanel()
+          onToggleRightPanel()
+          toast.info('All panels shown', {
+            duration: 1200,
+            className: 'text-sm'
+          })
+        }
+        // If mixed state, close the open one(s)
+        else {
+          if (showLeftPanel) onToggleLeftPanel()
+          if (showRightPanel) onToggleRightPanel()
+          toast.info('Panels hidden', {
+            duration: 1200,
+            className: 'text-sm'
+          })
+        }
       }
     }
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [onToggleLeftPanel, onToggleRightPanel])
+  }, [onToggleLeftPanel, onToggleRightPanel, showLeftPanel, showRightPanel])
 }

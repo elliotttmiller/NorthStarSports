@@ -13,8 +13,14 @@ export function usePanelState() {
   const [leftPanelWidth, setLeftPanelWidth] = useKV<number>('left-panel-width', 300)
   const [rightPanelWidth, setRightPanelWidth] = useKV<number>('right-panel-width', 300)
 
-  const toggleLeftPanel = () => setShowLeftPanel(prev => !prev)
-  const toggleRightPanel = () => setShowRightPanel(prev => !prev)
+  // Use functional updates to avoid stale closure issues
+  const toggleLeftPanel = () => {
+    setShowLeftPanel((prev) => !prev)
+  }
+  
+  const toggleRightPanel = () => {
+    setShowRightPanel((prev) => !prev)
+  }
 
   return {
     showLeftPanel: showLeftPanel ?? true,

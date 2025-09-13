@@ -37,6 +37,8 @@ function App() {
   useKeyboardShortcuts({
     onToggleLeftPanel: isMobile ? () => {} : toggleLeftPanel,
     onToggleRightPanel: isMobile ? () => {} : toggleRightPanel,
+    showLeftPanel: isMobile ? false : showLeftPanel,
+    showRightPanel: isMobile ? false : showRightPanel
   })
 
   const handleMobileNavClick = (panel: string) => {
@@ -103,6 +105,7 @@ function App() {
                     <ResizeHandle
                       side="left"
                       onResize={setLeftPanelWidth}
+                      currentWidth={leftPanelWidth}
                       minWidth={250}
                       maxWidth={500}
                     />
@@ -174,6 +177,7 @@ function App() {
                     <ResizeHandle
                       side="right"
                       onResize={setRightPanelWidth}
+                      currentWidth={rightPanelWidth}
                       minWidth={250}
                       maxWidth={500}
                     />
