@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useBetting } from '@/contexts/BettingContext'
 import { cn } from '@/lib/utils'
-import { ActivePanel } from '@/hooks/usePanelState'
+
+type ActivePanel = 'home' | 'sports' | 'betslip' | 'profile'
 
 interface MobileBottomNavProps {
   className?: string
