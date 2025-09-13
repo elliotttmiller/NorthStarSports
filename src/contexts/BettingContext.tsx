@@ -60,8 +60,8 @@ const BettingContext = createContext<BettingContextType | null>(null)
 export function BettingProvider({ children }: { children: ReactNode }) {
   const [bets, setBets] = useKV<Bet[]>('betting-slip', [])
   const [favorites, setFavorites] = useKV<string[]>('favorites', [])
-  const [selectedSport, setSelectedSport] = useKV<string>('selected-sport', 'NFL')
-  const [selectedLeague, setSelectedLeague] = useKV<string>('selected-league', 'NFL')
+  const [selectedSport, setSelectedSport] = useKV<string>('selected-sport', 'Football')
+  const [selectedLeague, setSelectedLeague] = useKV<string>('selected-league', 'nfl')
   const [activeView, setActiveView] = useKV<'games' | 'props'>('active-view', 'games')
   const [betSlipMode, setBetSlipMode] = useKV<'straight' | 'parlay'>('betslip-mode', 'straight')
   const [rightPanelTab, setRightPanelTab] = useKV<'betslip' | 'mybets'>('right-panel-tab', 'betslip')
@@ -117,8 +117,8 @@ export function BettingProvider({ children }: { children: ReactNode }) {
         removeBet,
         updateBetStake,
         clearBets,
-        selectedSport: selectedSport || 'NFL',
-        selectedLeague: selectedLeague || 'NFL',
+        selectedSport: selectedSport || 'Football',
+        selectedLeague: selectedLeague || 'nfl',
         setSelectedSport,
         setSelectedLeague,
         activeView: activeView || 'games',

@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useBetting } from '@/contexts/BettingContext'
+import { useBetting, Bet } from '@/contexts/BettingContext'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
@@ -31,9 +31,9 @@ export function BetSlip() {
     return odds.toString()
   }
 
-  const formatLine = (bet: any) => {
+  const formatLine = (bet: Bet) => {
     if (bet.betType === 'spread') {
-      const sign = bet.line > 0 ? '+' : ''
+      const sign = bet.line && bet.line > 0 ? '+' : ''
       return `${sign}${bet.line}`
     }
     if (bet.betType === 'total') {
