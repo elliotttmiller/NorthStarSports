@@ -1,28 +1,28 @@
-import { Badge } from '@/
-import { List, Receipt } from '@phosphor-icon
-import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { List, Receipt } from '@phosphor-icons/react'
+import { Button } from '@/components/ui/button'
+import { GameLinesTable } from './GameLinesTable'
+import { PropBuilder } from './PropBuilder'
+import { useBetting } from '@/contexts/BettingContext'
+import { cn } from '@/lib/utils'
 
+interface WorkspacePanelProps {
   isMobile?: boolean
+  onToggleLeftPanel?: () => void
   onToggleRightPanel?: () => void
+  className?: string
+}
 
-export function WorkspacePanel(
-  onToggleLeftPanel,
-  className = ''
-  const { activeView, setActiveVi
-  return (
- 
-
-            <Button
+export function WorkspacePanel({
   isMobile = false,
   onToggleLeftPanel,
   onToggleRightPanel,
   className = ''
 }: WorkspacePanelProps) {
-  const { activeView, setActiveView, betSlip } = useBetting()
+  const { activeView, setActiveView, bets } = useBetting()
 
   return (
-    <div className={`flex flex-col h-full ${className}`}>
+    <div className={cn('flex flex-col h-full', className)}>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background">
         {isMobile ? (
@@ -30,80 +30,92 @@ export function WorkspacePanel(
             <Button
               variant="ghost"
               size="sm"
-                  {bets.length}
-              )}
-          </>
-          <>
-              <Button
-                size="sm"
-                onC
-                <List classNam
-              <h1 class
-
-              <Button
-             
-                className="nav-button"
-                Game Lines
-              <Button
-                size="sm"
-                classNam
-                
-            </div>
-            <
-             
+              onClick={onToggleLeftPanel}
+              className="nav-button"
+            >
+              <List className="h-5 w-5" />
+            </Button>
             
-              >
-              </Butto
+            <h1 className="font-semibold text-lg">NorthStar Sports</h1>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggleRightPanel}
+              className="nav-button relative"
+            >
+              <Receipt className="h-5 w-5" />
+              {bets.length > 0 && (
+                <Badge
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                >
+                  {bets.length}
+                </Badge>
+              )}
+            </Button>
           </>
-      </div>
-      {/* Main Content Area */}
-        {activeView === 'games' ? (
         ) : (
+          <>
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onToggleLeftPanel}
+                className="nav-button"
+              >
+                <List className="h-5 w-5" />
+              </Button>
+              <h1 className="font-semibold text-lg">Game Lines</h1>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Button
+                variant={activeView === 'games' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveView('games')}
+                className="nav-button"
+              >
+                Games
+              </Button>
+              <Button
+                variant={activeView === 'props' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveView('props')}
+                className="nav-button"
+              >
+                Prop Builder
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onToggleRightPanel}
+                className="nav-button relative ml-4"
+              >
+                <Receipt className="h-5 w-5" />
+                {bets.length > 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                  >
+                    {bets.length}
+                  </Badge>
+                )}
+              </Button>
+            </div>
+          </>
         )}
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 min-h-0 overflow-auto">
+        {activeView === 'games' ? (
+          <GameLinesTable />
+        ) : (
+          <PropBuilder />
+        )}
+      </div>
     </div>
+  )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
