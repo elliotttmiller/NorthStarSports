@@ -1,98 +1,100 @@
 import React from 'react'
-import { Button } from '@/components/u
+import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { 
   CaretLeft, 
   CaretRight,
   PushPin,
   PushPinSlash
+} from '@phosphor-icons/react'
+
 interface PanelToggleProps {
-
+  isOpen: boolean
+  onToggle: () => void
+  side: 'left' | 'right'
   className?: string
-  onTogglePin?: (
+  onTogglePin?: () => void
+  isPinned?: boolean
+}
 
+export function PanelToggle({ 
   isOpen, 
+  onToggle, 
   side, 
+  className = '',
+  onTogglePin,
   isPinned = false,
 }: PanelToggleProps) {
- 
-
-    <div className={`absolute 
-      <mot
-        whil
-        
-          size="s
-          className
-          }`}
+  const isLeft = side === 'left'
+  
+  return (
+    <div className={`absolute ${
+      isLeft ? 'left-4 top-4' : 'right-4 top-4'
+    } z-30 flex ${isLeft ? 'flex-row' : 'flex-row-reverse'} gap-2 ${className}`}>
+      
+      {/* Main Toggle Button */}
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="relative"
+      >
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onToggle}
+          className={`h-9 w-9 p-0 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-background/90 hover:border-border/70`}
+          title={`${isOpen ? 'Hide' : 'Show'} ${isLeft ? 'navigation' : 'bet slip'}`}
         >
+          <motion.div
             animate={{ 
+              rotate: isOpen ? (isLeft ? 0 : 180) : (isLeft ? 180 : 0),
               scale: [1, 1.2, 1]
+            }}
             transition={{ 
-
-          
+              rotate: { duration: 0.3, ease: [0.4, 0.0, 0.2, 1] },
+              scale: { duration: 0.4, times: [0, 0.6, 1] }
+            }}
+          >
+            {isLeft ? <CaretRight size={16} /> : <CaretLeft size={16} />}
           </motion.div>
+        </Button>
       </motion.div>
-      {/* Pin/Unp
-        <motion.div
-          animate={{ opacity: 1, y
-       
-          while
-          <Button
-            size="s
-            className={`h-7 
-                ? 'border-accent/50 text-accent hover:bg-accent/10' 
-            }`}
+
+      {/* Pin/Unpin Button - Only show when panel is open */}
+      <AnimatePresence>
+        {isOpen && onTogglePin && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ delay: 0.1 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-              animate={{ 
-         
-              transit
-              {isPinned
-          </Button>
-      )}
-  )
-
-
-
-
-
-
-
-
-
-
-
-
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ delay: 0.1 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onTogglePin}
-            className={`h-7 w-7 p-0 rounded-full bg-background/60 backdrop-blur-sm border transition-all duration-200 ${
-              isPinned 
-                ? 'border-accent/50 text-accent hover:bg-accent/10' 
-                : 'border-border/30 text-muted-foreground hover:bg-muted/60 hover:border-border/50'
-            }`}
-            title={isPinned ? 'Unpin panel' : 'Pin panel open'}
-          >
-            <motion.div
-              animate={{ 
-                rotate: isPinned ? 0 : 0,
-                scale: isPinned ? 1.1 : 1
-              }}
-              transition={{ duration: 0.2 }}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onTogglePin}
+              className={`h-7 w-7 p-0 rounded-full bg-background/60 backdrop-blur-sm border transition-all duration-200 ${
+                isPinned 
+                  ? 'border-accent/50 text-accent hover:bg-accent/10' 
+                  : 'border-border/30 text-muted-foreground hover:bg-muted/60 hover:border-border/50'
+              }`}
+              title={isPinned ? 'Unpin panel' : 'Pin panel open'}
             >
-              {isPinned ? <PushPin size={12} /> : <PushPinSlash size={12} />}
-            </motion.div>
-          </Button>
-        </motion.div>
-      )}
+              <motion.div
+                animate={{ 
+                  rotate: isPinned ? 0 : 0,
+                  scale: isPinned ? 1.1 : 1
+                }}
+                transition={{ duration: 0.2 }}
+              >
+                {isPinned ? <PushPin size={12} /> : <PushPinSlash size={12} />}
+              </motion.div>
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
