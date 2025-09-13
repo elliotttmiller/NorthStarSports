@@ -30,7 +30,7 @@ export function PanelToggle({
     : (isOpen ? CaretRight : CaretLeft)
 
   return (
-    <div className={`absolute top-4 ${side === 'left' ? 'right-2' : 'left-2'} z-10 flex flex-col gap-2 ${className}`}>
+    <div className={`absolute top-4 ${side === 'left' ? 'left-2' : 'right-2'} z-10 flex flex-col gap-2 ${className}`}>
       {/* Main toggle button */}
       <motion.div
         whileHover={{ scale: 1.05 }}
