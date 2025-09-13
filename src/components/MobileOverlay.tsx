@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
@@ -7,7 +8,7 @@ interface MobileOverlayProps {
   isOpen: boolean
   onClose: () => void
   title?: string
-  children: React.ReactNode
+  children: ReactNode
   className?: string
   side?: 'left' | 'right'
   slideFrom?: 'left' | 'right'

@@ -1,3 +1,5 @@
+import React from 'react'
+import { Badge } from '@/components/ui/badge'
 import { List, Receipt } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -7,50 +9,49 @@ import { useBetSlip, useWorkspace } from '@/hooks'
 import { cn } from '@/lib/utils'
 
 interface WorkspacePanelProps {
-  className?: string
   isMobile?: boolean
-  onToggleLeftPanel?: () => void
-  onToggleRightPanel?: () => void
+  onToggleLeftPanel: () => void
+  onToggleRightPanel: () => void
+  className?: string
 }
 
-export function WorkspacePanel({ 
-  className,
+export function WorkspacePanel({
   isMobile = false,
   onToggleLeftPanel,
-  onToggleRightPanel 
+  onToggleRightPanel,
+  className = ''
 }: WorkspacePanelProps) {
   const { activeView, setActiveView } = useWorkspace()
   const { bets } = useBetSlip()
 
   return (
-    <div className={cn("flex flex-col h-full bg-background", className)}>
-      {/* Header with Navigation Controls */}
-      <div className="flex items-center justify-between p-4 border-b bg-card">
+    <div className={cn('flex flex-col h-full', className)}>
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background">
         {isMobile ? (
-          // Mobile Header
           <>
             <Button
               variant="ghost"
               size="sm"
-              className="h-9 px-3 nav-button hover:bg-secondary/50"
               onClick={onToggleLeftPanel}
+              className="nav-button"
             >
-              <List className="w-4 h-4 mr-2" />
-              Sports
+              <List className="h-5 w-5" />
             </Button>
-            <h1 className="text-lg font-semibold">NorthStar Sports</h1>
+            
+            <h1 className="font-semibold text-lg">Game Lines</h1>
+            
             <Button
               variant="ghost"
               size="sm"
-              className="h-9 px-3 nav-button hover:bg-secondary/50"
               onClick={onToggleRightPanel}
+              className="nav-button relative"
             >
-              <Receipt className="w-4 h-4 mr-2" />
-              Bet Slip
+              <Receipt className="h-5 w-5" />
               {bets.length > 0 && (
-                <Badge 
-                  variant="default" 
-                  className="ml-2 h-5 px-1.5 bg-accent text-accent-foreground"
+                <Badge
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
                 >
                   {bets.length}
                 </Badge>
@@ -58,32 +59,48 @@ export function WorkspacePanel({
             </Button>
           </>
         ) : (
-          // Desktop Header
           <>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-9 px-3 nav-button hover:bg-secondary/50"
                 onClick={onToggleLeftPanel}
+                className="nav-button"
               >
-                <List className="w-4 h-4" />
+                <List className="h-5 w-5" />
               </Button>
-              <h1 className="text-lg font-semibold">Sports Center</h1>
+              <h1 className="font-semibold text-lg">Game Lines</h1>
             </div>
+            
             <div className="flex items-center gap-2">
+              <Button
+                variant={activeView === 'games' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveView('games')}
+                className="nav-button"
+              >
+                Games
+              </Button>
+              <Button
+                variant={activeView === 'props' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveView('props')}
+                className="nav-button"
+              >
+                Prop Builder
+              </Button>
+              
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-9 px-3 nav-button hover:bg-secondary/50"
                 onClick={onToggleRightPanel}
+                className="nav-button relative ml-4"
               >
-                <Receipt className="w-4 h-4 mr-2" />
-                Bet Slip
+                <Receipt className="h-5 w-5" />
                 {bets.length > 0 && (
-                  <Badge 
-                    variant="default" 
-                    className="ml-2 h-5 px-1.5 bg-accent text-accent-foreground"
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
                   >
                     {bets.length}
                   </Badge>
@@ -95,7 +112,7 @@ export function WorkspacePanel({
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 overflow-auto">
         {activeView === 'games' ? (
           <GameLinesTable />
         ) : (
