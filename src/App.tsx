@@ -1,11 +1,15 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { BettingProvider } from './contexts/BettingContext'
+import { HeaderNavbar } from './components/HeaderNavbar'
 import { SideNavPanel } from './components/SideNavPanel'
 import { WorkspacePanel } from './components/WorkspacePanel'
 import { ActionHubPanel } from './components/ActionHubPanel'
 import { MobileBottomNav } from './components/MobileBottomNav'
 import { MobileOverlay } from './components/MobileOverlay'
 import { useIsMobile } from './hooks/useIsMobile'
+import { usePanelState } from './hooks/usePanelState'
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { Toaster } from '@/components/ui/sonner'
 
 function App() {
@@ -13,6 +17,15 @@ function App() {
   const [activeMobilePanel, setActiveMobilePanel] = useState('workspace')
   const [showMobileNav, setShowMobileNav] = useState(false)
   const [showMobileBetSlip, setShowMobileBetSlip] = useState(false)
+  
+  // Desktop panel visibility state with persistence
+  const { showLeftPanel, showRightPanel, toggleLeftPanel, toggleRightPanel } = usePanelState()
+
+  // Keyboard shortcuts for panel toggling (desktop only)
+  useKeyboardShortcuts({
+    onToggleLeftPanel: isMobile ? () => {} : toggleLeftPanel,
+    onToggleRightPanel: isMobile ? () => {} : toggleRightPanel,
+  })
 
   const handleMobileNavClick = (panel: string) => {
     switch (panel) {
@@ -38,24 +51,76 @@ function App() {
   return (
     <BettingProvider>
       <div className="h-screen flex flex-col bg-background">
+        {/* Fixed Header - Desktop Only */}
+        {!isMobile && (
+          <HeaderNavbar
+            showLeftPanel={showLeftPanel}
+            showRightPanel={showRightPanel}
+            onToggleLeftPanel={toggleLeftPanel}
+            onToggleRightPanel={toggleRightPanel}
+          />
+        )}
+
         {/* Desktop Layout */}
         {!isMobile && (
-          <div className="flex-1 grid grid-cols-12 gap-0 min-h-0">
+          <motion.div 
+            className="flex-1 grid min-h-0 pt-14"
+            style={{
+              gridTemplateColumns: `${showLeftPanel ? '300px' : '0px'} 1fr ${showRightPanel ? '300px' : '0px'}`
+            }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+          >
             {/* Left Panel - Navigation */}
-            <div className="col-span-3 min-h-0">
-              <SideNavPanel className="h-full" />
+            <div className="min-h-0 overflow-hidden">
+              <AnimatePresence mode="wait">
+                {showLeftPanel && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.25, ease: 'easeInOut' }}
+                    className="h-full"
+                  >
+                    <SideNavPanel className="h-full" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Center Panel - Workspace */}
-            <div className="col-span-6 min-h-0">
+            <motion.div 
+              className={`min-h-0 border-x border-border ${
+                !showLeftPanel && !showRightPanel 
+                  ? 'shadow-lg ring-1 ring-accent/10' 
+                  : ''
+              }`}
+              animate={{
+                borderColor: !showLeftPanel && !showRightPanel 
+                  ? 'var(--accent)' 
+                  : 'var(--border)'
+              }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
               <WorkspacePanel className="h-full" />
-            </div>
+            </motion.div>
 
             {/* Right Panel - Action Hub */}
-            <div className="col-span-3 min-h-0">
-              <ActionHubPanel className="h-full" />
+            <div className="min-h-0 overflow-hidden">
+              <AnimatePresence mode="wait">
+                {showRightPanel && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.25, ease: 'easeInOut' }}
+                    className="h-full"
+                  >
+                    <ActionHubPanel className="h-full" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Mobile Layout */}

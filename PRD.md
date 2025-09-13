@@ -12,6 +12,20 @@ A professional, universally adaptive sports betting platform that transforms the
 
 ## Essential Features
 
+### Fixed Header Navbar (Desktop)
+- **Functionality**: Persistent top navigation with panel toggles, branding, and quick actions
+- **Purpose**: Provides consistent access to core controls and visual orientation
+- **Trigger**: Always visible on desktop; panel toggle buttons control side panel visibility
+- **Progression**: Toggle interaction → Smooth panel animation → Layout reflow → Focus state indication
+- **Success criteria**: Smooth 300ms animations with proper state persistence
+
+### Dynamic Panel System
+- **Functionality**: Collapsible left and right panels with smooth animations and state persistence
+- **Purpose**: Maximizes workspace flexibility and allows focus modes
+- **Trigger**: Header toggle buttons or keyboard shortcuts (⌘[ / ⌘])
+- **Progression**: Toggle → Animation → Layout adjustment → State save → Visual feedback
+- **Success criteria**: Buttery smooth transitions with proper visual hierarchy and keyboard accessibility
+
 ### Left Panel - Sports Library Navigation
 - **Functionality**: Hierarchical sports and league navigation with favorites system
 - **Purpose**: Quick access to all available betting markets organized by sport and league
