@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { Toaster } from 'sonner'
 import { Toaster } from 'sonner'
 
 // Context
 import { BettingProvider } from './contexts/BettingContext'
 
 // Components
-import { SideNavPanel } from './components/SideNavPanel'
-import { WorkspacePanel } from './components/WorkspacePanel'
-import { ActionHubPanel } from './components/ActionHubPanel'
-import { MobileBottomNav } from './components/MobileBottomNav'
+import { ActionHubPanel } from './components/ActionHubPa
 import { MobileOverlay } from './components/MobileOverlay'
-import { PanelToggle } from './components/PanelToggle'
 import { ResizeHandle } from './components/ResizeHandle'
+// Hooks
+import { usePanelState } from './hooks/usePanelState'
+
+  const isMobile = useIsMobile()
 
 // Hooks
 import { useIsMobile } from './hooks/useIsMobile'
@@ -30,28 +30,26 @@ function App() {
     toggleRightPanel,
     setLeftPanelWidth,
     setRightPanelWidth
-  } = usePanelState()
+    onToggleLeftPanel
 
-  // Mobile overlay states
-  const [showSportsOverlay, setShowSportsOverlay] = useState(false)
-  const [showBetSlipOverlay, setShowBetSlipOverlay] = useState(false)
-
-  // Mobile navigation state
-  const [activePanel, setActivePanel] = useState<'workspace' | 'betslip' | 'profile'>('workspace')
-
-  useKeyboardShortcuts({
-    onToggleLeftPanel: toggleLeftPanel,
-    onToggleRightPanel: toggleRightPanel,
-    showLeftPanel,
-    showRightPanel
   })
-
   const handleMobileNavClick = (section: string) => {
-    switch (section) {
       case 'home':
-        setActivePanel('workspace')
-        setShowSportsOverlay(false)
-        setShowBetSlipOverlay(false)
+
+        break
+        setShowSportsOverlay(true)
+
+        setShowBetSlipOv
+      case 'profile':
+        setShowSpo
+    
+
+  return (
+      <div className="
+          // Deskt
+            {/* Left Panel - Sports
+              {showLeftPanel && (
+                  initial={{ opacity
         break
       case 'nav':
         setShowSportsOverlay(true)
@@ -103,12 +101,12 @@ function App() {
               <div className="flex justify-between items-center p-2 border-b border-border bg-card">
                 <PanelToggle
                   isOpen={showLeftPanel}
-                  onToggle={toggleLeftPanel}
+                  onClick={toggleLeftPanel}
                   side="left"
                 />
                 <PanelToggle
                   isOpen={showRightPanel}
-                  onToggle={toggleRightPanel}
+                  onClick={toggleRightPanel}
                   side="right"
                 />
               </div>
@@ -116,90 +114,89 @@ function App() {
               <div className="flex-1 min-h-0">
                 <WorkspacePanel />
               </div>
-            </div>
+            {/* Ma
 
-            {/* Right Panel - Action Hub */}
-            <AnimatePresence mode="wait">
-              {showRightPanel && (
-                <motion.div
-                  initial={{ opacity: 0, x: rightPanelWidth }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: rightPanelWidth }}
-                  transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  className="flex-shrink-0 h-full border-l border-border bg-card"
-                  style={{ width: rightPanelWidth }}
-                >
-                  <ResizeHandle
-                    onResize={setRightPanelWidth}
-                    currentWidth={rightPanelWidth}
-                    minWidth={320}
-                    maxWidth={500}
-                    side="left"
-                  />
-                  <ActionHubPanel />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        ) : (
-          // Mobile focused experience
-          <div className="h-full flex flex-col">
-            {/* Main Content */}
-            <div className="flex-1 min-h-0">
-              {activePanel === 'workspace' && <WorkspacePanel />}
-              {activePanel === 'betslip' && (
-                <div className="h-full bg-card">
-                  <ActionHubPanel />
+                <div className="h-full bg-ca
                 </div>
-              )}
-              {activePanel === 'profile' && (
-                <div className="h-full flex items-center justify-center bg-card">
-                  <div className="text-center">
-                    <h2 className="text-xl font-semibold text-foreground mb-2">Profile</h2>
-                    <p className="text-muted-foreground">Profile features coming soon</p>
-                  </div>
+              {activePanel === 'pr
+                  <div clas
+                    <p className="text-muted-foreground">Profi
                 </div>
-              )}
             </div>
-
             {/* Mobile Sports Overlay */}
-            <MobileOverlay
               isOpen={showSportsOverlay}
-              onClose={() => setShowSportsOverlay(false)}
               title="Sports"
-              slideFrom="left"
             >
-              <SideNavPanel />
             </MobileOverlay>
-
             {/* Mobile Bet Slip Overlay */}
-            <MobileOverlay
               isOpen={showBetSlipOverlay}
-              onClose={() => setShowBetSlipOverlay(false)}
               title="Bet Slip"
-              slideFrom="right"
             >
-              <ActionHubPanel />
             </MobileOverlay>
-
-            {/* Mobile Bottom Navigation */}
-            <MobileBottomNav
-              onNavClick={handleMobileNavClick}
-              activePanel={activePanel}
+            {/* Mobi
+              onNavClick={handleMobi
             />
-          </div>
         )}
-
         <Toaster
-          position="top-right"
-          toastOptions={{
-            className: 'bg-card text-card-foreground border border-border',
-            duration: 3000,
-          }}
+          toastO
+            d
         />
-      </div>
     </BettingProvider>
-  )
 }
-
 export default App
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
