@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Toaster } from 'sonner'
 
 // Context
-import { BettingProvider } from './contexts/BetSlipContext'
+import { BettingProvider } from './contexts/BettingContext'
 
 // Components
 import { SideNavPanel } from './components/SideNavPanel'
@@ -109,12 +109,12 @@ function App() {
               <div className="flex justify-between items-center p-2 border-b border-border bg-card">
                 <PanelToggle
                   isOpen={showLeftPanel}
-                  onClick={toggleLeftPanel}
+                  onToggle={toggleLeftPanel}
                   side="left"
                 />
                 <PanelToggle
                   isOpen={showRightPanel}
-                  onClick={toggleRightPanel}
+                  onToggle={toggleRightPanel}
                   side="right"
                 />
               </div>
@@ -142,66 +142,57 @@ function App() {
                     maxWidth={500}
                     side="left"
                   />
+                  <ActionHubPanel />
                 </motion.div>
-            </AnimatePresence
+              )}
+            </AnimatePresence>
+          </div>
         ) : (
           <>
-            <div
-             
-                </div>
-            
-                  <p className="text-
-              )}
+            {/* Mobile Layout */}
+            <div className="flex-1 min-h-0">
+              <WorkspacePanel />
+            </div>
 
+            {/* Mobile Sports Overlay */}
             <MobileOverlay
-              onClose={handleSportsO
+              isOpen={showSportsOverlay}
+              onClose={handleSportsOverlayClose}
+              title="Sports"
             >
-            </Mo
+              <SideNavPanel />
+            </MobileOverlay>
+
             {/* Mobile Bet Slip Overlay */}
+            <MobileOverlay
               isOpen={showBetSlipOverlay}
+              onClose={handleBetSlipOverlayClose}
               title="Bet Slip"
-              <ActionH
+            >
+              <ActionHubPanel />
+            </MobileOverlay>
 
-            <Mobil
-
+            {/* Mobile Bottom Navigation */}
+            <MobileBottomNav
+              activePanel={activePanel}
+              onNavClick={handleMobileNavClick}
+            />
           </>
+        )}
 
+        <Toaster
+          position="top-right"
           toastOptions={{
             style: {
-              color: 'var(--
-            }
+              background: 'var(--card)',
+              color: 'var(--foreground)',
+              border: '1px solid var(--border)',
+            },
+          }}
         />
+      </div>
     </BettingProvider>
+  )
+}
 
 export default App
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
