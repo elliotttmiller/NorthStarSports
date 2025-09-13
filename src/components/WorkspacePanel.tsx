@@ -1,11 +1,11 @@
 import React from 'react'
+import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { GameLinesTable } from './GameLinesTa
-import { useBetting } from '@/contexts/BettingContext
-
-  className?: string
-  onToggleLeftPanel?: () => void
-}
+import { List, Receipt } from '@phosphor-icons/react'
+import { GameLinesTable } from './GameLinesTable'
+import { PropBuilder } from './PropBuilder'
+import { useBetting } from '@/contexts/BettingContext'
+import { cn } from '@/lib/utils'
 
 interface WorkspacePanelProps {
   className?: string
@@ -34,42 +34,37 @@ export function WorkspacePanel({
               size="sm"
               className="h-9 px-3 nav-button hover:bg-secondary/50"
               onClick={onToggleLeftPanel}
-             
+            >
+              <List className="w-4 h-4" />
+            </Button>
+            
+            <h1 className="text-lg font-semibold">Sports Center</h1>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 px-3 nav-button hover:bg-secondary/50 relative"
               onClick={onToggleRightPanel}
-              <Recei
-              {bets.l
-            
-                >
-            
-            </Butto
-        ) : (
-          <>
-              <Button
-                size="sm"
-             
-                <List className="w-4 h-4" />
-              <h1 clas
-
-              <Button
-                size="sm"
-                className="nav-button"
-                G
-              <Button
-                size="sm
-                
-                Prop 
-            <
-            <
-                variant="gh
-            
-              >
-              </Butto
+            >
+              <Receipt className="w-4 h-4" />
+              {bets.length > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
+                  {bets.length}
+                </Badge>
+              )}
+            </Button>
           </>
-      </div>
-      {/* Main Content Area */}
-        {activeView === 'games' ? (
         ) : (
-        )}
+          // Desktop Header
+          <>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-9 px-3 nav-button hover:bg-secondary/50"
+                onClick={onToggleLeftPanel}
+              >
+                <List className="w-4 h-4" />
               </Button>
               <h1 className="text-lg font-semibold">Sports Center</h1>
             </div>
@@ -115,9 +110,6 @@ export function WorkspacePanel({
           <PropBuilder />
         )}
       </div>
-    </div>
-  )
-}      </div>
     </div>
   )
 }
