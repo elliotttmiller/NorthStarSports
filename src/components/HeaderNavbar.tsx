@@ -3,12 +3,9 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { 
-  List, 
   Receipt, 
-  User, 
   Star,
-  Sidebar,
-  X
+  Sidebar
 } from '@phosphor-icons/react'
 import { useBetting } from '@/contexts/BettingContext'
 
@@ -113,37 +110,7 @@ export function HeaderNavbar({
           </div>
         </div>
 
-        {/* Center Section - Quick Actions & Bet Counter */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              <List size={16} className="mr-2" />
-              Sports
-            </Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              Live
-            </Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              Trending
-            </Button>
-          </div>
-
-          {/* Bet Counter Display */}
-          {totalBets > 0 && (
-            <motion.div 
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="flex items-center gap-2 px-3 py-1 bg-muted/50 rounded-full"
-            >
-              <Receipt size={14} className="text-muted-foreground" />
-              <span className="text-sm font-medium">
-                {totalBets} bet{totalBets !== 1 ? 's' : ''} active
-              </span>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Right Section - Bet Slip Toggle & User */}
+        {/* Right Section - Bet Slip Toggle */}
         <div className="flex items-center gap-3">
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -246,12 +213,6 @@ export function HeaderNavbar({
               )}
             </Button>
           </motion.div>
-
-          <div className="h-6 w-px bg-border" />
-
-          <Button variant="ghost" size="sm" className="p-2 hover:bg-muted transition-colors">
-            <User size={18} />
-          </Button>
         </div>
       </div>
     </header>
