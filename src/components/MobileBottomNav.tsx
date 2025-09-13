@@ -7,12 +7,21 @@ import { ActivePanel } from '@/hooks/usePanelState'
 
 interface MobileBottomNavProps {
   className?: string
-  onNavClick: (panel: 'home' | 'sports' | 'betslip' | 'profile') => void
+  onNavigate?: (panel: 'home' | 'sports' | 'betslip' | 'profile') => void
+  onNavClick?: (panel: 'home' | 'sports' | 'betslip' | 'profile') => void
   activePanel: ActivePanel
 }
 
-export function MobileBottomNav({ className, onNavClick, activePanel }: MobileBottomNavProps) {
+export function MobileBottomNav({ className, onNavClick, onNavigate, activePanel }: MobileBottomNavProps) {
   const { bets } = useBetting()
+  
+  const handleNavClick = (panel: 'home' | 'sports' | 'betslip' | 'profile') => {
+    if (onNavigate) {
+      onNavigate(panel)
+    } else if (onNavClick) {
+      onNavClick(panel)
+    }
+  }
 
   return (
     <div className={cn(
@@ -23,7 +32,7 @@ export function MobileBottomNav({ className, onNavClick, activePanel }: MobileBo
       <Button
         variant={activePanel === 'home' ? 'default' : 'ghost'}
         className="rounded-none h-16 flex-col gap-1"
-        onClick={() => onNavClick('home')}
+        onClick={() => handleNavClick('home')}
       >
         <ChartBar className="w-5 h-5" />
         <span className="text-xs">Home</span>
@@ -32,7 +41,7 @@ export function MobileBottomNav({ className, onNavClick, activePanel }: MobileBo
       <Button
         variant={activePanel === 'sports' ? 'default' : 'ghost'}
         className="rounded-none h-16 flex-col gap-1"
-        onClick={() => onNavClick('sports')}
+        onClick={() => handleNavClick('sports')}
       >
         <List className="w-5 h-5" />
         <span className="text-xs">Sports</span>
@@ -41,7 +50,7 @@ export function MobileBottomNav({ className, onNavClick, activePanel }: MobileBo
       <Button
         variant={activePanel === 'betslip' ? 'default' : 'ghost'}
         className="rounded-none h-16 flex-col gap-1 relative"
-        onClick={() => onNavClick('betslip')}
+        onClick={() => handleNavClick('betslip')}
       >
         <Receipt className="w-5 h-5" />
         <span className="text-xs">Bet Slip</span>
@@ -58,7 +67,7 @@ export function MobileBottomNav({ className, onNavClick, activePanel }: MobileBo
       <Button
         variant={activePanel === 'profile' ? 'default' : 'ghost'}
         className="rounded-none h-16 flex-col gap-1"
-        onClick={() => onNavClick('profile')}
+        onClick={() => handleNavClick('profile')}
       >
         <User className="w-5 h-5" />
         <span className="text-xs">Profile</span>

@@ -6,23 +6,26 @@ import { cn } from '@/lib/utils'
 interface MobileOverlayProps {
   isOpen: boolean
   onClose: () => void
-  title: string
+  title?: string
   children: React.ReactNode
   className?: string
+  side?: 'left' | 'right'
   slideFrom?: 'left' | 'right'
 }
 
 export function MobileOverlay({ 
   isOpen, 
   onClose, 
-  title, 
+  title = '', 
   children, 
   className,
-  slideFrom = 'left'
+  side = 'left',
+  slideFrom
 }: MobileOverlayProps) {
-  const slideInitial = slideFrom === 'left' ? { x: '-100%' } : { x: '100%' }
-  const slideExit = slideFrom === 'left' ? { x: '-100%' } : { x: '100%' }
-  const positionClass = slideFrom === 'left' ? 'left-0' : 'right-0'
+  const direction = slideFrom || side
+  const slideInitial = direction === 'left' ? { x: '-100%' } : { x: '100%' }
+  const slideExit = direction === 'left' ? { x: '-100%' } : { x: '100%' }
+  const positionClass = direction === 'left' ? 'left-0' : 'right-0'
 
   return (
     <AnimatePresence>
@@ -50,17 +53,19 @@ export function MobileOverlay({
             )}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-lg font-semibold">{title}</h2>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={onClose}
-              >
-                <X className="w-5 h-5" />
-              </Button>
-            </div>
+            {title && (
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-lg font-semibold">{title}</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={onClose}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            )}
             
             {/* Content */}
             <div className="flex-1 overflow-hidden">
