@@ -1,55 +1,55 @@
 import React, { useState } from 'react'
 import { Toaster } from 'sonner'
 
-// Context Providers
-import { BettingProvider } from '@/contexts/BettingContext'
-
 // Components
-import { SideNavPanel } from '@/components/SideNavPanel'
-import { WorkspacePanel } from '@/components/WorkspacePanel'
-import { ActionHubPanel } from '@/components/ActionHubPanel'
-import { MobileBottomNav } from '@/components/MobileBottomNav'
-import { MobileOverlay } from '@/components/MobileOverlay'
+import { WorkspacePanel } from '@/components/WorkspacePanel
 
-// Hooks
+
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-
 // Types
-type MobilePanel = 'sports' | 'betslip' | null
 
-export default function App() {
   const isMobile = useMediaQuery('(max-width: 1023px)')
-  
   // Mobile overlay states
-  const [activeMobilePanel, setActiveMobilePanel] = useState<MobilePanel>(null)
-  
-  // Desktop panel visibility
-  const [showLeftPanel, setShowLeftPanel] = useState(true)
-  const [showRightPanel, setShowRightPanel] = useState(true)
 
-  const handleMobileNavigation = (panel: 'home' | 'sports' | 'betslip') => {
-    switch (panel) {
-      case 'sports':
-        setActiveMobilePanel('sports')
-        break
+  const 
+
+
+        
       case 'betslip':
-        setActiveMobilePanel('betslip')
-        break
-      case 'home':
-        setActiveMobilePanel(null)
-        break
+
+        setActiveMobilePanel(nu
     }
-  }
 
-  const closeMobileOverlay = () => {
-    setActiveMobilePanel(null)
-  }
+    setActiveMobilePanel(n
 
-  return (
-    <BettingProvider>
-      <div className="min-h-screen bg-background">
+  
         {isMobile ? (
-          <>
+            {/* Mobile Experience */}
+              {/* Main Content Area */}
+
+                  onToggleLeftPanel={() => setActiveMobilePanel('sports')}
+                />
+
+              <MobileOverlay
+             
+              >
+              </MobileOverlay>
+             
+                is
+                side="right"
+             
+
+   
+
+            </div>
+        ) : (
+   
+
+          
+                </div
+
+              <div cl
+            
             {/* Mobile Experience */}
             <div className="flex flex-col h-screen">
               {/* Main Content Area */}
@@ -59,7 +59,7 @@ export default function App() {
                   onToggleLeftPanel={() => setActiveMobilePanel('sports')}
                   onToggleRightPanel={() => setActiveMobilePanel('betslip')}
                 />
-              </div>
+            </div>
 
               {/* Mobile Sports Overlay */}
               <MobileOverlay
@@ -94,7 +94,7 @@ export default function App() {
               {showLeftPanel && (
                 <div className="border-r border-border bg-card">
                   <SideNavPanel />
-                </div>
+
               )}
 
               {/* Center Panel - Main Workspace */}
@@ -112,13 +112,13 @@ export default function App() {
                   <ActionHubPanel />
                 </div>
               )}
-            </div>
-          </>
-        )}
 
-        {/* Global Toast Notifications */}
+          </>
+
+
+
         <Toaster position="top-right" />
-      </div>
+
     </BettingProvider>
-  )
+
 }
