@@ -1,7 +1,13 @@
 import { ReactNode } from 'react'
 
 // Global type definitions for the NorthStarSports Wagering Studio
+/// <reference types="vite/client" />
+
 export {}
+
+// Vite environment variables
+declare const GITHUB_RUNTIME_PERMANENT_NAME: string
+declare const BASE_KV_SERVICE_URL: string
 
 declare global {
   interface Window {

@@ -1,4 +1,4 @@
-import { League, Game } from '@/contexts/BettingContext'
+import { League, Game } from '@/types'
 
 export const sampleGames: Game[] = [
   {
