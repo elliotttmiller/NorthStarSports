@@ -1,117 +1,163 @@
 # NorthStarSports Wagering Studio - Product Requirements Document
 
 ## Core Purpose & Success
-- **Mission Statement**: To create a universally adaptive, professional sports betting interface that combines modern UI/UX design with comprehensive functionality across all devices.
-- **Success Indicators**: Seamless responsive design, zero TypeScript errors, professional polish, and complete feature parity across desktop and mobile experiences.
-- **Experience Qualities**: Professional, Intuitive, Responsive
+
+**Mission Statement**: Create a professional, state-of-the-art sports betting studio that provides a complete wagering experience with full parity between desktop and mobile interfaces.
+
+**Success Indicators**: 
+- Seamless experience across all device types
+- Professional data-dense layouts without overwhelming the user
+- Complete betting workflow from selection to slip management
+- Real-time synchronization across all panels and views
+
+**Experience Qualities**: Professional, Intuitive, Responsive
 
 ## Project Classification & Approach
-- **Complexity Level**: Complex Application (advanced functionality, persistent state management, multi-panel layout)
-- **Primary User Activity**: Creating and Managing (building bet slips, managing wagers, navigating sports data)
+
+**Complexity Level**: Complex Application (advanced functionality, state management, responsive design)
+
+**Primary User Activity**: Interacting - Users actively engage with betting lines, build betting slips, and manage their wagering experience
 
 ## Thought Process for Feature Selection
-- **Core Problem Analysis**: Modern sports betting requires sophisticated interface that adapts to any screen size while maintaining professional appearance and full functionality
-- **User Context**: Users need quick access to sports navigation, detailed game lines, and persistent bet slip management
-- **Critical Path**: Sports Selection → Game Lines Review → Bet Building → Wager Management
-- **Key Moments**: Panel toggling, bet addition, responsive layout transitions
+
+**Core Problem Analysis**: Sports bettors need comprehensive access to betting lines with the ability to build complex wagers while maintaining awareness of their betting slip status.
+
+**User Context**: Users will access this application during active betting sessions, requiring rapid access to odds, quick bet building, and clear bet slip management.
+
+**Critical Path**: Navigation → Sport/League Selection → Game Selection → Bet Building → Bet Slip Management → Bet Placement
+
+**Key Moments**: 
+1. First selection of a sport/league (navigation clarity)
+2. Adding first bet to slip (feedback confirmation)
+3. Managing multiple bets in slip (organization clarity)
 
 ## Essential Features
 
-### Desktop Three-Panel Layout
-- **Left Panel**: Hierarchical sports navigation with favorites system
-- **Center Panel**: Dynamic workspace showing game lines or prop builder
-- **Right Panel**: Persistent action hub with bet slip and wager history
-- **Panel Management**: Smooth toggle animations, resize handles, keyboard shortcuts
+### Adaptive Layout System
+**Functionality**: Responsive three-panel desktop layout that transforms to focused mobile experience
+**Purpose**: Optimal user experience regardless of device
+**Success Criteria**: Seamless transition between layouts without loss of functionality
 
-### Mobile Focused Experience
-- **Bottom Navigation**: Four-tab navigation system
-- **Overlay Panels**: Slide-in navigation and bet slip panels
-- **Responsive Transitions**: Seamless desktop-to-mobile layout adaptation
+### Sports Navigation Library
+**Functionality**: Hierarchical navigation with favorites system
+**Purpose**: Quick access to preferred leagues and comprehensive sports coverage
+**Success Criteria**: One-click access to favorites, clear sport categorization
 
-### State Management
-- **Persistent Storage**: User preferences, favorites, panel states using useKV
-- **Real-time Synchronization**: All panels update automatically when data changes
-- **Cross-device Consistency**: State maintained across sessions
+### Game Lines Display
+**Functionality**: Data-dense table displaying spread, total, and moneyline odds
+**Purpose**: Comprehensive odds comparison and selection interface
+**Success Criteria**: Clear odds display, instant bet selection feedback
+
+### Advanced Bet Slip Management
+**Functionality**: Multi-mode betting (straight, parlay) with stake management
+**Purpose**: Complete wagering workflow management
+**Success Criteria**: Clear bet organization, easy stake adjustment, bet removal
+
+### State Synchronization
+**Functionality**: Real-time updates across all panels and views
+**Purpose**: Maintain consistency throughout the application
+**Success Criteria**: Instant updates when bets are added/removed from any view
 
 ## Design Direction
 
 ### Visual Tone & Identity
-- **Emotional Response**: Professional confidence and trust
-- **Design Personality**: Clean, modern, elegant - inspired by premium financial applications
-- **Visual Metaphors**: Trading floor aesthetics for sports betting
-- **Simplicity Spectrum**: Minimal interface with rich functionality
+**Emotional Response**: Professional confidence and trust
+**Design Personality**: Clean, sophisticated, data-focused
+**Visual Metaphors**: Financial trading platforms, professional dashboards
+**Simplicity Spectrum**: Minimal interface with rich data density
 
 ### Color Strategy
-- **Color Scheme Type**: Monochromatic (variations of slate/gray)
-- **Primary Color**: Deep charcoal (oklch(0.205 0 0)) - conveys professionalism and authority
-- **Secondary Colors**: Light grays for backgrounds and cards
-- **Accent Color**: Warm amber (oklch(0.646 0.222 41.116)) for success states and highlights
-- **Color Psychology**: Gray/slate conveys stability and professionalism, amber provides warmth for positive interactions
-- **Color Accessibility**: WCAG AA compliant contrast ratios throughout
-- **Foreground/Background Pairings**:
-  - Background (pure white) + Foreground (deep charcoal): 11.2:1 ratio
-  - Card (pure white) + Card-foreground (deep charcoal): 11.2:1 ratio
-  - Primary (deep charcoal) + Primary-foreground (off-white): 9.8:1 ratio
-  - Secondary (light gray) + Secondary-foreground (deep charcoal): 8.7:1 ratio
-  - Accent (warm amber) + Accent-foreground (white): 4.8:1 ratio
-  - Muted (very light gray) + Muted-foreground (medium gray): 5.2:1 ratio
+**Color Scheme Type**: Monochromatic Slate system
+**Primary Colors**: 
+- Background: Pure white (oklch(1 0 0))
+- Foreground: Deep charcoal (oklch(0.205 0 0))
+- Card: Pure white (oklch(1 0 0))
+- Primary: Deep charcoal (oklch(0.205 0 0))
+- Secondary: Light gray (oklch(0.97 0 0))
+- Accent: Warm amber for success (oklch(0.646 0.222 41.116))
+- Destructive: Error red (oklch(0.577 0.245 27.325))
+
+**Supporting Colors**:
+- Muted: Very light gray (oklch(0.96 0 0))
+- Border: Light gray borders (oklch(0.922 0 0))
+- Ring: Focus rings (oklch(0.708 0 0))
+
+**Color Accessibility**: All color pairings meet WCAG AA compliance with 4.5:1 contrast ratios
 
 ### Typography System
-- **Font Pairing Strategy**: Single font family (Inter) with varied weights for hierarchy
-- **Typographic Hierarchy**: Clear distinction between headings (semibold), body text (regular), and captions (light)
-- **Font Personality**: Modern, clean, highly legible - professional without being sterile
-- **Readability Focus**: Optimized line height (1.5x), comfortable character spacing
-- **Typography Consistency**: Consistent font sizing scale and spacing relationships
-- **Which fonts**: Inter - chosen for excellent readability at all sizes and weights
-- **Legibility Check**: Inter provides exceptional clarity for data-dense interfaces like odds tables
+**Font Pairing Strategy**: Single font family for consistency
+**Primary Font**: Inter - clean, professional, excellent readability
+**Typographic Hierarchy**: Clear distinction between headers, body text, and data
+**Typography Consistency**: Consistent sizing and spacing throughout
 
 ### Visual Hierarchy & Layout
-- **Attention Direction**: Left-to-right flow: Navigation → Content → Actions
-- **White Space Philosophy**: Generous padding and margins to create breathing room and focus
-- **Grid System**: CSS Grid for main layout, Flexbox for component-level organization
-- **Responsive Approach**: Adaptive layouts that transform meaningfully across breakpoints
-- **Content Density**: High information density balanced with visual clarity through proper spacing
+**Attention Direction**: Left-to-right flow (Navigation → Content → Actions)
+**Grid System**: CSS Grid for main layout, Flexbox for components
+**Responsive Approach**: Mobile-first with enhanced desktop experience
+**Content Density**: High data density with clear organization
 
 ### Animations
-- **Purposeful Meaning**: Smooth panel transitions communicate state changes and maintain spatial relationships
-- **Hierarchy of Movement**: Primary: panel toggling, Secondary: button interactions, Tertiary: subtle micro-interactions
-- **Contextual Appropriateness**: Professional, subtle animations that enhance rather than distract
+**Purposeful Meaning**: Smooth panel transitions reinforce spatial relationships
+**Hierarchy of Movement**: Panel toggles > data updates > micro-interactions
+**Contextual Appropriateness**: Subtle, professional animations that enhance rather than distract
 
 ### UI Elements & Component Selection
-- **Component Usage**: Shadcn v4 components for consistency and accessibility
-- **Component Customization**: Tailwind utilities for precise styling within design system constraints
-- **Component States**: Clear hover, active, focused, and disabled states for all interactive elements
-- **Icon Selection**: Phosphor icons for consistency and comprehensive coverage
-- **Component Hierarchy**: 
-  - Primary: Panel toggles, place bet buttons
-  - Secondary: Navigation items, odds buttons  
-  - Tertiary: Utility buttons and micro-interactions
-- **Spacing System**: Consistent use of Tailwind's spacing scale (4, 8, 12, 16, 24px base units)
-- **Mobile Adaptation**: Components stack vertically, increase touch targets to 44px minimum
+
+**Core Components Used**:
+- **Panels**: Cards with borders for clear section definition
+- **Navigation**: Collapsible accordions for hierarchical browsing
+- **Data Display**: Tables with monospace fonts for odds alignment
+- **Actions**: Buttons with clear primary/secondary hierarchy
+- **Overlays**: Modal-style mobile panels for focused interactions
+
+**Component States**: All interactive elements have hover, active, focus, and disabled states
+**Mobile Adaptation**: Panels transform to full-screen overlays on mobile
 
 ### Visual Consistency Framework
-- **Design System Approach**: Component-based with consistent props and styling patterns
-- **Style Guide Elements**: Color variables, spacing scale, typography scale, component states
-- **Visual Rhythm**: Consistent padding, margins, and component sizing create predictable patterns
-- **Brand Alignment**: Professional aesthetic aligns with high-end financial/trading applications
+**Design System Approach**: Component-based with consistent spacing and typography
+**Style Guide Elements**: Monochromatic color palette, consistent border radius (0.375rem)
+**Visual Rhythm**: 4px base unit for spacing consistency
 
 ### Accessibility & Readability
-- **Contrast Goal**: WCAG AA compliance achieved with all color combinations exceeding 4.5:1 ratio for normal text, 3:1 for large text
-- **Focus Management**: Clear focus indicators and logical tab order
-- **Screen Reader Support**: Proper ARIA labels and semantic HTML structure
-- **Keyboard Navigation**: Full keyboard accessibility with shortcuts for power users
+**Contrast Goal**: WCAG AA compliance achieved across all color combinations
+**Keyboard Navigation**: Full keyboard support with visible focus states
+**Screen Reader Support**: Proper ARIA labels and semantic HTML structure
+
+## Technical Implementation
+
+### Architecture Pattern
+- **Desktop**: Three-panel CSS Grid layout (Navigation | Content | Actions)
+- **Mobile**: Single-panel focus with overlay navigation
+- **State Management**: React Context for betting slip and navigation state
+- **Data Persistence**: useKV hooks for user preferences and bet slip state
+
+### Key Technologies
+- **Animations**: Framer Motion for smooth transitions
+- **Components**: Shadcn/ui component library
+- **Icons**: Phosphor Icons for consistent iconography
+- **Responsive Design**: Tailwind CSS with custom breakpoints
+
+### Performance Considerations
+- **Lazy Loading**: Components load as needed
+- **Optimistic Updates**: Immediate UI feedback for user actions
+- **Efficient Re-renders**: Optimized React context usage
+
+## Edge Cases & Problem Scenarios
+
+**Empty States**: Clear messaging when no bets are selected or leagues have no games
+**Loading States**: Skeleton loaders during data fetching
+**Error Handling**: Graceful fallbacks with clear error messaging
+**Mobile Interactions**: Touch-friendly targets and gestures
+**Rapid Interactions**: Debounced actions to prevent duplicate selections
 
 ## Implementation Considerations
-- **Scalability Needs**: Modular component architecture allows for easy feature additions
-- **Testing Focus**: Responsive behavior, state persistence, cross-browser compatibility
-- **Critical Questions**: How well does the layout adapt to ultra-wide and ultra-narrow viewports?
 
-## Technical Architecture
-- **Framework**: React with TypeScript for type safety
-- **State Management**: React Context with useKV hooks for persistence
-- **Styling**: Tailwind CSS with custom design system variables
-- **Animations**: Framer Motion for smooth, professional transitions
-- **Build System**: Vite for fast development and optimized builds
+**Scalability**: Component-based architecture supports easy feature additions
+**Testing Focus**: Panel transitions, bet selection accuracy, state synchronization
+**Critical Questions**: Performance with large numbers of games/bets
 
 ## Reflection
-This approach creates a truly professional sports betting interface that rivals premium trading platforms in terms of design quality and user experience. The monochromatic color scheme with subtle amber accents provides a sophisticated, trustworthy appearance while the adaptive layout ensures functionality across all devices. The emphasis on persistent state and smooth animations creates a premium feel that distinguishes this application from typical sports betting interfaces.
+
+This approach uniquely combines the data density of professional trading platforms with the usability of modern mobile applications. The adaptive layout system ensures users get the optimal experience for their device while maintaining complete feature parity. The monochromatic design system creates a professional aesthetic that builds user trust while remaining visually appealing and modern.
+
+The centralized state management ensures the application feels like a cohesive experience rather than separate components, which is critical for betting applications where users need confidence in their selections and bet slip accuracy.

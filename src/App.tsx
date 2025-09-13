@@ -1,39 +1,38 @@
-import { useState } from 'react'
-import { Toaster } from 'sonner'
+import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Toaster } from 'sonner'
 
-import { WorkspacePa
-import { PanelToggle } from './components/PanelToggle'
-import { MobileOverlay } from './components/MobileOverlay'
+// Context providers
+import { BettingProvider } from './contexts/BettingContext'
 
+// Panel components
+import { SideNavPanel } from './components/SideNavPanel'
+import { WorkspacePanel } from './components/WorkspacePanel'
+import { ActionHubPanel } from './components/ActionHubPanel'
 import { PanelToggle } from './components/PanelToggle'
 import { MobileBottomNav } from './components/MobileBottomNav'
 import { MobileOverlay } from './components/MobileOverlay'
 import { ResizeHandle } from './components/ResizeHandle'
 
-// Hook imports
+// Hooks
 import { useIsMobile } from './hooks/useIsMobile'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
+import { usePanelState } from './hooks/usePanelState'
+
+function App() {
   const isMobile = useIsMobile()
-
-    showLeftPanel,
-    leftPanelWidth,
-
-    setLeftPanel
-  } = usePanelState()
   
-
-  useKeyb
-    onToggleRightP
-    showRightPanel
-
-  const handleMobile
-      case 'nav':
-        break
+  const {
+    showLeftPanel,
+    showRightPanel,
+    leftPanelWidth,
+    rightPanelWidth,
+    toggleLeftPanel,
+    toggleRightPanel,
     setLeftPanelWidth,
     setRightPanelWidth
   } = usePanelState()
-
+  
   // Mobile panel state
   const [activeMobilePanel, setActiveMobilePanel] = useState<'nav' | 'betslip' | null>(null)
 
@@ -82,8 +81,8 @@ import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.2 }}
-                  className="min-h-0 border-r border-border bg-card"
-                className=
+                  className="min-h-0 border-r border-border bg-card relative"
+                  style={{
                     boxShadow: showLeftPanel ? '4px 0 8px -2px rgba(0, 0, 0, 0.1)' : 'none'
                   }}
                 >
@@ -91,7 +90,7 @@ import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
                   <ResizeHandle
                     side="right"
                     currentWidth={leftPanelWidth}
-                    onWidthChange={setLeftPanelWidth}
+                    onResize={setLeftPanelWidth}
                     minWidth={250}
                     maxWidth={400}
                   />
@@ -104,13 +103,13 @@ import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
               {/* Panel Toggle Buttons */}
               <PanelToggle
                 isOpen={showLeftPanel}
-                onClick={toggleLeftPanel}
+                onToggle={toggleLeftPanel}
                 side="left"
                 className="absolute left-2 top-4 z-10"
               />
               <PanelToggle
                 isOpen={showRightPanel}
-                onClick={toggleRightPanel}
+                onToggle={toggleRightPanel}
                 side="right"
                 className="absolute right-2 top-4 z-10"
               />
@@ -129,60 +128,73 @@ import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
                   transition={{ duration: 0.2 }}
                   className="min-h-0 border-l border-border bg-card relative"
                   style={{
+                    boxShadow: showRightPanel ? '-4px 0 8px -2px rgba(0, 0, 0, 0.1)' : 'none'
+                  }}
+                >
+                  <ActionHubPanel />
+                  <ResizeHandle
+                    side="left"
+                    currentWidth={rightPanelWidth}
+                    onResize={setRightPanelWidth}
+                    minWidth={300}
+                    maxWidth={500}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ) : (
+          /* Mobile Layout */
+          <div className="flex-1 flex flex-col relative">
+            {/* Panel Toggle Buttons for Mobile */}
+            <div className="absolute top-4 left-2 right-2 flex justify-between z-20">
+              <PanelToggle
+                isOpen={activeMobilePanel === 'nav'}
+                onToggle={() => setActiveMobilePanel(activeMobilePanel === 'nav' ? null : 'nav')}
+                side="left"
+              />
+              <PanelToggle
+                isOpen={activeMobilePanel === 'betslip'}
+                onToggle={() => setActiveMobilePanel(activeMobilePanel === 'betslip' ? null : 'betslip')}
+                side="right"
+              />
+            </div>
 
-            <MobileO
-              onC
-            >
-            </MobileOverlay>
+            {/* Main Mobile Workspace */}
+            <WorkspacePanel />
+
+            {/* Mobile Overlays */}
             <MobileOverlay
-              onClose={() => setActiveMobilePanel(
+              isOpen={activeMobilePanel === 'nav'}
+              onClose={() => setActiveMobilePanel(null)}
+              title="Sports Navigation"
+              slideFrom="left"
             >
+              <SideNavPanel />
             </MobileOverlay>
-            {/* Bottom Navigation 
-              onNavC
+
+            <MobileOverlay
+              isOpen={activeMobilePanel === 'betslip'}
+              onClose={() => setActiveMobilePanel(null)}
+              title="Bet Slip"
+              slideFrom="right"
+            >
+              <ActionHubPanel />
+            </MobileOverlay>
+
+            {/* Bottom Navigation */}
+            <MobileBottomNav
+              onNavClick={handleMobileNavigation}
+              activePanel={activeMobilePanel || 'workspace'}
             />
+          </div>
         )}
-        {/* Global Toast Notif
+
+        {/* Global Toast Notifications */}
+        <Toaster position="top-right" />
       </div>
+    </BettingProvider>
   )
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default App
