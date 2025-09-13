@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { Toaster } from 'sonner'
 
 // Context
-import { BettingProvider } from './contexts/BettingContext'
+import { BettingProvider } from './contexts/BetSlipContext'
 
 // Components
 import { HeaderNavbar } from './components/HeaderNavbar'
@@ -20,7 +19,7 @@ import { usePanelState } from './hooks/usePanelState'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 
 // Types
-type ActivePanel = 'home' | 'sports' | 'betslip' | 'profile'
+type ActivePanel = 'home' | 'sports' | 'my-bets' | 'profile'
 
 function App() {
   const isMobile = useIsMobile()
@@ -30,171 +29,85 @@ function App() {
     leftPanelWidth,
     rightPanelWidth,
     toggleLeftPanel,
-    toggleRightPanel,
-    setLeftPanelWidth,
-    setRightPanelWidth,
-  } = usePanelState()
+    setRightPanelWidt
 
-  // Mobile overlay states
-  const [showSportsOverlay, setShowSportsOverlay] = useState(false)
-  const [showBetSlipOverlay, setShowBetSlipOverlay] = useState(false)
-  const [activePanel, setActivePanel] = useState<ActivePanel>('home')
+  const [showSportsOver
+  const [activePanel,
 
-  // Initialize keyboard shortcuts
-  useKeyboardShortcuts({
-    onToggleLeftPanel: toggleLeftPanel,
-    onToggleRightPanel: toggleRightPanel,
+    onToggleLeftPanel: tog
   })
-
   // Mobile navigation handlers
-  const handleMobileNavClick = (panel: ActivePanel) => {
     setActivePanel(panel)
-    
-    switch (panel) {
-      case 'home':
-        setShowSportsOverlay(false)
-        setShowBetSlipOverlay(false)
+
+        setShowSportsOverlay(false
         break
-      case 'sports':
         setShowSportsOverlay(true)
-        setShowBetSlipOverlay(false)
         break
-      case 'betslip':
-        setShowSportsOverlay(false)
-        setShowBetSlipOverlay(true)
-        break
-      case 'profile':
-        setShowSportsOverlay(false)
-        setShowBetSlipOverlay(false)
-        break
-    }
-  }
+    
 
-  const handleSportsOverlayClose = () => {
-    setShowSportsOverlay(false)
-    setActivePanel('home')
+        setShowSportsOverlay(fa
+        break
   }
+  co
+    setActivePanel('
 
-  const handleBetSlipOverlayClose = () => {
     setShowBetSlipOverlay(false)
-    setActivePanel('home')
   }
-
   return (
-    <BettingProvider>
-      <div className="h-screen w-full bg-background text-foreground flex flex-col overflow-hidden">
-        {/* Header Navigation */}
+      <div className
         <HeaderNavbar 
-          onToggleLeftPanel={toggleLeftPanel}
-          onToggleRightPanel={toggleRightPanel}
-          showLeftPanel={showLeftPanel}
-          showRightPanel={showRightPanel}
-        />
+          onToggleRightPanel={toggle
+          sho
 
-        {/* Main Content Area */}
-        <div className="flex-1 min-h-0 flex">
-          {!isMobile ? (
-            // Desktop three-panel layout
-            <div className="flex w-full h-full">
-              {/* Left Panel */}
-              <AnimatePresence>
-                {showLeftPanel && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -leftPanelWidth }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -leftPanelWidth }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    className="flex-shrink-0 h-full border-r border-border bg-card relative"
-                    style={{ width: leftPanelWidth }}
-                  >
-                    <ResizeHandle
-                      onResize={setLeftPanelWidth}
-                      currentWidth={leftPanelWidth}
-                      minWidth={280}
-                      maxWidth={500}
+        <div className="flex-1 min-
+            // Desktop three-panel 
+             
+                {show
+                    initial={{ opac
+                    exit={{ opacity:
+             
+     
+   
+
                       side="right"
-                    />
-                    <SideNavPanel />
-                  </motion.div>
+                    <SideNavPan
                 )}
-              </AnimatePresence>
 
-              {/* Center Panel */}
-              <div className="flex-1 min-w-0 h-full bg-background">
-                <WorkspacePanel />
+
               </div>
+              {/* Right Panel */
+                {showRight
+   
 
-              {/* Right Panel */}
-              <AnimatePresence>
-                {showRightPanel && (
-                  <motion.div
-                    initial={{ opacity: 0, x: rightPanelWidth }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: rightPanelWidth }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    className="flex-shrink-0 h-full border-l border-border bg-card relative"
-                    style={{ width: rightPanelWidth }}
+          
                   >
-                    <ResizeHandle
                       onResize={setRightPanelWidth}
-                      currentWidth={rightPanelWidth}
-                      minWidth={320}
-                      maxWidth={500}
-                      side="left"
-                    />
+                      minWidth={3
+                      
                     <ActionHubPanel />
-                  </motion.div>
                 )}
-              </AnimatePresence>
             </div>
-          ) : (
             <>
-              {/* Mobile Layout */}
-              <div className="flex-1 min-h-0">
-                <WorkspacePanel />
-              </div>
+          
 
-              {/* Mobile Sports Overlay */}
-              <MobileOverlay
+              {/* Mobile Sports O
                 isOpen={showSportsOverlay}
-                onClose={handleSportsOverlayClose}
-                title="Sports"
-              >
+                title="S
                 <SideNavPanel />
-              </MobileOverlay>
 
-              {/* Mobile Bet Slip Overlay */}
               <MobileOverlay
-                isOpen={showBetSlipOverlay}
-                onClose={handleBetSlipOverlayClose}
-                title="Bet Slip"
+                onClose={handle
               >
-                <ActionHubPanel />
-              </MobileOverlay>
-
+              </MobileOverlay
               {/* Mobile Bottom Navigation */}
-              <MobileBottomNav
                 activePanel={activePanel}
-                onNavClick={handleMobileNavClick}
               />
-            </>
           )}
-        </div>
 
-        {/* Global Toast Notifications */}
         <Toaster
-          position="top-right"
-          toastOptions={{
-            style: {
-              background: 'var(--card)',
-              color: 'var(--foreground)',
+          toastOpti
+              background: 'var(--
               border: '1px solid var(--border)',
-            },
           }}
-        />
       </div>
-    </BettingProvider>
   )
-}
-
-export default App
