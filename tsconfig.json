@@ -21,6 +21,8 @@
     /* Linting */
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "paths": {
       "@/*": [
         "./src/*"
