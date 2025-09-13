@@ -1,19 +1,19 @@
 import React from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { Button } from '@/components/ui/button'
 import { Button } from '@/components/ui/button'
 import { 
-  CaretLeft, 
-  CaretRight,
   PushPin,
-  PushPinSlash
-} from '@phosphor-icons/react'
-
-interface PanelToggleProps {
-  isOpen: boolean
-  onToggle: () => void
-  side: 'left' | 'right'
+} from '@phos
+interface 
+  onToggle: ()
   className?: string
-  onTogglePin?: () => void
+
+
+  isOpen, 
+  side, 
+  onTogglePin,
+}: PanelToggleProps)
+  
   isPinned?: boolean
 }
 
@@ -62,39 +62,38 @@ export function PanelToggle({
 
       {/* Pin/Unpin Button - Only show when panel is open */}
       <AnimatePresence>
-        {isOpen && onTogglePin && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ delay: 0.1 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onTogglePin}
-              className={`h-7 w-7 p-0 rounded-full bg-background/60 backdrop-blur-sm border transition-all duration-200 ${
                 isPinned 
-                  ? 'border-accent/50 text-accent hover:bg-accent/10' 
-                  : 'border-border/30 text-muted-foreground hover:bg-muted/60 hover:border-border/50'
-              }`}
-              title={isPinned ? 'Unpin panel' : 'Pin panel open'}
-            >
+                  : '
+              title={isPinned ? 'Unpin panel
               <motion.div
-                animate={{ 
-                  rotate: isPinned ? 0 : 0,
-                  scale: isPinned ? 1.1 : 1
+                  rotate: isPinned ? 0 : 
                 }}
-                transition={{ duration: 0.2 }}
               >
-                {isPinned ? <PushPin size={12} /> : <PushPinSlash size={12} />}
               </motion.div>
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+          <
+      </AnimatePres
   )
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
