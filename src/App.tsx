@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { AnimatePresence, motion
 import { AnimatePresence, motion } from 'framer-motion'
+import { Toaster } from 'sonner'
 
+// Context
+import { BettingProvider } from './contexts/BettingContext'
 
-import { SideNavPanel } from './components/SideNavPanel'
-
-import { Mobi
+// Components
 import { SideNavPanel } from './components/SideNavPanel'
 import { WorkspacePanel } from './components/WorkspacePanel'
 import { ActionHubPanel } from './components/ActionHubPanel'
@@ -40,7 +40,9 @@ function App() {
   const [activePanel, setActivePanel] = useState<'workspace' | 'betslip' | 'profile'>('workspace')
 
   useKeyboardShortcuts({
+    onToggleLeftPanel: toggleLeftPanel,
     onToggleRightPanel: toggleRightPanel,
+    showLeftPanel,
     showRightPanel
   })
 
@@ -50,7 +52,7 @@ function App() {
         setActivePanel('workspace')
         setShowSportsOverlay(false)
         setShowBetSlipOverlay(false)
-        setSh
+        break
       case 'nav':
         setShowSportsOverlay(true)
         break
@@ -63,75 +65,78 @@ function App() {
         setShowSportsOverlay(false)
         setShowBetSlipOverlay(false)
         break
-     
-   
+    }
+  }
 
-          
-                  ani
+  return (
+    <BettingProvider>
+      <div className="h-screen w-full flex flex-col bg-background text-foreground overflow-hidden">
+        {!isMobile ? (
+          // Desktop three-panel layout
+          <div className="flex h-full">
+            {/* Left Panel - Sports Navigation */}
+            <AnimatePresence mode="wait">
+              {showLeftPanel && (
+                <motion.div
+                  initial={{ opacity: 0, x: -leftPanelWidth }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -leftPanelWidth }}
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="flex-shrink-0 h-full border-r border-border bg-card"
+                  style={{ width: leftPanelWidth }}
+                >
+                  <SideNavPanel />
+                  <ResizeHandle
+                    onResize={setLeftPanelWidth}
+                    currentWidth={leftPanelWidth}
+                    minWidth={280}
+                    maxWidth={500}
+                    side="right"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Center Panel - Main Workspace */}
+            <div className="flex-1 flex flex-col min-w-0 h-full">
+              {/* Panel Toggle Controls */}
+              <div className="flex justify-between items-center p-2 border-b border-border bg-card">
+                <PanelToggle
+                  isOpen={showLeftPanel}
+                  onToggle={toggleLeftPanel}
+                  side="left"
+                />
+                <PanelToggle
+                  isOpen={showRightPanel}
+                  onToggle={toggleRightPanel}
+                  side="right"
+                />
+              </div>
+              
+              <div className="flex-1 min-h-0">
+                <WorkspacePanel />
+              </div>
+            </div>
+
+            {/* Right Panel - Action Hub */}
+            <AnimatePresence mode="wait">
+              {showRightPanel && (
+                <motion.div
+                  initial={{ opacity: 0, x: rightPanelWidth }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: rightPanelWidth }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="flex-shrink-0 h-full border-l border-border bg-card"
+                  style={{ width: rightPanelWidth }}
                 >
                   <ResizeHandle
-                    currentWidth={leftP
-                    maxWidth={500}
-                </motion.div>
-            </AnimatePresence>
-            {/* Center Pane
-              {/* Panel Toggle Con
-                <PanelToggle
-                  onClick={toggleLeftPanel}
-                />
-                  isOpen={showRightPanel}
-                  side="right"
-              </d
-              <WorkspacePanel />
-
-            <AnimatePresence mode="wait">
-                <motion.div
-                  initial={{ opaci
-                  exit={{ opacity:
-                  cl
-                  <ActionHubP
-                
-                    minWidth={
-
-                </motion.div>
-            </AnimatePresence>
-        ) : (
-          <div className="h-full flex flex-col">
-            <div className="
-              {activePanel === 'betslip'
-                  <ActionHubPanel />
-              )}
-                <d
-                    <h2 clas
-                  </div>
-              )}
-
-            <Mobil
-              onClos
-
-              <SideNavPanel />
-
-
-              onClose={() => setShowBetSlipO
-              slideFrom="right"
-              <ActionHubPanel />
-
-            <MobileBottomNav
-              activePanel={activePanel}
-          </div>
-
-          position="top-right"
-            className: 'bg-card text-card-foreground border border-border',
-          }}
-      </div>
-  )
                     onResize={setRightPanelWidth}
                     currentWidth={rightPanelWidth}
                     minWidth={320}
                     maxWidth={500}
                     side="left"
                   />
+                  <ActionHubPanel />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -196,7 +201,5 @@ function App() {
     </BettingProvider>
   )
 }
-
-export default App}
 
 export default App
