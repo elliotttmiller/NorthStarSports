@@ -1,5 +1,5 @@
-import React from 'react'
-
+import React, { useState } from 'react'
+import { Toaster } from 'sonner'
 
 // Context
 import { BettingProvider } from './contexts/BettingContext'
@@ -10,131 +10,113 @@ import { SideNavPanel } from './components/SideNavPanel'
 import { WorkspacePanel } from './components/WorkspacePanel'
 import { ActionHubPanel } from './components/ActionHubPanel'
 import { MobileOverlay } from './components/MobileOverlay'
+import { MobileBottomNav } from './components/MobileBottomNav'
+
+// Hooks
 import { useIsMobile } from './hooks/useIsMobile'
+import { ActivePanel } from './hooks/usePanelState'
 
-function
-  const {
-    showRightPanel,
-    rightPanelWidth,
+function App() {
+  const isMobile = useIsMobile()
+  
+  // Desktop panel states
+  const [showLeftPanel, setShowLeftPanel] = useState(true)
+  const [showRightPanel, setShowRightPanel] = useState(true)
+  
+  // Mobile overlay states
+  const [showSportsOverlay, setShowSportsOverlay] = useState(false)
+  const [showBetSlipOverlay, setShowBetSlipOverlay] = useState(false)
+  const [activePanel, setActivePanel] = useState<ActivePanel>('home')
 
-    showBetSlipO
-    setShowBetSlipOverlay,
-    setAc
-
-  useKeyboardShortc
-    onToggleRightPa
-    showRightPanel
-
-  const handleMobileN
+  const handleMobileNavigation = (panel: 'home' | 'sports' | 'betslip' | 'profile') => {
+    switch (panel) {
       case 'sports':
-        setActivePanel(
-      case 'betslip':
-        setActivePanel('be
-      case 'home
-        setShowSpo
+        setShowSportsOverlay(true)
+        setActivePanel('sports')
         break
-
+      case 'betslip':
+        setShowBetSlipOverlay(true)
+        setActivePanel('betslip')
+        break
+      case 'profile':
+        // Handle profile panel if needed
+        setActivePanel('profile')
+        break
+      case 'home':
+        setShowSportsOverlay(false)
+        setShowBetSlipOverlay(false)
+        setActivePanel('home')
+        break
     }
+  }
 
+  return (
     <BettingProvider>
+      <div className="flex flex-col h-screen bg-background">
         {/* Header */}
-          onToggle
-          showLeft
-    
+        <HeaderNavbar 
+          onToggleLeftPanel={() => setShowLeftPanel(!showLeftPanel)}
+          onToggleRightPanel={() => setShowRightPanel(!showRightPanel)}
+          showLeftPanel={showLeftPanel}
+          showRightPanel={showRightPanel}
+        />
 
+        <div className="flex flex-1 min-h-0">
           {!isMobile ? (
             <>
-              {showL
-                  <S
+              {/* Desktop Layout */}
+              {showLeftPanel && (
+                <div className="flex-shrink-0 w-80 border-r bg-card">
+                  <SideNavPanel />
+                </div>
               )}
-              {/* Center Panel *
-             
 
-              {showRightPanel && (
-                  <ActionHubPanel
-             
-          ) : (
-            <div className="fl
-              <div className="flex-
-              </div>
-             
-              
-                title="Sports"
-             
-
-   
-
-          
-              </Mobil
-              {/* Mobile Bottom Navigation */}
-                active
-              />
-          )}
-
-        <Toaster
-            style: {
-              border: '1px solid var(--border)'
-            }
-        />
-    </BettingProvider>
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+              {/* Center Panel */}
+              <div className="flex-1 min-w-0">
+                <WorkspacePanel />
               </div>
 
               {/* Right Panel */}
               {showRightPanel && (
-                <div className="flex-shrink-0 border-l bg-card" style={{ width: rightPanelWidth }}>
+                <div className="flex-shrink-0 w-96 border-l bg-card">
                   <ActionHubPanel />
                 </div>
               )}
             </>
           ) : (
-            // Mobile layout
-            <div className="flex flex-col flex-1">
-              {/* Main mobile content */}
-              <div className="flex-1 min-h-0">
-                <WorkspacePanel />
+            <>
+              {/* Mobile Layout */}
+              <div className="flex flex-col flex-1">
+                {/* Main mobile content */}
+                <div className="flex-1 min-h-0">
+                  <WorkspacePanel />
+                </div>
+
+                {/* Mobile Sports Overlay */}
+                <MobileOverlay
+                  isOpen={showSportsOverlay}
+                  onClose={() => setShowSportsOverlay(false)}
+                  title="Sports"
+                >
+                  <SideNavPanel />
+                </MobileOverlay>
+
+                {/* Mobile Bet Slip Overlay */}
+                <MobileOverlay
+                  isOpen={showBetSlipOverlay}
+                  onClose={() => setShowBetSlipOverlay(false)}
+                  title="Bet Slip"
+                >
+                  <ActionHubPanel />
+                </MobileOverlay>
+
+                {/* Mobile Bottom Navigation */}
+                <MobileBottomNav
+                  activePanel={activePanel}
+                  onNavClick={handleMobileNavigation}
+                />
               </div>
-
-              {/* Mobile Sports Overlay */}
-              <MobileOverlay
-                isOpen={showSportsOverlay}
-                onClose={() => setShowSportsOverlay(false)}
-                title="Sports"
-              >
-                <SideNavPanel />
-              </MobileOverlay>
-
-              {/* Mobile Bet Slip Overlay */}
-              <MobileOverlay
-                isOpen={showBetSlipOverlay}
-                onClose={() => setShowBetSlipOverlay(false)}
-                title="Bet Slip"
-              >
-                <ActionHubPanel />
-              </MobileOverlay>
-
-              {/* Mobile Bottom Navigation */}
-              <MobileBottomNav
-                activePanel={activePanel}
-                onNavigate={handleMobileNavigation}
-              />
-            </div>
+            </>
           )}
         </div>
 
