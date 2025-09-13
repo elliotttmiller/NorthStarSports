@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Toaster } from 'sonner'
 
-// Context
-import { BettingProvider } from './contexts/BettingContext'
+
+// Compone
+import { SideNavPanel } from './components/SideNavPanel'
 
 // Components
 import { HeaderNavbar } from './components/HeaderNavbar'
@@ -14,7 +14,6 @@ import { MobileBottomNav } from './components/MobileBottomNav'
 
 // Hooks
 import { useIsMobile } from './hooks/useIsMobile'
-import { ActivePanel } from './hooks/usePanelState'
 
 function App() {
   const isMobile = useIsMobile()
@@ -26,9 +25,9 @@ function App() {
   // Mobile overlay states
   const [showSportsOverlay, setShowSportsOverlay] = useState(false)
   const [showBetSlipOverlay, setShowBetSlipOverlay] = useState(false)
-  const [activePanel, setActivePanel] = useState<ActivePanel>('home')
+  const [activePanel, setActivePanel] = useState<'home' | 'sports' | 'betslip'>('home')
 
-  const handleMobileNavigation = (panel: 'home' | 'sports' | 'betslip' | 'profile') => {
+  const handleMobileNavigation = (panel: 'home' | 'sports' | 'betslip') => {
     switch (panel) {
       case 'sports':
         setShowSportsOverlay(true)
@@ -38,52 +37,48 @@ function App() {
         setShowBetSlipOverlay(true)
         setActivePanel('betslip')
         break
-      case 'profile':
-        // Handle profile panel if needed
-        setActivePanel('profile')
-        break
       case 'home':
         setShowSportsOverlay(false)
         setShowBetSlipOverlay(false)
         setActivePanel('home')
         break
-    }
+  }
   }
 
   return (
-    <BettingProvider>
+        <HeaderNavbar
       <div className="flex flex-col h-screen bg-background">
-        {/* Header */}
+          showLeftPane
         <HeaderNavbar 
-          onToggleLeftPanel={() => setShowLeftPanel(!showLeftPanel)}
-          onToggleRightPanel={() => setShowRightPanel(!showRightPanel)}
+          onToggleLeft={() => setShowLeftPanel(!showLeftPanel)}
+          onToggleRight={() => setShowRightPanel(!showRightPanel)}
           showLeftPanel={showLeftPanel}
           showRightPanel={showRightPanel}
         />
 
         <div className="flex flex-1 min-h-0">
-          {!isMobile ? (
-            <>
+              {/* Center
+              
               {/* Desktop Layout */}
               {showLeftPanel && (
                 <div className="flex-shrink-0 w-80 border-r bg-card">
                   <SideNavPanel />
                 </div>
-              )}
+            </>
 
               {/* Center Panel */}
               <div className="flex-1 min-w-0">
                 <WorkspacePanel />
-              </div>
+                >
 
-              {/* Right Panel */}
-              {showRightPanel && (
+
+
                 <div className="flex-shrink-0 w-96 border-l bg-card">
-                  <ActionHubPanel />
-                </div>
-              )}
-            </>
-          ) : (
+
+
+
+
+
             <>
               {/* Mobile Layout */}
               <div className="flex flex-col flex-1">
@@ -113,26 +108,25 @@ function App() {
                 {/* Mobile Bottom Navigation */}
                 <MobileBottomNav
                   activePanel={activePanel}
-                  onNavClick={handleMobileNavigation}
+                  onNavigate={handleMobileNavigation}
                 />
-              </div>
+
             </>
-          )}
-        </div>
 
-        {/* Toast notifications */}
-        <Toaster
-          toastOptions={{
-            style: {
-              background: 'var(--card)',
-              border: '1px solid var(--border)',
-              color: 'var(--foreground)'
-            }
-          }}
-        />
-      </div>
-    </BettingProvider>
-  )
-}
 
-export default App
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
