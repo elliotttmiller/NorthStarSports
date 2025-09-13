@@ -1,24 +1,24 @@
 import React from 'react'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { List, Receipt } from '@phosphor-icons/react'
-import { Badge } from '@/components/ui/badge'
-import { Badge } from '@/components/ui/badge'
 import { GameLinesTable } from './GameLinesTable'
 import { PropBuilder } from './PropBuilder'
 import { useBetting } from '@/contexts/BettingContext'
 import { cn } from '@/lib/utils'
 
-  isMobile = false,
-  onToggleRightPanel
-  const { activeView
-  return (
-      {/* Header with Navigation 
- 
+interface WorkspacePanelProps {
+  className?: string
+  isMobile?: boolean
+  onToggleLeftPanel?: () => void
+  onToggleRightPanel?: () => void
+}
 
-              variant="ghost"
-            
+export function WorkspacePanel({
+  className,
   isMobile = false,
   onToggleLeftPanel,
-  onToggleRightPanel 
+  onToggleRightPanel
 }: WorkspacePanelProps) {
   const { activeView, setActiveView, bets } = useBetting()
 
@@ -34,11 +34,13 @@ import { cn } from '@/lib/utils'
               size="sm"
               className="h-9 px-3 nav-button hover:bg-secondary/50"
               onClick={onToggleLeftPanel}
-             
+            >
               <List className="w-4 h-4 mr-2" />
-            </Button
+              Sports
             </Button>
+            
             <h1 className="text-lg font-semibold">NorthStar Sports</h1>
+            
             <Button
               variant="ghost"
               size="sm"
@@ -48,15 +50,15 @@ import { cn } from '@/lib/utils'
               <Receipt className="w-4 h-4 mr-2" />
               Bet Slip
               {bets.length > 0 && (
-                variant
+                <Badge 
                   variant="default" 
                   className="ml-2 h-5 px-1.5 bg-accent text-accent-foreground"
                 >
-                Bet Slip
+                  {bets.length}
                 </Badge>
-                
+              )}
             </Button>
-             
+          </>
         ) : (
           // Desktop Header
           <>
@@ -66,41 +68,53 @@ import { cn } from '@/lib/utils'
                 size="sm"
                 className="h-9 px-3 nav-button hover:bg-secondary/50"
                 onClick={onToggleLeftPanel}
-        )}
+              >
                 <List className="w-4 h-4" />
-  )
+              </Button>
               <h1 className="text-lg font-semibold">Sports Center</h1>
+            </div>
 
+            <div className="flex items-center gap-2">
+              <Button
+                variant={activeView === 'games' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveView('games')}
+                className="nav-button"
+              >
+                Game Lines
+              </Button>
+              <Button
+                variant={activeView === 'props' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveView('props')}
+                className="nav-button"
+              >
+                Prop Builder
+              </Button>
+            </div>
 
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-9 px-3 nav-button hover:bg-secondary/50"
+                onClick={onToggleRightPanel}
+              >
+                <Receipt className="w-4 h-4" />
+              </Button>
+            </div>
+          </>
+        )}
+      </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      {/* Main Content Area */}
+      <div className="flex-1 min-h-0">
+        {activeView === 'games' ? (
+          <GameLinesTable />
+        ) : (
+          <PropBuilder />
+        )}
+      </div>
+    </div>
+  )
+}
