@@ -43,7 +43,7 @@ export function PanelToggle({
     } else {
       // Right panel: Action hub/bet slip related icons
       if (isOpen) {
-        return X // X to indicate "close"
+        return CaretRight // Arrow pointing right to indicate "close"
       } else {
         return Receipt // Receipt icon to indicate "open bet slip"
       }

@@ -8,18 +8,18 @@ import { ActionHubPanel } from './components/ActionHubPanel'
 import { PanelToggle } from './components/PanelToggle'
 import { MobileBottomNav } from './components/MobileBottomNav'
 import { MobileOverlay } from './components/MobileOverlay'
-
 import { ResizeHandle } from './components/ResizeHandle'
+
 import { useIsMobile } from './hooks/useIsMobile'
 import { usePanelState } from './hooks/usePanelState'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { Toaster } from '@/components/ui/sonner'
 
-function App() {
+export default function App() {
   const isMobile = useIsMobile()
-  const [activeMobilePanel, setActiveMobilePanel] = useState('workspace')
-  const [showMobileNav, setShowMobileNav] = useState(false)
-  const [showMobileBetSlip, setShowMobileBetSlip] = useState(false)
+  const [activeMobilePanel, setActiveMobilePanel] = useState<string>('workspace')
+  const [showMobileNav, setShowMobileNav] = useState<boolean>(false)
+  const [showMobileBetSlip, setShowMobileBetSlip] = useState<boolean>(false)
   
   // Desktop panel visibility state with persistence
   const { 
@@ -41,7 +41,7 @@ function App() {
     showRightPanel: isMobile ? false : showRightPanel
   })
 
-  const handleMobileNavClick = (panel: string) => {
+  const handleMobileNavClick = (panel: string): void => {
     switch (panel) {
       case 'nav':
         setShowMobileNav(true)
@@ -58,6 +58,8 @@ function App() {
         setActiveMobilePanel('profile')
         setShowMobileNav(false)
         setShowMobileBetSlip(false)
+        break
+      default:
         break
     }
   }
@@ -127,15 +129,13 @@ function App() {
               }}
               transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
             >
-              {/* Left Panel Toggle */}
+              {/* Panel Toggles */}
               <PanelToggle
                 isOpen={showLeftPanel}
                 onToggle={toggleLeftPanel}
                 side="left"
                 className="z-20"
               />
-
-              {/* Right Panel Toggle */}
               <PanelToggle
                 isOpen={showRightPanel}
                 onToggle={toggleRightPanel}
@@ -237,4 +237,3 @@ function App() {
     </BettingProvider>
   )
 }
-
