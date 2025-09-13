@@ -1,59 +1,14 @@
 import { createContext, useContext, ReactNode } from 'react'
 import { useKV } from '@github/spark/hooks'
-
-export interface Bet {
-  id: string
-  gameId: string
-  teamName: string
-  betType: 'spread' | 'moneyline' | 'total'
-  odds: number
-  line?: number
-  stake?: number
-  isOver?: boolean
-}
-
-export interface Game {
-  id: string
-  homeTeam: string
-  awayTeam: string
-  time: string
-  homeSpread: number
-  awaySpread: number
-  homeSpreadOdds: number
-  awaySpreadOdds: number
-  total: number
-  overOdds: number
-  underOdds: number
-  homeMoneyline: number
-  awayMoneyline: number
-}
-
-export interface League {
-  id: string
-  name: string
-  sport: string
-  games: Game[]
-}
-
-interface BettingContextType {
-  bets: Bet[]
-  addBet: (bet: Bet) => void
-  removeBet: (betId: string) => void
-  updateBetStake: (betId: string, stake: number) => void
-  clearBets: () => void
-  selectedSport: string
-  selectedLeague: string
-  setSelectedSport: (sport: string) => void
-  setSelectedLeague: (league: string) => void
-  activeView: 'games' | 'props'
-  setActiveView: (view: 'games' | 'props') => void
-  favorites: string[]
-  toggleFavorite: (leagueId: string) => void
-  betSlipMode: 'straight' | 'parlay'
-  setBetSlipMode: (mode: 'straight' | 'parlay') => void
-  rightPanelTab: 'betslip' | 'mybets'
-  setRightPanelTab: (tab: 'betslip' | 'mybets') => void
-}
+import type { 
+  Bet, 
+  Game, 
+  League, 
+  BettingContextType,
+  ViewType,
+  BetSlipMode,
+  RightPanelTab
+} from '@/types'
 
 const BettingContext = createContext<BettingContextType | null>(null)
 
@@ -62,9 +17,9 @@ export function BettingProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useKV<string[]>('favorites', [])
   const [selectedSport, setSelectedSport] = useKV<string>('selected-sport', 'Football')
   const [selectedLeague, setSelectedLeague] = useKV<string>('selected-league', 'nfl')
-  const [activeView, setActiveView] = useKV<'games' | 'props'>('active-view', 'games')
-  const [betSlipMode, setBetSlipMode] = useKV<'straight' | 'parlay'>('betslip-mode', 'straight')
-  const [rightPanelTab, setRightPanelTab] = useKV<'betslip' | 'mybets'>('right-panel-tab', 'betslip')
+  const [activeView, setActiveView] = useKV<ViewType>('active-view', 'games')
+  const [betSlipMode, setBetSlipMode] = useKV<BetSlipMode>('betslip-mode', 'straight')
+  const [rightPanelTab, setRightPanelTab] = useKV<RightPanelTab>('right-panel-tab', 'betslip')
 
   const addBet = (bet: Bet) => {
     setBets(currentBets => {

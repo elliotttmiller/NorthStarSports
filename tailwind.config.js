@@ -1,4 +1,5 @@
 import fs from "fs";
+import plugin from "tailwindcss/plugin";
 
 /** @type {import('tailwindcss').Config} */
 
@@ -22,6 +23,24 @@ const defaultTheme = {
       coarse: { raw: "(pointer: coarse)" },
       fine: { raw: "(pointer: fine)" },
       pwa: { raw: "(display-mode: standalone)" },
+    },
+    // Fluid Typography System with clamp()
+    fontSize: {
+      'xs': ['clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)', { lineHeight: '1.5' }],
+      'sm': ['clamp(0.875rem, 0.8rem + 0.375vw, 1rem)', { lineHeight: '1.5' }],
+      'base': ['clamp(1rem, 0.9rem + 0.5vw, 1.125rem)', { lineHeight: '1.6' }],
+      'lg': ['clamp(1.125rem, 1rem + 0.625vw, 1.25rem)', { lineHeight: '1.5' }],
+      'xl': ['clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem)', { lineHeight: '1.4' }],
+      '2xl': ['clamp(1.5rem, 1.3rem + 1vw, 1.875rem)', { lineHeight: '1.3' }],
+      '3xl': ['clamp(1.875rem, 1.6rem + 1.375vw, 2.25rem)', { lineHeight: '1.2' }],
+    },
+    // Fluid Spacing System
+    spacing: {
+      'fluid-xs': 'clamp(0.25rem, 0.2rem + 0.25vw, 0.375rem)',
+      'fluid-sm': 'clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem)', 
+      'fluid-md': 'clamp(1rem, 0.8rem + 1vw, 1.5rem)',
+      'fluid-lg': 'clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem)',
+      'fluid-xl': 'clamp(2rem, 1.6rem + 2vw, 3rem)',
     },
     colors: {
       neutral: {
@@ -144,4 +163,52 @@ const defaultTheme = {
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: { ...defaultTheme, ...theme },
+  plugins: [
+    // Fluid Engine Plugin - Universal Typography & Containment
+    plugin(function({ addBase }) {
+      addBase({
+        // Global fluid typography defaults
+        'body': {
+          fontSize: 'clamp(1rem, 0.9rem + 0.5vw, 1.125rem)',
+          lineHeight: '1.6',
+        },
+        'h1': {
+          fontSize: 'clamp(1.875rem, 1.6rem + 1.375vw, 2.25rem)',
+          lineHeight: '1.2',
+          fontWeight: '700',
+        },
+        'h2': {
+          fontSize: 'clamp(1.5rem, 1.3rem + 1vw, 1.875rem)', 
+          lineHeight: '1.3',
+          fontWeight: '600',
+        },
+        'h3': {
+          fontSize: 'clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem)',
+          lineHeight: '1.4',
+          fontWeight: '500',
+        },
+        // Universal text overflow protection
+        '*': {
+          wordWrap: 'break-word',
+          overflowWrap: 'break-word',
+          hyphens: 'auto',
+        },
+        // Container intrinsic sizing
+        '.container-fluid': {
+          width: 'min(100%, calc(100vw - 2rem))',
+          marginInline: 'auto',
+        },
+        // Fluid panel system
+        '.panel-fluid': {
+          padding: 'clamp(1rem, 0.8rem + 1vw, 1.5rem)',
+        },
+        // Prevent container overflow
+        '.overflow-safe': {
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        },
+      })
+    })
+  ],
 };
