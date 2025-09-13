@@ -50,22 +50,18 @@ export function PanelToggle({
     }
   }
 
-  // Get positioning classes based on which side
-  const getPositionClasses = () => {
-    if (side === 'left') {
-      return 'absolute left-3 top-3 z-30'
-    } else {
-      return 'absolute right-3 top-3 z-30'
-    }
+  // Get base classes (positioning handled by parent)
+  const getBaseClasses = () => {
+    return '' // No positioning, handled by parent component
   }
 
   const Icon = getIcon()
-  const positionClasses = getPositionClasses()
+  const baseClasses = getBaseClasses()
   
   return (
     <motion.div
       className={cn(
-        positionClasses,
+        baseClasses,
         className
       )}
       initial={{ opacity: 0, scale: 0.8 }}
