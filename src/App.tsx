@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BettingProvider } from './contexts/BettingContext'
-import { HeaderNavbar } from './components/HeaderNavbar'
+
 import { SideNavPanel } from './components/SideNavPanel'
 import { WorkspacePanel } from './components/WorkspacePanel'
 import { ActionHubPanel } from './components/ActionHubPanel'
+import { PanelToggle } from './components/PanelToggle'
 import { MobileBottomNav } from './components/MobileBottomNav'
 import { MobileOverlay } from './components/MobileOverlay'
 
@@ -62,20 +63,10 @@ function App() {
   return (
     <BettingProvider>
       <div className="h-screen flex flex-col bg-background">
-        {/* Fixed Header - Desktop Only */}
-        {!isMobile && (
-          <HeaderNavbar
-            showLeftPanel={showLeftPanel}
-            showRightPanel={showRightPanel}
-            onToggleLeftPanel={toggleLeftPanel}
-            onToggleRightPanel={toggleRightPanel}
-          />
-        )}
-
         {/* Desktop Layout */}
         {!isMobile && (
           <motion.div 
-            className="flex-1 grid min-h-0 pt-14 relative"
+            className="flex-1 grid min-h-0 relative"
             style={{
               gridTemplateColumns: `${showLeftPanel ? `${leftPanelWidth}px` : '0px'} 1fr ${showRightPanel ? `${rightPanelWidth}px` : '0px'}`
             }}
@@ -133,6 +124,22 @@ function App() {
               }}
               transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
             >
+              {/* Left Panel Toggle */}
+              <PanelToggle
+                isOpen={showLeftPanel}
+                onToggle={toggleLeftPanel}
+                side="left"
+                className="z-20"
+              />
+
+              {/* Right Panel Toggle */}
+              <PanelToggle
+                isOpen={showRightPanel}
+                onToggle={toggleRightPanel}
+                side="right"
+                className="z-20"
+              />
+
               <WorkspacePanel className="h-full" />
             </motion.div>
 
