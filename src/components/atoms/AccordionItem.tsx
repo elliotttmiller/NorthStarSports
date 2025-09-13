@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react'
-import { ChevronDown } from '@phosphor-icons/react'
+import { CaretDown } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import type { AccordionItemProps } from '@/types'
 
@@ -38,7 +38,7 @@ export function AccordionItem({
         aria-controls={`accordion-content-${title.replace(/\s+/g, '-').toLowerCase()}`}
       >
         <span className="text-sm font-medium overflow-safe">{title}</span>
-        <ChevronDown 
+        <CaretDown 
           className={cn(
             "w-4 h-4 transition-transform duration-200 flex-shrink-0",
             isExpanded && "rotate-180"

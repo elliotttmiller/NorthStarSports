@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import { X, Calculator } from '@phosphor-icons/react'
+import { Calculator } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useBetting, Bet } from '@/contexts/BettingContext'
+import { BetSlipEntry } from '@/components/atoms'
+import { useBetSlip, useBettingUtils } from '@/hooks'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -20,50 +20,14 @@ export function BetSlip() {
     clearBets, 
     betSlipMode, 
     setBetSlipMode 
-  } = useBetting()
+  } = useBetSlip()
+  
+  const { calculateParlayOdds, formatOdds, formatLine } = useBettingUtils()
   
   const [roundRobinOptions, setRoundRobinOptions] = useState({
     '2teams': false,
     '3teams': false
   })
-
-  const formatOdds = (odds: number) => {
-    if (odds > 0) return `+${odds}`
-    return odds.toString()
-  }
-
-  const formatLine = (bet: Bet) => {
-    if (bet.betType === 'spread') {
-      const sign = bet.line && bet.line > 0 ? '+' : ''
-      return `${sign}${bet.line}`
-    }
-    if (bet.betType === 'total') {
-      return `${bet.isOver ? 'o' : 'u'}${bet.line}`
-    }
-    return ''
-  }
-
-  const calculatePayout = (stake: number, odds: number) => {
-    if (!stake || !odds) return 0
-    
-    if (odds > 0) {
-      return stake * (odds / 100)
-    } else {
-      return stake * (100 / Math.abs(odds))
-    }
-  }
-
-  const calculateParlayOdds = () => {
-    if (bets.length < 2) return 0
-    
-    let combinedDecimal = 1
-    bets.forEach(bet => {
-      const decimal = bet.odds > 0 ? (bet.odds / 100) + 1 : (100 / Math.abs(bet.odds)) + 1
-      combinedDecimal *= decimal
-    })
-    
-    return combinedDecimal > 2 ? Math.round((combinedDecimal - 1) * 100) : -(100 / (combinedDecimal - 1))
-  }
 
   const handlePlaceBet = () => {
     const hasStakes = bets.some(bet => bet.stake && bet.stake > 0)
@@ -75,6 +39,8 @@ export function BetSlip() {
     toast.success('Bet placed successfully!')
     clearBets()
   }
+
+  const parlayOdds = calculateParlayOdds(bets)
 
   if (bets.length === 0) {
     return (
@@ -110,80 +76,38 @@ export function BetSlip() {
         </TabsList>
 
         <TabsContent value="straight" className="mt-4">
-          <AnimatePresence mode="popLayout">
-            {bets.map((bet) => (
-              <motion.div
-                key={bet.id}
-                initial={{ opacity: 0, y: -20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
-                layout
-                className="mb-3"
-              >
-                <Card className="p-3">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-medium">{bet.teamName}</span>
-                        <Badge variant="outline" className="text-xs">
-                          {bet.betType.toUpperCase()}
-                        </Badge>
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {formatLine(bet)} {formatOdds(bet.odds)}
-                      </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
-                      onClick={() => removeBet(bet.id)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex gap-2">
-                      <div className="flex-1">
-                        <label className="text-xs text-muted-foreground">Risk</label>
-                        <Input
-                          type="number"
-                          placeholder="0"
-                          className="h-8 text-sm"
-                          value={bet.stake || ''}
-                          onChange={(e) => updateBetStake(bet.id, Number(e.target.value))}
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-xs text-muted-foreground">Win</label>
-                        <Input
-                          type="number"
-                          placeholder="0"
-                          className="h-8 text-sm"
-                          value={bet.stake ? calculatePayout(bet.stake, bet.odds).toFixed(2) : ''}
-                          readOnly
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+          <div className="space-y-fluid-sm fluid-container">
+            <AnimatePresence mode="popLayout">
+              {bets.map((bet) => (
+                <motion.div
+                  key={bet.id}
+                  initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  layout
+                >
+                  <BetSlipEntry
+                    bet={bet}
+                    onRemove={removeBet}
+                    onStakeChange={updateBetStake}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
         </TabsContent>
 
         <TabsContent value="parlay" className="mt-4">
           {bets.length < 2 ? (
-            <div className="text-center py-8">
-              <p className="text-sm text-muted-foreground">
+            <div className="text-center py-8 fluid-container">
+              <p className="text-sm text-muted-foreground overflow-safe">
                 Add at least 2 bets to create a parlay
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              <Card className="p-3">
+            <div className="space-y-fluid-md fluid-container">
+              <Card className="p-fluid-sm">
                 <div className="space-y-3">
                   <AnimatePresence mode="popLayout">
                     {bets.map((bet) => (
@@ -196,10 +120,10 @@ export function BetSlip() {
                         layout
                         className="flex items-center justify-between"
                       >
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium">{bet.teamName}</span>
-                            <span className="text-xs text-muted-foreground">
+                            <span className="text-sm font-medium overflow-safe">{bet.teamName}</span>
+                            <span className="text-xs text-muted-foreground overflow-safe">
                               {formatLine(bet)} {formatOdds(bet.odds)}
                             </span>
                           </div>
@@ -207,8 +131,9 @@ export function BetSlip() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                          className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive flex-shrink-0"
                           onClick={() => removeBet(bet.id)}
+                          aria-label="Remove bet from parlay"
                         >
                           <X className="w-4 h-4" />
                         </Button>
@@ -218,12 +143,12 @@ export function BetSlip() {
                 </div>
               </Card>
 
-              <Card className="p-3">
+              <Card className="p-fluid-sm">
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Parlay Odds</span>
-                    <span className="text-sm font-mono">
-                      {formatOdds(calculateParlayOdds())}
+                    <span className="text-sm font-medium overflow-safe">Parlay Odds</span>
+                    <span className="text-sm font-mono overflow-safe">
+                      {formatOdds(parlayOdds)}
                     </span>
                   </div>
                   <Separator />
@@ -234,6 +159,8 @@ export function BetSlip() {
                         type="number"
                         placeholder="0"
                         className="h-8 text-sm"
+                        min="0"
+                        step="0.01"
                       />
                     </div>
                     <div className="flex-1">

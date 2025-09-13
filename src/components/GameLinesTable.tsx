@@ -2,18 +2,20 @@ import { Plus } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
-import { useBetting, Game, Bet } from '@/contexts/BettingContext'
+import { GameRow, SkeletonLoader } from '@/components/atoms'
+import { useNavigation, useBetSlip } from '@/hooks'
 import { sampleLeagues } from '@/data/sampleData'
 import { cn } from '@/lib/utils'
 import { useState, useEffect } from 'react'
+import type { Game, Bet } from '@/types'
 
 interface GameLinesTableProps {
   className?: string
 }
 
 export function GameLinesTable({ className }: GameLinesTableProps) {
-  const { selectedLeague, addBet, bets } = useBetting()
+  const { selectedLeague } = useNavigation()
+  const { addBet } = useBetSlip()
   const [isLoading, setIsLoading] = useState(true)
   
   const league = sampleLeagues.find(l => l.id === selectedLeague)
@@ -29,107 +31,58 @@ export function GameLinesTable({ className }: GameLinesTableProps) {
     return () => clearTimeout(timer)
   }, [selectedLeague])
 
-  const formatOdds = (odds: number) => {
-    if (odds > 0) return `+${odds}`
-    return odds.toString()
-  }
-
-  const formatSpread = (spread: number) => {
-    if (spread > 0) return `+${spread}`
-    return spread.toString()
-  }
-
-  const isBetSelected = (gameId: string, teamName: string, betType: string) => {
-    return bets.some(bet => 
-      bet.gameId === gameId && 
-      bet.teamName === teamName && 
-      bet.betType === betType
-    )
-  }
-
-  const handleBetClick = (game: Game, teamName: string, betType: 'spread' | 'moneyline' | 'total', odds: number, line?: number, isOver?: boolean) => {
+  const handleBetClick = (betData: Omit<Bet, 'id'>) => {
     const bet: Bet = {
-      id: `${game.id}-${teamName}-${betType}-${Date.now()}`,
-      gameId: game.id,
-      teamName,
-      betType,
-      odds,
-      line,
-      isOver
+      id: `${betData.gameId}-${betData.teamName}-${betData.betType}-${Date.now()}`,
+      ...betData
     }
     addBet(bet)
   }
 
-  // Loading skeleton component
+  // Loading skeleton component using atomic SkeletonLoader
   const LoadingSkeleton = () => (
-    <Card className={cn("flex flex-col h-full", className)}>
-      <div className="p-4 border-b bg-accent/5">
+    <Card className={cn("flex flex-col h-full panel-fluid", className)}>
+      <div className="p-fluid-md border-b bg-accent/5">
         <div className="flex items-center justify-between">
           <div>
-            <Skeleton className="h-6 w-20 mb-2" />
-            <Skeleton className="h-4 w-32" />
+            <SkeletonLoader width="5rem" height="1.5rem" className="mb-2" />
+            <SkeletonLoader width="8rem" height="1rem" />
           </div>
-          <Skeleton className="h-8 w-24" />
+          <SkeletonLoader width="6rem" height="2rem" />
         </div>
       </div>
 
-      <div className="grid grid-cols-12 gap-4 p-4 border-b bg-muted/30 text-sm font-medium">
-        <div className="col-span-3">TIME</div>
-        <div className="col-span-2">TEAM</div>
-        <div className="col-span-2 text-center">SPREAD</div>
-        <div className="col-span-2 text-center">TOTAL</div>
-        <div className="col-span-2 text-center">MONEY LINE</div>
-        <div className="col-span-1 text-center">MORE</div>
+      <div className="grid grid-cols-6 gap-4 p-fluid-md border-b bg-muted/30 text-sm font-medium">
+        <div className="overflow-safe">TIME</div>
+        <div className="overflow-safe">TEAM</div>
+        <div className="text-center overflow-safe">SPREAD</div>
+        <div className="text-center overflow-safe">TOTAL</div>
+        <div className="text-center overflow-safe">MONEY LINE</div>
+        <div className="text-center overflow-safe">MORE</div>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto fluid-container">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="border-b">
-            {/* Away Team Row */}
-            <div className="grid grid-cols-12 gap-4 p-3">
-              <div className="col-span-3">
-                <Skeleton className="h-4 w-12" />
+          <div key={i} className="border-b p-fluid-sm">
+            <div className="grid grid-cols-6 gap-2 py-2">
+              <SkeletonLoader width="3rem" height="1rem" />
+              <div className="space-y-1">
+                <SkeletonLoader width="4rem" height="1rem" />
+                <SkeletonLoader width="4rem" height="1rem" />
               </div>
-              <div className="col-span-2 flex items-center gap-2">
-                <Skeleton className="w-6 h-6 rounded" />
-                <Skeleton className="h-4 w-16" />
+              <div className="space-y-1">
+                <SkeletonLoader height="2rem" />
+                <SkeletonLoader height="2rem" />
               </div>
-              <div className="col-span-2 flex gap-1">
-                <Skeleton className="h-8 flex-1" />
-                <Skeleton className="h-8 flex-1" />
+              <div className="space-y-1">
+                <SkeletonLoader height="2rem" />
+                <SkeletonLoader height="2rem" />
               </div>
-              <div className="col-span-2 flex gap-1">
-                <Skeleton className="h-8 flex-1" />
-                <Skeleton className="h-8 flex-1" />
+              <div className="space-y-1">
+                <SkeletonLoader height="2rem" />
+                <SkeletonLoader height="2rem" />
               </div>
-              <div className="col-span-2">
-                <Skeleton className="h-8 w-full" />
-              </div>
-              <div className="col-span-1 flex justify-center">
-                <Skeleton className="h-8 w-8" />
-              </div>
-            </div>
-            {/* Home Team Row */}
-            <div className="grid grid-cols-12 gap-4 p-3">
-              <div className="col-span-3"></div>
-              <div className="col-span-2 flex items-center gap-2">
-                <Skeleton className="w-6 h-6 rounded" />
-                <Skeleton className="h-4 w-16" />
-              </div>
-              <div className="col-span-2 flex gap-1">
-                <Skeleton className="h-8 flex-1" />
-                <Skeleton className="h-8 flex-1" />
-              </div>
-              <div className="col-span-2 flex gap-1">
-                <Skeleton className="h-8 flex-1" />
-                <Skeleton className="h-8 flex-1" />
-              </div>
-              <div className="col-span-2">
-                <Skeleton className="h-8 w-full" />
-              </div>
-              <div className="col-span-1 flex justify-center">
-                <Skeleton className="h-8 w-8" />
-              </div>
+              <SkeletonLoader height="2rem" />
             </div>
           </div>
         ))}
@@ -143,12 +96,12 @@ export function GameLinesTable({ className }: GameLinesTableProps) {
 
   if (games.length === 0) {
     return (
-      <Card className={cn("flex flex-col h-full", className)}>
-        <div className="p-4 border-b bg-accent/5">
+      <Card className={cn("flex flex-col h-full panel-fluid", className)}>
+        <div className="p-fluid-md border-b bg-accent/5">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold">{league?.name || 'Loading...'}</h2>
-              <p className="text-sm text-muted-foreground">Sep 14 - WEEK 2</p>
+              <h2 className="text-lg font-semibold overflow-safe">{league?.name || 'Loading...'}</h2>
+              <p className="text-sm text-muted-foreground overflow-safe">Sep 14 - WEEK 2</p>
             </div>
             <Button variant="outline" size="sm">
               Update Lines
@@ -157,7 +110,7 @@ export function GameLinesTable({ className }: GameLinesTableProps) {
         </div>
         
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-2 fluid-container">
             <p className="text-muted-foreground">No games available</p>
             <p className="text-sm text-muted-foreground">Check back later for updated lines</p>
           </div>
@@ -167,13 +120,13 @@ export function GameLinesTable({ className }: GameLinesTableProps) {
   }
 
   return (
-    <Card className={cn("flex flex-col h-full", className)}>
+    <Card className={cn("flex flex-col h-full panel-fluid", className)}>
       {/* Header */}
-      <div className="p-4 border-b bg-accent/5">
+      <div className="p-fluid-md border-b bg-accent/5">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold">{league?.name}</h2>
-            <p className="text-sm text-muted-foreground">Sep 14 - WEEK 2</p>
+            <h2 className="text-lg font-semibold overflow-safe">{league?.name}</h2>
+            <p className="text-sm text-muted-foreground overflow-safe">Sep 14 - WEEK 2</p>
           </div>
           <Button variant="outline" size="sm">
             Update Lines
@@ -182,149 +135,23 @@ export function GameLinesTable({ className }: GameLinesTableProps) {
       </div>
 
       {/* Table Header */}
-      <div className="grid grid-cols-12 gap-4 p-4 border-b bg-muted/30 text-sm font-medium text-muted-foreground">
-        <div className="col-span-3">TIME</div>
-        <div className="col-span-2">TEAM</div>
-        <div className="col-span-2 text-center">SPREAD</div>
-        <div className="col-span-2 text-center">TOTAL</div>
-        <div className="col-span-2 text-center">MONEY LINE</div>
-        <div className="col-span-1 text-center">MORE</div>
+      <div className="grid grid-cols-6 gap-2 p-fluid-md border-b bg-muted/30 text-sm font-medium text-muted-foreground">
+        <div className="overflow-safe">TIME</div>
+        <div className="overflow-safe">TEAM</div>
+        <div className="text-center overflow-safe">SPREAD</div>
+        <div className="text-center overflow-safe">TOTAL</div>
+        <div className="text-center overflow-safe">MONEY LINE</div>
+        <div className="text-center overflow-safe">MORE</div>
       </div>
 
-      {/* Games List */}
+      {/* Games List - Using Atomic GameRow Components */}
       <div className="flex-1 overflow-auto">
-        {games.map((game, index) => (
-          <div key={game.id} className="border-b last:border-b-0">
-            {/* Away Team Row */}
-            <div className="grid grid-cols-12 gap-4 p-3 hover:bg-muted/20 transition-colors">
-              <div className="col-span-3 text-sm text-muted-foreground">
-                {index === 0 ? game.time : ''}
-              </div>
-              <div className="col-span-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-muted rounded flex items-center justify-center text-xs font-bold">
-                    {game.awayTeam.slice(0, 3).toUpperCase()}
-                  </div>
-                  <span className="font-medium text-sm">{game.awayTeam}</span>
-                </div>
-              </div>
-              <div className="col-span-2 flex gap-1">
-                <Button
-                  variant={isBetSelected(game.id, game.awayTeam, 'spread') ? 'default' : 'outline'}
-                  size="sm"
-                  className="flex-1 h-8 text-xs odds-table"
-                  onClick={() => handleBetClick(game, game.awayTeam, 'spread', game.awaySpreadOdds, game.awaySpread)}
-                >
-                  {formatSpread(game.awaySpread)}
-                </Button>
-                <Button
-                  variant={isBetSelected(game.id, game.awayTeam, 'spread') ? 'default' : 'outline'}
-                  size="sm"
-                  className="flex-1 h-8 text-xs odds-table"
-                  onClick={() => handleBetClick(game, game.awayTeam, 'spread', game.awaySpreadOdds, game.awaySpread)}
-                >
-                  {formatOdds(game.awaySpreadOdds)}
-                </Button>
-              </div>
-              <div className="col-span-2 flex gap-1">
-                <Button
-                  variant={isBetSelected(game.id, 'Over', 'total') ? 'default' : 'outline'}
-                  size="sm"
-                  className="flex-1 h-8 text-xs odds-table"
-                  onClick={() => handleBetClick(game, 'Over', 'total', game.overOdds, game.total, true)}
-                >
-                  o{game.total}
-                </Button>
-                <Button
-                  variant={isBetSelected(game.id, 'Over', 'total') ? 'default' : 'outline'}
-                  size="sm"
-                  className="flex-1 h-8 text-xs odds-table"
-                  onClick={() => handleBetClick(game, 'Over', 'total', game.overOdds, game.total, true)}
-                >
-                  {formatOdds(game.overOdds)}
-                </Button>
-              </div>
-              <div className="col-span-2">
-                <Button
-                  variant={isBetSelected(game.id, game.awayTeam, 'moneyline') ? 'default' : 'outline'}
-                  size="sm"
-                  className="w-full h-8 text-xs odds-table"
-                  onClick={() => handleBetClick(game, game.awayTeam, 'moneyline', game.awayMoneyline)}
-                >
-                  {formatOdds(game.awayMoneyline)}
-                </Button>
-              </div>
-              <div className="col-span-1 flex justify-center">
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Home Team Row */}
-            <div className="grid grid-cols-12 gap-4 p-3 hover:bg-muted/20 transition-colors">
-              <div className="col-span-3"></div>
-              <div className="col-span-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-muted rounded flex items-center justify-center text-xs font-bold">
-                    {game.homeTeam.slice(0, 3).toUpperCase()}
-                  </div>
-                  <span className="font-medium text-sm">{game.homeTeam}</span>
-                </div>
-              </div>
-              <div className="col-span-2 flex gap-1">
-                <Button
-                  variant={isBetSelected(game.id, game.homeTeam, 'spread') ? 'default' : 'outline'}
-                  size="sm"
-                  className="flex-1 h-8 text-xs odds-table"
-                  onClick={() => handleBetClick(game, game.homeTeam, 'spread', game.homeSpreadOdds, game.homeSpread)}
-                >
-                  {formatSpread(game.homeSpread)}
-                </Button>
-                <Button
-                  variant={isBetSelected(game.id, game.homeTeam, 'spread') ? 'default' : 'outline'}
-                  size="sm"
-                  className="flex-1 h-8 text-xs odds-table"
-                  onClick={() => handleBetClick(game, game.homeTeam, 'spread', game.homeSpreadOdds, game.homeSpread)}
-                >
-                  {formatOdds(game.homeSpreadOdds)}
-                </Button>
-              </div>
-              <div className="col-span-2 flex gap-1">
-                <Button
-                  variant={isBetSelected(game.id, 'Under', 'total') ? 'default' : 'outline'}
-                  size="sm"
-                  className="flex-1 h-8 text-xs odds-table"
-                  onClick={() => handleBetClick(game, 'Under', 'total', game.underOdds, game.total, false)}
-                >
-                  u{game.total}
-                </Button>
-                <Button
-                  variant={isBetSelected(game.id, 'Under', 'total') ? 'default' : 'outline'}
-                  size="sm"
-                  className="flex-1 h-8 text-xs odds-table"
-                  onClick={() => handleBetClick(game, 'Under', 'total', game.underOdds, game.total, false)}
-                >
-                  {formatOdds(game.underOdds)}
-                </Button>
-              </div>
-              <div className="col-span-2">
-                <Button
-                  variant={isBetSelected(game.id, game.homeTeam, 'moneyline') ? 'default' : 'outline'}
-                  size="sm"
-                  className="w-full h-8 text-xs odds-table"
-                  onClick={() => handleBetClick(game, game.homeTeam, 'moneyline', game.homeMoneyline)}
-                >
-                  {formatOdds(game.homeMoneyline)}
-                </Button>
-              </div>
-              <div className="col-span-1 flex justify-center">
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
+        {games.map((game) => (
+          <GameRow 
+            key={game.id}
+            game={game}
+            onBetClick={handleBetClick}
+          />
         ))}
       </div>
     </Card>
