@@ -1,5 +1,5 @@
 import React from 'react'
-import { Toaster } from 'sonner'
+
 
 // Context
 import { BettingProvider } from './contexts/BettingContext'
@@ -10,86 +10,90 @@ import { SideNavPanel } from './components/SideNavPanel'
 import { WorkspacePanel } from './components/WorkspacePanel'
 import { ActionHubPanel } from './components/ActionHubPanel'
 import { MobileOverlay } from './components/MobileOverlay'
-import { MobileBottomNav } from './components/MobileBottomNav'
-
-// Hooks
 import { useIsMobile } from './hooks/useIsMobile'
-import { usePanelState } from './hooks/usePanelState'
-import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 
-function App() {
-  const isMobile = useIsMobile()
+function
   const {
-    showLeftPanel,
     showRightPanel,
-    leftPanelWidth,
     rightPanelWidth,
-    toggleLeftPanel,
-    toggleRightPanel,
-    showSportsOverlay,
-    showBetSlipOverlay,
-    setShowSportsOverlay,
+
+    showBetSlipO
     setShowBetSlipOverlay,
-    activePanel,
-    setActivePanel
-  } = usePanelState()
+    setAc
 
-  // Enable keyboard shortcuts for desktop
-  useKeyboardShortcuts({
-    onToggleLeftPanel: toggleLeftPanel,
-    onToggleRightPanel: toggleRightPanel,
-    showLeftPanel,
+  useKeyboardShortc
+    onToggleRightPa
     showRightPanel
-  })
 
-  // Mobile navigation handlers
-  const handleMobileNavigation = (panel: string) => {
-    switch (panel) {
+  const handleMobileN
       case 'sports':
-        setShowSportsOverlay(true)
-        setActivePanel('sports')
-        break
+        setActivePanel(
       case 'betslip':
-        setShowBetSlipOverlay(true)
-        setActivePanel('betslip')
+        setActivePanel('be
+      case 'home
+        setShowSpo
         break
-      case 'home':
-        setActivePanel('home')
-        setShowSportsOverlay(false)
-        setShowBetSlipOverlay(false)
-        break
-      default:
-        setActivePanel('home')
-        break
+
     }
-  }
 
-  return (
     <BettingProvider>
-      <div className="flex flex-col h-screen bg-background text-foreground">
         {/* Header */}
-        <HeaderNavbar
-          onToggleLeftPanel={toggleLeftPanel}
-          onToggleRightPanel={toggleRightPanel}
-          showLeftPanel={showLeftPanel}
-          showRightPanel={showRightPanel}
-        />
+          onToggle
+          showLeft
+    
 
-        {/* Main Content Area */}
-        <div className="flex flex-1 min-h-0">
           {!isMobile ? (
-            // Desktop layout - Three panel studio
             <>
-              {/* Left Panel */}
-              {showLeftPanel && (
-                <div className="flex-shrink-0 border-r bg-card" style={{ width: leftPanelWidth }}>
-                  <SideNavPanel />
-                </div>
+              {showL
+                  <S
               )}
+              {/* Center Panel *
+             
 
-              {/* Center Panel */}
-              <div className="flex-1 min-w-0">
-                <WorkspacePanel />
+              {showRightPanel && (
+                  <ActionHubPanel
+             
+          ) : (
+            <div className="fl
+              <div className="flex-
+              </div>
+             
+              
+                title="Sports"
+             
+
+   
+
+          
+              </Mobil
+              {/* Mobile Bottom Navigation */}
+                active
+              />
+          )}
+
+        <Toaster
+            style: {
+              border: '1px solid var(--border)'
+            }
+        />
+    </BettingProvider>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               </div>
 
               {/* Right Panel */}
@@ -128,7 +132,7 @@ function App() {
               {/* Mobile Bottom Navigation */}
               <MobileBottomNav
                 activePanel={activePanel}
-                onNavClick={handleMobileNavigation}
+                onNavigate={handleMobileNavigation}
               />
             </div>
           )}
