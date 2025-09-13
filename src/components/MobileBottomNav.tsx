@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 
 interface MobileBottomNavProps {
   className?: string
-  onNavClick: (panel: 'nav' | 'workspace' | 'betslip' | 'profile') => void
+  onNavClick: (panel: 'home' | 'sports' | 'betslip' | 'profile') => void
   activePanel: string
 }
 
@@ -20,21 +20,21 @@ export function MobileBottomNav({ className, onNavClick, activePanel }: MobileBo
       className
     )}>
       <Button
-        variant={activePanel === 'nav' ? 'default' : 'ghost'}
+        variant={activePanel === 'home' ? 'default' : 'ghost'}
         className="rounded-none h-16 flex-col gap-1"
-        onClick={() => onNavClick('nav')}
+        onClick={() => onNavClick('home')}
       >
-        <List className="w-5 h-5" />
-        <span className="text-xs">Sports</span>
+        <ChartBar className="w-5 h-5" />
+        <span className="text-xs">Home</span>
       </Button>
 
       <Button
-        variant={activePanel === 'workspace' ? 'default' : 'ghost'}
+        variant={activePanel === 'sports' ? 'default' : 'ghost'}
         className="rounded-none h-16 flex-col gap-1"
-        onClick={() => onNavClick('workspace')}
+        onClick={() => onNavClick('sports')}
       >
-        <ChartBar className="w-5 h-5" />
-        <span className="text-xs">Lines</span>
+        <List className="w-5 h-5" />
+        <span className="text-xs">Sports</span>
       </Button>
 
       <Button
