@@ -1,20 +1,21 @@
+import React from 'react'
 import { List, Receipt } from '@phosphor-icons/react'
-import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Badge } from '@/components/ui/badge'
 import { GameLinesTable } from './GameLinesTable'
 import { PropBuilder } from './PropBuilder'
 import { useBetting } from '@/contexts/BettingContext'
 import { cn } from '@/lib/utils'
 
-interface WorkspacePanelProps {
-  className?: string
-  isMobile?: boolean
-  onToggleLeftPanel?: () => void
-  onToggleRightPanel?: () => void
-}
+  isMobile = false,
+  onToggleRightPanel
+  const { activeView
+  return (
+      {/* Header with Navigation 
+ 
 
-export function WorkspacePanel({ 
-  className,
+              variant="ghost"
+            
   isMobile = false,
   onToggleLeftPanel,
   onToggleRightPanel 
@@ -33,9 +34,9 @@ export function WorkspacePanel({
               size="sm"
               className="h-9 px-3 nav-button hover:bg-secondary/50"
               onClick={onToggleLeftPanel}
-            >
+             
               <List className="w-4 h-4 mr-2" />
-              Sports
+            </Button
             </Button>
             <h1 className="text-lg font-semibold">NorthStar Sports</h1>
             <Button
@@ -47,15 +48,15 @@ export function WorkspacePanel({
               <Receipt className="w-4 h-4 mr-2" />
               Bet Slip
               {bets.length > 0 && (
-                <Badge 
+                variant
                   variant="default" 
                   className="ml-2 h-5 px-1.5 bg-accent text-accent-foreground"
                 >
-                  {bets.length}
+                Bet Slip
                 </Badge>
-              )}
+                
             </Button>
-          </>
+             
         ) : (
           // Desktop Header
           <>
@@ -65,42 +66,41 @@ export function WorkspacePanel({
                 size="sm"
                 className="h-9 px-3 nav-button hover:bg-secondary/50"
                 onClick={onToggleLeftPanel}
-              >
+        )}
                 <List className="w-4 h-4" />
-              </Button>
-              <h1 className="text-lg font-semibold">Sports Center</h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-9 px-3 nav-button hover:bg-secondary/50"
-                onClick={onToggleRightPanel}
-              >
-                <Receipt className="w-4 h-4 mr-2" />
-                Bet Slip
-                {bets.length > 0 && (
-                  <Badge 
-                    variant="default" 
-                    className="ml-2 h-5 px-1.5 bg-accent text-accent-foreground"
-                  >
-                    {bets.length}
-                  </Badge>
-                )}
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Main Content Area */}
-      <div className="flex-1 min-h-0">
-        {activeView === 'games' ? (
-          <GameLinesTable />
-        ) : (
-          <PropBuilder />
-        )}
-      </div>
-    </div>
   )
-}
+              <h1 className="text-lg font-semibold">Sports Center</h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
