@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { BetSlip } from './BetSlip'
 import { MyBets } from './MyBets'
-import { useBetting } from '@/contexts/BettingContext'
+import { useBetSlip } from '@/hooks'
 import { cn } from '@/lib/utils'
 
 interface ActionHubPanelProps {
@@ -11,7 +11,7 @@ interface ActionHubPanelProps {
 }
 
 export function ActionHubPanel({ className }: ActionHubPanelProps) {
-  const { rightPanelTab, setRightPanelTab, bets } = useBetting()
+  const { rightPanelTab, setRightPanelTab, bets } = useBetSlip()
 
   return (
     <Card className={cn("flex flex-col h-full bg-card border-l", className)}>

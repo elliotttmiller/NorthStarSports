@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { Toaster } from 'sonner'
 import { BettingProvider } from '@/contexts/BettingContext'
-import { NavigationProvider } from '@/contexts/NavigationContext'
 import { WorkspacePanel } from '@/components/WorkspacePanel'
 import { SideNavPanel } from '@/components/SideNavPanel'
 import { ActionHubPanel } from '@/components/ActionHubPanel'
 import { MobileOverlay } from '@/components/MobileOverlay'
 import { MobileBottomNav } from '@/components/MobileBottomNav'
-import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useMediaQuery } from '@/hooks'
 import type { MobilePanelType } from '@/types'
 
 export default function App() {
@@ -42,9 +41,8 @@ export default function App() {
   const toggleRightPanel = () => setShowRightPanel(!showRightPanel)
 
   return (
-    <NavigationProvider>
-      <BettingProvider>
-        <div className="min-h-screen bg-background text-foreground">
+    <BettingProvider>
+      <div className="min-h-screen bg-background text-foreground">
           {isMobile ? (
             // Mobile Experience - Focused Single Panel
             <div className="flex flex-col h-screen">
@@ -133,6 +131,5 @@ export default function App() {
           <Toaster position="top-right" />
         </div>
       </BettingProvider>
-    </NavigationProvider>
-  )
+    )
 }

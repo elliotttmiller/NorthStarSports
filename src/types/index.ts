@@ -3,7 +3,7 @@
  * All data shapes and interfaces for the NorthStarSports application
  */
 
-// Core Betting Types
+// ===== CORE BETTING TYPES =====
 export interface Bet {
   id: string
   gameId: string
@@ -15,7 +15,6 @@ export interface Bet {
   isOver?: boolean
 }
 
-// Game and League Types
 export interface Game {
   id: string
   homeTeam: string
@@ -39,50 +38,45 @@ export interface League {
   games: Game[]
 }
 
-// Sports Navigation Types
 export interface Sport {
   id: string
   name: string
   leagues: League[]
 }
 
-// UI State Types
+// ===== UI STATE ENUMS =====
 export type ViewType = 'games' | 'props'
 export type BetSlipMode = 'straight' | 'parlay'
 export type RightPanelTab = 'betslip' | 'mybets'
 export type MobilePanelType = 'sports' | 'betslip' | null
 
-// Context and Hook Types
+// ===== CONTEXT INTERFACES =====
 export interface BettingContextType {
+  // Bet Management
   bets: Bet[]
   addBet: (bet: Bet) => void
   removeBet: (betId: string) => void
   updateBetStake: (betId: string, stake: number) => void
   clearBets: () => void
+  
+  // Navigation State
   selectedSport: string
   selectedLeague: string
   setSelectedSport: (sport: string) => void
   setSelectedLeague: (league: string) => void
-  activeView: ViewType
-  setActiveView: (view: ViewType) => void
   favorites: string[]
   toggleFavorite: (leagueId: string) => void
+  
+  // View Management
+  activeView: ViewType
+  setActiveView: (view: ViewType) => void
   betSlipMode: BetSlipMode
   setBetSlipMode: (mode: BetSlipMode) => void
   rightPanelTab: RightPanelTab
   setRightPanelTab: (tab: RightPanelTab) => void
 }
 
-export interface NavigationContextType {
-  selectedSport: string
-  selectedLeague: string
-  setSelectedSport: (sport: string) => void
-  setSelectedLeague: (league: string) => void
-  favorites: string[]
-  toggleFavorite: (leagueId: string) => void
-}
-
-// Component Props Types
+// ===== COMPONENT PROP INTERFACES =====
 export interface PanelProps {
   isMobile?: boolean
   onToggleLeftPanel?: () => void
@@ -96,6 +90,7 @@ export interface MobileOverlayProps {
   children: React.ReactNode
 }
 
+// ===== ATOMIC COMPONENT INTERFACES =====
 export interface AccordionItemProps {
   title: string
   children: React.ReactNode
@@ -114,7 +109,7 @@ export interface BetSlipEntryProps {
   onStakeChange: (betId: string, stake: number) => void
 }
 
-// Animation and Transition Types
+// ===== ANIMATION INTERFACES =====
 export interface AnimationProps {
   initial?: object
   animate?: object
@@ -122,9 +117,29 @@ export interface AnimationProps {
   transition?: object
 }
 
-// Utility Types
+// ===== UTILITY TYPES =====
 export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
 }
 
 export type AtomicComponent<T = {}> = React.FC<T & React.HTMLAttributes<HTMLElement>>
+
+// ===== RESPONSIVE TYPES =====
+export interface ResponsiveState {
+  isMobile: boolean
+  isTablet: boolean
+  isDesktop: boolean
+  isLargeDesktop: boolean
+}
+
+// ===== BETTING CALCULATION TYPES =====
+export interface BetCalculation {
+  payout: number
+  totalStake: number
+  potentialWin: number
+}
+
+export interface ParlayCalculation extends BetCalculation {
+  parlayOdds: number
+  combinedDecimal: number
+}

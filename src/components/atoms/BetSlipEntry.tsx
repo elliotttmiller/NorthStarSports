@@ -4,7 +4,7 @@
  * Follows Protocol of Radical Reusability
  */
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils'
 import { useBettingUtils } from '@/hooks'
 import type { BetSlipEntryProps } from '@/types'
 
-export function BetSlipEntry({ 
+function BetSlipEntryComponent({ 
   bet, 
   onRemove, 
   onStakeChange,
@@ -96,3 +96,6 @@ export function BetSlipEntry({
     </div>
   )
 }
+
+// Memoized export for performance optimization
+export const BetSlipEntry = React.memo(BetSlipEntryComponent)

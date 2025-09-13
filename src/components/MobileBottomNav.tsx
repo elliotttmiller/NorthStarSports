@@ -1,7 +1,7 @@
 import { List, ChartBar, Receipt, User } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { useBetting } from '@/contexts/BettingContext'
+import { useBetSlip } from '@/hooks'
 import { cn } from '@/lib/utils'
 
 type ActivePanel = 'home' | 'sports' | 'betslip' | 'profile'
@@ -14,7 +14,7 @@ interface MobileBottomNavProps {
 }
 
 export function MobileBottomNav({ className, onNavClick, onNavigate, activePanel }: MobileBottomNavProps) {
-  const { bets } = useBetting()
+  const { bets } = useBetSlip()
   
   const handleNavClick = (panel: 'home' | 'sports' | 'betslip' | 'profile') => {
     if (onNavigate) {

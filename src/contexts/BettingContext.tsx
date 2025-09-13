@@ -1,4 +1,10 @@
-import { createContext, useContext, ReactNode } from 'react'
+/**
+ * Unified Betting Context - Single Source of Truth
+ * Manages all application state including betting, navigation, and UI preferences
+ * Replaces the previous separate NavigationContext for better architecture
+ */
+
+import { createContext, useContext, ReactNode, useCallback } from 'react'
 import { useKV } from '@github/spark/hooks'
 import type { 
   Bet, 
@@ -12,6 +18,10 @@ import type {
 
 const BettingContext = createContext<BettingContextType | null>(null)
 
+/**
+ * BettingProvider - Main Application State Provider
+ * Provides unified state management for the entire application
+ */
 export function BettingProvider({ children }: { children: ReactNode }) {
   const [bets, setBets] = useKV<Bet[]>('betting-slip', [])
   const [favorites, setFavorites] = useKV<string[]>('favorites', [])
@@ -21,7 +31,11 @@ export function BettingProvider({ children }: { children: ReactNode }) {
   const [betSlipMode, setBetSlipMode] = useKV<BetSlipMode>('betslip-mode', 'straight')
   const [rightPanelTab, setRightPanelTab] = useKV<RightPanelTab>('right-panel-tab', 'betslip')
 
-  const addBet = (bet: Bet) => {
+  /**
+   * Add a new bet to the bet slip
+   * Replaces existing bet if same game/type/team combination exists
+   */
+  const addBet = useCallback((bet: Bet) => {
     setBets(currentBets => {
       if (!currentBets) return [bet]
       
@@ -37,32 +51,36 @@ export function BettingProvider({ children }: { children: ReactNode }) {
       
       return [...currentBets, bet]
     })
-  }
+  }, [setBets])
 
-  const removeBet = (betId: string) => {
+  /** Remove a bet from the bet slip */
+  const removeBet = useCallback((betId: string) => {
     setBets(currentBets => currentBets?.filter(bet => bet.id !== betId) || [])
-  }
+  }, [setBets])
 
-  const updateBetStake = (betId: string, stake: number) => {
+  /** Update the stake amount for a specific bet */
+  const updateBetStake = useCallback((betId: string, stake: number) => {
     setBets(currentBets => 
       currentBets?.map(bet => 
         bet.id === betId ? { ...bet, stake } : bet
       ) || []
     )
-  }
+  }, [setBets])
 
-  const clearBets = () => {
+  /** Clear all bets from the bet slip */
+  const clearBets = useCallback(() => {
     setBets([])
-  }
+  }, [setBets])
 
-  const toggleFavorite = (leagueId: string) => {
+  /** Toggle favorite status for a league */
+  const toggleFavorite = useCallback((leagueId: string) => {
     setFavorites(currentFavorites => {
       if (!currentFavorites) return [leagueId]
       return currentFavorites.includes(leagueId)
         ? currentFavorites.filter(id => id !== leagueId)
         : [...currentFavorites, leagueId]
     })
-  }
+  }, [setFavorites])
 
   return (
     <BettingContext.Provider

@@ -4,12 +4,13 @@
  * Follows Protocol of Radical Reusability
  */
 
+import React from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useBettingUtils } from '@/hooks'
 import type { GameRowProps, Bet } from '@/types'
 
-export function GameRow({ 
+function GameRowComponent({ 
   game, 
   onBetClick,
   className,
@@ -125,3 +126,6 @@ export function GameRow({
     </div>
   )
 }
+
+// Memoized export for performance optimization
+export const GameRow = React.memo(GameRowComponent)

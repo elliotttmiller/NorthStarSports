@@ -4,15 +4,66 @@
  */
 
 import { useBetting as useBettingContext } from '@/contexts/BettingContext'
-import { useNavigation as useNavigationContext } from '@/contexts/NavigationContext'
+import { useCallback, useMemo, useEffect, useState } from 'react'
 import type { Bet } from '@/types'
 
 /**
+ * Media Query Hook
+ * Responsive design utilities
+ */
+export function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia(query)
+    
+    const updateMatches = () => {
+      setMatches(media.matches)
+    }
+
+    updateMatches()
+    media.addEventListener('change', updateMatches)
+    
+    return () => media.removeEventListener('change', updateMatches)
+  }, [query])
+
+  return matches
+}
+
+/**
+ * Responsive Utilities Hook
+ * Pre-configured breakpoint hooks
+ */
+export function useResponsive() {
+  const isMobile = useMediaQuery('(max-width: 1023px)')
+  const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1023px)')
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
+  const isLargeDesktop = useMediaQuery('(min-width: 1440px)')
+  
+  return { isMobile, isTablet, isDesktop, isLargeDesktop }
+}
+
+/**
+ * Unified Application State Hook
+ * Single source of truth for all app state
+ */
+export function useAppState() {
+  return useBettingContext()
+}
+
+/**
  * Bet Slip Management Hook
- * Abstracts all bet-related operations
+ * Abstracts all bet-related operations with performance optimizations
  */
 export function useBetSlip() {
   const context = useBettingContext()
+  
+  // Memoize bet statistics for performance
+  const betStats = useMemo(() => ({
+    totalBets: context.bets.length,
+    totalStake: context.bets.reduce((sum, bet) => sum + (bet.stake || 0), 0),
+    hasValidBets: context.bets.some(bet => bet.stake && bet.stake > 0),
+  }), [context.bets])
   
   return {
     bets: context.bets,
@@ -24,15 +75,25 @@ export function useBetSlip() {
     setBetSlipMode: context.setBetSlipMode,
     rightPanelTab: context.rightPanelTab,
     setRightPanelTab: context.setRightPanelTab,
+    ...betStats,
   }
 }
 
 /**
  * Navigation State Hook
- * Abstracts sport/league selection
+ * Abstracts sport/league selection with optimized updates
  */
 export function useNavigation() {
-  return useNavigationContext()
+  const context = useBettingContext()
+  
+  return {
+    selectedSport: context.selectedSport,
+    selectedLeague: context.selectedLeague,
+    setSelectedSport: context.setSelectedSport,
+    setSelectedLeague: context.setSelectedLeague,
+    favorites: context.favorites,
+    toggleFavorite: context.toggleFavorite,
+  }
 }
 
 /**
@@ -49,23 +110,11 @@ export function useWorkspace() {
 }
 
 /**
- * Panel Visibility Hook for Desktop
- * Manages panel show/hide states
- */
-export function usePanelVisibility() {
-  // This could be moved to a separate context if needed
-  // For now, we'll use local state in App.tsx
-  return {
-    // Will be implemented in App.tsx refactor
-  }
-}
-
-/**
  * Betting Utilities Hook
- * Common betting calculations and utilities
+ * Common betting calculations and utilities with memoization
  */
 export function useBettingUtils() {
-  const calculatePayout = (stake: number, odds: number): number => {
+  const calculatePayout = useCallback((stake: number, odds: number): number => {
     if (!stake || !odds) return 0
     
     if (odds > 0) {
@@ -73,9 +122,9 @@ export function useBettingUtils() {
     } else {
       return stake * (100 / Math.abs(odds))
     }
-  }
+  }, [])
 
-  const calculateParlayOdds = (bets: Bet[]): number => {
+  const calculateParlayOdds = useCallback((bets: Bet[]): number => {
     if (bets.length < 2) return 0
     
     let combinedDecimal = 1
@@ -85,25 +134,40 @@ export function useBettingUtils() {
     })
     
     return combinedDecimal > 2 ? Math.round((combinedDecimal - 1) * 100) : -(100 / (combinedDecimal - 1))
-  }
+  }, [])
 
-  const formatOdds = (odds: number): string => {
+  const formatOdds = useCallback((odds: number): string => {
     return odds > 0 ? `+${odds}` : odds.toString()
-  }
+  }, [])
 
-  const formatLine = (bet: Bet): string => {
+  const formatLine = useCallback((bet: Bet): string => {
     if (bet.betType === 'spread') {
       return `${bet.line > 0 ? '+' : ''}${bet.line}`
     } else if (bet.betType === 'total') {
       return `${bet.isOver ? 'O' : 'U'} ${bet.line}`
     }
     return ''
-  }
+  }, [])
+
+  const calculateTotalPayout = useCallback((bets: Bet[]): number => {
+    if (bets.length === 0) return 0
+    
+    if (bets.length === 1) {
+      const bet = bets[0]
+      return bet.stake ? calculatePayout(bet.stake, bet.odds) : 0
+    }
+    
+    // Parlay calculation
+    const totalStake = bets.reduce((sum, bet) => sum + (bet.stake || 0), 0)
+    const parlayOdds = calculateParlayOdds(bets)
+    return parlayOdds ? calculatePayout(totalStake, parlayOdds) : 0
+  }, [calculatePayout, calculateParlayOdds])
 
   return {
     calculatePayout,
     calculateParlayOdds,
     formatOdds,
     formatLine,
+    calculateTotalPayout,
   }
 }
