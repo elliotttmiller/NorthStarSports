@@ -7,6 +7,8 @@ import { WorkspacePanel } from './components/WorkspacePanel'
 import { ActionHubPanel } from './components/ActionHubPanel'
 import { MobileBottomNav } from './components/MobileBottomNav'
 import { MobileOverlay } from './components/MobileOverlay'
+import { PanelToggle } from './components/PanelToggle'
+import { ResizeHandle } from './components/ResizeHandle'
 import { useIsMobile } from './hooks/useIsMobile'
 import { usePanelState } from './hooks/usePanelState'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
@@ -19,7 +21,16 @@ function App() {
   const [showMobileBetSlip, setShowMobileBetSlip] = useState(false)
   
   // Desktop panel visibility state with persistence
-  const { showLeftPanel, showRightPanel, toggleLeftPanel, toggleRightPanel } = usePanelState()
+  const { 
+    showLeftPanel, 
+    showRightPanel, 
+    leftPanelWidth, 
+    rightPanelWidth,
+    toggleLeftPanel, 
+    toggleRightPanel,
+    setLeftPanelWidth,
+    setRightPanelWidth
+  } = usePanelState()
 
   // Keyboard shortcuts for panel toggling (desktop only)
   useKeyboardShortcuts({
@@ -64,62 +75,138 @@ function App() {
         {/* Desktop Layout */}
         {!isMobile && (
           <motion.div 
-            className="flex-1 grid min-h-0 pt-14"
+            className="flex-1 grid min-h-0 pt-14 relative"
             style={{
-              gridTemplateColumns: `${showLeftPanel ? '300px' : '0px'} 1fr ${showRightPanel ? '300px' : '0px'}`
+              gridTemplateColumns: `${showLeftPanel ? `${leftPanelWidth}px` : '0px'} 1fr ${showRightPanel ? `${rightPanelWidth}px` : '0px'}`
             }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
           >
             {/* Left Panel - Navigation */}
-            <div className="min-h-0 overflow-hidden">
+            <motion.div 
+              className="min-h-0 overflow-hidden relative bg-card/50 backdrop-blur-sm border-r border-border/50"
+              animate={{ 
+                opacity: showLeftPanel ? 1 : 0,
+                x: showLeftPanel ? 0 : -20,
+                boxShadow: showLeftPanel 
+                  ? '4px 0 24px -12px rgba(0,0,0,0.08), 1px 0 0 0 rgba(0,0,0,0.02)' 
+                  : 'none'
+              }}
+              transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
+            >
               <AnimatePresence mode="wait">
                 {showLeftPanel && (
                   <motion.div
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.25, ease: 'easeInOut' }}
-                    className="h-full"
+                    exit={{ opacity: 0, x: -30 }}
+                    transition={{ 
+                      duration: 0.35, 
+                      ease: [0.4, 0.0, 0.2, 1],
+                      delay: 0.05
+                    }}
+                    className="h-full relative"
                   >
                     <SideNavPanel className="h-full" />
+                    
+                    {/* Floating toggle for left panel */}
+                    <PanelToggle
+                      isOpen={showLeftPanel}
+                      onToggle={toggleLeftPanel}
+                      side="left"
+                    />
+                    
+                    {/* Resize handle for left panel */}
+                    <ResizeHandle
+                      side="left"
+                      onResize={setLeftPanelWidth}
+                      minWidth={250}
+                      maxWidth={500}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
 
             {/* Center Panel - Workspace */}
             <motion.div 
-              className={`min-h-0 border-x border-border ${
+              className={`min-h-0 relative bg-background ${
                 !showLeftPanel && !showRightPanel 
-                  ? 'shadow-lg ring-1 ring-accent/10' 
-                  : ''
+                  ? 'shadow-2xl ring-1 ring-accent/20 rounded-lg mx-2 my-2' 
+                  : 'border-x border-border'
               }`}
               animate={{
-                borderColor: !showLeftPanel && !showRightPanel 
-                  ? 'var(--accent)' 
-                  : 'var(--border)'
+                scale: !showLeftPanel && !showRightPanel ? 1.005 : 1,
+                borderRadius: !showLeftPanel && !showRightPanel ? '8px' : '0px'
               }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
             >
               <WorkspacePanel className="h-full" />
+              
+              {/* Floating toggles when panels are hidden */}
+              {!showLeftPanel && (
+                <PanelToggle
+                  isOpen={showLeftPanel}
+                  onToggle={toggleLeftPanel}
+                  side="left"
+                  className="!left-4"
+                />
+              )}
+              
+              {!showRightPanel && (
+                <PanelToggle
+                  isOpen={showRightPanel}
+                  onToggle={toggleRightPanel}
+                  side="right"
+                  className="!right-4"
+                />
+              )}
             </motion.div>
 
             {/* Right Panel - Action Hub */}
-            <div className="min-h-0 overflow-hidden">
+            <motion.div 
+              className="min-h-0 overflow-hidden relative bg-card/50 backdrop-blur-sm border-l border-border/50"
+              animate={{ 
+                opacity: showRightPanel ? 1 : 0,
+                x: showRightPanel ? 0 : 20,
+                boxShadow: showRightPanel 
+                  ? '-4px 0 24px -12px rgba(0,0,0,0.08), -1px 0 0 0 rgba(0,0,0,0.02)' 
+                  : 'none'
+              }}
+              transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
+            >
               <AnimatePresence mode="wait">
                 {showRightPanel && (
                   <motion.div
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.25, ease: 'easeInOut' }}
-                    className="h-full"
+                    exit={{ opacity: 0, x: 30 }}
+                    transition={{ 
+                      duration: 0.35, 
+                      ease: [0.4, 0.0, 0.2, 1],
+                      delay: 0.05
+                    }}
+                    className="h-full relative"
                   >
                     <ActionHubPanel className="h-full" />
+                    
+                    {/* Floating toggle for right panel */}
+                    <PanelToggle
+                      isOpen={showRightPanel}
+                      onToggle={toggleRightPanel}
+                      side="right"
+                    />
+                    
+                    {/* Resize handle for right panel */}
+                    <ResizeHandle
+                      side="right"
+                      onResize={setRightPanelWidth}
+                      minWidth={250}
+                      maxWidth={500}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           </motion.div>
         )}
 

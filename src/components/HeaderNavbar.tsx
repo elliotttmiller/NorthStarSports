@@ -35,24 +35,63 @@ export function HeaderNavbar({
       <div className="flex items-center justify-between h-14 px-4">
         {/* Left Section - Panel Toggle & Logo */}
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onToggleLeftPanel}
-            className={`p-2 transition-all duration-200 ${
-              showLeftPanel 
-                ? 'bg-muted/50 hover:bg-muted text-foreground' 
-                : 'hover:bg-muted text-muted-foreground hover:text-foreground'
-            }`}
-            title={`${showLeftPanel ? 'Hide Navigation' : 'Show Navigation'} (⌘[)`}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <motion.div
-              animate={{ rotate: showLeftPanel ? 90 : 0 }}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggleLeftPanel}
+              className={`relative p-2 transition-all duration-300 group ${
+                showLeftPanel 
+                  ? 'bg-primary/10 hover:bg-primary/15 text-primary border border-primary/20' 
+                  : 'hover:bg-muted/80 text-muted-foreground hover:text-foreground hover:border-border/50'
+              }`}
+              title={`${showLeftPanel ? 'Hide Navigation' : 'Show Navigation'} (⌘[)`}
             >
-              {showLeftPanel ? <X size={18} /> : <Sidebar size={18} />}
-            </motion.div>
-          </Button>
+              <motion.div
+                animate={{ 
+                  rotate: showLeftPanel ? 180 : 0,
+                  scale: showLeftPanel ? 1.1 : 1
+                }}
+                transition={{ 
+                  duration: 0.3, 
+                  ease: [0.4, 0.0, 0.2, 1],
+                  type: 'spring',
+                  damping: 20
+                }}
+                className="relative"
+              >
+                <Sidebar size={18} />
+              </motion.div>
+              
+              {/* Active indicator */}
+              <motion.div
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-primary/5 to-accent/5"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ 
+                  opacity: showLeftPanel ? 1 : 0,
+                  scale: showLeftPanel ? 1 : 0.8
+                }}
+                transition={{ duration: 0.2 }}
+              />
+              
+              {/* Subtle glow effect */}
+              {showLeftPanel && (
+                <motion.div
+                  className="absolute -inset-1 bg-primary/10 rounded-lg blur-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.5, 0] }}
+                  transition={{ 
+                    duration: 2, 
+                    ease: 'easeInOut',
+                    repeat: Infinity 
+                  }}
+                />
+              )}
+            </Button>
+          </motion.div>
           
           <div className="flex items-center gap-2">
             <motion.div
@@ -106,46 +145,107 @@ export function HeaderNavbar({
 
         {/* Right Section - Bet Slip Toggle & User */}
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onToggleRightPanel}
-            className={`relative p-2 transition-all duration-200 ${
-              showRightPanel 
-                ? 'bg-muted/50 hover:bg-muted text-foreground' 
-                : 'hover:bg-muted text-muted-foreground hover:text-foreground'
-            }`}
-            title={`${showRightPanel ? 'Hide Bet Slip' : 'Show Bet Slip'} (⌘])`}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <motion.div
-              animate={{ 
-                scale: totalBets > 0 ? [1, 1.1, 1] : 1
-              }}
-              transition={{ 
-                duration: 0.5, 
-                ease: 'easeInOut',
-                repeat: totalBets > 0 ? Infinity : 0,
-                repeatDelay: 2
-              }}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggleRightPanel}
+              className={`relative p-2 transition-all duration-300 overflow-hidden ${
+                showRightPanel 
+                  ? 'bg-primary/10 hover:bg-primary/15 text-primary border border-primary/20' 
+                  : 'hover:bg-muted/80 text-muted-foreground hover:text-foreground hover:border-border/50'
+              } ${totalBets > 0 ? 'ring-2 ring-accent/30 ring-offset-2 ring-offset-background' : ''}`}
+              title={`${showRightPanel ? 'Hide Bet Slip' : 'Show Bet Slip'} (⌘])`}
             >
-              <Receipt size={18} />
-            </motion.div>
-            {totalBets > 0 && (
               <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                className="absolute -top-1 -right-1"
+                animate={{ 
+                  scale: totalBets > 0 ? [1, 1.15, 1] : showRightPanel ? 1.1 : 1,
+                  rotate: showRightPanel ? [0, 5, -5, 0] : 0
+                }}
+                transition={{ 
+                  duration: totalBets > 0 ? 0.6 : 0.3, 
+                  ease: 'easeInOut',
+                  repeat: totalBets > 0 ? Infinity : 0,
+                  repeatDelay: 3
+                }}
               >
-                <Badge 
-                  variant="destructive"
-                  className="h-5 w-5 p-0 flex items-center justify-center text-xs font-medium"
-                >
-                  {totalBets}
-                </Badge>
+                <Receipt size={18} />
               </motion.div>
-            )}
-          </Button>
+              
+              {/* Pulse effect for active bets */}
+              {totalBets > 0 && (
+                <motion.div
+                  className="absolute inset-0 bg-accent/20 rounded-md"
+                  animate={{ 
+                    opacity: [0, 0.3, 0],
+                    scale: [0.8, 1.2, 0.8]
+                  }}
+                  transition={{
+                    duration: 2,
+                    ease: 'easeInOut',
+                    repeat: Infinity
+                  }}
+                />
+              )}
+              
+              {/* Active indicator */}
+              <motion.div
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-primary/5 to-accent/5"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ 
+                  opacity: showRightPanel ? 1 : 0,
+                  scale: showRightPanel ? 1 : 0.8
+                }}
+                transition={{ duration: 0.2 }}
+              />
+              
+              {/* Bet count badge with enhanced animation */}
+              {totalBets > 0 && (
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  exit={{ scale: 0, rotate: 180 }}
+                  transition={{ 
+                    type: 'spring',
+                    damping: 15,
+                    stiffness: 200
+                  }}
+                  className="absolute -top-1 -right-1"
+                >
+                  <Badge 
+                    variant="destructive"
+                    className="h-5 w-5 p-0 flex items-center justify-center text-xs font-bold shadow-lg"
+                  >
+                    <motion.span
+                      key={totalBets}
+                      initial={{ scale: 1.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {totalBets}
+                    </motion.span>
+                  </Badge>
+                </motion.div>
+              )}
+              
+              {/* Subtle glow effect when active */}
+              {showRightPanel && (
+                <motion.div
+                  className="absolute -inset-1 bg-primary/10 rounded-lg blur-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.5, 0] }}
+                  transition={{ 
+                    duration: 2, 
+                    ease: 'easeInOut',
+                    repeat: Infinity 
+                  }}
+                />
+              )}
+            </Button>
+          </motion.div>
 
           <div className="h-6 w-px bg-border" />
 
