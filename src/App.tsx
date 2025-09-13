@@ -1,21 +1,23 @@
-import React from 'react'
+import { useState } from 'react'
 import { Toaster } from 'sonner'
+import { AnimatePresence, motion } from 'framer-motion'
+
 // Contexts
+import { BettingProvider } from './contexts/BettingContext'
 
-import { Si
-import { ActionHubPanel } from './components/ActionHubPanel
-
-import { Resi
+// Components
 import { SideNavPanel } from './components/SideNavPanel'
 import { WorkspacePanel } from './components/WorkspacePanel'
 import { ActionHubPanel } from './components/ActionHubPanel'
 import { MobileBottomNav } from './components/MobileBottomNav'
 import { MobileOverlay } from './components/MobileOverlay'
 import { PanelToggle } from './components/PanelToggle'
+import { ResizeHandle } from './components/ResizeHandle'
 
 // Hooks
 import { useIsMobile } from './hooks/useIsMobile'
 import { usePanelState } from './hooks/usePanelState'
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 
 function App() {
   const isMobile = useIsMobile()
@@ -30,47 +32,67 @@ function App() {
     setRightPanelWidth
   } = usePanelState()
 
+  // Mobile overlay states
+  const [showSportsOverlay, setShowSportsOverlay] = useState(false)
+  const [showBetSlipOverlay, setShowBetSlipOverlay] = useState(false)
+
+  // Mobile navigation state
+  const [activePanel, setActivePanel] = useState<'workspace' | 'betslip' | 'profile'>('workspace')
+
   useKeyboardShortcuts({
+    onToggleLeftPanel: toggleLeftPanel,
     onToggleRightPanel: toggleRightPanel,
+    showLeftPanel,
     showRightPanel
+  })
 
-
+  const handleMobileNavClick = (section: 'nav' | 'workspace' | 'betslip' | 'profile') => {
+    switch (section) {
+      case 'workspace':
         setActivePanel('workspace')
-        setShowBetsO
+        setShowSportsOverlay(false)
+        setShowBetSlipOverlay(false)
+        break
       case 'nav':
         setShowSportsOverlay(true)
         break
+      case 'betslip':
         setActivePanel('betslip')
-        setSh
-      case 'profile'
-        setShowSportsOverlay(false
+        setShowBetSlipOverlay(true)
         break
+      case 'profile':
+        setActivePanel('profile')
+        setShowSportsOverlay(false)
+        setShowBetSlipOverlay(false)
+        break
+    }
   }
+
   return (
-      <div className="h-screen w
-          // Desktop three-panel la
-            {
-     
-   
-
-          
-                >
-                  <ResizeHandle
-                    cu
-                    maxWidth={500}
-                  />
-              )}
-
-            <div className="flex-
+    <BettingProvider>
+      <div className="h-screen w-full flex flex-col bg-background text-foreground overflow-hidden">
+        {!isMobile ? (
+          // Desktop three-panel layout
+          <div className="flex h-full">
+            {/* Left Panel - Sports Navigation */}
+            <AnimatePresence mode="wait">
+              {showLeftPanel && (
                 <motion.div
                   key="left-panel"
                   initial={{ opacity: 0, width: 0 }}
                   animate={{ opacity: 1, width: leftPanelWidth }}
                   exit={{ opacity: 0, width: 0 }}
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  className="min-h-0 border-r border-border flex-shrink-0 bg-card"
+                  className="min-h-0 border-r border-border flex-shrink-0 bg-card relative"
                 >
                   <SideNavPanel />
+                  <ResizeHandle
+                    side="right"
+                    onResize={setLeftPanelWidth}
+                    currentWidth={leftPanelWidth}
+                    minWidth={280}
+                    maxWidth={500}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -81,12 +103,12 @@ function App() {
               <div className="absolute top-4 left-4 z-10 flex gap-2">
                 <PanelToggle
                   isOpen={showLeftPanel}
-                  onClick={toggleLeftPanel}
+                  onToggle={toggleLeftPanel}
                   side="left"
                 />
                 <PanelToggle
                   isOpen={showRightPanel}
-                  onClick={toggleRightPanel}
+                  onToggle={toggleRightPanel}
                   side="right"
                 />
               </div>
@@ -103,9 +125,16 @@ function App() {
                   animate={{ opacity: 1, width: rightPanelWidth }}
                   exit={{ opacity: 0, width: 0 }}
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  className="min-h-0 border-l border-border flex-shrink-0 bg-card"
+                  className="min-h-0 border-l border-border flex-shrink-0 bg-card relative"
                 >
                   <ActionHubPanel />
+                  <ResizeHandle
+                    onResize={setRightPanelWidth}
+                    currentWidth={rightPanelWidth}
+                    minWidth={320}
+                    maxWidth={500}
+                    side="left"
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -115,7 +144,20 @@ function App() {
           <div className="h-full flex flex-col">
             {/* Main Content */}
             <div className="flex-1 min-h-0">
-              <WorkspacePanel />
+              {activePanel === 'workspace' && <WorkspacePanel />}
+              {activePanel === 'betslip' && (
+                <div className="h-full bg-card">
+                  <ActionHubPanel />
+                </div>
+              )}
+              {activePanel === 'profile' && (
+                <div className="h-full flex items-center justify-center bg-card">
+                  <div className="text-center">
+                    <h2 className="text-xl font-semibold text-foreground mb-2">Profile</h2>
+                    <p className="text-muted-foreground">Profile features coming soon</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Mobile Sports Overlay */}
@@ -126,39 +168,36 @@ function App() {
               slideFrom="left"
             >
               <SideNavPanel />
-              <ActionHubPane
+            </MobileOverlay>
 
+            {/* Mobile Bet Slip Overlay */}
+            <MobileOverlay
+              isOpen={showBetSlipOverlay}
+              onClose={() => setShowBetSlipOverlay(false)}
+              title="Bet Slip"
+              slideFrom="right"
+            >
+              <ActionHubPanel />
+            </MobileOverlay>
+
+            {/* Mobile Bottom Navigation */}
             <MobileBottomNav
-              onNavClick={
+              onNavClick={handleMobileNavClick}
+              activePanel={activePanel}
+            />
           </div>
+        )}
 
         <Toaster
+          position="top-right"
           toastOptions={{
-             
-              border: '1px solid
+            className: 'bg-card text-card-foreground border border-border',
+            duration: 3000,
           }}
-
+        />
+      </div>
+    </BettingProvider>
   )
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default App
