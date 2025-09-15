@@ -5,8 +5,12 @@ import { SideNavPanel } from '../panels/SideNavPanel'
 import { ActionHubPanel } from '../panels/ActionHubPanel'
 import { FloatingBetSlipButton } from '../FloatingBetSlipButton'
 import { BetSlipModal } from '../BetSlipModal'
+import { MobileBetSlipPanel } from '../MobileBetSlipPanel'
 import { NavigationProvider, useNavigation } from '../../context/NavigationContext'
 import { BetSlipProvider } from '../../context/BetSlipContext'
+import { UserProvider } from '@/context/UserContext';
+import { BetHistoryProvider } from '@/context/BetHistoryContext';
+import { BetsProvider } from '@/context/BetsContext';
 import { Toaster } from '@/components/ui/sonner'
 import { SidebarToggle } from '../SidebarToggle'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -60,7 +64,7 @@ function LayoutContent() {
             <div className="fixed inset-0 pointer-events-none z-50">
               <FloatingBetSlipButton />
             </div>
-            <BetSlipModal />
+            <MobileBetSlipPanel />
             <AnimatePresence>
               {navigation.mobilePanel && navigation.mobilePanel !== 'workspace' && (
                 <motion.div
@@ -119,6 +123,8 @@ function LayoutContent() {
                   </motion.div>
                 )}
               </AnimatePresence>
+              {/* Desktop only: BetSlipModal */}
+              <BetSlipModal />
             </div>
           </div>
         )}
@@ -129,12 +135,19 @@ function LayoutContent() {
 }
 
 
+
 export function RootLayout() {
   return (
     <NavigationProvider>
       <BetSlipProvider>
-        <LayoutContent />
+        <UserProvider>
+          <BetHistoryProvider>
+            <BetsProvider>
+              <LayoutContent />
+            </BetsProvider>
+          </BetHistoryProvider>
+        </UserProvider>
       </BetSlipProvider>
     </NavigationProvider>
-  )
+  );
 }

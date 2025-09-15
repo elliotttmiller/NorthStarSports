@@ -50,10 +50,14 @@ export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) =>
   const setRemoteBetSlip = useSetActiveBetSlip();
   const [betSlip, setBetSlip] = useState<BetSlip>(defaultBetSlip);
 
-  // Hydrate from backend on load
+  // Hydrate from backend only once on mount
   useEffect(() => {
-    if (remoteBetSlip && !loading) setBetSlip(remoteBetSlip);
-  }, [remoteBetSlip, loading]);
+    if (remoteBetSlip && !loading) {
+      setBetSlip(prev => (prev === defaultBetSlip || prev.bets.length === 0 ? remoteBetSlip : prev));
+    }
+    // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   const calculateBetSlipTotals = (bets: Bet[], betType: 'single' | 'parlay') => {
     if (bets.length === 0) {

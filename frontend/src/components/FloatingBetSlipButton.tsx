@@ -175,7 +175,10 @@ export function FloatingBetSlipButton() {
       >
         <Receipt className="w-6 h-6 text-accent-foreground" weight={navigation.isBetSlipOpen ? 'fill' : 'regular'} />
         {betSlip.bets.length > 0 && (
-          <div className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center bg-primary text-primary-foreground text-xs font-medium">
+          <div
+            className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center bg-primary text-primary-foreground text-xs font-medium shadow-lg border-2 border-white"
+            style={{ zIndex: 100 }}
+          >
             {betSlip.bets.length}
           </div>
         )}
