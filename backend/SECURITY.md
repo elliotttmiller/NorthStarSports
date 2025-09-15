@@ -4,6 +4,7 @@
 - Use HTTPS in production (terminate SSL at Nginx or load balancer).
 - Validate all input (Joi schemas in controllers).
 - Sanitize and escape user input before using in queries.
+- Use `pino` logger for all logging (no `console.log` in production).
 - Use helmet and CORS middleware in Express.
 - Restrict CORS origins in production.
 - Keep dependencies up to date.

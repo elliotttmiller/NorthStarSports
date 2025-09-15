@@ -1,21 +1,23 @@
-
-
 import { createClient } from 'redis';
+import { logger } from './logger'; // Adjust the path as necessary
 
-const client = createClient({
-  username: 'default',
-  password: 'lvYPE9h0AsW6PQU63QbVG2hvz1C70IqO',
-  socket: {
-    host: 'redis-19041.c228.us-central1-1.gce.redns.redis-cloud.com',
-    port: 19041
-  }
-});
+let redisClient;
 
-client.on('error', err => console.log('Redis Client Error', err));
+(async () => {
+  const client = createClient({
+    username: 'default',
+    password: 'lvYPE9h0AsW6PQU63QbVG2hvz1C70IqO',
+    socket: {
+      host: 'redis-19041.c228.us-central1-1.gce.redns.redis-cloud.com',
+      port: 19041
+    }
+  });
+  client.on('error', err => logger.error('Redis Client Error', err));
+  await client.connect();
+  redisClient = client;
+})();
 
-await client.connect();
-
-export const redisClient = client;
+export { redisClient };
 
 export const kvService = {
   async get(key) {

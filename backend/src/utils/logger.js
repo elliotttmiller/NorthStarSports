@@ -1,7 +1,11 @@
+import pino from 'pino';
+
+const logger = pino();
+
 // Simple logger utility (can be replaced with winston later)
 export function logInfo(msg) {
-  console.log(`[INFO] ${msg}`);
+  logger.info(msg);
 }
 export function logError(msg) {
-  console.error(`[ERROR] ${msg}`);
+  logger.error(msg);
 }

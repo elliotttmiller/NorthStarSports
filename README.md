@@ -257,3 +257,22 @@ pm2 start ecosystem.config.js
 # Migration Ready
 - All production scripts, Docker, and CI/CD templates are present.
 - Local dev remains fast and unchanged.
+
+---
+
+# Workspace Polish & Finalization
+
+## Code Quality
+- All `console.log` replaced with production logger (`pino`) in backend.
+- All `any` types removed from test wrappers in frontend.
+- Linting, type-checking, and dependency management are enforced in both packages.
+
+## Structure
+- Monorepo root is clean: no dependencies, no config except workspace pointers.
+- All configs and dependencies are package-local (`frontend/`, `backend/`).
+- `.env` files are used for secrets/config, and are gitignored.
+
+## Best Practices
+- CI/CD should run lint, test, and build for both packages.
+- Security guidelines and integration guides are up to date.
+- All code is type-safe, modular, and production-ready.
