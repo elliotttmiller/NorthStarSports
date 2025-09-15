@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CaretUp, SortAscending } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
-import { useKV } from '@github/spark/hooks';
+import { useKV } from '@/hooks/useKV';
 
 // Interface for layout preferences
 interface LayoutPreferences {

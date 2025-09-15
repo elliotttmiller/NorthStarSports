@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, useMotionValue, useAnimation } from 'framer-motion'
 import { Receipt } from '@phosphor-icons/react'
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/hooks/useKV'
 import { useBetSlip } from '@/context/BetSlipContext'
 import { useNavigation } from '@/context/NavigationContext'
 import { useIsMobile } from '@/hooks/useIsMobile'

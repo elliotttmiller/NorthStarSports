@@ -140,7 +140,7 @@ export const SideNavPanel = () => {
   }
 
   return (
-    <div className="h-full bg-card flex flex-col overflow-hidden">
+    <div className="h-full bg-card flex flex-col overflow-hidden" style={{ '--nav-panel-width': '256px' } as React.CSSProperties}>
       {/* Header - Compact Sports header */}
       <motion.div 
         className="border-b border-border flex-shrink-0"

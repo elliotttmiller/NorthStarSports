@@ -16,14 +16,16 @@ export function SidebarToggle({ side, isOpen, onToggle, className }: SidebarTogg
   return (
     <motion.div
       className={cn(
-        'fixed top-1/2 -translate-y-1/2 z-40',
-        isLeft 
+  'fixed top-1/2 -translate-y-1/2 z-[99]',
+        isLeft
           ? `transition-all duration-[350ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
-              isOpen ? 'left-[308px]' : 'left-2'
-            }` 
+              isOpen ? '' : 'left-2'
+            }`
           : `transition-all duration-[350ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
-              isOpen ? 'right-[358px]' : 'right-2'
+              isOpen ? '' : 'right-2'
             }`,
+        isLeft && isOpen && 'left-[calc(var(--nav-panel-width,256px)+12px)]',
+  !isLeft && isOpen && 'right-[calc(var(--bet-slip-panel-width,340px)+20px)]',
         className
       )}
       initial={{ opacity: 0, scale: 0.8 }}
@@ -35,15 +37,15 @@ export function SidebarToggle({ side, isOpen, onToggle, className }: SidebarTogg
         size="icon"
         onClick={onToggle}
         className={cn(
-          'w-12 h-12 rounded-full shadow-lg border border-accent/40',
-          'bg-card/40 hover:bg-accent/80 hover:border-accent/80',
-          'transition-all duration-300 hover:scale-110 hover:shadow-2xl',
-          'opacity-60 hover:opacity-100',
+          'w-9 h-9 rounded-full shadow-lg border border-accent/70',
+          'bg-card/80 hover:bg-accent/90 hover:border-accent/90',
+          'transition-all duration-300 hover:scale-105 hover:shadow-xl',
+          'opacity-95 hover:opacity-100',
           'backdrop-blur-md',
           'ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
         )}
         style={{
-          boxShadow: '0 4px 24px 0 rgba(0,0,0,0.10)',
+          boxShadow: '0 2px 12px 0 rgba(0,0,0,0.13)',
           transition: 'background 0.2s, border 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s',
         }}
       >
@@ -63,25 +65,7 @@ export function SidebarToggle({ side, isOpen, onToggle, className }: SidebarTogg
           </motion.div>
         </AnimatePresence>
       </Button>
-      {/* Tooltip indicator */}
-      <AnimatePresence>
-        {!isOpen && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 5 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 5 }}
-            transition={{ delay: 1 }}
-            className={cn(
-              'absolute top-full mt-2 px-2 py-1 text-xs text-card-foreground',
-              'bg-card/90 backdrop-blur-sm border border-border/50 rounded-md',
-              'pointer-events-none select-none shadow-lg',
-              isLeft ? 'left-0' : 'right-0'
-            )}
-          >
-            {isLeft ? 'Sports' : 'Bet Slip'}
-          </motion.div>
-        )}
-      </AnimatePresence>
+  {/* Tooltip indicator removed for desktop UI as requested */}
     </motion.div>
   )
 }

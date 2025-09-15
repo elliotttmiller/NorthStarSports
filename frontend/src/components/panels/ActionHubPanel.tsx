@@ -125,7 +125,7 @@ export const ActionHubPanel = () => {
   }
 
   return (
-    <div className="h-full bg-card flex flex-col overflow-hidden">
+  <div className="h-full bg-card flex flex-col overflow-hidden z-40" style={{ '--bet-slip-panel-width': '340px' } as React.CSSProperties}>
       <motion.div 
         className="p-4 border-b border-border flex-shrink-0"
         initial={{ opacity: 0, y: -10 }}
