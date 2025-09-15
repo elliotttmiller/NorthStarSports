@@ -125,7 +125,7 @@ export const ActionHubPanel = () => {
   }
 
   return (
-  <div className="h-full bg-card flex flex-col overflow-hidden z-40" style={{ '--bet-slip-panel-width': '340px' } as React.CSSProperties}>
+    <div className="h-full bg-card flex flex-col overflow-hidden z-40" style={{ '--bet-slip-panel-width': '340px' } as React.CSSProperties}>
       <motion.div 
         className="p-4 border-b border-border flex-shrink-0"
         initial={{ opacity: 0, y: -10 }}
@@ -152,7 +152,6 @@ export const ActionHubPanel = () => {
           </Button>
         </div>
       </motion.div>
-
       <SmoothScrollContainer className="flex-1" showScrollbar={false}>
         <div className="p-4">
           <motion.div
@@ -177,7 +176,6 @@ export const ActionHubPanel = () => {
                     )}
                   </TabsTrigger>
                 </TabsList>
-
                 <div className="mt-3 p-3 bg-secondary/30 rounded-lg">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     {betSlip.betType === 'single' ? (
@@ -188,162 +186,158 @@ export const ActionHubPanel = () => {
                     ) : (
                       <>
                         <Stack size={12} />
-                        <span>All selections must win for payout</span>
+                        <span>Parlay mode: all bets must win</span>
                       </>
                     )}
                   </div>
                 </div>
-              </Tabs>
-            </div>
-
-            <div className="space-y-3">
-              {betSlip.betType === 'single' ? (
-                <AnimatePresence mode="popLayout">
-                  {betSlip.bets.map((bet, index) => (
+                <div className="space-y-3">
+                  {betSlip.betType === 'single' ? (
+                    <AnimatePresence mode="popLayout">
+                      {betSlip.bets.map((bet, index) => (
+                        <motion.div
+                          key={bet.id}
+                          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, x: -100, scale: 0.95 }}
+                          transition={{ 
+                            duration: 0.3, 
+                            delay: index * 0.05,
+                            ease: [0.4, 0.0, 0.2, 1]
+                          }}
+                          layout
+                          whileHover={{ y: -2 }}
+                        >
+                          <Card className="relative border-border/50 hover:border-accent/50 transition-colors">
+                            <CardHeader className="pb-2">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <CardTitle className="text-sm font-medium">
+                                    {formatBetDescription(bet)}
+                                  </CardTitle>
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    {bet.game.awayTeam.shortName} @ {bet.game.homeTeam.shortName}
+                                  </p>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <Badge variant="outline" className="font-mono text-xs">
+                                    {formatOdds(bet.odds)}
+                                  </Badge>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => removeBet(bet.id)}
+                                    className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                                  >
+                                    <Trash size={14} />
+                                  </Button>
+                                </div>
+                              </div>
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <label className="text-xs text-muted-foreground">Stake:</label>
+                                  <Input
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={bet.stake || ''}
+                                    onChange={(e) => handleStakeChange(bet.id, e.target.value)}
+                                    className="w-20 h-7 text-xs"
+                                    placeholder="0.00"
+                                  />
+                                </div>
+                                <div className="flex items-center justify-between text-xs">
+                                  <span className="text-muted-foreground">To Win:</span>
+                                  <span className="font-medium text-accent">
+                                    ${(bet.potentialPayout - bet.stake).toFixed(2)}
+                                  </span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  ) : (
                     <motion.div
-                      key={bet.id}
-                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, x: -100, scale: 0.95 }}
-                      transition={{ 
-                        duration: 0.3, 
-                        delay: index * 0.05,
-                        ease: [0.4, 0.0, 0.2, 1]
-                      }}
-                      layout
-                      whileHover={{ y: -2 }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
                     >
-                      <Card className="relative border-border/50 hover:border-accent/50 transition-colors">
-                        <CardHeader className="pb-2">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <CardTitle className="text-sm font-medium">
-                                {formatBetDescription(bet)}
-                              </CardTitle>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                {bet.game.awayTeam.shortName} @ {bet.game.homeTeam.shortName}
-                              </p>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Badge variant="outline" className="font-mono text-xs">
-                                {formatOdds(bet.odds)}
-                              </Badge>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => removeBet(bet.id)}
-                                className="h-6 w-6 p-0 text-destructive hover:text-destructive"
-                              >
-                                <Trash size={14} />
-                              </Button>
-                            </div>
+                      <Card className="border-accent/20">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-sm flex items-center gap-2">
+                              <Stack size={16} />
+                              Parlay ({betSlip.bets.length} picks)
+                            </CardTitle>
+                            <Badge variant="outline" className="border-accent/30 text-accent">
+                              {formatOdds(betSlip.totalOdds)}
+                            </Badge>
                           </div>
                         </CardHeader>
-                        <CardContent className="pt-0">
-                          <div className="space-y-2">
+                        <CardContent className="space-y-3">
+                          {betSlip.bets.map((bet, index) => (
+                            <motion.div 
+                              key={bet.id} 
+                              className="flex items-center justify-between p-3 bg-muted/50 rounded-md border border-border/50"
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.3, delay: index * 0.1 }}
+                              whileHover={{ x: 2 }}
+                            >
+                              <div className="flex-1">
+                                <div className="text-sm font-medium">{formatBetDescription(bet)}</div>
+                                <div className="text-xs text-muted-foreground">
+                                  {bet.game.awayTeam.shortName} @ {bet.game.homeTeam.shortName}
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Badge variant="outline" className="text-xs font-mono">
+                                  {formatOdds(bet.odds)}
+                                </Badge>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => removeBet(bet.id)}
+                                  className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                                >
+                                  <Trash size={12} />
+                                </Button>
+                              </div>
+                            </motion.div>
+                          ))}
+                          <Separator />
+                          <div className="space-y-3 bg-secondary/30 rounded-lg p-3">
                             <div className="flex items-center justify-between">
-                              <label className="text-xs text-muted-foreground">Stake:</label>
+                              <label className="text-sm font-medium text-card-foreground">Total Stake:</label>
                               <Input
                                 type="number"
                                 min="0"
                                 step="0.01"
-                                value={bet.stake || ''}
-                                onChange={(e) => handleStakeChange(bet.id, e.target.value)}
-                                className="w-20 h-7 text-xs"
+                                value={betSlip.bets[0]?.stake || ''}
+                                onChange={(e) => betSlip.bets[0] && handleStakeChange(betSlip.bets[0].id, e.target.value)}
+                                className="w-24 h-8 text-sm"
                                 placeholder="0.00"
                               />
                             </div>
-                            <div className="flex items-center justify-between text-xs">
-                              <span className="text-muted-foreground">To Win:</span>
-                              <span className="font-medium text-accent">
-                                ${(bet.potentialPayout - bet.stake).toFixed(2)}
-                              </span>
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground">Parlay Odds:</span>
+                              <span className="font-medium text-accent">{formatOdds(betSlip.totalOdds)}</span>
                             </div>
                           </div>
                         </CardContent>
                       </Card>
                     </motion.div>
-                  ))}
-                </AnimatePresence>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card className="border-accent/20">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-sm flex items-center gap-2">
-                          <Stack size={16} />
-                          Parlay ({betSlip.bets.length} picks)
-                        </CardTitle>
-                        <Badge variant="outline" className="border-accent/30 text-accent">
-                          {formatOdds(betSlip.totalOdds)}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      {betSlip.bets.map((bet, index) => (
-                        <motion.div 
-                          key={bet.id} 
-                          className="flex items-center justify-between p-3 bg-muted/50 rounded-md border border-border/50"
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.1 }}
-                          whileHover={{ x: 2 }}
-                        >
-                          <div className="flex-1">
-                            <div className="text-sm font-medium">{formatBetDescription(bet)}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {bet.game.awayTeam.shortName} @ {bet.game.homeTeam.shortName}
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Badge variant="outline" className="text-xs font-mono">
-                              {formatOdds(bet.odds)}
-                            </Badge>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => removeBet(bet.id)}
-                              className="h-6 w-6 p-0 text-destructive hover:text-destructive"
-                            >
-                              <Trash size={12} />
-                            </Button>
-                          </div>
-                        </motion.div>
-                      ))}
-                      
-                      <Separator />
-                      
-                      <div className="space-y-3 bg-secondary/30 rounded-lg p-3">
-                        <div className="flex items-center justify-between">
-                          <label className="text-sm font-medium text-card-foreground">Total Stake:</label>
-                          <Input
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            value={betSlip.bets[0]?.stake || ''}
-                            onChange={(e) => betSlip.bets[0] && handleStakeChange(betSlip.bets[0].id, e.target.value)}
-                            className="w-24 h-8 text-sm"
-                            placeholder="0.00"
-                          />
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Parlay Odds:</span>
-                          <span className="font-medium text-accent">{formatOdds(betSlip.totalOdds)}</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )}
+                  )}
+                </div>
+              </Tabs>
             </div>
           </motion.div>
         </div>
       </SmoothScrollContainer>
-
       {/* Bet Slip Summary - Fixed at bottom */}
       <motion.div 
         className="border-t border-border bg-card/95 backdrop-blur-sm flex-shrink-0"
@@ -395,4 +389,4 @@ export const ActionHubPanel = () => {
       </motion.div>
     </div>
   );
-};
+}

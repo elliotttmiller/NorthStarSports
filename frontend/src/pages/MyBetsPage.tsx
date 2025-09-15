@@ -25,8 +25,9 @@ export function MyBetsPage() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden bg-background">
-  <SmoothScrollContainer className="universal-responsive-container flex-1" showScrollbar={false}>
-        <motion.div style={{ padding: 'var(--fluid-panel-padding)', fontSize: 'var(--fluid-base)' }}
+      <div className="container mx-auto px-4 max-w-screen-lg flex-1 w-full">
+        <SmoothScrollContainer className="universal-responsive-container flex-1" showScrollbar={false}>
+          <motion.div style={{ padding: 'var(--fluid-panel-padding)', fontSize: 'var(--fluid-base)' }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.1 }}
@@ -131,7 +132,8 @@ export function MyBetsPage() {
             </TabsContent>
           </Tabs>
         </motion.div>
-  </SmoothScrollContainer>
+        </SmoothScrollContainer>
+      </div>
     </div>
   )
 }

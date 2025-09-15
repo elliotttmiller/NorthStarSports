@@ -38,13 +38,14 @@ export const OtherPage = () => {
 
   return (
     <div className="h-full bg-card flex flex-col overflow-hidden">
-      {/* Header */}
-      <motion.div 
-        className="p-4 border-b border-border flex-shrink-0"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
+      <div className="container mx-auto px-4 max-w-screen-lg flex-1 w-full">
+        {/* Header */}
+        <motion.div 
+          className="p-4 border-b border-border flex-shrink-0"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
         <h2 className="text-lg font-semibold text-card-foreground">Other Bet Types</h2>
         <p className="text-sm text-muted-foreground">Professional betting options</p>
         {betSlip.bets.length > 0 && (
@@ -110,6 +111,7 @@ export const OtherPage = () => {
           </div>
         </motion.div>
   </SmoothScrollContainer>
+      </div>
     </div>
   );
 };

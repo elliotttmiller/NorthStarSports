@@ -47,8 +47,9 @@ export function HomePage() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden bg-background">
-  <SmoothScrollContainer className="universal-responsive-container flex-1" showScrollbar={false}>
-        <div className="space-y-6" style={{ padding: 'var(--fluid-panel-padding)', fontSize: 'var(--fluid-base)' }}>
+      <div className="container mx-auto px-4 max-w-screen-lg flex-1 w-full">
+        <SmoothScrollContainer className="universal-responsive-container flex-1" showScrollbar={false}>
+          <div className="space-y-6" style={{ padding: 'var(--fluid-panel-padding)', fontSize: 'var(--fluid-base)' }}>
           {/* Welcome Section */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -162,10 +163,11 @@ export function HomePage() {
             </Button>
           </motion.div>
 
-          {/* Bottom spacing */}
-          <div className="h-16" />
-        </div>
-  </SmoothScrollContainer>
+            {/* Bottom spacing */}
+            <div className="h-16" />
+          </div>
+        </SmoothScrollContainer>
+      </div>
     </div>
   )
 }

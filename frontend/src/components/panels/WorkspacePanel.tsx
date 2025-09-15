@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
 import { Game } from '@/types';
@@ -16,16 +17,16 @@ import { useKV } from '@/hooks/useKV';
 
 // Interface for layout preferences
 interface LayoutPreferences {
-  viewMode: 'fluid' | 'compact' | 'list'
-  sortBy: 'time' | 'popular' | 'odds'
-  showExpanded: boolean
+  viewMode: 'fluid' | 'compact' | 'list';
+  sortBy: 'time' | 'popular' | 'odds';
+  showExpanded: boolean;
 }
 
-export const WorkspacePanel = () => {
+const WorkspacePanel = () => {
   const { navigation, setMobilePanel } = useNavigation();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  
+
   // State management
   const [games, setGames] = useState<Game[]>([]);
   const [expandedCards, setExpandedCards] = useKV<string[]>('expanded-game-cards', []);
@@ -35,7 +36,7 @@ export const WorkspacePanel = () => {
     sortBy: 'time',
     showExpanded: false
   });
-  
+
   const [pagination, setPagination] = useState<PaginatedResponse<Game>['pagination'] | null>(null);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(false);
@@ -61,7 +62,7 @@ export const WorkspacePanel = () => {
 
     try {
       const response = await getGamesPaginated(navigation.selectedLeague, page, 12);
-      
+
       if (reset) {
         setGames(response.data);
         setCurrentPage(1);
@@ -69,7 +70,7 @@ export const WorkspacePanel = () => {
         setGames(prevGames => [...prevGames, ...response.data]);
         setCurrentPage(page);
       }
-      
+
       setPagination(response.pagination);
     } catch (error) {
       console.error('Failed to load games:', error);
@@ -99,37 +100,37 @@ export const WorkspacePanel = () => {
   const handleGameToggle = useCallback((gameId: string) => {
     setExpandedCards((current) => {
       if (current?.includes(gameId)) {
-        return current.filter(id => id !== gameId)
+        return current.filter(id => id !== gameId);
       }
-      return [...(current || []), gameId]
-    })
-  }, [setExpandedCards])
+      return [...(current || []), gameId];
+    });
+  }, [setExpandedCards]);
 
   // Sorting and filtering
   const processedGames = useMemo(() => {
-    let processed = [...games]
-    
+    let processed = [...games];
+
     // Sort games
     switch (layoutPrefs?.sortBy) {
       case 'time':
-        processed.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
-        break
+        processed.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+        break;
       case 'popular':
         // Mock popularity sorting - in real app this would be based on betting volume
-        processed.sort((a, b) => (favoriteGames?.includes(b.id) ? 1 : 0) - (favoriteGames?.includes(a.id) ? 1 : 0))
-        break
+        processed.sort((a, b) => (favoriteGames?.includes(b.id) ? 1 : 0) - (favoriteGames?.includes(a.id) ? 1 : 0));
+        break;
       case 'odds':
         // Sort by moneyline favorite
         processed.sort((a, b) => {
-          const aFav = Math.min(a.odds.moneyline.home.odds, a.odds.moneyline.away.odds)
-          const bFav = Math.min(b.odds.moneyline.home.odds, b.odds.moneyline.away.odds)
-          return aFav - bFav
-        })
-        break
+          const aFav = Math.min(a.odds.moneyline.home.odds, a.odds.moneyline.away.odds);
+          const bFav = Math.min(b.odds.moneyline.home.odds, b.odds.moneyline.away.odds);
+          return aFav - bFav;
+        });
+        break;
     }
-    
-    return processed
-  }, [games, layoutPrefs, favoriteGames])
+
+    return processed;
+  }, [games, layoutPrefs, favoriteGames]);
 
   const handleScrollToTop = () => {
     if (scrollContainerRef) {
@@ -137,7 +138,7 @@ export const WorkspacePanel = () => {
     }
   };
 
-  const gameIds = processedGames.map(game => game.id)
+  const gameIds = processedGames.map(game => game.id);
 
   if (initialLoading) {
     return <SkeletonLoader type="games" count={4} />;
@@ -146,7 +147,7 @@ export const WorkspacePanel = () => {
   if (!navigation.selectedLeague || games.length === 0) {
     return (
       <div className="h-full flex items-center justify-center bg-background">
-        <motion.div 
+        <motion.div
           className="text-center px-4"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -154,18 +155,20 @@ export const WorkspacePanel = () => {
         >
           <h3 className="text-lg font-medium text-foreground mb-2">Select a League</h3>
           <p className="text-muted-foreground mb-4">Choose a sport and league to view games and place bets.</p>
-          
+
           {/* Mobile-only: Show button to open sports navigation */}
           {isMobile && (
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <Button 
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => setMobilePanel('navigation')}
-                className="bg-accent text-accent-foreground hover:bg-accent/90"
+                className="rounded-full px-4 py-2 mt-2 shadow-md"
               >
-                Browse Sports & Leagues
+                Open Sports
               </Button>
             </motion.div>
           )}
@@ -175,61 +178,33 @@ export const WorkspacePanel = () => {
   }
 
   return (
-    <div className="h-full flex flex-col overflow-hidden bg-background relative">
-      {/* Header with controls */}
-      <div
-        className={cn('flex items-center justify-between border-b border-border bg-card/50 backdrop-blur-sm')}
-        style={{
-          padding: 'var(--fluid-panel-padding)',
-          fontSize: 'var(--fluid-lg)',
-          borderRadius: 'var(--fluid-radius)'
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <h2 className="font-semibold text-foreground">
-            {navigation.selectedLeague?.toUpperCase()} Games
-          </h2>
-          <div className="text-sm text-muted-foreground">
-            ({processedGames.length})
-          </div>
+    <div className="h-full w-full flex flex-col items-center justify-start mx-auto max-w-screen-lg px-4 sm:px-8 lg:px-12 py-10 gap-y-10 bg-background">
+      <div className="w-full max-w-2xl mx-auto text-center">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-2 tracking-tight">Welcome to NSSPORTSCLUB</h1>
+        <p className="text-lg text-muted-foreground mb-6">Your professional sports betting platform</p>
+      </div>
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Example stats, replace with real data if needed */}
+        <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
+          <span className="text-sm text-muted-foreground mb-1">Balance</span>
+          <span className="text-2xl font-semibold text-foreground">$1,250.00</span>
         </div>
-        
-        <div className="flex items-center gap-2">
-          {/* Sort options */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              const sortOptions = ['time', 'popular', 'odds'] as const
-              const currentIndex = sortOptions.indexOf(layoutPrefs?.sortBy || 'time')
-              const nextSort = sortOptions[(currentIndex + 1) % sortOptions.length]
-              setLayoutPrefs((current) => {
-                const defaultPrefs: LayoutPreferences = {
-                  viewMode: 'fluid',
-                  sortBy: 'time',
-                  showExpanded: false
-                }
-                return {
-                  ...(current || defaultPrefs),
-                  sortBy: nextSort
-                }
-              })
-            }}
-            className="h-8"
-          >
-            <SortAscending size={14} />
-            {!isMobile && (
-              <span className="ml-1 capitalize">
-                {layoutPrefs?.sortBy || 'time'}
-              </span>
-            )}
-          </Button>
+        <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
+          <span className="text-sm text-muted-foreground mb-1">Win Rate</span>
+          <span className="text-2xl font-semibold text-foreground">68%</span>
+        </div>
+        <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
+          <span className="text-sm text-muted-foreground mb-1">Active</span>
+          <span className="text-2xl font-semibold text-foreground">0</span>
+        </div>
+        <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
+          <span className="text-sm text-muted-foreground mb-1">This Week</span>
+          <span className="text-2xl font-semibold text-foreground">+$340</span>
         </div>
       </div>
-
       {/* Games Container */}
-      <div className="flex-1 overflow-hidden">
-        <div 
+      <div className="flex-1 overflow-hidden w-full">
+        <div
           ref={(el) => setScrollContainerRef(el)}
           className={cn('h-full seamless-scroll overflow-y-auto')}
           style={{
@@ -259,7 +234,7 @@ export const WorkspacePanel = () => {
 
           {/* End of results indicator */}
           {pagination && !pagination.hasNextPage && processedGames.length > 0 && (
-            <motion.div 
+            <motion.div
               className="text-center py-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -271,7 +246,7 @@ export const WorkspacePanel = () => {
             </motion.div>
           )}
         </div>
-        
+
         {/* Loading indicator */}
         {loading && (
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
@@ -313,3 +288,5 @@ export const WorkspacePanel = () => {
     </div>
   );
 };
+
+export default WorkspacePanel;

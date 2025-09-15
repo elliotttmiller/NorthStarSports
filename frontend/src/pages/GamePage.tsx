@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { WorkspacePanel } from '@/components/panels/WorkspacePanel'
+import WorkspacePanel from '@/components/panels/WorkspacePanel'
 
 export function GamePage() {
   const { gameId } = useParams()

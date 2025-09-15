@@ -55,7 +55,6 @@ export const SideNavPanel = () => {
 
   const renderSportItem = (sport: Sport, index: number) => {
     const isExpanded = navigation.selectedSport === sport.id;
-    
     return (
       <AccordionItem key={sport.id} value={sport.id} className="border-border">
         <AccordionTrigger
@@ -63,17 +62,12 @@ export const SideNavPanel = () => {
             isExpanded ? 'bg-muted/50' : 'hover:bg-muted/30'
           }`}
         >
-          <motion.div 
-            className="flex items-center space-x-2 w-full"
-            whileHover={{ x: 1 }}
+          <motion.div
+            className="flex items-center gap-2"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.2, delay: index * 0.03 }}
           >
-            <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-colors duration-200 ${
-              isExpanded ? 'bg-primary/20' : 'bg-primary/10'
-            }`}>
-              <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
-                isExpanded ? 'bg-primary' : 'bg-primary/70'
-              }`} />
-            </div>
             <span className={`font-medium text-sm transition-colors duration-200 ${
               isExpanded ? 'text-card-foreground' : 'text-card-foreground/80'
             }`}>

@@ -25,7 +25,7 @@ export function SidebarToggle({ side, isOpen, onToggle, className }: SidebarTogg
               isOpen ? '' : 'right-2'
             }`,
         isLeft && isOpen && 'left-[calc(var(--nav-panel-width,256px)+12px)]',
-  !isLeft && isOpen && 'right-[calc(var(--bet-slip-panel-width,340px)+20px)]',
+  !isLeft && isOpen && 'right-[calc(var(--bet-slip-panel-width,340px)+60px)]',
         className
       )}
       initial={{ opacity: 0, scale: 0.8 }}
