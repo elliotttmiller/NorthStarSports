@@ -3,9 +3,12 @@ import react from "@vitejs/plugin-react-swc";
 import { defineConfig, PluginOption } from "vite";
 import { VitePWA } from 'vite-plugin-pwa'
 
-import { resolve } from 'path'
 
-const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -37,7 +40,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': resolve(projectRoot, 'src')
+      '@': resolve(__dirname, 'src')
     }
   },
 });

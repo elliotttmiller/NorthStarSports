@@ -1,15 +1,21 @@
 
+
 import { createClient } from 'redis';
 
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
-export const redisClient = createClient({ url: redisUrl });
-
-redisClient.on('error', (err) => {
-  console.error('Redis Client Error', err);
+const client = createClient({
+  username: 'default',
+  password: 'lvYPE9h0AsW6PQU63QbVG2hvz1C70IqO',
+  socket: {
+    host: 'redis-19041.c228.us-central1-1.gce.redns.redis-cloud.com',
+    port: 19041
+  }
 });
 
-// Connect on startup
-redisClient.connect();
+client.on('error', err => console.log('Redis Client Error', err));
+
+await client.connect();
+
+export const redisClient = client;
 
 export const kvService = {
   async get(key) {
