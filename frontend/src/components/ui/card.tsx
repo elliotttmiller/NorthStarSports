@@ -7,7 +7,7 @@ function Card({ className, ...props }: ComponentProps<"div">) {
     <div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col border shadow-sm",
+        "bg-gradient-to-br from-[color:var(--color-card-soft)] to-[color:var(--color-card)] text-card-foreground flex flex-col border border-[color:var(--color-border)] transition-transform duration-200 backdrop-blur-md hover:-translate-y-0.5 hover:scale-[1.015]",
         className
       )}
       style={{

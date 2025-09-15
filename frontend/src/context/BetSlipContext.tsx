@@ -5,7 +5,15 @@ import { calculatePayout } from '@/services/mockApi';
 
 interface BetSlipContextType {
   betSlip: BetSlip;
-  addBet: (game: Game, betType: 'spread' | 'moneyline' | 'total' | 'player_prop', selection: 'home' | 'away' | 'over' | 'under', odds: number, line?: number, playerProp?: PlayerProp) => void;
+  addBet: (
+    game: Game,
+    betType: 'spread' | 'moneyline' | 'total' | 'player_prop' | 'period_winner' | 'quarter_winner' | 'half_winner',
+    selection: 'home' | 'away' | 'over' | 'under',
+    odds: number,
+    line?: number,
+    playerProp?: PlayerProp,
+    periodOrQuarterOrHalf?: string
+  ) => void;
   removeBet: (betId: string) => void;
   updateStake: (betId: string, stake: number) => void;
   setBetType: (betType: 'single' | 'parlay') => void;
@@ -81,20 +89,23 @@ export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) =>
   }, [setRemoteBetSlip]);
 
   const addBet = (
-    game: Game, 
-    betType: 'spread' | 'moneyline' | 'total' | 'player_prop', 
+    game: Game,
+    betType: 'spread' | 'moneyline' | 'total' | 'player_prop' | 'period_winner' | 'quarter_winner' | 'half_winner',
     selection: 'home' | 'away' | 'over' | 'under',
     odds: number,
     line?: number,
-    playerProp?: PlayerProp
+    playerProp?: PlayerProp,
+    periodOrQuarterOrHalf?: string
   ) => {
-    const betId = playerProp 
+    const betId = playerProp
       ? `${game.id}-${betType}-${playerProp.id}-${selection}`
-      : `${game.id}-${betType}-${selection}`;
+      : periodOrQuarterOrHalf
+        ? `${game.id}-${betType}-${periodOrQuarterOrHalf}-${selection}`
+        : `${game.id}-${betType}-${selection}`;
     let filteredBets = betSlip.bets;
     if (betType !== 'player_prop') {
       filteredBets = betSlip.bets.filter(
-        bet => !(bet.gameId === game.id && bet.betType === betType)
+        bet => !(bet.gameId === game.id && bet.betType === betType && (!periodOrQuarterOrHalf || bet.periodOrQuarterOrHalf !== periodOrQuarterOrHalf))
       );
     } else {
       filteredBets = betSlip.bets.filter(
@@ -111,6 +122,7 @@ export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) =>
       stake: 10,
       potentialPayout: 10 + calculatePayout(10, odds),
       game,
+      periodOrQuarterOrHalf,
       playerProp: playerProp ? {
         playerId: playerProp.playerId,
         playerName: playerProp.playerName,

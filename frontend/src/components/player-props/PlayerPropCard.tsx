@@ -106,9 +106,9 @@ export function PlayerPropCard({ prop, game, compact = false, className }: Playe
         duration: 2000,
         position: 'bottom-center',
         style: {
-          background: 'oklch(0.12 0.015 240)',
-          border: '1px solid oklch(0.18 0.02 240)',
-          color: 'oklch(0.88 0.005 240)'
+          background: 'var(--color-card)',
+          border: '1px solid var(--color-border)',
+          color: 'var(--color-fg)'
         }
       }
     )
@@ -116,84 +116,73 @@ export function PlayerPropCard({ prop, game, compact = false, className }: Playe
 
   return (
     <Card className={cn(
-      'group/card bg-card/50 border-border/30 transition-all duration-300',
-      'hover:bg-card/70 hover:border-accent/20 hover:shadow-lg',
-      'hover:transform hover:translate-y-[-1px]',
+      'group/card bg-background border-border/30 transition-all duration-200',
+      'hover:bg-muted/40 hover:border-accent/10 hover:shadow-sm',
+      'rounded-lg',
       className
     )}>
       <CardContent className={cn(
         'p-0',
-        compact ? 'p-3' : 'p-4'
+        compact ? 'p-2' : 'p-3'
       )}>
         {/* Player Header */}
         <div className={cn(
-          'flex items-start justify-between mb-3',
-          compact && 'mb-2'
+          'flex items-center justify-between mb-2',
+          compact && 'mb-1'
         )}>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
+            <div className="flex items-center gap-2 flex-wrap mb-0.5">
               <h5 className={cn(
-                'font-bold text-foreground truncate',
-                compact ? 'text-sm' : 'text-base'
+                'font-semibold text-foreground truncate',
+                compact ? 'text-xs' : 'text-sm'
               )}>
                 {prop.playerName}
               </h5>
-              <Badge 
-                variant="outline" 
-                className="text-xs px-2 py-0.5 bg-muted/50 border-border/50"
-              >
+              <span className="text-xs text-muted-foreground font-normal tracking-wide">
                 {prop.position}
-              </Badge>
+              </span>
             </div>
-            
-            <div className="flex items-center gap-2 mb-1">
-              <Badge 
-                variant={prop.team === 'home' ? 'default' : 'secondary'} 
-                className={cn(
-                  'text-xs px-2 py-0.5 font-medium',
-                  prop.team === 'home' 
-                    ? 'bg-accent/20 text-accent border-accent/30' 
-                    : 'bg-muted/50 text-muted-foreground border-border/50'
-                )}
-              >
-                {prop.team === 'home' ? game.homeTeam.shortName : game.awayTeam.shortName}
-              </Badge>
-            </div>
-            
-            <p className={cn(
-              'text-muted-foreground font-medium',
-              compact ? 'text-xs' : 'text-sm'
-            )}>
-              {prop.statType}
-            </p>
+            <span className={cn('text-muted-foreground font-normal', compact ? 'text-xs' : 'text-xs')}>{prop.statType}</span>
           </div>
         </div>
 
         {/* Betting Grid */}
-        <div className="grid grid-cols-2 gap-3">
-          <PropBetButton
-            prop={prop}
-            selection="over"
+        <div className="grid grid-cols-2 gap-2">
+          <Button
+            variant={isOverSelected ? 'default' : 'outline'}
+            size="sm"
+            className={cn(
+              'h-8 px-2 text-xs font-medium rounded-md',
+              'transition-all duration-150',
+              isOverSelected ? 'bg-accent/90 text-white' : 'bg-background text-foreground border-border/40',
+              'hover:bg-accent/10 hover:border-accent/30'
+            )}
             onClick={(e) => handlePlayerPropClick(e, 'over')}
-            compact={compact}
-            isSelected={isOverSelected}
-          />
-          <PropBetButton
-            prop={prop}
-            selection="under"
+          >
+            O {formatTotalLine(prop.line)} <span className="ml-1 font-normal">{formatOdds(prop.overOdds)}</span>
+          </Button>
+          <Button
+            variant={isUnderSelected ? 'default' : 'outline'}
+            size="sm"
+            className={cn(
+              'h-8 px-2 text-xs font-medium rounded-md',
+              'transition-all duration-150',
+              isUnderSelected ? 'bg-accent/90 text-white' : 'bg-background text-foreground border-border/40',
+              'hover:bg-accent/10 hover:border-accent/30'
+            )}
             onClick={(e) => handlePlayerPropClick(e, 'under')}
-            compact={compact}
-            isSelected={isUnderSelected}
-          />
+          >
+            U {formatTotalLine(prop.line)} <span className="ml-1 font-normal">{formatOdds(prop.underOdds)}</span>
+          </Button>
         </div>
 
         {/* Selection Indicator */}
         {(isOverSelected || isUnderSelected) && (
-          <div className="mt-3 pt-3 border-t border-accent/20">
+          <div className="mt-2 pt-2 border-t border-border/20">
             <div className="flex items-center justify-center">
-              <Badge className="bg-accent/20 text-accent border-accent/30 text-xs font-medium">
+              <span className="bg-accent/10 text-accent border-accent/20 text-xs font-medium rounded px-2 py-0.5">
                 Added to Bet Slip
-              </Badge>
+              </span>
             </div>
           </div>
         )}

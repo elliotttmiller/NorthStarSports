@@ -5,21 +5,21 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-[color:var(--color-focus-ring)] focus-visible:ring-[color:var(--color-focus-ring)]/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shadow-xs",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+          "bg-accent text-accent-foreground shadow-md hover:bg-accent/90",
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-destructive text-white shadow-md hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border border-[color:var(--color-border)] bg-background/80 shadow-xs hover:bg-accent/10 hover:text-accent-foreground",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+          "bg-secondary/80 text-secondary-foreground shadow-xs hover:bg-secondary/90",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "hover:bg-accent/10 hover:text-accent-foreground",
+        link: "text-accent underline-offset-4 hover:underline",
         // Professional betting variants
         bet:
           "bg-accent/10 text-accent border border-accent/20 shadow-xs hover:bg-accent/20 hover:border-accent/30 active:bg-accent/30 transition-all duration-200 transform active:scale-95",
@@ -28,7 +28,7 @@ const buttonVariants = cva(
         "bet-negative":
           "bg-[color:var(--color-loss)]/10 text-[color:var(--color-loss)] border border-[color:var(--color-loss)]/20 shadow-xs hover:bg-[color:var(--color-loss)]/20 hover:border-[color:var(--color-loss)]/30 active:bg-[color:var(--color-loss)]/30 transition-all duration-200 transform active:scale-95",
         "bet-selected":
-          "bg-accent text-accent-foreground border-accent shadow-md ring-2 ring-accent/20 transform scale-[1.02]",
+          "bg-accent text-accent-foreground border-accent shadow-lg ring-2 ring-accent/20 transform scale-[1.02]",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

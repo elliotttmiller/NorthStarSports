@@ -1,11 +1,9 @@
 import { useState, useCallback } from 'react'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { PropCategory } from '@/types'
 import { Game } from '@/types'
-import { Target, MagnifyingGlass, SortAscending, Funnel, Sparkle } from '@phosphor-icons/react'
 import { PropCategorySection } from './PropCategorySection'
 import { usePlayerProps } from '@/hooks/usePlayerProps'
 import { cn } from '@/lib/utils'
@@ -17,6 +15,8 @@ interface PlayerPropsContainerProps {
   isLoading: boolean
   compact?: boolean
   className?: string
+  expandedCategories?: Set<string>
+  setExpandedCategories?: (value: Set<string> | ((prev: Set<string>) => Set<string>)) => void
 }
 
 type SortOption = 'default' | 'alphabetical' | 'mostProps' | 'popular'
@@ -27,10 +27,15 @@ export function PlayerPropsContainer({
   game, 
   isLoading, 
   compact = false,
-  className 
+  className,
+  expandedCategories,
+  setExpandedCategories
 }: PlayerPropsContainerProps) {
   const { stats, sortCategories, filterProps } = usePlayerProps(categories)
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['popular']))
+  // Use lifted state if provided, else fallback to local (for backward compatibility)
+  const [localExpandedCategories, localSetExpandedCategories] = useState<Set<string>>(new Set(['popular']))
+  const expanded = expandedCategories ?? localExpandedCategories
+  const setExpanded = setExpandedCategories ?? localSetExpandedCategories
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('default')
   const [filterBy, setFilterBy] = useState<FilterOption>('all')
@@ -73,7 +78,7 @@ export function PlayerPropsContainer({
   const totalProps = processedCategories.reduce((sum, cat) => sum + cat.props.length, 0)
 
   const toggleCategory = useCallback((categoryKey: string) => {
-    setExpandedCategories(current => {
+    setExpanded(current => {
       const newSet = new Set(current)
       if (newSet.has(categoryKey)) {
         newSet.delete(categoryKey)
@@ -82,33 +87,26 @@ export function PlayerPropsContainer({
       }
       return newSet
     })
-  }, [])
+  }, [setExpanded])
 
   const expandAll = useCallback(() => {
-    setExpandedCategories(new Set(processedCategories.map(cat => cat.key)))
-  }, [processedCategories])
+    setExpanded(new Set(processedCategories.map(cat => cat.key)))
+  }, [processedCategories, setExpanded])
 
   const collapseAll = useCallback(() => {
-    setExpandedCategories(new Set())
-  }, [])
+    setExpanded(new Set())
+  }, [setExpanded])
 
   if (isLoading) {
     return (
-      <Card className={cn('bg-card/50 border-border/30', className)}>
+      <Card className={cn('bg-background border-border/20', className)}>
         <CardContent className="p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <Target size={20} className="text-accent" />
-            <h4 className="font-bold text-lg">Player Props</h4>
+          <div className="flex items-center gap-2 mb-4">
+            <h4 className="font-semibold text-base text-foreground">Player Props</h4>
           </div>
-          
-          <div className="flex items-center justify-center py-12">
-            <div className="flex flex-col items-center gap-4">
-              <div className="relative">
-                <div className="rounded-full h-8 w-8 border-3 border-accent border-t-transparent animate-spin" />
-                <div className="absolute inset-0 rounded-full h-8 w-8 border-3 border-accent/30" />
-              </div>
-              <p className="text-sm text-muted-foreground">Loading player props...</p>
-            </div>
+          <div className="flex items-center justify-center py-8">
+            <div className="rounded-full h-7 w-7 border-2 border-muted animate-spin" />
+            <span className="ml-3 text-xs text-muted-foreground">Loading player props...</span>
           </div>
         </CardContent>
       </Card>
@@ -117,31 +115,24 @@ export function PlayerPropsContainer({
 
   if (processedCategories.length === 0) {
     const isEmpty = categories.length === 0
-    
     return (
-      <Card className={cn('bg-card/50 border-border/30', className)}>
+      <Card className={cn('bg-background border-border/20', className)}>
         <CardContent className="p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <Target size={20} className="text-accent" />
-            <h4 className="font-bold text-lg">Player Props</h4>
+          <div className="flex items-center gap-2 mb-4">
+            <h4 className="font-semibold text-base text-foreground">Player Props</h4>
           </div>
-          
-          <div className="text-center py-12">
-            <div className="mb-4">
-              <Target size={48} className="mx-auto text-muted-foreground/50" />
-            </div>
-            <h5 className="font-semibold text-foreground mb-2">
+          <div className="text-center py-8">
+            <h5 className="font-medium text-foreground mb-2">
               {isEmpty ? 'No Player Props Available' : 'No Results Found'}
             </h5>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto">
+            <p className="text-xs text-muted-foreground max-w-md mx-auto">
               {isEmpty 
-                ? 'Player props for this game are not currently available. Check back later for updates.'
+                ? 'Player props for this game are not currently available.'
                 : searchTerm 
-                  ? `No props found matching "${searchTerm}". Try adjusting your search or filters.`
-                  : 'No props match your current filters. Try adjusting your filter settings.'
+                  ? `No props found matching "${searchTerm}".`
+                  : 'No props match your current filters.'
               }
             </p>
-            
             {!isEmpty && (searchTerm || filterBy !== 'all') && (
               <Button
                 variant="outline"
@@ -162,108 +153,53 @@ export function PlayerPropsContainer({
   }
 
   return (
-    <Card className={cn('bg-card/50 border-border/30 overflow-hidden', className)}>
+    <Card className={cn('bg-background border border-border/20 overflow-hidden', className)}>
       <CardContent className="p-0 flex flex-col h-full">
         {/* Header */}
-        <div className="p-6 pb-4 bg-gradient-to-r from-card/50 to-card/80 border-b border-border/30">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <Target size={20} className="text-accent" />
-                <Sparkle size={12} className="absolute -top-1 -right-1 text-accent animate-pulse" />
-              </div>
-              <h4 className="font-bold text-lg">Player Props</h4>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Badge 
-                variant="secondary" 
-                className="bg-accent/10 text-accent border-accent/20 font-medium"
-              >
-                {totalProps} props
-              </Badge>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowFilters(!showFilters)}
-                className="h-8 px-2"
-              >
-                <Funnel size={16} />
-              </Button>
-            </div>
+        <div className="p-4 pb-2 border-b border-border/20 bg-background">
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="font-semibold text-base text-foreground">Player Props</h4>
+            <span className="text-xs text-muted-foreground">{totalProps} props</span>
           </div>
-
-          {/* Search and Filters */}
-          <div className={cn(
-            'space-y-3 overflow-hidden transition-all duration-300',
-            showFilters ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
-          )}>
-            {/* Search */}
-            <div className="relative">
-              <MagnifyingGlass size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search players or stats..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 h-9 bg-background/50 border-border/50 focus:border-accent/50"
-              />
-            </div>
-
-            {/* Controls */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={expandAll}
-                  className="h-8 px-3 text-xs"
-                >
-                  Expand All
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={collapseAll}
-                  className="h-8 px-3 text-xs"
-                >
-                  Collapse All
-                </Button>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <SortAscending size={14} className="text-muted-foreground" />
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="text-xs bg-background/50 border border-border/50 rounded px-2 py-1 focus:border-accent/50"
-                >
-                  <option value="default">Default</option>
-                  <option value="popular">Popular First</option>
-                  <option value="alphabetical">A-Z</option>
-                  <option value="mostProps">Most Props</option>
-                </select>
-              </div>
-            </div>
+          {/* Controls */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={expandAll}
+              className="h-7 px-2 text-xs"
+            >
+              Expand All
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={collapseAll}
+              className="h-7 px-2 text-xs"
+            >
+              Collapse All
+            </Button>
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="ml-auto text-xs bg-background border border-border/30 rounded px-2 py-1 focus:border-accent/40"
+              style={{ minWidth: 100 }}
+            />
           </div>
         </div>
-
         {/* Categories - now in SmoothScrollContainer */}
-        <SmoothScrollContainer className={cn('flex-1 p-6 space-y-4', compact && 'p-4 max-h-80')} showScrollbar={false}>
-          {processedCategories.map((category, index) => (
-            <div
+        <SmoothScrollContainer className={cn('flex-1 p-3 space-y-2', compact && 'p-2 max-h-80')} showScrollbar={false}>
+          {processedCategories.map((category) => (
+            <PropCategorySection
               key={category.key}
-              className="animate-in slide-in-from-bottom duration-300"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <PropCategorySection
-                category={category}
-                game={game}
-                isExpanded={expandedCategories.has(category.key)}
-                onToggle={() => toggleCategory(category.key)}
-                compact={compact}
-              />
-            </div>
+              category={category}
+              game={game}
+              isExpanded={expanded.has(category.key)}
+              onToggle={() => toggleCategory(category.key)}
+              compact={compact}
+            />
           ))}
         </SmoothScrollContainer>
       </CardContent>

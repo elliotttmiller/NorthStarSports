@@ -17,60 +17,73 @@
 @import "tw-animate-css";
 
 :root {
-  /* Theme variables */
-  --color-neutral-1: oklch(0.98 0.002 240);
-  --color-neutral-2: oklch(0.96 0.003 240);
-  --color-neutral-3: oklch(0.94 0.005 240);
-  --color-neutral-4: oklch(0.90 0.008 240);
-  --color-neutral-5: oklch(0.84 0.012 240);
-  --color-neutral-6: oklch(0.75 0.015 240);
-  --color-neutral-7: oklch(0.66 0.018 240);
-  --color-neutral-8: oklch(0.55 0.020 240);
-  --color-neutral-9: oklch(0.45 0.022 240);
-  --color-neutral-10: oklch(0.35 0.020 240);
-  --color-neutral-11: oklch(0.25 0.018 240);
-  --color-neutral-12: oklch(0.15 0.015 240);
-  --color-neutral-contrast: oklch(0.08 0.008 240);
 
-  /* Accent colors - Blue theme */
-  --color-accent-1: oklch(0.98 0.014 260);
-  --color-accent-2: oklch(0.95 0.028 260);
-  --color-accent-3: oklch(0.92 0.042 260);
-  --color-accent-4: oklch(0.88 0.056 260);
-  --color-accent-5: oklch(0.82 0.070 260);
-  --color-accent-6: oklch(0.75 0.084 260);
-  --color-accent-7: oklch(0.68 0.098 260);
-  --color-accent-8: oklch(0.60 0.112 260);
-  --color-accent-9: oklch(0.48 0.14 260);
-  --color-accent-10: oklch(0.42 0.126 260);
-  --color-accent-11: oklch(0.35 0.112 260);
-  --color-accent-12: oklch(0.28 0.098 260);
-  --color-accent-contrast: oklch(0.98 0.005 240);
+  /* --- Modern Elegant Palette --- */
+  /* Neutrals: deep slate blue-gray to soft off-white */
+  --color-neutral-1: oklch(0.99 0.002 250); /* off-white */
+  --color-neutral-2: oklch(0.97 0.004 250);
+  --color-neutral-3: oklch(0.94 0.006 250);
+  --color-neutral-4: oklch(0.90 0.010 250);
+  --color-neutral-5: oklch(0.84 0.014 250);
+  --color-neutral-6: oklch(0.75 0.018 250);
+  --color-neutral-7: oklch(0.66 0.022 250);
+  --color-neutral-8: oklch(0.55 0.025 250);
+  --color-neutral-9: oklch(0.45 0.028 250);
+  --color-neutral-10: oklch(0.32 0.025 250); /* deep slate */
+  --color-neutral-11: oklch(0.22 0.020 250);
+  --color-neutral-12: oklch(0.14 0.015 250);
+  --color-neutral-contrast: oklch(0.09 0.008 250);
 
-  /* Accent secondary - Green theme */
-  --color-accent-secondary-1: oklch(0.98 0.012 140);
-  --color-accent-secondary-2: oklch(0.95 0.024 140);
-  --color-accent-secondary-3: oklch(0.92 0.036 140);
-  --color-accent-secondary-4: oklch(0.88 0.048 140);
-  --color-accent-secondary-5: oklch(0.82 0.060 140);
-  --color-accent-secondary-6: oklch(0.75 0.072 140);
-  --color-accent-secondary-7: oklch(0.68 0.084 140);
-  --color-accent-secondary-8: oklch(0.60 0.096 140);
-  --color-accent-secondary-9: oklch(0.58 0.12 140);
-  --color-accent-secondary-10: oklch(0.52 0.108 140);
-  --color-accent-secondary-11: oklch(0.45 0.096 140);
-  --color-accent-secondary-12: oklch(0.38 0.084 140);
-  --color-accent-secondary-contrast: oklch(0.98 0.005 240);
+  /* Accent: vibrant blue */
+  --color-accent-1: oklch(0.98 0.018 265);
+  --color-accent-2: oklch(0.95 0.036 265);
+  --color-accent-3: oklch(0.92 0.054 265);
+  --color-accent-4: oklch(0.88 0.072 265);
+  --color-accent-5: oklch(0.82 0.090 265);
+  --color-accent-6: oklch(0.75 0.108 265);
+  --color-accent-7: oklch(0.68 0.126 265);
+  --color-accent-8: oklch(0.60 0.144 265);
+  --color-accent-9: oklch(0.48 0.18 265); /* main accent */
+  --color-accent-10: oklch(0.42 0.15 265);
+  --color-accent-11: oklch(0.35 0.13 265);
+  --color-accent-12: oklch(0.28 0.11 265);
+  --color-accent-contrast: oklch(0.99 0.002 250);
+
+  /* Accent secondary: subtle green */
+  --color-accent-secondary-1: oklch(0.98 0.014 145);
+  --color-accent-secondary-2: oklch(0.95 0.028 145);
+  --color-accent-secondary-3: oklch(0.92 0.042 145);
+  --color-accent-secondary-4: oklch(0.88 0.056 145);
+  --color-accent-secondary-5: oklch(0.82 0.070 145);
+  --color-accent-secondary-6: oklch(0.75 0.084 145);
+  --color-accent-secondary-7: oklch(0.68 0.098 145);
+  --color-accent-secondary-8: oklch(0.60 0.112 145);
+  --color-accent-secondary-9: oklch(0.58 0.14 145); /* main green */
+  --color-accent-secondary-10: oklch(0.52 0.11 145);
+  --color-accent-secondary-11: oklch(0.45 0.09 145);
+  --color-accent-secondary-12: oklch(0.38 0.07 145);
+  --color-accent-secondary-contrast: oklch(0.99 0.002 250);
 
   /* Foreground and background */
-  --color-fg: oklch(0.94 0.005 240);
-  --color-fg-secondary: oklch(0.66 0.012 240);
-  --color-bg: oklch(0.08 0.008 240);
-  --color-bg-inset: oklch(0.11 0.012 240);
-  --color-bg-overlay: oklch(0.13 0.012 240);
-  
+  --color-fg: oklch(0.97 0.004 250); /* near-white */
+  --color-fg-secondary: oklch(0.70 0.012 250);
+  --color-bg: oklch(0.16 0.007 250); /* deep slate blue-gray */
+  --color-bg-inset: oklch(0.19 0.012 250);
+  --color-bg-overlay: oklch(0.22 0.012 250);
+
+  /* Card and panel backgrounds */
+  --color-card: oklch(0.22 0.012 250); /* slightly lighter than bg */
+  --color-card-soft: oklch(0.28 0.018 250); /* for gradients */
+  --color-panel: oklch(0.19 0.012 250);
+  --color-panel-soft: oklch(0.24 0.016 250);
+
+  /* Border and shadow */
+  --color-border: oklch(0.28 0.018 250);
+  --color-border-soft: oklch(0.22 0.012 250);
+  --color-shadow: oklch(0.10 0.008 250);
+
   /* Focus ring */
-  --color-focus-ring: oklch(0.48 0.14 260);
+  --color-focus-ring: oklch(0.48 0.18 265);
 
   /* Size variables */
   --size-px: 1px;

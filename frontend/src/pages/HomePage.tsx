@@ -73,14 +73,14 @@ export function HomePage() {
 				exit="exit"
 				className="h-full w-full flex flex-col overflow-hidden bg-background"
 			>
-				<SmoothScrollContainer className="flex-1 universal-responsive-container" showScrollbar={false}>
-					<motion.div
-						className="container mx-auto px-4 max-w-screen-lg w-full space-y-6"
-						style={{ padding: 'var(--fluid-panel-padding)', fontSize: 'var(--fluid-base)' }}
-						variants={containerVariants}
-						initial={false}
-						animate="visible"
-					>
+				   <SmoothScrollContainer className="flex-1 w-full min-h-0" showScrollbar={false}>
+					   <motion.div
+						   className="mx-auto w-full max-w-3xl md:max-w-4xl lg:max-w-5xl px-6 md:px-10 lg:px-16 space-y-8"
+						   style={{ padding: 'var(--fluid-panel-padding)', fontSize: 'var(--fluid-base)' }}
+						   variants={containerVariants}
+						   initial={false}
+						   animate="visible"
+					   >
 						{/* Welcome Section */}
 						<motion.div
 							variants={sectionVariants}
@@ -91,29 +91,29 @@ export function HomePage() {
 						</motion.div>
 
 						{/* Quick Stats */}
-						<motion.div
-							variants={sectionVariants}
-							className="grid grid-cols-2 lg:grid-cols-4 gap-3"
-						>
-							{[
-								{ icon: CurrencyDollar, label: 'Balance', value: '$1,250.00', color: 'text-accent' },
-								{ icon: Trophy, label: 'Win Rate', value: '68%', color: 'text-accent' },
-								{ icon: ChartBar, label: 'Active', value: activeBetsCount, color: 'text-primary' },
-								{ icon: Calendar, label: 'This Week', value: '+$340', color: 'text-accent' }
-							].map((stat, index) => (
-								<Card key={stat.label} className="bg-card/50 backdrop-blur-sm border-border/50" style={{ fontSize: 'var(--fluid-base)', borderRadius: 'var(--fluid-radius)' }}>
-									<CardContent style={{ padding: 'var(--fluid-panel-padding)' }}>
-										<div className="flex items-center space-x-3">
-											<stat.icon size={20} className={stat.color} />
-											<div>
-												<p className="text-sm text-muted-foreground">{stat.label}</p>
-												<p className="font-semibold text-foreground">{stat.value}</p>
-											</div>
-										</div>
-									</CardContent>
-								</Card>
-							))}
-						</motion.div>
+						   <motion.div
+							   variants={sectionVariants}
+							   className="flex justify-center"
+						   >
+							   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-2xl">
+								   {[
+									   { icon: CurrencyDollar, label: 'Balance', value: '$1,250.00', color: 'text-accent' },
+									   { icon: Trophy, label: 'Win Rate', value: '68%', color: 'text-accent' },
+									   { icon: ChartBar, label: 'Active', value: activeBetsCount, color: 'text-primary' },
+									   { icon: Calendar, label: 'This Week', value: '+$340', color: 'text-accent' }
+								   ].map((stat, index) => (
+									   <Card key={stat.label} className="bg-card/50 backdrop-blur-sm border-border/50 shadow-sm flex items-center justify-center min-h-[80px] md:min-h-[100px] min-w-[110px] md:min-w-[130px]" style={{ fontSize: 'var(--fluid-base)', borderRadius: 'var(--fluid-radius)' }}>
+										   <CardContent style={{ padding: '1.1rem 0.75rem' }}>
+											   <div className="flex flex-col items-center justify-center gap-1.5">
+												   <stat.icon size={22} className={stat.color} />
+												   <p className="text-xs md:text-sm text-muted-foreground">{stat.label}</p>
+												   <p className="font-semibold text-base md:text-lg text-foreground">{stat.value}</p>
+											   </div>
+										   </CardContent>
+									   </Card>
+								   ))}
+							   </div>
+						   </motion.div>
 
 						{/* My Bets Navigation */}
 						<motion.div

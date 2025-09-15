@@ -53,7 +53,8 @@
 
 :root {
   /* Core color system - Dark theme with blue accents */
-  --color-bg: oklch(0.06 0.007 240);
+  /* Softer, less harsh dark gray for background */
+  --color-bg: oklch(0.16 0.007 240);
   --color-bg-inset: oklch(0.08 0.007 240);
   --color-bg-overlay: oklch(0.10 0.007 240);
   --color-fg: oklch(0.98 0.003 240);

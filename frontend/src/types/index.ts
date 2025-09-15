@@ -36,6 +36,16 @@ export interface GameOdds {
   spread: SpreadBetOption;
   moneyline: MoneylineBetOption;
   total: TotalBetOption;
+  // Optional period/quarter/half winner odds
+  periodWinners?: {
+    [period: string]: OddsData;
+  };
+  quarterWinners?: {
+    [quarter: string]: OddsData;
+  };
+  halfWinners?: {
+    [half: string]: OddsData;
+  };
 }
 
 export interface SpreadBetOption {
@@ -71,13 +81,21 @@ export interface OddsData {
 export interface Bet {
   id: string;
   gameId: string;
-  betType: 'spread' | 'moneyline' | 'total' | 'player_prop';
+  betType:
+    | 'spread'
+    | 'moneyline'
+    | 'total'
+    | 'player_prop'
+    | 'period_winner'
+    | 'quarter_winner'
+    | 'half_winner';
   selection: 'home' | 'away' | 'over' | 'under';
   odds: number;
   line?: number;
   stake: number;
   potentialPayout: number;
   game: Game;
+  periodOrQuarterOrHalf?: string; // e.g. '1st', '2nd', etc.
   playerProp?: {
     playerId: string;
     playerName: string;

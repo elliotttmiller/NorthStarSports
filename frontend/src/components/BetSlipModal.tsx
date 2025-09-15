@@ -133,32 +133,29 @@ export const BetSlipModal = () => {
           transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
           className="mobile-betslip-modal universal-responsive-container"
         >
-          <div className="container mx-auto px-4 max-w-screen-lg w-full h-full flex flex-col">
-            <DialogContent
-              className="universal-responsive-container fixed inset-0 z-[60] w-full h-full max-w-none bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden p-0 sm:p-0 md:p-0"
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                width: '100vw',
-                height: '100vh',
-                maxWidth: '100vw',
-                maxHeight: '100vh',
-                transform: 'none',
-                margin: 0,
-                padding: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                boxSizing: 'border-box',
-                overflow: 'hidden',
-              }}
-              onInteractOutside={(e) => {
-                if (!isPlacing) handleClose();
-                else e.preventDefault();
-              }}
-            >
+          <DialogContent
+            className="fixed inset-0 z-[60] w-full h-full max-w-none bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden p-0 sm:max-w-lg sm:left-1/2 sm:top-1/2 sm:translate-x-[-50%] sm:translate-y-[-50%]"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: '100vh',
+              maxHeight: '100vh',
+              transform: 'none',
+              margin: 0,
+              padding: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              boxSizing: 'border-box',
+              overflow: 'hidden',
+            }}
+            onInteractOutside={(e) => {
+              if (!isPlacing) handleClose();
+              else e.preventDefault();
+            }}
+          >
             {/* Enhanced Header */}
   <DialogHeader className="flex-shrink-0 border-b border-border/40 p-3 sm:p-4 bg-gradient-to-r from-card/90 to-card/80 backdrop-blur-2xl">
           <div className="flex items-center justify-between">
@@ -253,7 +250,7 @@ export const BetSlipModal = () => {
         </DialogHeader>
 
         {/* Content Area with Enhanced Scrolling */}
-  <SmoothScrollContainer className="flex-1 px-2 sm:px-4 seamless-scroll">
+  <SmoothScrollContainer className="flex-1 min-h-0 overflow-auto seamless-scroll">
           <motion.div 
             className="py-6 space-y-6"
             initial={{ opacity: 0, y: 10 }}
@@ -583,7 +580,6 @@ export const BetSlipModal = () => {
           </motion.div>
         )}
             </DialogContent>
-          </div>
         </motion.div>
       </Dialog>
     </AnimatePresence>

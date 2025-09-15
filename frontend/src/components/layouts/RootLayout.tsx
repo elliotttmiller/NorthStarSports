@@ -68,7 +68,7 @@ function LayoutContent() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="fixed inset-0 bg-black/60 z-30"
+                  className="fixed inset-0 bg-[color:var(--color-bg-overlay)]/80 backdrop-blur-md z-30"
                   onClick={() => setMobilePanel(null)}
                 />
               )}
