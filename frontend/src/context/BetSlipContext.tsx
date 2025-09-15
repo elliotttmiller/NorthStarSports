@@ -1,5 +1,5 @@
-import { createContext, useContext, ReactNode } from 'react';
-import { useKV } from '@github/spark/hooks';
+import { createContext, useContext, ReactNode, useEffect, useState, useCallback } from 'react';
+import { useActiveBetSlip, useSetActiveBetSlip } from '@/hooks/useApi';
 import { Bet, BetSlip, Game, PlayerProp } from '@/types';
 import { calculatePayout } from '@/services/mockApi';
 
@@ -34,8 +34,18 @@ const defaultBetSlip: BetSlip = {
   totalOdds: 0
 };
 
+// TODO: Replace with real user ID from auth context
+const USER_ID = 'demo';
+
 export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) => {
-  const [betSlip, setBetSlip] = useKV<BetSlip>('bet-slip', defaultBetSlip);
+  const { data: remoteBetSlip, loading } = useActiveBetSlip(USER_ID);
+  const setRemoteBetSlip = useSetActiveBetSlip();
+  const [betSlip, setBetSlip] = useState<BetSlip>(defaultBetSlip);
+
+  // Hydrate from backend on load
+  useEffect(() => {
+    if (remoteBetSlip && !loading) setBetSlip(remoteBetSlip);
+  }, [remoteBetSlip, loading]);
 
   const calculateBetSlipTotals = (bets: Bet[], betType: 'single' | 'parlay') => {
     if (bets.length === 0) {
@@ -64,6 +74,12 @@ export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) =>
     }
   };
 
+  // All actions update both local and remote
+  const syncAndSet = useCallback(async (nextSlip: BetSlip) => {
+    setBetSlip(nextSlip);
+    await setRemoteBetSlip(USER_ID, nextSlip);
+  }, [setRemoteBetSlip]);
+
   const addBet = (
     game: Game, 
     betType: 'spread' | 'moneyline' | 'total' | 'player_prop', 
@@ -75,116 +91,72 @@ export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) =>
     const betId = playerProp 
       ? `${game.id}-${betType}-${playerProp.id}-${selection}`
       : `${game.id}-${betType}-${selection}`;
-    
-    setBetSlip(currentBetSlip => {
-      if (!currentBetSlip) return defaultBetSlip;
-      
-      // Remove existing bet on same game/type if it exists (except for player props which can be multiple)
-      let filteredBets = currentBetSlip.bets;
-      if (betType !== 'player_prop') {
-        filteredBets = currentBetSlip.bets.filter(
-          bet => !(bet.gameId === game.id && bet.betType === betType)
-        );
-      } else {
-        // For player props, remove only if it's the same prop
-        filteredBets = currentBetSlip.bets.filter(
-          bet => bet.id !== betId
-        );
-      }
-      
-      const newBet: Bet = {
-        id: betId,
-        gameId: game.id,
-        betType,
-        selection,
-        odds,
-        line,
-        stake: 10, // Default stake
-        potentialPayout: 10 + calculatePayout(10, odds),
-        game,
-        playerProp: playerProp ? {
-          playerId: playerProp.playerId,
-          playerName: playerProp.playerName,
-          statType: playerProp.statType,
-          category: playerProp.category
-        } : undefined
-      };
-
-      const updatedBets = [...filteredBets, newBet];
-      const totals = calculateBetSlipTotals(updatedBets, currentBetSlip.betType);
-
-      return {
-        ...currentBetSlip,
-        bets: updatedBets,
-        ...totals
-      };
-    });
+    let filteredBets = betSlip.bets;
+    if (betType !== 'player_prop') {
+      filteredBets = betSlip.bets.filter(
+        bet => !(bet.gameId === game.id && bet.betType === betType)
+      );
+    } else {
+      filteredBets = betSlip.bets.filter(
+        bet => bet.id !== betId
+      );
+    }
+    const newBet: Bet = {
+      id: betId,
+      gameId: game.id,
+      betType,
+      selection,
+      odds,
+      line,
+      stake: 10,
+      potentialPayout: 10 + calculatePayout(10, odds),
+      game,
+      playerProp: playerProp ? {
+        playerId: playerProp.playerId,
+        playerName: playerProp.playerName,
+        statType: playerProp.statType,
+        category: playerProp.category
+      } : undefined
+    };
+    const updatedBets = [...filteredBets, newBet];
+    const totals = calculateBetSlipTotals(updatedBets, betSlip.betType);
+    syncAndSet({ ...betSlip, bets: updatedBets, ...totals });
   };
 
   const removeBet = (betId: string) => {
-    setBetSlip(currentBetSlip => {
-      if (!currentBetSlip) return defaultBetSlip;
-      
-      const updatedBets = currentBetSlip.bets.filter(bet => bet.id !== betId);
-      const totals = calculateBetSlipTotals(updatedBets, currentBetSlip.betType);
-
-      return {
-        ...currentBetSlip,
-        bets: updatedBets,
-        ...totals
-      };
-    });
+    const updatedBets = betSlip.bets.filter(bet => bet.id !== betId);
+    const totals = calculateBetSlipTotals(updatedBets, betSlip.betType);
+    syncAndSet({ ...betSlip, bets: updatedBets, ...totals });
   };
 
   const updateStake = (betId: string, stake: number) => {
-    setBetSlip(currentBetSlip => {
-      if (!currentBetSlip) return defaultBetSlip;
-      
-      const updatedBets = currentBetSlip.bets.map(bet => {
-        if (bet.id === betId) {
-          return {
-            ...bet,
-            stake,
-            potentialPayout: stake + calculatePayout(stake, bet.odds)
-          };
-        }
-        return bet;
-      });
-
-      // For parlay, update all bets to have same stake
-      if (currentBetSlip.betType === 'parlay') {
-        updatedBets.forEach(bet => {
-          bet.stake = stake;
-          bet.potentialPayout = stake + calculatePayout(stake, bet.odds);
-        });
+    const updatedBets = betSlip.bets.map(bet => {
+      if (bet.id === betId) {
+        return {
+          ...bet,
+          stake,
+          potentialPayout: stake + calculatePayout(stake, bet.odds)
+        };
       }
-
-      const totals = calculateBetSlipTotals(updatedBets, currentBetSlip.betType);
-
-      return {
-        ...currentBetSlip,
-        bets: updatedBets,
-        ...totals
-      };
+      return bet;
     });
+    if (betSlip.betType === 'parlay') {
+      updatedBets.forEach(bet => {
+        bet.stake = stake;
+        bet.potentialPayout = stake + calculatePayout(stake, bet.odds);
+      });
+    }
+    const totals = calculateBetSlipTotals(updatedBets, betSlip.betType);
+    syncAndSet({ ...betSlip, bets: updatedBets, ...totals });
   };
 
   const setBetType = (betType: 'single' | 'parlay') => {
-    setBetSlip(currentBetSlip => {
-      if (!currentBetSlip) return defaultBetSlip;
-      
-      const totals = calculateBetSlipTotals(currentBetSlip.bets, betType);
-      
-      return {
-        ...currentBetSlip,
-        betType,
-        ...totals
-      };
-    });
+    const totals = calculateBetSlipTotals(betSlip.bets, betType);
+    syncAndSet({ ...betSlip, betType, ...totals });
   };
 
   const clearBetSlip = () => {
-    setBetSlip(defaultBetSlip);
+    syncAndSet(defaultBetSlip);
   };
 
   const currentBetSlip = betSlip || defaultBetSlip;

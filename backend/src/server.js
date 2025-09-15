@@ -3,6 +3,7 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import kvRoutes from './routes/kv.js';
+import redisRoutes from './routes/redis.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -13,6 +14,7 @@ app.use(express.json());
 
 // Routes
 app.use('/kv', kvRoutes);
+app.use('/api', redisRoutes);
 
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
