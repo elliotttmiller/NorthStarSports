@@ -15,6 +15,15 @@ export default defineConfig({
   build: {
     outDir: 'dist', // outputs to frontend/dist
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
   plugins: [
     react(),
     tailwindcss(),

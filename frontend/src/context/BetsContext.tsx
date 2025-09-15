@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
-import { useBet, useSetBet } from '@/hooks/useApi';
+import { useBets, useSetBets } from '@/hooks/useApi';
 import { Bet } from '@/types';
 
 // TODO: Replace with real user ID from auth context
@@ -16,30 +16,47 @@ interface BetsContextType {
 export const BetsContext = createContext<BetsContextType | undefined>(undefined);
 
 export const BetsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // For simplicity, this context can be refactored to fetch a single bet or a list as needed
-  // Here, we provide a stub for a single bet (could be extended for a list)
-  const { data: bet, loading, error } = useBet('demo-bet-id');
-  const setBet = useSetBet();
 
-  const refreshBets = useCallback(async () => {}, []); // No-op for now
+
+  // Fetch all active bets for the user
+  const { data: betsRaw, loading, error } = useBets(USER_ID);
+  const [bets, setLocalBets] = useState<Bet[]>(Array.isArray(betsRaw) ? betsRaw : []);
+  const setBets = useSetBets();
+
+  // Keep local bets in sync with remote
+  useEffect(() => {
+    if (Array.isArray(betsRaw)) setLocalBets(betsRaw);
+  }, [betsRaw]);
+
+  // Actually refetch bets from backend
+  const refreshBets = useCallback(async () => {
+    const res = await fetch('/api/bets/' + USER_ID);
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data)) setLocalBets(data);
+    }
+  }, []);
 
   const addBet = useCallback(async (bet: Bet) => {
-    await setBet(bet.id, bet);
+    const updatedBets: Bet[] = [...bets, bet];
+    await setBets(USER_ID, updatedBets);
     await refreshBets();
-  }, [setBet, refreshBets]);
+  }, [bets, setBets, refreshBets]);
 
   const updateBet = useCallback(async (betId: string, bet: Partial<Bet>) => {
-    await setBet(betId, bet);
+    const updatedBets: Bet[] = bets.map((b: Bet) => b.id === betId ? { ...b, ...bet } : b);
+    await setBets(USER_ID, updatedBets);
     await refreshBets();
-  }, [setBet, refreshBets]);
+  }, [bets, setBets, refreshBets]);
 
   const deleteBet = useCallback(async (betId: string) => {
-    await setBet(betId, { deleted: true });
+    const updatedBets: Bet[] = bets.filter((b: Bet) => b.id !== betId);
+    await setBets(USER_ID, updatedBets);
     await refreshBets();
-  }, [setBet, refreshBets]);
+  }, [bets, setBets, refreshBets]);
 
   const value: BetsContextType = {
-    bets: bet ? [bet] : [],
+    bets,
     refreshBets,
     addBet,
     updateBet,

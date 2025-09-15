@@ -1,3 +1,21 @@
+// Fetch all bets for a user
+export function useBets(userId) {
+  return useApi(`/bets/${userId}`);
+}
+
+// Set all bets for a user
+export function useSetBets() {
+  return useCallback(async (userId, bets) => {
+    const res = await fetch(`${API_BASE}/bets/${userId}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bets)
+      }
+    );
+    return res.ok;
+  }, []);
+}
 import { useState, useEffect, useCallback } from 'react';
 
 const API_BASE = '/api';

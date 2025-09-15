@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useBetsContext } from '@/context/BetsContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { useNavigation } from '@/context/NavigationContext';
 import { formatOdds } from '@/lib/formatters';
@@ -16,6 +17,7 @@ import { SmoothScrollContainer } from '@/components/VirtualScrolling';
 
 export const BetSlipModal = () => {
   const { betSlip, removeBet, updateStake, setBetType, clearBetSlip } = useBetSlip();
+  const { addBet } = useBetsContext();
   const { navigation, setIsBetSlipOpen } = useNavigation();
   const [isPlacing, setIsPlacing] = useState(false);
   const [placementStage, setPlacementStage] = useState<'idle' | 'validating' | 'processing' | 'success'>('idle');
@@ -43,38 +45,46 @@ export const BetSlipModal = () => {
       toast.error('No bets selected');
       return;
     }
-
     if (betSlip.totalStake === 0) {
       toast.error('Please enter stake amounts');
       return;
     }
-
     setIsPlacing(true);
-    
     try {
       // Stage 1: Validation
       setPlacementStage('validating');
       await new Promise(resolve => setTimeout(resolve, 600));
-      
       // Stage 2: Processing
       setPlacementStage('processing');
       await new Promise(resolve => setTimeout(resolve, 1200));
-      
+      // Place bets
+      if (betSlip.betType === 'single') {
+        for (const bet of betSlip.bets) {
+          await addBet(bet);
+        }
+      } else if (betSlip.betType === 'parlay') {
+        // Create a parlay bet object (using the first bet as a base)
+        const parlayBet = {
+          ...betSlip.bets[0],
+          id: `parlay-${Date.now()}`,
+          betType: 'parlay' as const,
+          legs: betSlip.bets,
+          stake: betSlip.totalStake,
+          potentialPayout: betSlip.totalPayout,
+          odds: betSlip.totalOdds,
+        };
+        await addBet(parlayBet);
+      }
       // Stage 3: Success
       setPlacementStage('success');
       await new Promise(resolve => setTimeout(resolve, 800));
-      
       toast.success(
         `${betSlip.betType === 'single' ? 'Bets' : 'Parlay'} placed successfully! Good luck!`
       );
-      
       clearBetSlip();
-      
-      // Delayed close for success animation
       setTimeout(() => {
         handleClose();
       }, 300);
-      
     } catch (error) {
       toast.error('Failed to place bet. Please try again.');
       setPlacementStage('idle');

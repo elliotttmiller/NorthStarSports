@@ -11,10 +11,14 @@ import {
   getGame,
   setGame,
   getLeaderboard,
-  updateLeaderboard
+  updateLeaderboard,
+  getUserBets
 } from '../controllers/redisController.js';
 
 const router = express.Router();
+
+// Get all bets for a user
+router.get('/bets/:userId', getUserBets);
 
 // User
 router.get('/user/:userId', getUser);

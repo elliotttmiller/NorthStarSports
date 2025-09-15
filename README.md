@@ -1,4 +1,3 @@
-
 # NorthStarSports
 
 NorthStarSports is a comprehensive, modern, and fully reimagined website and application UI redesign for nssportsclub. This project delivers a next-generation sports betting and club management platform, engineered from the ground up to provide a seamless, real-time, and persistent user experience. The codebase features a robust, scalable architecture leveraging React, TypeScript, Node.js, Express, and Redis Cloud, and is meticulously crafted to support both high-performance wagering and club operations.
@@ -29,6 +28,7 @@ This project is the foundation for the next era of nssportsclub, combining best-
 - [Testing](#testing)
 - [Contributing](#contributing)
 - [License](#license)
+- [Production Build & Deployment](#production-build--deployment)
 
 ---
 
@@ -190,3 +190,70 @@ MIT License. See `LICENSE` file for details.
 
 ## Contact
 For questions or support, open an issue on GitHub or contact the maintainer.
+
+---
+
+## Environment Variables
+
+- Copy `.env.example` to `.env` in both `backend/` and `frontend/` and fill in the required values.
+- All secrets and environment-specific settings should be managed via these files.
+
+## Local Development
+
+- Use `start.py` for local development. This will start both backend and frontend with hot reload and log streaming.
+- No Docker or production process managers are required for local development.
+
+## Production Migration
+
+- When ready for production, use the provided Dockerfiles, PM2 configs, and CI/CD templates for deployment.
+- See the `deployment` section below for details.
+
+---
+
+# Production Build & Deployment
+
+## Local Development (No Docker Required)
+- Use `start.py` or run backend/frontend dev scripts as before.
+- Environment variables managed via `.env` files in each package.
+
+## Production Build
+
+### 1. Build Frontend
+```
+cd frontend
+npm install
+npm run build
+```
+
+### 2. Start Backend (Production)
+```
+cd backend
+npm install --production
+npm run start
+```
+
+### 3. Docker Compose (Migration Ready)
+```
+docker-compose up --build
+```
+- This will build and run both backend and frontend containers.
+- Frontend served via Nginx, backend on port 3001.
+
+### 4. PM2 (Optional, Backend Only)
+```
+cd backend
+npm install pm2 -g
+pm2 start ecosystem.config.js
+```
+
+## CI/CD
+- See `.github/workflows/ci.yml` for GitHub Actions pipeline.
+
+# Security & Optimization
+- All secrets/config in `.env` files (never commit real secrets).
+- Static assets served via Nginx in production.
+- Hardened Dockerfiles and Nginx config for best practices.
+
+# Migration Ready
+- All production scripts, Docker, and CI/CD templates are present.
+- Local dev remains fast and unchanged.

@@ -1,29 +1,27 @@
-import { kvService } from '../services/kvService.js';
+import * as kvService from '../services/kvService.js';
+import { success, error } from '../utils/responseFormatter.js';
 
-
-export const getKV = async (req, res) => {
-  const { key } = req.params;
+export async function getKV(req, res, next) {
   try {
-    const value = await kvService.get(key);
+    const value = await kvService.get(req.params.key);
     if (value === null || typeof value === 'undefined') {
-      return res.status(404).json({ error: 'Not Found' });
+      return res.status(404).json(error('Not Found', 404));
     }
-    res.json({ key, value });
+    res.json(success({ key: req.params.key, value }));
   } catch (err) {
-    res.status(500).json({ error: 'Server error', details: err.message });
+    next(err);
   }
-};
+}
 
-export const setKV = async (req, res) => {
-  const { key } = req.params;
-  const { value } = req.body;
-  if (typeof value === 'undefined') {
-    return res.status(400).json({ error: 'Missing value in body' });
-  }
+export async function setKV(req, res, next) {
   try {
-    await kvService.set(key, value);
-    res.json({ key, value });
+    const { value } = req.body;
+    if (typeof value === 'undefined') {
+      return res.status(400).json(error('Missing value in body', 400));
+    }
+    await kvService.set(req.params.key, value);
+    res.json(success({ key: req.params.key, value }));
   } catch (err) {
-    res.status(500).json({ error: 'Server error', details: err.message });
+    next(err);
   }
-};
+}

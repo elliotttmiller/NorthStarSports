@@ -29,3 +29,15 @@ This information will help us triage your report more quickly.
 ## Policy
 
 See [GitHub's Safe Harbor Policy](https://docs.github.com/en/site-policy/security-policies/github-bug-bounty-program-legal-safe-harbor#1-safe-harbor-terms)
+
+# Frontend Security Guidelines
+
+- Never commit real secrets or API keys to the repo.
+- All config/secrets must be in `.env` (see `.env.example`).
+- Use HTTPS in production (enforced by Nginx or hosting provider).
+- Validate all user input (zod schemas, client-side validation).
+- Sanitize any user-generated content before rendering.
+- Use Content Security Policy (CSP) headers in production (see Nginx config).
+- Keep dependencies up to date.
+- Serve static assets via Nginx in production.
+- Monitor for vulnerabilities (npm audit, Snyk, etc).

@@ -88,7 +88,8 @@ export interface Bet {
     | 'player_prop'
     | 'period_winner'
     | 'quarter_winner'
-    | 'half_winner';
+    | 'half_winner'
+    | 'parlay';
   selection: 'home' | 'away' | 'over' | 'under';
   odds: number;
   line?: number;
@@ -102,6 +103,7 @@ export interface Bet {
     statType: string;
     category: string;
   };
+  legs?: Bet[];
 }
 
 export interface BetSlip {

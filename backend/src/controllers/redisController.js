@@ -1,3 +1,19 @@
+// Get all bets for a user (from betslip history)
+export const getUserBets = async (req, res) => {
+  const { userId } = req.params;
+  // Get betslip history (list of betslip IDs)
+  const betslipIds = await kvService.getBetSlipHistory(userId, 100); // adjust count as needed
+  if (!betslipIds || betslipIds.length === 0) return res.json([]);
+  // For each betslip ID, get the bet object
+  const bets = await Promise.all(
+    betslipIds.map(async (betId) => {
+      const bet = await kvService.getBet(betId);
+      return bet ? { ...bet, id: betId } : null;
+    })
+  );
+  // Filter out nulls (missing bets)
+  res.json(bets.filter(Boolean));
+};
 import { kvService } from '../services/kvService.js';
 
 // User
