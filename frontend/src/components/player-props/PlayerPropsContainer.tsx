@@ -9,6 +9,7 @@ import { Target, MagnifyingGlass, SortAscending, Funnel, Sparkle } from '@phosph
 import { PropCategorySection } from './PropCategorySection'
 import { usePlayerProps } from '@/hooks/usePlayerProps'
 import { cn } from '@/lib/utils'
+import { SmoothScrollContainer } from '@/components/VirtualScrolling';
 
 interface PlayerPropsContainerProps {
   categories: PropCategory[]
@@ -162,7 +163,7 @@ export function PlayerPropsContainer({
 
   return (
     <Card className={cn('bg-card/50 border-border/30 overflow-hidden', className)}>
-      <CardContent className="p-0">
+      <CardContent className="p-0 flex flex-col h-full">
         {/* Header */}
         <div className="p-6 pb-4 bg-gradient-to-r from-card/50 to-card/80 border-b border-border/30">
           <div className="flex items-center justify-between mb-4">
@@ -247,11 +248,8 @@ export function PlayerPropsContainer({
           </div>
         </div>
 
-        {/* Categories */}
-        <div className={cn(
-          'p-6 space-y-4 max-h-[70vh] overflow-y-auto seamless-scroll',
-          compact && 'p-4 max-h-80'
-        )}>
+        {/* Categories - now in SmoothScrollContainer */}
+        <SmoothScrollContainer className={cn('flex-1 p-6 space-y-4', compact && 'p-4 max-h-80')} showScrollbar={false}>
           {processedCategories.map((category, index) => (
             <div
               key={category.key}
@@ -267,7 +265,7 @@ export function PlayerPropsContainer({
               />
             </div>
           ))}
-        </div>
+        </SmoothScrollContainer>
       </CardContent>
     </Card>
   )

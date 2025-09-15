@@ -1,5 +1,5 @@
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { SmoothScrollContainer } from '@/components/VirtualScrolling';
 import { useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
 import { Game } from '@/types';
@@ -41,7 +41,7 @@ const WorkspacePanel = () => {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [scrollContainerRef, setScrollContainerRef] = useState<HTMLDivElement | null>(null);
+  // Remove scrollContainerRef, not needed for SmoothScrollContainer
   const { scrollToTop } = useSmoothScroll();
 
   const loadMoreRef = useInfiniteScroll({
@@ -133,8 +133,10 @@ const WorkspacePanel = () => {
   }, [games, layoutPrefs, favoriteGames]);
 
   const handleScrollToTop = () => {
-    if (scrollContainerRef) {
-      scrollToTop(scrollContainerRef);
+    // Try to find the SmoothScrollContainer by class and scroll to top
+    const el = document.querySelector('.universal-responsive-container');
+    if (el) {
+      scrollToTop(el as HTMLElement);
     }
   };
 
@@ -146,146 +148,147 @@ const WorkspacePanel = () => {
 
   if (!navigation.selectedLeague || games.length === 0) {
     return (
-      <div className="h-full flex items-center justify-center bg-background">
+      <AnimatePresence mode="wait">
         <motion.div
-          className="text-center px-4"
+          key="workspacepanel-empty"
+          className="h-full flex items-center justify-center bg-background"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.5 }}
         >
-          <h3 className="text-lg font-medium text-foreground mb-2">Select a League</h3>
-          <p className="text-muted-foreground mb-4">Choose a sport and league to view games and place bets.</p>
+          <div className="text-center px-4">
+            <h3 className="text-lg font-medium text-foreground mb-2">Select a League</h3>
+            <p className="text-muted-foreground mb-4">Choose a sport and league to view games and place bets.</p>
 
-          {/* Mobile-only: Show button to open sports navigation */}
-          {isMobile && (
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setMobilePanel('navigation')}
-                className="rounded-full px-4 py-2 mt-2 shadow-md"
+            {/* Mobile-only: Show button to open sports navigation */}
+            {isMobile && (
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                Open Sports
-              </Button>
-            </motion.div>
-          )}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setMobilePanel('navigation')}
+                  className="rounded-full px-4 py-2 mt-2 shadow-md"
+                >
+                  Open Sports
+                </Button>
+              </motion.div>
+            )}
+          </div>
         </motion.div>
-      </div>
+      </AnimatePresence>
     );
   }
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-start mx-auto max-w-screen-lg px-4 sm:px-8 lg:px-12 py-10 gap-y-10 bg-background">
-      <div className="w-full max-w-2xl mx-auto text-center">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-2 tracking-tight">Welcome to NSSPORTSCLUB</h1>
-        <p className="text-lg text-muted-foreground mb-6">Your professional sports betting platform</p>
-      </div>
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Example stats, replace with real data if needed */}
-        <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
-          <span className="text-sm text-muted-foreground mb-1">Balance</span>
-          <span className="text-2xl font-semibold text-foreground">$1,250.00</span>
-        </div>
-        <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
-          <span className="text-sm text-muted-foreground mb-1">Win Rate</span>
-          <span className="text-2xl font-semibold text-foreground">68%</span>
-        </div>
-        <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
-          <span className="text-sm text-muted-foreground mb-1">Active</span>
-          <span className="text-2xl font-semibold text-foreground">0</span>
-        </div>
-        <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
-          <span className="text-sm text-muted-foreground mb-1">This Week</span>
-          <span className="text-2xl font-semibold text-foreground">+$340</span>
-        </div>
-      </div>
-      {/* Games Container */}
-      <div className="flex-1 overflow-hidden w-full">
-        <div
-          ref={(el) => setScrollContainerRef(el)}
-          className={cn('h-full seamless-scroll overflow-y-auto')}
-          style={{
-            padding: 'var(--fluid-panel-padding)',
-            fontSize: 'var(--fluid-base)'
-          }}
-        >
-          <div className="space-y-2">
-            <AnimatePresence mode="popLayout">
-              {processedGames.map((game) => (
-                <GameCard
-                  key={game.id}
-                  game={game}
-                  className={cn(
-                    'card-hover',
-                    favoriteGames?.includes(game.id) && 'ring-1 ring-yellow-400/20'
-                  )}
-                />
-              ))}
-            </AnimatePresence>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="workspacepanel-main"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -30 }}
+        transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
+        className="h-full w-full flex flex-col bg-background"
+      >
+        {/* Stats header - hidden on mobile, compact on desktop */}
+        <div className="hidden md:grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 sm:px-8 lg:px-12 py-6 max-w-screen-lg mx-auto">
+          <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
+            <span className="text-sm text-muted-foreground mb-1">Balance</span>
+            <span className="text-2xl font-semibold text-foreground">$1,250.00</span>
           </div>
-
-          {/* Load more trigger */}
-          {pagination?.hasNextPage && !loading && (
-            <div ref={loadMoreRef} className="h-16 w-full" />
-          )}
-
-          {/* End of results indicator */}
-          {pagination && !pagination.hasNextPage && processedGames.length > 0 && (
-            <motion.div
-              className="text-center py-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="text-sm text-muted-foreground">
-                End of games list
-              </div>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Loading indicator */}
-        {loading && (
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-card/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-border"
-            >
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                <span className="text-sm text-muted-foreground">Loading more games...</span>
-              </div>
-            </motion.div>
+          <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
+            <span className="text-sm text-muted-foreground mb-1">Win Rate</span>
+            <span className="text-2xl font-semibold text-foreground">68%</span>
           </div>
-        )}
-      </div>
-
-      {/* Floating Action Button - Scroll to top */}
-      <AnimatePresence>
-        {processedGames.length > 5 && (
-          <motion.div
-            className="fixed bottom-20 right-4 z-30 lg:bottom-6"
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            transition={{ duration: 0.2 }}
+          <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
+            <span className="text-sm text-muted-foreground mb-1">Active</span>
+            <span className="text-2xl font-semibold text-foreground">0</span>
+          </div>
+          <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
+            <span className="text-sm text-muted-foreground mb-1">This Week</span>
+            <span className="text-2xl font-semibold text-foreground">+$340</span>
+          </div>
+        </div>
+        {/* Games Container - always fills available height */}
+        <div className="flex-1 min-h-0 w-full flex flex-col">
+          <SmoothScrollContainer
+            className={cn('h-full universal-responsive-container px-0 sm:px-4')}
+            showScrollbar={false}
           >
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleScrollToTop}
-              className="rounded-full h-10 w-10 shadow-lg hover:shadow-xl transition-shadow bg-card/90 backdrop-blur-sm border border-border"
-            >
-              <CaretUp size={16} />
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+            <div className="space-y-2 pt-2 pb-24 sm:pb-4" style={{ fontSize: 'var(--fluid-base)' }}>
+              <AnimatePresence mode="popLayout">
+                {processedGames.map((game) => (
+                  <GameCard
+                    key={game.id}
+                    game={game}
+                    className={cn(
+                      'card-hover',
+                      favoriteGames?.includes(game.id) && 'ring-1 ring-yellow-400/20'
+                    )}
+                  />
+                ))}
+              </AnimatePresence>
+              {/* Load more trigger */}
+              {pagination?.hasNextPage && !loading && (
+                <div ref={loadMoreRef} className="h-16 w-full" />
+              )}
+              {/* End of results indicator */}
+              {pagination && !pagination.hasNextPage && processedGames.length > 0 && (
+                <motion.div
+                  className="text-center py-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="text-sm text-muted-foreground">
+                    End of games list
+                  </div>
+                </motion.div>
+              )}
+              {/* Loading indicator */}
+              {loading && (
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-card/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-border"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+                      <span className="text-sm text-muted-foreground">Loading more games...</span>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+            </div>
+          </SmoothScrollContainer>
+          {/* Floating Action Button - Scroll to top */}
+          <AnimatePresence>
+            {processedGames.length > 5 && (
+              <motion.div
+                className="fixed bottom-20 right-4 z-30 lg:bottom-6"
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleScrollToTop}
+                  className="rounded-full h-10 w-10 shadow-lg hover:shadow-xl transition-shadow bg-card/90 backdrop-blur-sm border border-border"
+                >
+                  <CaretUp size={16} />
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

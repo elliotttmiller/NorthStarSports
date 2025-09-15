@@ -6,7 +6,7 @@ import { getSports } from '@/services/mockApi';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { SmoothScrollContainer } from '@/components/VirtualScrolling';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const SideNavPanel = () => {
   const { navigation, selectSport, selectLeague, setMobilePanel } = useNavigation();
@@ -25,29 +25,22 @@ export const SideNavPanel = () => {
         setLoading(false);
       }
     };
-
     loadSports();
   }, []);
 
   const handleSportClick = (sportId: string) => {
-    // Only expand/collapse the accordion, don't navigate
     selectSport(navigation.selectedSport === sportId ? '' : sportId);
   };
 
   const handleLeagueClick = (leagueId: string) => {
-    // Find which sport this league belongs to
     const sport = sports.find(s => s.leagues.some(l => l.id === leagueId));
     if (sport) {
       selectSport(sport.id);
     }
     selectLeague(leagueId);
-    
-    // Navigate to games page on both desktop and mobile
     setTimeout(() => {
       navigate('/games');
     }, 150);
-    
-    // Close mobile panel if mobile
     if (window.innerWidth < 1024) {
       setMobilePanel(null);
     }
@@ -116,78 +109,89 @@ export const SideNavPanel = () => {
 
   if (loading) {
     return (
-      <div className="h-full bg-card flex flex-col overflow-hidden">
-        <motion.div 
-          className="p-3 border-b border-border flex-shrink-0"
+      <AnimatePresence mode="wait">
+        <motion.div
+          key="sidenavpanel-loading"
+          className="h-full bg-card flex flex-col overflow-hidden"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
         >
-          <h2 className="text-base font-semibold text-card-foreground">Sports</h2>
-          <p className="text-xs text-muted-foreground">Loading sports...</p>
+          <div className="p-3 border-b border-border flex-shrink-0">
+            <h2 className="text-base font-semibold text-card-foreground">Sports</h2>
+            <p className="text-xs text-muted-foreground">Loading sports...</p>
+          </div>
+          <div className="flex-1">
+            <SkeletonLoader type="navigation" count={3} />
+          </div>
         </motion.div>
-        <div className="flex-1">
-          <SkeletonLoader type="navigation" count={3} />
-        </div>
-      </div>
+      </AnimatePresence>
     );
   }
 
   return (
-    <div className="h-full bg-card flex flex-col overflow-hidden" style={{ '--nav-panel-width': '256px' } as React.CSSProperties}>
-      {/* Header - Compact Sports header */}
-      <motion.div 
-        className="border-b border-border flex-shrink-0"
-        style={{
-          padding: 'var(--fluid-panel-padding)',
-          fontSize: 'var(--fluid-lg)',
-          borderRadius: 'var(--fluid-radius)'
-        }}
-        initial={{ opacity: 0, y: -10 }}
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="sidenavpanel-main"
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+        exit={{ opacity: 0, y: -30 }}
+        transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
+        className="h-full bg-card flex flex-col overflow-hidden shadow-lg border-r border-border"
+        style={{ '--nav-panel-width': '256px' } as React.CSSProperties}
       >
-        <h2 className="font-semibold text-card-foreground">Sports</h2>
-        <p className="text-muted-foreground">Select league to view games</p>
-      </motion.div>
+        {/* Sticky header for mobile and desktop */}
+        <motion.div
+          className="sticky top-0 z-10 bg-card/95 border-b border-border flex-shrink-0 px-4 py-3 md:py-4"
+          style={{ fontSize: 'var(--fluid-lg)', borderRadius: 'var(--fluid-radius)' }}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <h2 className="font-semibold text-card-foreground text-lg md:text-xl">Sports</h2>
+          <p className="text-xs md:text-sm text-muted-foreground">Select league to view games</p>
+        </motion.div>
 
-      <div className="flex-1 overflow-hidden">
-        <div className="h-full seamless-scroll overflow-y-auto" style={{ padding: 'var(--fluid-panel-padding)', fontSize: 'var(--fluid-base)' }}>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-          >
-            <div className="space-y-1">
-              <Accordion 
-                type="single" 
-                collapsible 
-                value={navigation.selectedSport || undefined}
-                onValueChange={(value) => {
-                  if (value) {
-                    selectSport(value);
-                  }
-                }}
-              >
-                {sports.map((sport, index) => (
-                  <motion.div
-                    key={sport.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ 
-                      duration: 0.3, 
-                      delay: index * 0.05,
-                      ease: [0.4, 0.0, 0.2, 1]
-                    }}
-                  >
-                    {renderSportItem(sport, index)}
-                  </motion.div>
-                ))}
-              </Accordion>
-            </div>
-          </motion.div>
+        {/* Scrollable sports/league list */}
+        <div className="flex-1 min-h-0 overflow-hidden">
+          <div className="h-full seamless-scroll overflow-y-auto px-2 md:px-4 py-2 md:py-4" style={{ fontSize: 'var(--fluid-base)' }}>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
+              <div className="space-y-1">
+                <Accordion
+                  type="single"
+                  collapsible
+                  value={navigation.selectedSport || undefined}
+                  onValueChange={(value) => {
+                    if (value) {
+                      selectSport(value);
+                    }
+                  }}
+                >
+                  {sports.map((sport, index) => (
+                    <motion.div
+                      key={sport.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        duration: 0.3,
+                        delay: index * 0.05,
+                        ease: [0.4, 0.0, 0.2, 1]
+                      }}
+                    >
+                      {renderSportItem(sport, index)}
+                    </motion.div>
+                  ))}
+                </Accordion>
+              </div>
+            </motion.div>
+          </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </AnimatePresence>
   );
 };

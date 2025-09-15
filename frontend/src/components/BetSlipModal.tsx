@@ -123,34 +123,43 @@ export const BetSlipModal = () => {
   if (!isOpen) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <div className="mobile-betslip-modal universal-responsive-container">
-        <DialogContent
-          className="universal-responsive-container fixed inset-0 z-[60] w-full h-full max-w-none bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden p-0 sm:p-0 md:p-0"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            width: '100vw',
-            height: '100vh',
-            maxWidth: '100vw',
-            maxHeight: '100vh',
-            transform: 'none',
-            margin: 0,
-            padding: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            boxSizing: 'border-box',
-            overflow: 'hidden',
-          }}
-          onInteractOutside={(e) => {
-            if (!isPlacing) handleClose();
-            else e.preventDefault();
-          }}
+    <AnimatePresence mode="wait">
+      <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+        <motion.div
+          key="betslip-modal"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -30 }}
+          transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
+          className="mobile-betslip-modal universal-responsive-container"
         >
-        {/* Enhanced Header */}
+          <div className="container mx-auto px-4 max-w-screen-lg w-full h-full flex flex-col">
+            <DialogContent
+              className="universal-responsive-container fixed inset-0 z-[60] w-full h-full max-w-none bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden p-0 sm:p-0 md:p-0"
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                width: '100vw',
+                height: '100vh',
+                maxWidth: '100vw',
+                maxHeight: '100vh',
+                transform: 'none',
+                margin: 0,
+                padding: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                boxSizing: 'border-box',
+                overflow: 'hidden',
+              }}
+              onInteractOutside={(e) => {
+                if (!isPlacing) handleClose();
+                else e.preventDefault();
+              }}
+            >
+            {/* Enhanced Header */}
   <DialogHeader className="flex-shrink-0 border-b border-border/40 p-3 sm:p-4 bg-gradient-to-r from-card/90 to-card/80 backdrop-blur-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -573,8 +582,10 @@ export const BetSlipModal = () => {
             </div>
           </motion.div>
         )}
-      </DialogContent>
-      </div>
-    </Dialog>
+            </DialogContent>
+          </div>
+        </motion.div>
+      </Dialog>
+    </AnimatePresence>
   );
 };
