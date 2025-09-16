@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from 'express';
-import { getUser, setUser } from '../controllers/userController';
-import validateUser from '../middlewares/validateUser';
+import { getUser, setUser } from '../controllers/userController.js';
+import validateUser from '../middlewares/validateUser.js';
 
 const router: Router = express.Router();
 

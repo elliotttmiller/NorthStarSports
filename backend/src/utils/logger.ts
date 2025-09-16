@@ -1,11 +1,17 @@
-import pino from 'pino';
+const pino = require('pino');
 
-const logger = pino();
-export { logger };
+// Create a pino logger instance with pretty printing for local development
+const logger = pino({
+  transport: {
+    target: 'pino-pretty',
+    options: { colorize: true }
+  }
+});
+module.exports = logger;
 
-export function logInfo(msg: string): void {
+module.exports.logInfo = function(msg: string) {
   logger.info(msg);
-}
-export function logError(msg: string): void {
+};
+module.exports.logError = function(msg: string) {
   logger.error(msg);
-}
+};

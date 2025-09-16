@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from 'express';
-import { getBet, setBet, getUserBets } from '../controllers/betController';
+import { getBet, setBet, getUserBets } from '../controllers/betController.js';
 
 const router: Router = express.Router();
 

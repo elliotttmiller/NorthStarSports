@@ -46,6 +46,20 @@ def verify_redis_connection():
     print('Failed to connect to Redis Cloud. Exiting.')
     sys.exit(1)
 
+def wait_for_backend(port=4000, timeout=30):
+    import socket
+    print_status(f'Waiting for backend to be available on port {port}...')
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            with socket.create_connection(("localhost", port), timeout=2):
+                print_status(f'Backend server is running on port {port}.')
+                return True
+        except Exception:
+            time.sleep(1)
+    print_status(f'Backend did not start on port {port} within {timeout} seconds. Exiting.')
+    sys.exit(1)
+
 def main():
     no_browser = '--no-browser' in sys.argv
     kill_backend_processes()
@@ -63,8 +77,8 @@ def main():
         logging.error('Error: npm not found. Please ensure Node.js and npm are installed.')
         sys.exit(1)
 
-    # Wait for backend to be ready (simple sleep, user will see logs directly)
-    time.sleep(3)
+    # Wait for backend to be ready (check port)
+    wait_for_backend(port=4000, timeout=30)
 
     print_status('Backend ready (check above for logs). Starting frontend dev server...')
     try:
@@ -78,7 +92,6 @@ def main():
         logging.error('Error: npm not found. Please ensure Node.js and npm are installed.')
         backend_proc.terminate()
         sys.exit(1)
-
 
     print_status('Both backend and frontend have exited.')
     backend_proc.wait()
