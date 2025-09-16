@@ -12,7 +12,7 @@ let redisClient: RedisClientType<any, any>;
       port: 19041
     }
   });
-  client.on('error', err => logger.error('Redis Client Error', err));
+  client.on('error', (err: any) => logger.error('Redis Client Error', err));
   await client.connect();
   redisClient = client as RedisClientType<any, any>;
 })();

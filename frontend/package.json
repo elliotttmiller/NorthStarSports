@@ -12,7 +12,7 @@
         "start": "vite preview",
         "test": "jest --config jest.config.cjs --passWithNoTests",
         "type-check": "tsc --noEmit",
-    "lint-and-type-check": "npm run lint && npm run type-check"
+        "lint-and-type-check": "npm run lint && npm run type-check"
     },
     "dependencies": {
         "@heroicons/react": "^2.2.0",
@@ -70,7 +70,6 @@
         "react-resizable-panels": "^2.1.7",
         "react-router-dom": "^7.9.1",
         "recharts": "^2.15.1",
-        "redis": "^4.7.1",
         "sonner": "^2.0.1",
         "tailwind-merge": "^3.0.2",
         "tailwindcss-fluid": "^0.2.0",
