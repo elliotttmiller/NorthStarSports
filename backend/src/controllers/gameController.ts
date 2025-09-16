@@ -1,37 +1,54 @@
 import { Request, Response, NextFunction } from 'express';
-import { getGame, setGame } from '../services/gameService.js';
+import { getGame as getGameService, setGame as setGameService } from '../services/gameService.js';
 import { success, error } from '../utils/responseFormatter.js';
-const logger = require('../utils/logger');
+import { logInfo, logError, logWarn } from '../utils/logger.js';
 
-export async function getGameById(req: Request, res: Response, next: NextFunction) {
-  logger.info({ msg: 'getGameById called', id: req.params.id });
+export async function getGame(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const gameId = req.params.gameId;
+  if (!gameId) {
+    logWarn('Missing gameId parameter');
+    res.status(400).json(error('Missing gameId parameter', 400));
+    return;
+  }
+  
+  logInfo('getGame called', { gameId });
   try {
-    const game = await getGame(req.params.id);
+    const game = await getGameService(gameId);
     if (!game) {
-      logger.warn({ msg: 'Game not found', id: req.params.id });
-      return res.status(404).json(error('Game not found', 404));
+      logWarn('Game not found', { gameId });
+      res.status(404).json(error('Game not found', 404));
+      return;
     }
-    logger.info({ msg: 'getGameById success', id: req.params.id });
+    logInfo('getGame success', { gameId });
     res.json(success(game));
   } catch (err) {
-    logger.error({ msg: 'getGameById error', error: err });
+    logError('getGame error', err as Error);
     next(err);
   }
 }
 
-export async function setGameById(req: Request, res: Response, next: NextFunction) {
-  logger.info({ msg: 'setGameById called', id: req.params.id });
+export async function setGame(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const gameId = req.params.gameId;
+  if (!gameId) {
+    logWarn('Missing gameId parameter');
+    res.status(400).json(error('Missing gameId parameter', 400));
+    return;
+  }
+  
+  logInfo('setGame called', { gameId });
   try {
-    const { game } = req.body;
-    if (!game) {
-      logger.warn({ msg: 'Missing game in body', id: req.params.id });
-      return res.status(400).json(error('Missing game in body', 400));
+    // Accept game data directly in body or nested under 'game' field
+    const gameData = req.body.game || req.body;
+    if (!gameData || Object.keys(gameData).length === 0) {
+      logWarn('Missing game data in body', { gameId });
+      res.status(400).json(error('Missing game data in body', 400));
+      return;
     }
-    await setGame(req.params.id, game);
-    logger.info({ msg: 'setGameById success', id: req.params.id });
-    res.json(success({ id: req.params.id, game }));
+    await setGameService(gameId, gameData);
+    logInfo('setGame success', { gameId });
+    res.json(success({ gameId, game: gameData }));
   } catch (err) {
-    logger.error({ msg: 'setGameById error', error: err });
+    logError('setGame error', err as Error);
     next(err);
   }
 }

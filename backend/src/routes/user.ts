@@ -1,4 +1,4 @@
-import express, { Request, Response, Router } from 'express';
+import express, { Router } from 'express';
 import { getUser, setUser } from '../controllers/userController.js';
 import validateUser from '../middlewares/validateUser.js';
 

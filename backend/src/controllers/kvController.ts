@@ -1,37 +1,53 @@
 import { Request, Response, NextFunction } from 'express';
 import { kvService } from '../services/kvService.js';
 import { success, error } from '../utils/responseFormatter.js';
-const logger = require('../utils/logger');
+import { logInfo, logError, logWarn } from '../utils/logger.js';
 
-export async function getKV(req: Request, res: Response, next: NextFunction) {
-  logger.info({ msg: 'getKV called', key: req.params.key });
+export async function getKV(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const key = req.params.key;
+  if (!key) {
+    logWarn('Missing key parameter');
+    res.status(400).json(error('Missing key parameter', 400));
+    return;
+  }
+  
+  logInfo('getKV called', { key });
   try {
-    const value = await kvService.get(req.params.key);
+    const value = await kvService.get(key);
     if (value === null || typeof value === 'undefined') {
-      logger.warn({ msg: 'KV not found', key: req.params.key });
-      return res.status(404).json(error('Not Found', 404));
+      logWarn('KV not found', { key });
+      res.status(404).json(error('Not Found', 404));
+      return;
     }
-    logger.info({ msg: 'getKV success', key: req.params.key, value });
-    res.json(success({ key: req.params.key, value }));
+    logInfo('getKV success', { key, value });
+    res.json(success({ key, value }));
   } catch (err) {
-    logger.error({ msg: 'getKV error', error: err });
+    logError('getKV error', err as Error);
     next(err);
   }
 }
 
-export async function setKV(req: Request, res: Response, next: NextFunction) {
-  logger.info({ msg: 'setKV called', key: req.params.key });
+export async function setKV(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const key = req.params.key;
+  if (!key) {
+    logWarn('Missing key parameter');
+    res.status(400).json(error('Missing key parameter', 400));
+    return;
+  }
+  
+  logInfo('setKV called', { key });
   try {
     const { value } = req.body;
     if (typeof value === 'undefined') {
-      logger.warn({ msg: 'Missing value in body', key: req.params.key });
-      return res.status(400).json(error('Missing value in body', 400));
+      logWarn('Missing value in body', { key });
+      res.status(400).json(error('Missing value in body', 400));
+      return;
     }
-    await kvService.set(req.params.key, value);
-    logger.info({ msg: 'setKV success', key: req.params.key, value });
-    res.json(success({ key: req.params.key, value }));
+    await kvService.set(key, value);
+    logInfo('setKV success', { key, value });
+    res.json(success({ key, value }));
   } catch (err) {
-    logger.error({ msg: 'setKV error', error: err });
+    logError('setKV error', err as Error);
     next(err);
   }
 }

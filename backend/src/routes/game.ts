@@ -1,4 +1,4 @@
-import express, { Request, Response, Router } from 'express';
+import express, { Router } from 'express';
 import { getGame, setGame } from '../controllers/gameController.js';
 
 const router: Router = express.Router();

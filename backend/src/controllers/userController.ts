@@ -1,33 +1,47 @@
 import { Request, Response, NextFunction } from 'express';
-import * as userService from '../services/userService';
-import { success, error } from '../utils/responseFormatter';
+import * as userService from '../services/userService.js';
+import { success, error } from '../utils/responseFormatter.js';
+import { logInfo, logError, logWarn } from '../utils/logger.js';
 
-const logger = require('../utils/logger');
-
-export async function getUser(req: Request, res: Response, next: NextFunction) {
-  logger.info({ msg: 'getUser called', userId: req.params.userId });
+export async function getUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const userId = req.params.userId;
+  if (!userId) {
+    logWarn('Missing userId parameter');
+    res.status(400).json(error('Missing userId parameter', 400));
+    return;
+  }
+  
+  logInfo('getUser called', { userId });
   try {
-    const user = await userService.getUser(req.params.userId);
+    const user = await userService.getUser(userId);
     if (!user) {
-      logger.warn({ msg: 'User not found', userId: req.params.userId });
-      return res.status(404).json(error('User not found', 404));
+      logWarn('User not found', { userId });
+      res.status(404).json(error('User not found', 404));
+      return;
     }
-    logger.info({ msg: 'getUser success', user });
+    logInfo('getUser success', { user });
     res.json(success(user));
   } catch (err) {
-    logger.error({ msg: 'getUser error', error: err });
+    logError('getUser error', err as Error);
     next(err);
   }
 }
 
-export async function setUser(req: Request, res: Response, next: NextFunction) {
-  logger.info({ msg: 'setUser called', userId: req.params.userId });
+export async function setUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const userId = req.params.userId;
+  if (!userId) {
+    logWarn('Missing userId parameter');
+    res.status(400).json(error('Missing userId parameter', 400));
+    return;
+  }
+  
+  logInfo('setUser called', { userId });
   try {
-    await userService.setUser(req.params.userId, req.body);
-    logger.info({ msg: 'setUser success', userId: req.params.userId });
-    res.json(success({ userId: req.params.userId }));
+    await userService.setUser(userId, req.body);
+    logInfo('setUser success', { userId });
+    res.json(success({ userId }));
   } catch (err) {
-    logger.error({ msg: 'setUser error', error: err });
+    logError('setUser error', err as Error);
     next(err);
   }
 }

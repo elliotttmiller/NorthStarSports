@@ -1,4 +1,4 @@
-import express, { Request, Response, Router } from 'express';
+import express, { Router } from 'express';
 import { getKV, setKV } from '../controllers/kvController.js';
 
 const router: Router = express.Router();

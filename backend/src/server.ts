@@ -1,41 +1,107 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import 'dotenv/config';
+import logger, { logInfo, logError } from './utils/logger.js';
+import app from './app.js';
+import type { Server } from 'http';
 
-const logger = require('./utils/logger');
-import app from './app';
+const PORT = Number(process.env.PORT) || 4000;
+const HOST = process.env.HOST || 'localhost';
 
-const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
+class AppServer {
+  private server: Server | null = null;
 
-async function startServer() {
-  logger.info('Starting backend server...');
-  try {
-    const server = app.listen(PORT, () => {
-      logger.info({ msg: 'Express server running', url: `http://localhost:${PORT}` });
-    });
+  async start(): Promise<void> {
+    try {
+      logInfo('🚀 Starting NorthStar Sports Backend Server...', {
+        port: PORT,
+        host: HOST,
+        nodeEnv: process.env.NODE_ENV || 'development'
+      });
 
-    server.on('error', (err: NodeJS.ErrnoException) => {
-      logger.error({ msg: 'Express server error', err });
+      // Start the Express server
+      this.server = app.listen(PORT, HOST, () => {
+        logInfo('✅ Backend server running successfully', {
+          url: `http://${HOST}:${PORT}`,
+          health: `http://${HOST}:${PORT}/api/v1/health`
+        });
+      });
+
+      // Handle server errors
+      this.server.on('error', this.handleServerError.bind(this));
+
+      // Setup graceful shutdown handlers
+      this.setupGracefulShutdown();
+
+    } catch (error) {
+      logError('💥 Failed to start server', error as Error);
       process.exit(1);
+    }
+  }
+
+  private handleServerError(error: NodeJS.ErrnoException): void {
+    if (error.syscall !== 'listen') {
+      throw error;
+    }
+
+    const bind = typeof PORT === 'string' ? `Pipe ${PORT}` : `Port ${PORT}`;
+
+    switch (error.code) {
+      case 'EACCES':
+        logError(`${bind} requires elevated privileges`);
+        process.exit(1);
+        break;
+      case 'EADDRINUSE':
+        logError(`${bind} is already in use`);
+        process.exit(1);
+        break;
+      default:
+        throw error;
+    }
+  }
+
+  private setupGracefulShutdown(): void {
+    const signals = ['SIGTERM', 'SIGINT'] as const;
+
+    signals.forEach((signal) => {
+      process.on(signal, async () => {
+        logInfo(`📡 Received ${signal}, initiating graceful shutdown...`);
+        await this.shutdown();
+      });
     });
 
-    process.on('SIGINT', () => {
-      logger.info('SIGINT received, shutting down server...');
-      server.close(() => {
-        logger.info('Server closed.');
-        process.exit(0);
+    // Handle uncaught exceptions
+    process.on('uncaughtException', (error: Error) => {
+      logError('💥 Uncaught Exception', error);
+      this.shutdown().then(() => process.exit(1));
+    });
+
+    // Handle unhandled promise rejections
+    process.on('unhandledRejection', (reason: any) => {
+      logError('💥 Unhandled Rejection', new Error(String(reason)));
+      this.shutdown().then(() => process.exit(1));
+    });
+  }
+
+  private async shutdown(): Promise<void> {
+    if (!this.server) return;
+
+    return new Promise<void>((resolve) => {
+      const timeout = setTimeout(() => {
+        logError('⚠️  Forced shutdown after timeout');
+        process.exit(1);
+      }, 10000);
+
+      this.server!.close(() => {
+        clearTimeout(timeout);
+        logInfo('✅ Server closed successfully');
+        resolve();
       });
     });
-    process.on('SIGTERM', () => {
-      logger.info('SIGTERM received, shutting down server...');
-      server.close(() => {
-        logger.info('Server closed.');
-        process.exit(0);
-      });
-    });
-  } catch (err) {
-    logger.error({ msg: 'Fatal startup error', error: err });
-    process.exit(1);
   }
 }
 
-startServer();
+// Start the server
+const appServer = new AppServer();
+appServer.start().catch((error) => {
+  logError('💥 Failed to start application', error);
+  process.exit(1);
+});

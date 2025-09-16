@@ -1,0 +1,385 @@
+{
+  "folders": [
+    {
+      "name": "🏈 NorthStar Sports",
+      "path": "."
+    },
+    {
+      "name": "🔧 Backend",
+      "path": "./backend"
+    },
+    {
+      "name": "🎨 Frontend", 
+      "path": "./frontend"
+    }
+  ],
+  "settings": {
+    // General settings
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.rulers": [80, 120],
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 120,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    
+    // TypeScript settings
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.suggest.autoImports": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    
+    // File associations and exclusions
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/build": true,
+      "**/.git": true,
+      "**/logs": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/build": true,
+      "**/logs": true
+    },
+    
+    // Language specific settings
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 2
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 2
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 2
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 2
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 2
+    },
+    "[markdown]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.wordWrap": "wordWrapColumn",
+      "editor.wordWrapColumn": 80
+    },
+    
+    // Terminal settings
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.env.windows": {},
+    "terminal.integrated.cwd": "${workspaceFolder}",
+    
+    // Git settings
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    
+    // ESLint settings
+    "eslint.workingDirectories": ["backend", "frontend"],
+    "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact"
+    ],
+    
+    // Prettier settings
+    "prettier.configPath": ".prettierrc",
+    
+    // Extension specific settings
+    "emmet.includeLanguages": {
+      "typescript": "html",
+      "typescriptreact": "html"
+    },
+    
+    // Testing
+    "jest.autoRun": "off",
+    
+    // Performance
+    "typescript.disableAutomaticTypeAcquisition": false,
+    "typescript.preferences.includePackageJsonAutoImports": "on"
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug Backend",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/backend/src/server.ts",
+        "cwd": "${workspaceFolder}/backend",
+        "runtimeArgs": ["--loader", "tsx"],
+        "env": {
+          "NODE_ENV": "development"
+        },
+        "console": "integratedTerminal",
+        "skipFiles": [
+          "<node_internals>/**"
+        ],
+        "envFile": "${workspaceFolder}/backend/.env"
+      },
+      {
+        "name": "Debug Frontend (Chrome)",
+        "type": "chrome",
+        "request": "launch",
+        "url": "http://localhost:5000",
+        "webRoot": "${workspaceFolder}/frontend/src",
+        "sourceMaps": true
+      },
+      {
+        "name": "Debug Backend Tests",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/backend/node_modules/.bin/jest",
+        "args": ["--runInBand", "--no-cache"],
+        "cwd": "${workspaceFolder}/backend",
+        "env": {
+          "NODE_ENV": "test"
+        },
+        "console": "integratedTerminal",
+        "skipFiles": [
+          "<node_internals>/**"
+        ]
+      },
+      {
+        "name": "Debug Frontend Tests", 
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/frontend/node_modules/.bin/jest",
+        "args": ["--runInBand", "--no-cache"],
+        "cwd": "${workspaceFolder}/frontend",
+        "env": {
+          "NODE_ENV": "test"
+        },
+        "console": "integratedTerminal",
+        "skipFiles": [
+          "<node_internals>/**"
+        ]
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Install All Dependencies",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-File", 
+          "${workspaceFolder}/dev-tools.ps1",
+          "-Action", "Install",
+          "-Target", "All"
+        ],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Build All Projects",
+        "type": "shell", 
+        "command": "powershell",
+        "args": [
+          "-File",
+          "${workspaceFolder}/dev-tools.ps1", 
+          "-Action", "Build",
+          "-Target", "All"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "presentation": {
+          "echo": true,
+          "reveal": "always", 
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": [
+          "$tsc",
+          "$eslint-stylish"
+        ]
+      },
+      {
+        "label": "Run All Tests",
+        "type": "shell",
+        "command": "powershell", 
+        "args": [
+          "-File",
+          "${workspaceFolder}/dev-tools.ps1",
+          "-Action", "Test", 
+          "-Target", "All"
+        ],
+        "group": {
+          "kind": "test",
+          "isDefault": true
+        },
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false, 
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Start Development Servers",
+        "type": "shell",
+        "command": "python",
+        "args": ["dev-start.py"],
+        "isBackground": true,
+        "group": "build", 
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Clean All Projects",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-File", 
+          "${workspaceFolder}/dev-tools.ps1",
+          "-Action", "Clean",
+          "-Target", "All"
+        ],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Backend Only - Dev",
+        "type": "shell",
+        "command": "npm",
+        "args": ["run", "dev"],
+        "options": {
+          "cwd": "${workspaceFolder}/backend"
+        },
+        "isBackground": true,
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always", 
+          "focus": false,
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Frontend Only - Dev", 
+        "type": "shell",
+        "command": "npm",
+        "args": ["run", "dev"],
+        "options": {
+          "cwd": "${workspaceFolder}/frontend"
+        },
+        "isBackground": true,
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false, 
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Environment Sync",
+        "type": "shell",
+        "command": "powershell", 
+        "args": [
+          "-File",
+          "${workspaceFolder}/env-sync.ps1",
+          "-Action", "Sync"
+        ],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Project Status",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-File", 
+          "${workspaceFolder}/dev-tools.ps1",
+          "-Action", "Status"
+        ],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Full Reset",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-File",
+          "${workspaceFolder}/dev-tools.ps1", 
+          "-Action", "Reset"
+        ],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      }
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "ms-vscode.vscode-typescript-next",
+      "bradlc.vscode-tailwindcss",
+      "formulahendry.auto-rename-tag",
+      "christian-kohler.path-intellisense", 
+      "ms-vscode.vscode-json",
+      "redhat.vscode-yaml",
+      "ms-python.python",
+      "ms-vscode.powershell",
+      "github.copilot",
+      "github.copilot-chat",
+      "ms-vscode.vscode-node-azure-pack",
+      "rangav.vscode-thunder-client",
+      "humao.rest-client"
+    ]
+  }
+}
