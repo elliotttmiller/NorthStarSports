@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import type { Bet } from '../types';
 import { useBetsContext } from '@/context/BetsContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { useNavigation } from '@/context/NavigationContext';
@@ -85,7 +86,7 @@ export const BetSlipModal = () => {
       setTimeout(() => {
         handleClose();
       }, 300);
-    } catch (error) {
+    } catch {
       toast.error('Failed to place bet. Please try again.');
       setPlacementStage('idle');
     } finally {
@@ -94,20 +95,31 @@ export const BetSlipModal = () => {
   };
 
   // Enhanced bet description formatting
-  const formatBetDescription = useCallback((bet: any) => {
-    const { type, value, team } = bet;
-    switch (type) {
-      case 'spread':
-        const spreadValue = parseFloat(value);
-        return `${team} ${spreadValue > 0 ? '+' : ''}${spreadValue}`;
-      case 'moneyline':
-        return team;
-      case 'over_under':
-        return `${value > bet.game.total ? 'Over' : 'Under'} ${bet.game.total}`;
-      case 'player_prop':
-        return `${bet.playerName} ${bet.propType}`;
+  const formatBetDescription = useCallback((bet: Bet) => {
+    switch (bet.betType) {
+      case 'spread': {
+        const team = bet.selection === 'home' ? bet.game.homeTeam.shortName : bet.game.awayTeam.shortName;
+        const line = bet.line !== undefined ? (bet.line > 0 ? `+${bet.line}` : bet.line) : '';
+        return `${team} ${line}`;
+      }
+      case 'moneyline': {
+        const team = bet.selection === 'home' ? bet.game.homeTeam.shortName : bet.game.awayTeam.shortName;
+        return `${team} Win`;
+      }
+      case 'total': {
+        const overUnder = bet.selection === 'over' ? 'Over' : 'Under';
+        return `${overUnder} ${bet.line ?? ''}`;
+      }
+      case 'player_prop': {
+        if (bet.playerProp) {
+          return `${bet.playerProp.playerName} ${bet.playerProp.statType} ${bet.selection === 'over' ? 'Over' : 'Under'} ${bet.line ?? ''}`;
+        }
+        return 'Player Prop';
+      }
+      case 'parlay':
+        return 'Parlay Bet';
       default:
-        return `${team} ${type}`;
+        return 'Unknown Bet';
     }
   }, []);
 

@@ -21,7 +21,7 @@ import { useState, useEffect, useCallback } from 'react';
 const API_BASE = '/api';
 
 // Generic fetch hook
-function useApi(endpoint, options = {}, deps = []) {
+function useApi(endpoint, options = {}) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -35,7 +35,7 @@ function useApi(endpoint, options = {}, deps = []) {
       .catch(err => { if (isMounted) setError(err); })
       .finally(() => { if (isMounted) setLoading(false); });
     return () => { isMounted = false; };
-  }, deps);
+  }, [endpoint, options]);
 
   return { data, loading, error };
 }

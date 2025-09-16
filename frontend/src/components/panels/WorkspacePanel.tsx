@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { SmoothScrollContainer } from '@/components/VirtualScrolling';
-import { useNavigate } from 'react-router-dom';
+// ...existing code...
 import { useNavigation } from '@/context/NavigationContext';
 import { Game } from '@/types';
 import { getGamesPaginated, PaginatedResponse } from '@/services/mockApi';
@@ -11,7 +11,7 @@ import { useInfiniteScroll, useSmoothScroll } from '@/hooks/useInfiniteScroll';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import { CaretUp, SortAscending } from '@phosphor-icons/react';
+import { CaretUp } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import { useKV } from '@/hooks/useKV';
 
@@ -24,14 +24,12 @@ interface LayoutPreferences {
 
 const WorkspacePanel = () => {
   const { navigation, setMobilePanel } = useNavigation();
-  const navigate = useNavigate();
   const isMobile = useIsMobile();
 
   // State management
   const [games, setGames] = useState<Game[]>([]);
-  const [expandedCards, setExpandedCards] = useKV<string[]>('expanded-game-cards', []);
   const [favoriteGames] = useKV<string[]>('favorite-games', []);
-  const [layoutPrefs, setLayoutPrefs] = useKV<LayoutPreferences>('workspace-layout-prefs', {
+  const [layoutPrefs] = useKV<LayoutPreferences>('workspace-layout-prefs', {
     viewMode: 'fluid',
     sortBy: 'time',
     showExpanded: false
@@ -97,14 +95,7 @@ const WorkspacePanel = () => {
   }, [navigation.selectedLeague, loadGames]);
 
   // Game interaction handlers
-  const handleGameToggle = useCallback((gameId: string) => {
-    setExpandedCards((current) => {
-      if (current?.includes(gameId)) {
-        return current.filter(id => id !== gameId);
-      }
-      return [...(current || []), gameId];
-    });
-  }, [setExpandedCards]);
+  // ...existing code...
 
   // Sorting and filtering
   const processedGames = useMemo(() => {
@@ -140,7 +131,7 @@ const WorkspacePanel = () => {
     }
   };
 
-  const gameIds = processedGames.map(game => game.id);
+  // ...existing code...
 
   if (initialLoading) {
     return <SkeletonLoader type="games" count={4} />;

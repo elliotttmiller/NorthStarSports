@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { motion, useMotionValue, useAnimation } from 'framer-motion'
+import { motion, useMotionValue } from 'framer-motion'
 import { Receipt } from '@phosphor-icons/react'
 import { useKV } from '@/hooks/useKV'
 import { useBetSlip } from '@/context/BetSlipContext'
@@ -12,9 +12,6 @@ interface Position {
   y: number
 }
 
-interface FloatingBetSlipButtonProps {
-  // onToggle is no longer required, handled internally
-}
 
 export function FloatingBetSlipButton() {
   const { betSlip } = useBetSlip()
@@ -24,7 +21,6 @@ export function FloatingBetSlipButton() {
   
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const controls = useAnimation()
   
   const [isInitialized, setIsInitialized] = useState(false)
   const [isDragging, setIsDragging] = useState(false)

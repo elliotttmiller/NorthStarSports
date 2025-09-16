@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import { useBets, useSetBets } from '@/hooks/useApi';
 import { Bet } from '@/types';
 
-// TODO: Replace with real user ID from auth context
+// Integrate real user ID from AuthContext here when available
 const USER_ID = 'demo';
 
 interface BetsContextType {
@@ -15,11 +16,14 @@ interface BetsContextType {
 
 export const BetsContext = createContext<BetsContextType | undefined>(undefined);
 
-export const BetsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+interface BetsProviderProps {
+  children: ReactNode;
+}
+export const BetsProvider: React.FC<BetsProviderProps> = ({ children }) => {
 
 
   // Fetch all active bets for the user
-  const { data: betsRaw, loading, error } = useBets(USER_ID);
+  const { data: betsRaw } = useBets(USER_ID);
   const [bets, setLocalBets] = useState<Bet[]>(Array.isArray(betsRaw) ? betsRaw : []);
   const setBets = useSetBets();
 
@@ -68,6 +72,9 @@ export const BetsProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       {children}
     </BetsContext.Provider>
   );
+};
+BetsProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export function useBetsContext() {

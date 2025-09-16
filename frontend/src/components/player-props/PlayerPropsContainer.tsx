@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+// ...existing code...
 import { PropCategory } from '@/types'
 import { Game } from '@/types'
 import { PropCategorySection } from './PropCategorySection'
@@ -31,15 +31,15 @@ export function PlayerPropsContainer({
   expandedCategories,
   setExpandedCategories
 }: PlayerPropsContainerProps) {
-  const { stats, sortCategories, filterProps } = usePlayerProps(categories)
+  const { filterProps } = usePlayerProps(categories)
   // Use lifted state if provided, else fallback to local (for backward compatibility)
   const [localExpandedCategories, localSetExpandedCategories] = useState<Set<string>>(new Set(['popular']))
   const expanded = expandedCategories ?? localExpandedCategories
   const setExpanded = setExpandedCategories ?? localSetExpandedCategories
   const [searchTerm, setSearchTerm] = useState('')
-  const [sortBy, setSortBy] = useState<SortOption>('default')
-  const [filterBy, setFilterBy] = useState<FilterOption>('all')
-  const [showFilters, setShowFilters] = useState(false)
+  const [sortBy] = useState<SortOption>('default');
+  const [filterBy, setFilterBy] = useState<FilterOption>('all');
+  // ...existing code...
 
   // Apply filters and sorting
   let processedCategories = categories
@@ -139,8 +139,8 @@ export function PlayerPropsContainer({
                 size="sm"
                 className="mt-4"
                 onClick={() => {
-                  setSearchTerm('')
-                  setFilterBy('all')
+                  setSearchTerm('');
+                  setFilterBy('all');
                 }}
               >
                 Clear Filters

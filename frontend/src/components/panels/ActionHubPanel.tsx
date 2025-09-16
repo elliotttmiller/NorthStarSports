@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import type { Bet } from '@/types';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { formatOdds } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Trash, Calculator, Target, Stack, TrendUp } from '@phosphor-icons/react';
@@ -41,32 +42,38 @@ export const ActionHubPanel = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       toast.success(`${betSlip.betType === 'single' ? 'Bets' : 'Parlay'} placed! Potential payout: $${betSlip.totalPayout.toFixed(2)}`);
       clearBetSlip();
-    } catch (error) {
+    } catch {
       toast.error('Failed to place bet. Please try again.');
     } finally {
       setIsPlacing(false);
     }
   };
 
-  const formatBetDescription = (bet: any) => {
-    const { game, betType, selection, line, playerProp } = bet;
-    
-    switch (betType) {
-      case 'spread':
-        const team = selection === 'home' ? game.homeTeam : game.awayTeam;
-        return `${team.shortName} ${line}`;
-      case 'moneyline':
-        const mlTeam = selection === 'home' ? game.homeTeam : game.awayTeam;
-        return `${mlTeam.shortName} Win`;
-      case 'total':
-        return `${selection === 'over' ? 'Over' : 'Under'} ${line}`;
-      case 'player_prop':
-        if (playerProp) {
-          return `${playerProp.playerName} ${playerProp.statType} ${selection === 'over' ? 'Over' : 'Under'} ${line}`;
+  const formatBetDescription = (bet: Bet) => {
+    switch (bet.betType) {
+      case 'spread': {
+        const team = bet.selection === 'home' ? bet.game.homeTeam.shortName : bet.game.awayTeam.shortName;
+        const line = bet.line !== undefined ? (bet.line > 0 ? `+${bet.line}` : bet.line) : '';
+        return `${team} ${line}`;
+      }
+      case 'moneyline': {
+        const team = bet.selection === 'home' ? bet.game.homeTeam.shortName : bet.game.awayTeam.shortName;
+        return `${team} Win`;
+      }
+      case 'total': {
+        const overUnder = bet.selection === 'over' ? 'Over' : 'Under';
+        return `${overUnder} ${bet.line ?? ''}`;
+      }
+      case 'player_prop': {
+        if (bet.playerProp) {
+          return `${bet.playerProp.playerName} ${bet.playerProp.statType} ${bet.selection === 'over' ? 'Over' : 'Under'} ${bet.line ?? ''}`;
         }
         return 'Player Prop';
+      }
+      case 'parlay':
+        return 'Parlay Bet';
       default:
-        return 'Unknown bet';
+        return 'Unknown Bet';
     }
   };
 

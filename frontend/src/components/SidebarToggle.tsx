@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useBetSlip } from '@/context/BetSlipContext'
 import { useNavigation } from '@/context/NavigationContext'
-import { Badge } from '@/components/ui/badge'
+// ...existing code...
 
 interface SidebarToggleProps {
   side: 'left' | 'right'
@@ -84,13 +84,13 @@ export function SidebarToggle({ side, isOpen, onToggle, className }: SidebarTogg
   );
 }
 
+
 interface MobileSidebarToggleProps {
-  panel: 'navigation' | 'betslip'
   isActive: boolean
   onToggle: () => void
 }
 
-export function MobileSidebarToggle({ panel, isActive, onToggle }: MobileSidebarToggleProps) {
+export function MobileSidebarToggle({ isActive, onToggle }: MobileSidebarToggleProps) {
   return (
     <motion.div
       className="fixed bottom-20 right-4 z-50 lg:hidden"

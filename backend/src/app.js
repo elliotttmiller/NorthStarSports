@@ -14,7 +14,7 @@ app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/bet', betRoutes);
 app.use('/api/v1/game', gameRoutes);
 app.use('/api/v1/kv', kvRoutes);
-// TODO: Add leaderboard and other domain routes here
+// Add new domain routes (e.g., leaderboard) below as needed
 
 // Health check
 app.get('/api/v1/health', (req, res) => res.json({ status: 'ok' }));

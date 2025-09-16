@@ -28,8 +28,7 @@ export const OtherPage = () => {
     { id: 'specials', name: 'Specials', icon: Star, description: 'Unique betting opportunities' }
   ];
 
-  const handleBetTypeClick = (betTypeId: string) => {
-    // Navigate to games page for now since these are all implemented there
+  const handleBetTypeClick = () => {
     navigate('/games');
     if (window.innerWidth < 1024) {
       setMobilePanel(null);
@@ -98,7 +97,7 @@ export const OtherPage = () => {
                           <Button
                             variant="ghost"
                             className="w-full justify-start h-auto p-3 hover:bg-accent hover:text-accent-foreground transition-all duration-200"
-                            onClick={() => handleBetTypeClick(betType.id)}
+                            onClick={handleBetTypeClick}
                           >
                             <div className="flex items-start space-x-3 w-full">
                               <IconComponent className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />

@@ -12,14 +12,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { Game, PropCategory } from '@/types'
 import { formatOdds, formatTotalLine, formatTime } from '@/lib/formatters'
-import { getCategorizedPlayerProps } from '@/services/mockApi'
 import { Clock } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { PlayerPropsSection } from '@/components/PlayerPropsSection'
-import { SetStateAction, useMemo } from 'react'
 import { cn } from '@/lib/utils'
+
+import type { Game, PropCategory } from '@/types'
 
 interface GameCardProps {
   game: Game
@@ -30,19 +29,19 @@ interface GameCardProps {
 export function GameCard({ game, className, compact = false }: GameCardProps) {
   const { addBet, removeBet, betSlip } = useBetSlip();
   // Helper to check if a bet is in the bet slip (matches addBet's betId logic)
-  const getBetId = (betType: string, selection: string, periodOrQuarterOrHalf?: string) => {
+  const getBetId = useCallback((betType: string, selection: string, periodOrQuarterOrHalf?: string) => {
     if (!game || !game.id) return '';
     return periodOrQuarterOrHalf
       ? `${game.id}-${betType}-${periodOrQuarterOrHalf}-${selection}`
       : `${game.id}-${betType}-${selection}`;
-  };
+  }, [game]);
   const isBetInSlip = useCallback((betType: string, selection: string, periodOrQuarterOrHalf?: string) => {
     const betId = getBetId(betType, selection, periodOrQuarterOrHalf);
-    return Array.isArray(betSlip?.bets) && betSlip.bets.some((b: any) => b.id === betId);
-  }, [betSlip, game]);
+    return Array.isArray(betSlip?.bets) && betSlip.bets.some((b) => b.id === betId);
+  }, [betSlip, getBetId]);
   const [isExpanded, setIsExpanded] = useState(false)
-  const [propCategories, setPropCategories] = useState<PropCategory[]>([])
-  const [propsLoading, setPropsLoading] = useState(false)
+  const [propCategories] = useState<PropCategory[]>([])
+  const [propsLoading] = useState(false)
   // LIFTED expandedCategories state
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['popular']))
 
@@ -62,9 +61,7 @@ export function GameCard({ game, className, compact = false }: GameCardProps) {
     })
   }, [addBet, game])
 
-  const handleExpandToggle = useCallback(async (e?: React.MouseEvent) => {
-    // ...existing code...
-  }, [])
+  // (handleExpandToggle is defined but not used, so remove it)
 
   return (
     <motion.div layout className={cn("w-full", className)}>

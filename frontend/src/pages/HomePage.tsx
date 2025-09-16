@@ -1,15 +1,12 @@
-import { useNavigation } from '@/context/NavigationContext'
 import { useBetSlip } from '@/context/BetSlipContext'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SmoothScrollContainer } from '@/components/VirtualScrolling'
-import { User, TrendUp, Trophy, ChartBar, Calendar, CurrencyDollar } from '@phosphor-icons/react'
-import { useState, useEffect } from 'react'
-
-// Mock data for trending games
+import { TrendUp, Trophy, ChartBar, Calendar, CurrencyDollar } from '@phosphor-icons/react'
+// ...existing code...
 const trendingGames = [
 	{
 		id: 1,
@@ -54,14 +51,9 @@ const sectionVariants = {
 };
 
 export function HomePage() {
-	const { navigation, selectSport } = useNavigation()
-	const { betSlip } = useBetSlip()
-	const navigate = useNavigate()
-	const [activeBetsCount, setActiveBetsCount] = useState(0)
-
-	useEffect(() => {
-		setActiveBetsCount(betSlip.bets.length)
-	}, [betSlip.bets])
+	// Removed unused variable 'navigation'
+		const { betSlip } = useBetSlip()
+		const activeBetsCount = betSlip.bets.length
 
 	return (
 		<AnimatePresence mode="wait">
@@ -101,7 +93,7 @@ export function HomePage() {
 									   { icon: Trophy, label: 'Win Rate', value: '68%', color: 'text-accent' },
 									   { icon: ChartBar, label: 'Active', value: activeBetsCount, color: 'text-primary' },
 									   { icon: Calendar, label: 'This Week', value: '+$340', color: 'text-accent' }
-								   ].map((stat, index) => (
+								   ].map((stat) => (
 									   <Card key={stat.label} className="bg-card/50 backdrop-blur-sm border-border/50 shadow-sm flex items-center justify-center min-h-[80px] md:min-h-[100px] min-w-[110px] md:min-w-[130px]" style={{ fontSize: 'var(--fluid-base)', borderRadius: 'var(--fluid-radius)' }}>
 										   <CardContent style={{ padding: '1.1rem 0.75rem' }}>
 											   <div className="flex flex-col items-center justify-center gap-1.5">

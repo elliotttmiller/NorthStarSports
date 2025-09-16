@@ -1,27 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useBetSlip } from '@/context/BetSlipContext';
 import { Game } from '@/types';
-import { getGameById, getPlayerProps } from '@/services/mockApi';
-import { PlayerProp } from '@/types'
-import { formatOdds, formatTotalLine, formatDateDetailed } from '@/lib/formatters';
+import { getGameById } from '@/services/mockApi';
+import { formatDateDetailed } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
-import { ArrowLeft, Trophy, Users, Target, TrendUp } from '@phosphor-icons/react';
+import { ArrowLeft } from '@phosphor-icons/react';
 import { SmoothScrollContainer } from '@/components/VirtualScrolling';
 import { toast } from 'sonner';
 
 export function GameDetailPage() {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
-  const { addBet } = useBetSlip();
   const [game, setGame] = useState<Game | null>(null);
-  const [playerProps, setPlayerProps] = useState<PlayerProp[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('main');
 
@@ -31,12 +25,10 @@ export function GameDetailPage() {
     const loadGameData = async () => {
       setLoading(true);
       try {
-        const [gameData, propsData] = await Promise.all([
-          getGameById(gameId),
-          getPlayerProps(gameId)
+        const [gameData] = await Promise.all([
+          getGameById(gameId)
         ]);
         setGame(gameData);
-        setPlayerProps(propsData);
       } catch (error) {
         console.error('Failed to load game data:', error);
         toast.error('Failed to load game details');
@@ -48,38 +40,7 @@ export function GameDetailPage() {
     loadGameData();
   }, [gameId]);
 
-  const handleBetClick = (
-    betType: 'spread' | 'moneyline' | 'total',
-    selection: 'home' | 'away' | 'over' | 'under',
-    odds: number,
-    line?: number
-  ) => {
-    if (!game) return;
-    addBet(game, betType, selection, odds, line);
-    toast.success('Bet added to slip!', {
-      duration: 2000,
-    });
-  };
-
-  const handlePlayerPropClick = (prop: PlayerProp, selection: 'over' | 'under') => {
-    if (!game) return;
-    // Add player prop bet using the new signature
-    const odds = selection === 'over' ? prop.overOdds : prop.underOdds;
-    addBet(game, 'player_prop', selection, odds, prop.line, prop);
-    toast.success(`${prop.playerName} ${prop.statType} ${selection} ${prop.line} added to slip!`, {
-      duration: 2000,
-    });
-  };
-
-  const getStatIcon = (category: string) => {
-    switch (category) {
-      case 'passing': return <Target className="w-4 h-4" />;
-      case 'rushing': return <TrendUp className="w-4 h-4" />;
-      case 'receiving': return <Users className="w-4 h-4" />;
-      case 'scoring': return <Trophy className="w-4 h-4" />;
-      default: return <Target className="w-4 h-4" />;
-    }
-  };
+  // ...existing code...
 
   if (loading) {
     return <SkeletonLoader type="games" count={1} />;
@@ -109,13 +70,7 @@ export function GameDetailPage() {
     );
   }
 
-  const groupedProps = playerProps.reduce((acc, prop) => {
-    if (!acc[prop.category]) {
-      acc[prop.category] = [];
-    }
-    acc[prop.category].push(prop);
-    return acc;
-  }, {} as Record<string, PlayerProp[]>);
+  // ...existing code...
 
   return (
     <AnimatePresence mode="wait">

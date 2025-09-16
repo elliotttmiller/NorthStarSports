@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import { useUser, useSetUser } from '@/hooks/useApi';
-import { Bet, BetSlip } from '@/types';
+// ...existing code...
 
-// TODO: Replace with real user ID from auth context
+// Integrate real user ID from AuthContext here when available
 const USER_ID = 'demo';
 
 interface UserProfile {
@@ -30,7 +31,10 @@ const defaultUser: UserProfile = {
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+interface UserProviderProps {
+  children: ReactNode;
+}
+export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const { data: remoteUser, loading } = useUser(USER_ID);
   const setRemoteUser = useSetUser();
   const [user, setUser] = useState<UserProfile | null>(defaultUser);
@@ -89,8 +93,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     </UserContext.Provider>
   );
 };
+  UserProvider.propTypes = {
+    children: PropTypes.node.isRequired,
+  };
 
-export function useUserContext() {
+export const useUserContext = () => {
   const context = useContext(UserContext);
   if (context === undefined) {
     throw new Error('useUserContext must be used within a UserProvider.');

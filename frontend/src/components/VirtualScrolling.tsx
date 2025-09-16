@@ -1,23 +1,23 @@
-import { useRef, ReactNode, CSSProperties } from 'react'
+import { useRef, ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
-interface VirtualScrollContainerProps {
-  items: any[]
+interface VirtualScrollContainerProps<T> {
+  items: T[]
   itemHeight?: number
-  renderItem: (item: any, index: number) => ReactNode
+  renderItem: (item: T, index: number) => ReactNode
   className?: string
   gap?: number
   overscan?: number
   scrollBehavior?: 'smooth' | 'auto'
 }
 
-export function VirtualScrollContainer({
+export function VirtualScrollContainer<T>({
   items,
   renderItem,
   className,
   scrollBehavior = 'smooth'
-}: VirtualScrollContainerProps) {
+}: VirtualScrollContainerProps<T>) {
   const parentRef = useRef<HTMLDivElement>(null)
 
   return (
@@ -101,9 +101,9 @@ export function SmoothScrollContainer({
   )
 }
 
-interface InfiniteScrollProps {
-  items: any[]
-  renderItem: (item: any, index: number) => ReactNode
+interface InfiniteScrollProps<T> {
+  items: T[]
+  renderItem: (item: T, index: number) => ReactNode
   loadMore: () => void
   hasMore: boolean
   loading: boolean
@@ -111,7 +111,7 @@ interface InfiniteScrollProps {
   threshold?: number
 }
 
-export function InfiniteScrollContainer({
+export function InfiniteScrollContainer<T>({
   items,
   renderItem,
   loadMore,
@@ -119,7 +119,7 @@ export function InfiniteScrollContainer({
   loading,
   className,
   threshold = 300
-}: InfiniteScrollProps) {
+}: InfiniteScrollProps<T>) {
   const scrollRef = useRef<HTMLDivElement>(null)
   
   const handleScroll = () => {

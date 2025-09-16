@@ -1,7 +1,8 @@
-import * as userService from '../services/userService.js';
-import { success, error } from '../utils/responseFormatter.js';
+import { Request, Response, NextFunction } from 'express';
+import * as userService from '../services/userService';
+import { success, error } from '../utils/responseFormatter';
 
-export async function getUser(req, res, next) {
+export async function getUser(req: Request, res: Response, next: NextFunction) {
   try {
     const user = await userService.getUser(req.params.userId);
     if (!user) return res.status(404).json(error('User not found', 404));
@@ -11,7 +12,7 @@ export async function getUser(req, res, next) {
   }
 }
 
-export async function setUser(req, res, next) {
+export async function setUser(req: Request, res: Response, next: NextFunction) {
   try {
     await userService.setUser(req.params.userId, req.body);
     res.json(success({ userId: req.params.userId }));

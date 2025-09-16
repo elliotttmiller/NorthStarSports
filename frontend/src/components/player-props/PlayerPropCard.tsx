@@ -1,118 +1,60 @@
-import { useCallback } from 'react'
-import { useBetSlip } from '@/context/BetSlipContext'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { PlayerProp } from '@/types'
-import { Game } from '@/types'
-import { formatOdds, formatTotalLine } from '@/lib/formatters'
-import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
+import { useCallback } from 'react';
+import { useBetSlip } from '@/context/BetSlipContext';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { PlayerProp } from '@/types';
+import { Game } from '@/types';
+import { formatOdds, formatTotalLine } from '@/lib/formatters';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface PlayerPropCardProps {
-  prop: PlayerProp
-  game: Game
-  compact?: boolean
-  className?: string
-}
-
-interface PropBetButtonProps {
-  prop: PlayerProp
-  selection: 'over' | 'under'
-  onClick: (e: React.MouseEvent) => void
-  compact?: boolean
-  isSelected?: boolean
-}
-
-const PropBetButton = ({ prop, selection, onClick, compact = false, isSelected = false }: PropBetButtonProps) => {
-  const odds = selection === 'over' ? prop.overOdds : prop.underOdds
-  const displayText = selection === 'over' ? 'O' : 'U'
-  
-  // Determine button variant based on odds and selection state
-  const getButtonVariant = () => {
-    if (isSelected) return 'default'
-    if (odds > 0) return 'outline'
-    return 'outline'
-  }
-  
-  return (
-    <Button
-      variant={getButtonVariant()}
-      size="sm"
-      className={cn(
-        'h-auto p-0 flex flex-col items-center relative overflow-hidden',
-        'hover:shadow-lg transition-all duration-300 ease-out',
-        'hover:transform hover:scale-[1.02] active:scale-95',
-        compact ? 'min-h-[3rem]' : 'min-h-[3.5rem]',
-        'group'
-      )}
-      onClick={onClick}
-    >
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      
-      <div className="relative z-10 text-center w-full p-2">
-        <div className={cn(
-          'font-bold tracking-wide',
-          compact ? 'text-sm' : 'text-base',
-          'mb-1'
-        )}>
-          {displayText} {formatTotalLine(prop.line)}
-        </div>
-        <div className={cn(
-          'font-medium opacity-90',
-          compact ? 'text-xs' : 'text-sm',
-          odds > 0 ? 'text-[color:var(--color-win)]' : 'text-[color:var(--color-loss)]'
-        )}>
-          {formatOdds(odds)}
-        </div>
-      </div>
-    </Button>
-  )
+  prop: PlayerProp;
+  game: Game;
+  compact?: boolean;
+  className?: string;
 }
 
 export function PlayerPropCard({ prop, game, compact = false, className }: PlayerPropCardProps) {
-  const { addBet, betSlip } = useBetSlip()
+  const { addBet, betSlip } = useBetSlip();
 
   // Check if this prop is already in bet slip
-  const isOverSelected = betSlip.bets.some(bet => 
-    bet.betType === 'player_prop' && 
-    bet.playerProp?.playerId === prop.playerId && 
-    bet.selection === 'over'
-  )
-  
-  const isUnderSelected = betSlip.bets.some(bet => 
-    bet.betType === 'player_prop' && 
-    bet.playerProp?.playerId === prop.playerId && 
-    bet.selection === 'under'
-  )
+  const isOverSelected = betSlip.bets.some(
+    bet =>
+      bet.betType === 'player_prop' &&
+      bet.playerProp?.playerId === prop.playerId &&
+      bet.selection === 'over'
+  );
+  const isUnderSelected = betSlip.bets.some(
+    bet =>
+      bet.betType === 'player_prop' &&
+      bet.playerProp?.playerId === prop.playerId &&
+      bet.selection === 'under'
+  );
 
-  const handlePlayerPropClick = useCallback((
-    e: React.MouseEvent,
-    selection: 'over' | 'under'
-  ) => {
-    e.stopPropagation()
-    const odds = selection === 'over' ? prop.overOdds : prop.underOdds
-    addBet(game, 'player_prop', selection, odds, prop.line, prop)
-    
-    // Professional haptic feedback
-    if ('vibrate' in navigator) {
-      navigator.vibrate([10, 5, 15])
-    }
-    
-    toast.success(
-      `${prop.playerName} ${prop.statType} ${selection.toUpperCase()} ${formatTotalLine(prop.line)} added`, 
-      {
-        duration: 2000,
-        position: 'bottom-center',
-        style: {
-          background: 'var(--color-card)',
-          border: '1px solid var(--color-border)',
-          color: 'var(--color-fg)'
-        }
+  const handlePlayerPropClick = useCallback(
+    (e: React.MouseEvent, selection: 'over' | 'under') => {
+      e.stopPropagation();
+      const odds = selection === 'over' ? prop.overOdds : prop.underOdds;
+      addBet(game, 'player_prop', selection, odds, prop.line, prop);
+      if ('vibrate' in navigator) {
+        navigator.vibrate([10, 5, 15]);
       }
-    )
-  }, [addBet, game, prop])
+      toast.success(
+        `${prop.playerName} ${prop.statType} ${selection.toUpperCase()} ${formatTotalLine(prop.line)} added`,
+        {
+          duration: 2000,
+          position: 'bottom-center',
+          style: {
+            background: 'var(--color-card)',
+            border: '1px solid var(--color-border)',
+            color: 'var(--color-fg)',
+          },
+        }
+      );
+    },
+    [addBet, game, prop]
+  );
 
   return (
     <Card className={cn(
@@ -121,31 +63,21 @@ export function PlayerPropCard({ prop, game, compact = false, className }: Playe
       'rounded-lg',
       className
     )}>
-      <CardContent className={cn(
-        'p-0',
-        compact ? 'p-2' : 'p-3'
-      )}>
+      <CardContent className={cn('p-0', compact ? 'p-2' : 'p-3')}>
         {/* Player Header */}
-        <div className={cn(
-          'flex items-center justify-between mb-2',
-          compact && 'mb-1'
-        )}>
+        <div className={cn('flex items-center justify-between mb-2', compact && 'mb-1')}>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-0.5">
-              <h5 className={cn(
-                'font-semibold text-foreground truncate',
-                compact ? 'text-xs' : 'text-sm'
-              )}>
+              <h5 className={cn('font-semibold text-foreground truncate', compact ? 'text-xs' : 'text-sm')}>
                 {prop.playerName}
               </h5>
-              <span className="text-xs text-muted-foreground font-normal tracking-wide">
-                {prop.position}
-              </span>
+              <span className="text-xs text-muted-foreground font-normal tracking-wide">{prop.position}</span>
             </div>
-            <span className={cn('text-muted-foreground font-normal', compact ? 'text-xs' : 'text-xs')}>{prop.statType}</span>
+            <span className={cn('text-muted-foreground font-normal', compact ? 'text-xs' : 'text-xs')}>
+              {prop.statType}
+            </span>
           </div>
         </div>
-
         {/* Betting Grid */}
         <div className="grid grid-cols-2 gap-2">
           <Button
@@ -154,12 +86,17 @@ export function PlayerPropCard({ prop, game, compact = false, className }: Playe
             className={cn(
               'h-8 px-2 text-xs font-medium rounded-md',
               'transition-all duration-150',
-              isOverSelected ? 'bg-accent/90 text-white' : 'bg-background text-foreground border-border/40',
+              isOverSelected
+                ? 'bg-accent/90 text-white'
+                : 'bg-background text-foreground border-border/40',
               'hover:bg-accent/10 hover:border-accent/30'
             )}
-            onClick={(e) => handlePlayerPropClick(e, 'over')}
+            onClick={e => handlePlayerPropClick(e, 'over')}
           >
-            O {formatTotalLine(prop.line)} <span className="ml-1 font-normal">{formatOdds(prop.overOdds)}</span>
+            <span>
+              O {formatTotalLine(prop.line)}{' '}
+              <span className="ml-1 font-normal">{formatOdds(prop.overOdds)}</span>
+            </span>
           </Button>
           <Button
             variant={isUnderSelected ? 'default' : 'outline'}
@@ -167,15 +104,19 @@ export function PlayerPropCard({ prop, game, compact = false, className }: Playe
             className={cn(
               'h-8 px-2 text-xs font-medium rounded-md',
               'transition-all duration-150',
-              isUnderSelected ? 'bg-accent/90 text-white' : 'bg-background text-foreground border-border/40',
+              isUnderSelected
+                ? 'bg-accent/90 text-white'
+                : 'bg-background text-foreground border-border/40',
               'hover:bg-accent/10 hover:border-accent/30'
             )}
-            onClick={(e) => handlePlayerPropClick(e, 'under')}
+            onClick={e => handlePlayerPropClick(e, 'under')}
           >
-            U {formatTotalLine(prop.line)} <span className="ml-1 font-normal">{formatOdds(prop.underOdds)}</span>
+            <span>
+              U {formatTotalLine(prop.line)}{' '}
+              <span className="ml-1 font-normal">{formatOdds(prop.underOdds)}</span>
+            </span>
           </Button>
         </div>
-
         {/* Selection Indicator */}
         {(isOverSelected || isUnderSelected) && (
           <div className="mt-2 pt-2 border-t border-border/20">
@@ -188,5 +129,5 @@ export function PlayerPropCard({ prop, game, compact = false, className }: Playe
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

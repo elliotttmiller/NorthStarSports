@@ -402,7 +402,7 @@ const generatePlayerProps = (gameId: string): PlayerProp[] => {
           playerId: `player-${playerIndex}`,
           playerName: player.name,
           position: player.position,
-          category: category as any,
+          category: category as PlayerProp['category'],
           statType: stat.name,
           line,
           overOdds: -110 + Math.floor(Math.random() * 40) - 20,

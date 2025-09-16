@@ -5,7 +5,7 @@ import { Sport } from '@/types';
 import { getSports } from '@/services/mockApi';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
-import { SmoothScrollContainer } from '@/components/VirtualScrolling';
+// ...existing code...
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const SideNavPanel = () => {
@@ -28,9 +28,7 @@ export const SideNavPanel = () => {
     loadSports();
   }, []);
 
-  const handleSportClick = (sportId: string) => {
-    selectSport(navigation.selectedSport === sportId ? '' : sportId);
-  };
+  // ...existing code...
 
   const handleLeagueClick = (leagueId: string) => {
     const sport = sports.find(s => s.leagues.some(l => l.id === leagueId));

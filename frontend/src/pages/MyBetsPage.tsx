@@ -1,15 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SmoothScrollContainer } from '@/components/VirtualScrolling'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { useBetsContext } from '@/context/BetsContext'
 import { useBetHistoryContext } from '@/context/BetHistoryContext'
 
 export function MyBetsPage() {
-  const isMobile = useIsMobile();
   const { bets } = useBetsContext();
   const { betHistory } = useBetHistoryContext();
   const safeBets = Array.isArray(bets) ? bets : [];

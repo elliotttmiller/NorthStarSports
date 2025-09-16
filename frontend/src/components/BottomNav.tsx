@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { motion } from 'framer-motion';

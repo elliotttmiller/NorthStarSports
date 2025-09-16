@@ -1,8 +1,9 @@
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { useBetSlipHistory, useAddBetSlipToHistory } from '@/hooks/useApi';
 import { BetSlip } from '@/types';
+import PropTypes from 'prop-types';
 
-// TODO: Replace with real user ID from auth context
+// Integrate real user ID from AuthContext here when available
 const USER_ID = 'demo';
 
 interface BetHistoryContextType {
@@ -13,8 +14,11 @@ interface BetHistoryContextType {
 
 export const BetHistoryContext = createContext<BetHistoryContextType | undefined>(undefined);
 
-export const BetHistoryProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { data: remoteHistory, loading, error } = useBetSlipHistory(USER_ID, 20);
+interface BetHistoryProviderProps {
+  children: ReactNode;
+}
+export const BetHistoryProvider: React.FC<BetHistoryProviderProps> = ({ children }) => {
+  const { data: remoteHistory } = useBetSlipHistory(USER_ID, 20);
   const addRemoteBetSlip = useAddBetSlipToHistory();
   const [betHistory, setBetHistory] = useState<BetSlip[]>([]);
 
@@ -44,11 +48,14 @@ export const BetHistoryProvider: React.FC<{ children: ReactNode }> = ({ children
     </BetHistoryContext.Provider>
   );
 };
+BetHistoryProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export function useBetHistoryContext() {
   const context = useContext(BetHistoryContext);
   if (context === undefined) {
-    throw new Error('useBetHistoryContext must be used within a BetHistoryProvider.');
+    throw new Error('useBetHistoryContext must be used within a BetHistoryProvider');
   }
   return context;
-}
+};

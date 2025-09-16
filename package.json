@@ -4,5 +4,8 @@
   "workspaces": [
     "frontend",
     "backend"
-  ]
+  ],
+  "scripts": {
+    "lint-and-type-check": "npm run lint; npm run type-check"
+  }
 }

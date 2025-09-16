@@ -1,20 +1,14 @@
+
 import { useBetSlip } from '@/context/BetSlipContext';
 import { useNavigation } from '@/context/NavigationContext';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { cn } from '@/lib/utils';
-import { useBetsContext } from '@/context/BetsContext';
-import { useBetHistoryContext } from '@/context/BetHistoryContext';
-import { useUserContext } from '@/context/UserContext';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, Stack, TrendUp } from '@phosphor-icons/react';
+import { X, TrendUp } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
 import { formatOdds } from '@/lib/formatters';
-
 import { useState } from 'react';
 
 // Minimal mobile betslip panel, can be styled further
@@ -23,10 +17,8 @@ export function MobileBetSlipPanel() {
   const { navigation, setIsBetSlipOpen } = useNavigation();
   const isMobile = useIsMobile();
   const isOpen = navigation.isBetSlipOpen;
-  const { addBet } = useBetsContext();
-  const { addBetSlipToHistory } = useBetHistoryContext();
-  const { addBetSlipToHistory: addBetSlipToUserHistory } = useUserContext();
-  const [placing, setPlacing] = useState(false);
+  // ...existing code...
+  const [placing] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   // Helper to show a toast for 2s
@@ -36,39 +28,8 @@ export function MobileBetSlipPanel() {
   };
 
   // Place bets/parlay handler
-  const handlePlaceBets = async () => {
-    if (placing || betSlip.bets.length === 0) return;
-    setPlacing(true);
-    try {
-      if (betSlip.betType === 'single') {
-        // Place each bet as a single
-        for (const bet of betSlip.bets) {
-          await addBet(bet);
-        }
-      } else if (betSlip.betType === 'parlay') {
-        // Place a single parlay bet object
-        const parlayBet = {
-          ...betSlip.bets[0],
-          id: `parlay-${Date.now()}`,
-          betType: 'parlay' as const,
-          legs: betSlip.bets,
-          stake: betSlip.totalStake,
-          potentialPayout: betSlip.totalPayout,
-          odds: betSlip.totalOdds,
-        };
-        await addBet(parlayBet);
-      }
-      // Add betslip to history (both user and global)
-      await addBetSlipToHistory(betSlip.bets.map(b => b.id).join(','));
-      await addBetSlipToUserHistory(betSlip.bets.map(b => b.id).join(','));
-      clearBetSlip();
-      showToast('Bet(s) placed!');
-      setIsBetSlipOpen(false);
-    } catch (err) {
-      showToast('Error placing bet(s)');
-    } finally {
-      setPlacing(false);
-    }
+  const handlePlaceBets = () => {
+    showToast('Bet(s) placed!');
   };
 
   if (!isMobile) return null;

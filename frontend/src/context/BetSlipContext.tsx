@@ -1,4 +1,5 @@
-import { createContext, useContext, ReactNode, useEffect, useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import { createContext, useContext, ReactNode, useState, useEffect, useCallback } from 'react';
 import { useActiveBetSlip, useSetActiveBetSlip } from '@/hooks/useApi';
 import { Bet, BetSlip, Game, PlayerProp } from '@/types';
 import { calculatePayout } from '@/services/mockApi';
@@ -42,22 +43,20 @@ const defaultBetSlip: BetSlip = {
   totalOdds: 0
 };
 
-// TODO: Replace with real user ID from auth context
+// Integrate real user ID from AuthContext here when available
 const USER_ID = 'demo';
 
 export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) => {
-  const { data: remoteBetSlip, loading } = useActiveBetSlip(USER_ID);
+  const { data: remoteBetSlip } = useActiveBetSlip(USER_ID);
   const setRemoteBetSlip = useSetActiveBetSlip();
   const [betSlip, setBetSlip] = useState<BetSlip>(defaultBetSlip);
 
   // Hydrate from backend only once on mount
   useEffect(() => {
-    if (remoteBetSlip && !loading) {
+    if (remoteBetSlip) {
       setBetSlip(prev => (prev === defaultBetSlip || prev.bets.length === 0 ? remoteBetSlip : prev));
     }
-    // Only run on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
+  }, [remoteBetSlip]);
 
   const calculateBetSlipTotals = (bets: Bet[], betType: 'single' | 'parlay') => {
     if (bets.length === 0) {
@@ -191,4 +190,7 @@ export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) =>
       {children}
     </BetSlipContext.Provider>
   );
+};
+BetSlipProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

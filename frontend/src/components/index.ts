@@ -7,7 +7,7 @@ export { BetSlipModal } from './BetSlipModal'
 
 // Panel Components
 export { SideNavPanel } from './panels/SideNavPanel'
-export { WorkspacePanel } from './panels/WorkspacePanel'
+export { default as WorkspacePanel } from './panels/WorkspacePanel'
 export { ActionHubPanel } from './panels/ActionHubPanel'
 
 // Game Components

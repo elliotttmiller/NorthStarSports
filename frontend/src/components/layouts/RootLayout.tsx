@@ -15,20 +15,16 @@ import { Toaster } from '@/components/ui/sonner'
 import { SidebarToggle } from '../SidebarToggle'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useIsMobile } from '@/hooks/useIsMobile'
-import React, { useState } from 'react';
-import WorkspacePanel from '../panels/WorkspacePanel';
+import React from 'react';
 
-const NAV_PANEL_WIDTH = 260;
-const BET_SLIP_PANEL_WIDTH = 340;
+// ...existing code...
 
 // Removed duplicate RootLayout implementation. Use the named export below.
 function LayoutContent() {
-  const { navigation, setMobilePanel, toggleSideNav, toggleActionHub, setIsBetSlipOpen } = useNavigation()
+  const { navigation, setMobilePanel, toggleSideNav, toggleActionHub } = useNavigation()
   const isMobile = useIsMobile()
 
-  const handleBetSlipToggle = () => {
-    setIsBetSlipOpen(true)
-  }
+  // ...existing code...
 
   return (
     <div className="universal-responsive-container h-screen bg-background text-foreground flex flex-col overflow-hidden">

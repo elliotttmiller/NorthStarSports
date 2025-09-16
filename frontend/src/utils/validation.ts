@@ -13,6 +13,7 @@ export const betSchema = z.object({
   userId: z.string(),
   amount: z.number(),
   type: z.string(),
-  legs: z.array(z.any()).optional()
+  // Prefer a more specific schema for legs, but use z.unknown() if not possible
+  legs: z.array(z.unknown()).optional()
 });
 // Add more schemas as needed
