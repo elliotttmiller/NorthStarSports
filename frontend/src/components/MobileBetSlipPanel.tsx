@@ -123,13 +123,19 @@ export function MobileBetSlipPanel() {
             </Button>
           </div>
 
-          {/* Bet type toggle - compact */}
-          {betSlip.bets.length > 1 && (
+          {/* Bet type toggle - always show when there are bets */}
+          {betSlip.bets.length > 0 && (
             <div className="px-4 py-2">
               <Tabs value={betSlip.betType} onValueChange={setBetType} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 h-9">
                   <TabsTrigger value="single" className="text-sm">Straight</TabsTrigger>
-                  <TabsTrigger value="parlay" className="text-sm">Parlay</TabsTrigger>
+                  <TabsTrigger 
+                    value="parlay" 
+                    className="text-sm" 
+                    disabled={betSlip.bets.length < 2}
+                  >
+                    Parlay {betSlip.bets.length < 2 && '(2+ bets)'}
+                  </TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>

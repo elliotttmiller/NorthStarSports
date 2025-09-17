@@ -134,14 +134,16 @@ export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) =>
       } : undefined
     };
     const updatedBets = [...filteredBets, newBet];
-    const totals = calculateBetSlipTotals(updatedBets, betSlip.betType);
-    syncAndSet({ ...betSlip, bets: updatedBets, ...totals });
+    const finalBetType = updatedBets.length < 2 ? 'single' : betSlip.betType;
+    const totals = calculateBetSlipTotals(updatedBets, finalBetType);
+    syncAndSet({ ...betSlip, bets: updatedBets, betType: finalBetType, ...totals });
   };
 
   const removeBet = (betId: string) => {
     const updatedBets = betSlip.bets.filter(bet => bet.id !== betId);
-    const totals = calculateBetSlipTotals(updatedBets, betSlip.betType);
-    syncAndSet({ ...betSlip, bets: updatedBets, ...totals });
+    const finalBetType = updatedBets.length < 2 ? 'single' : betSlip.betType;
+    const totals = calculateBetSlipTotals(updatedBets, finalBetType);
+    syncAndSet({ ...betSlip, bets: updatedBets, betType: finalBetType, ...totals });
   };
 
   const updateStake = (betId: string, stake: number) => {
@@ -166,6 +168,10 @@ export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) =>
   };
 
   const setBetType = (betType: 'single' | 'parlay') => {
+    // Don't allow parlay with less than 2 bets
+    if (betType === 'parlay' && betSlip.bets.length < 2) {
+      return;
+    }
     const totals = calculateBetSlipTotals(betSlip.bets, betType);
     syncAndSet({ ...betSlip, betType, ...totals });
   };

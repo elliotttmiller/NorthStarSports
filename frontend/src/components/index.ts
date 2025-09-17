@@ -12,6 +12,8 @@ export { ActionHubPanel } from './panels/ActionHubPanel'
 
 // Game Components
 export { GameCard } from './GameCard'
+export { ProfessionalGameRow } from './ProfessionalGameRow'
+export { CompactMobileGameRow } from './CompactMobileGameRow'
 export { OddsButton } from './OddsButton'
 export { BetSlipItem } from './BetSlipItem'
 export { PlayerPropsSection } from './PlayerPropsSection'

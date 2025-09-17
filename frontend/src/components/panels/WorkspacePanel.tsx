@@ -6,6 +6,8 @@ import { Game } from '@/types';
 import { getGamesPaginated, PaginatedResponse } from '@/services/mockApi';
 import { Button } from '@/components/ui/button';
 import { GameCard } from '@/components/GameCard';
+import { ProfessionalGameRow } from '@/components/ProfessionalGameRow';
+import { CompactMobileGameRow } from '@/components/CompactMobileGameRow';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { GameCardSkeleton } from '@/components/ProgressiveLoader';
 import { useInfiniteScroll, useSmoothScroll } from '@/hooks/useInfiniteScroll';
@@ -141,22 +143,99 @@ const WorkspacePanel = () => {
         className={cn('h-full universal-responsive-container px-0 sm:px-4')}
         showScrollbar={false}
       >
-        <div className="space-y-2 pt-2 pb-24 sm:pb-4">
-          <AnimatePresence>
-            {Array.from({ length: 6 }).map((_, index) => (
-              <motion.div
-                key={`skeleton-${index}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: 0.3, 
-                  delay: index * 0.1 // Stagger the skeleton animations
-                }}
-              >
-                <GameCardSkeleton />
-              </motion.div>
-            ))}
-          </AnimatePresence>
+        <div className={cn("pt-2 pb-24 sm:pb-4", isMobile ? "px-2 space-y-2" : "mx-4 space-y-0")}>
+          {!isMobile && (
+            // Desktop: Table header skeleton
+            <div className="bg-muted/50 border border-border rounded-t-lg mb-0">
+              <div className="grid grid-cols-[80px_1fr_120px_120px_120px_50px] gap-4 items-center py-3 px-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="h-4 bg-muted animate-pulse rounded"></div>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          <div className={cn(
+            !isMobile && "bg-card/30 border border-t-0 border-border rounded-b-lg overflow-hidden"
+          )}>
+            <AnimatePresence>
+              {Array.from({ length: 6 }).map((_, index) => (
+                <motion.div
+                  key={`skeleton-${index}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.3, 
+                    delay: index * 0.1
+                  }}
+                  className={cn(
+                    isMobile 
+                      ? "bg-card/40 border border-border rounded-lg p-3 mb-2" 
+                      : "border-b border-border last:border-b-0"
+                  )}
+                >
+                  {isMobile ? (
+                    // Mobile skeleton
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <div className="h-3 bg-muted animate-pulse rounded w-16"></div>
+                        <div className="h-3 bg-muted animate-pulse rounded w-12"></div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <div className="h-4 w-4 bg-muted animate-pulse rounded"></div>
+                          <div className="h-4 bg-muted animate-pulse rounded w-24"></div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="h-4 w-4 bg-muted animate-pulse rounded"></div>
+                          <div className="h-4 bg-muted animate-pulse rounded w-24"></div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="space-y-1">
+                          <div className="h-3 bg-muted animate-pulse rounded w-12 mx-auto"></div>
+                          <div className="h-7 bg-muted animate-pulse rounded"></div>
+                          <div className="h-7 bg-muted animate-pulse rounded"></div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="h-3 bg-muted animate-pulse rounded w-8 mx-auto"></div>
+                          <div className="h-7 bg-muted animate-pulse rounded"></div>
+                          <div className="h-7 bg-muted animate-pulse rounded"></div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="h-3 bg-muted animate-pulse rounded w-6 mx-auto"></div>
+                          <div className="h-7 bg-muted animate-pulse rounded"></div>
+                          <div className="h-7 bg-muted animate-pulse rounded"></div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    // Desktop skeleton
+                    <div className="grid grid-cols-[80px_1fr_120px_120px_120px_50px] gap-4 items-center py-4 px-4">
+                      <div className="h-4 bg-muted animate-pulse rounded"></div>
+                      <div className="space-y-2">
+                        <div className="h-4 bg-muted animate-pulse rounded w-3/4"></div>
+                        <div className="h-4 bg-muted animate-pulse rounded w-2/3"></div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="h-8 bg-muted animate-pulse rounded"></div>
+                        <div className="h-8 bg-muted animate-pulse rounded"></div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="h-8 bg-muted animate-pulse rounded"></div>
+                        <div className="h-8 bg-muted animate-pulse rounded"></div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="h-8 bg-muted animate-pulse rounded"></div>
+                        <div className="h-8 bg-muted animate-pulse rounded"></div>
+                      </div>
+                      <div className="h-8 w-8 bg-muted animate-pulse rounded mx-auto"></div>
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
       </SmoothScrollContainer>
     );
@@ -234,19 +313,107 @@ const WorkspacePanel = () => {
             className={cn('h-full universal-responsive-container px-0 sm:px-4')}
             showScrollbar={false}
           >
-            <div className="space-y-2 pt-2 pb-24 sm:pb-4" style={{ fontSize: 'var(--fluid-base)' }}>
-              <AnimatePresence mode="popLayout">
-                {processedGames.map((game) => (
-                  <GameCard
-                    key={game.id}
-                    game={game}
-                    className={cn(
-                      'card-hover',
-                      favoriteGames?.includes(game.id) && 'ring-1 ring-yellow-400/20'
-                    )}
-                  />
-                ))}
-              </AnimatePresence>
+            <div className="pt-2 pb-24 sm:pb-4" style={{ fontSize: 'var(--fluid-base)' }}>
+              {/* Professional League Header */}
+              {navigation.selectedLeague && processedGames.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={cn(
+                    "bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-4 mb-0",
+                    isMobile ? "rounded-lg mx-2" : "rounded-t-lg mx-4"
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-lg font-bold">{navigation.selectedLeague}</h2>
+                      <p className="text-sm opacity-90">
+                        {new Date().toLocaleDateString('en-US', { 
+                          weekday: 'short', 
+                          month: 'short', 
+                          day: 'numeric' 
+                        })}
+                      </p>
+                    </div>
+                    <div className="text-sm opacity-90">
+                      Week {Math.ceil(new Date().getDate() / 7)}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Professional Table Header - Desktop Only */}
+              {!isMobile && processedGames.length > 0 && (
+                <div className="bg-muted/50 border-b border-border mx-4 rounded-none">
+                  <div className="grid grid-cols-[80px_1fr_120px_120px_120px_50px] gap-4 items-center py-3 px-4 text-sm font-semibold text-muted-foreground">
+                    <div>TIME</div>
+                    <div>TEAM</div>
+                    <div className="text-center">SPREAD</div>
+                    <div className="text-center">TOTAL</div>
+                    <div className="text-center">MONEY LINE</div>
+                    <div className="text-center">MORE</div>
+                  </div>
+                </div>
+              )}
+
+              {/* Games Container */}
+              {isMobile ? (
+                /* Mobile: Compact card layout with header */
+                <div className="px-2">
+                  {/* Mobile Table Header */}
+                  <div className="bg-muted/40 border border-border rounded-t-lg px-3 py-2 mb-2">
+                    <div className="grid grid-cols-4 gap-2 text-xs font-medium text-muted-foreground">
+                      <div>TEAMS</div>
+                      <div className="text-center">SPREAD</div>
+                      <div className="text-center">TOTAL</div>
+                      <div className="text-center">ML</div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <AnimatePresence mode="popLayout">
+                      {processedGames.map((game, index) => (
+                        <CompactMobileGameRow
+                          key={game.id}
+                          game={game}
+                          index={index}
+                        />
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                </div>
+              ) : (
+                /* Desktop: Professional table layout */
+                <div className="bg-card/30 border border-t-0 border-border mx-4 rounded-b-lg overflow-hidden">
+                  <AnimatePresence mode="popLayout">
+                    {processedGames.map((game, index) => {
+                      const currentTime = new Date(game.startTime).toLocaleTimeString('en-US', { 
+                        hour: 'numeric', 
+                        minute: '2-digit',
+                        hour12: true 
+                      });
+                      const prevTime = index > 0 ? new Date(processedGames[index - 1].startTime).toLocaleTimeString('en-US', { 
+                        hour: 'numeric', 
+                        minute: '2-digit',
+                        hour12: true 
+                      }) : null;
+                      
+                      const showTime = index === 0 || currentTime !== prevTime;
+                      const isFirstInGroup = showTime && index > 0;
+                      
+                      return (
+                        <ProfessionalGameRow
+                          key={game.id}
+                          game={game}
+                          isFirstInGroup={isFirstInGroup}
+                          showTime={showTime}
+                        />
+                      );
+                    })}
+                  </AnimatePresence>
+                </div>
+              )}
+
               {/* Load more trigger */}
               {pagination?.hasNextPage && !loading && (
                 <div ref={loadMoreRef} className="h-16 w-full" />
@@ -272,8 +439,8 @@ const WorkspacePanel = () => {
                   className="py-4"
                 >
                   {/* Show skeleton cards while loading more */}
-                  <div className="space-y-2">
-                    {Array.from({ length: 2 }).map((_, index) => (
+                  <div className={cn("space-y-2", isMobile ? "px-2" : "mx-4")}>
+                    {Array.from({ length: 3 }).map((_, index) => (
                       <motion.div
                         key={`loading-skeleton-${index}`}
                         initial={{ opacity: 0, scale: 0.95 }}
@@ -282,8 +449,66 @@ const WorkspacePanel = () => {
                           duration: 0.3, 
                           delay: index * 0.1 
                         }}
+                        className="bg-card/30 border border-border rounded-lg"
                       >
-                        <GameCardSkeleton />
+                        {isMobile ? (
+                          // Mobile skeleton
+                          <div className="p-3 space-y-3">
+                            <div className="flex justify-between">
+                              <div className="h-3 bg-muted animate-pulse rounded w-16"></div>
+                              <div className="h-3 bg-muted animate-pulse rounded w-12"></div>
+                            </div>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <div className="h-4 w-4 bg-muted animate-pulse rounded"></div>
+                                <div className="h-4 bg-muted animate-pulse rounded w-24"></div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <div className="h-4 w-4 bg-muted animate-pulse rounded"></div>
+                                <div className="h-4 bg-muted animate-pulse rounded w-24"></div>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="space-y-1">
+                                <div className="h-3 bg-muted animate-pulse rounded w-12 mx-auto"></div>
+                                <div className="h-7 bg-muted animate-pulse rounded"></div>
+                                <div className="h-7 bg-muted animate-pulse rounded"></div>
+                              </div>
+                              <div className="space-y-1">
+                                <div className="h-3 bg-muted animate-pulse rounded w-8 mx-auto"></div>
+                                <div className="h-7 bg-muted animate-pulse rounded"></div>
+                                <div className="h-7 bg-muted animate-pulse rounded"></div>
+                              </div>
+                              <div className="space-y-1">
+                                <div className="h-3 bg-muted animate-pulse rounded w-6 mx-auto"></div>
+                                <div className="h-7 bg-muted animate-pulse rounded"></div>
+                                <div className="h-7 bg-muted animate-pulse rounded"></div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          // Desktop skeleton
+                          <div className="grid grid-cols-[80px_1fr_120px_120px_120px_50px] gap-4 items-center py-4 px-4">
+                            <div className="h-4 bg-muted animate-pulse rounded"></div>
+                            <div className="space-y-2">
+                              <div className="h-4 bg-muted animate-pulse rounded w-3/4"></div>
+                              <div className="h-4 bg-muted animate-pulse rounded w-2/3"></div>
+                            </div>
+                            <div className="space-y-1">
+                              <div className="h-8 bg-muted animate-pulse rounded"></div>
+                              <div className="h-8 bg-muted animate-pulse rounded"></div>
+                            </div>
+                            <div className="space-y-1">
+                              <div className="h-8 bg-muted animate-pulse rounded"></div>
+                              <div className="h-8 bg-muted animate-pulse rounded"></div>
+                            </div>
+                            <div className="space-y-1">
+                              <div className="h-8 bg-muted animate-pulse rounded"></div>
+                              <div className="h-8 bg-muted animate-pulse rounded"></div>
+                            </div>
+                            <div className="h-8 w-8 bg-muted animate-pulse rounded mx-auto"></div>
+                          </div>
+                        )}
                       </motion.div>
                     ))}
                   </div>
@@ -325,6 +550,7 @@ const WorkspacePanel = () => {
               )}
             </div>
           </SmoothScrollContainer>
+          
           {/* Floating Action Button - Scroll to top */}
           <AnimatePresence>
             {processedGames.length > 5 && (

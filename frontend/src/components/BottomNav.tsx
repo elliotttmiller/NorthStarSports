@@ -3,7 +3,7 @@ import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { GameController, House, Receipt, DotsThree, Lightning } from '@phosphor-icons/react';
+import { House } from '@phosphor-icons/react';
 
 export function BottomNav() {
   const location = useLocation();
@@ -42,77 +42,91 @@ export function BottomNav() {
     navigate('/other');
   };
 
-  // Helper for unified nav button style
-  const navButtonClass = (active: boolean, extra?: string) =>
-    `flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
-      active ? 'bg-accent text-accent-foreground scale-105' : 'text-muted-foreground hover:text-foreground'
-    } ${extra || ''}`;
+  const handleHomeClick = () => {
+    setMobilePanel(null);
+    navigate('/');
+  };
 
   return (
-    <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-16 flex items-center justify-between px-2 w-full">
-      {/* Sports - Far Left */}
+    <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-16 flex items-center justify-between px-4 w-full">
+      {/* Sports - Text Only */}
       <motion.button
         onClick={handleSportsClick}
-        className={navButtonClass((location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation')}
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
+        className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium min-w-[60px] ${
+          (location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation'
+            ? 'bg-accent text-accent-foreground'
+            : 'text-muted-foreground hover:text-foreground hover:bg-accent/10'
+        }`}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
         type="button"
       >
-        <GameController size={20} weight={(location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation' ? 'fill' : 'regular'} />
-        <span className="text-xs font-medium">Sports</span>
+        Sports
       </motion.button>
 
-      {/* Live - Left of Center */}
+      {/* Live - Text Only */}
       <motion.button
         onClick={handleLiveClick}
-        className={navButtonClass(location.search.includes('filter=live'))}
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
+        className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium min-w-[50px] ${
+          location.search.includes('filter=live')
+            ? 'bg-accent text-accent-foreground'
+            : 'text-muted-foreground hover:text-foreground hover:bg-accent/10'
+        }`}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
         type="button"
       >
-        <Lightning size={20} weight={location.search.includes('filter=live') ? 'fill' : 'regular'} />
-        <span className="text-xs font-medium">Live</span>
+        Live
       </motion.button>
 
-      {/* Home - Center (now a button for unified effect) */}
+      {/* Home - Center Icon Only */}
       <motion.button
-        onClick={() => { setMobilePanel(null); navigate('/'); }}
-        className={navButtonClass(location.pathname === '/', 'p-3 min-w-[70px]') + (location.pathname === '/' ? ' shadow-xl' : ' bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground shadow-lg')}
-        whileHover={{ scale: 1.05, y: -2 }}
+        onClick={handleHomeClick}
+        className={`flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
+          location.pathname === '/'
+            ? 'bg-accent text-accent-foreground shadow-lg scale-110'
+            : 'bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground shadow-md'
+        }`}
+        whileHover={{ scale: location.pathname === '/' ? 1.15 : 1.05 }}
         whileTap={{ scale: 0.95 }}
         type="button"
       >
-        <House size={24} weight={location.pathname === '/' ? 'fill' : 'regular'} />
-        <span className="text-xs font-semibold">Home</span>
+        <House size={22} weight={location.pathname === '/' ? 'fill' : 'regular'} />
       </motion.button>
 
-      {/* Bets - Right of Center */}
+      {/* Bets - Text Only with Badge */}
       <motion.button
         onClick={handleBetsClick}
-        className={navButtonClass(location.pathname === '/my-bets', 'relative')}
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
+        className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium min-w-[50px] relative ${
+          location.pathname === '/my-bets'
+            ? 'bg-accent text-accent-foreground'
+            : 'text-muted-foreground hover:text-foreground hover:bg-accent/10'
+        }`}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
         type="button"
       >
-        <Receipt size={20} weight={location.pathname === '/my-bets' ? 'fill' : 'regular'} />
-        <span className="text-xs font-medium">Bets</span>
+        Bets
         {betSlip.bets.length > 0 && (
-          <div className="absolute -top-1 -right-1 min-w-[16px] h-[16px] rounded-full flex items-center justify-center bg-primary text-primary-foreground text-[10px] font-medium">
+          <div className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center bg-primary text-primary-foreground text-[10px] font-bold">
             {betSlip.bets.length}
           </div>
         )}
       </motion.button>
 
-      {/* Other - Far Right */}
+      {/* Other - Text Only */}
       <motion.button
         onClick={handleOtherClick}
-        className={navButtonClass(location.pathname === '/other')}
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
+        className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium min-w-[60px] ${
+          location.pathname === '/other'
+            ? 'bg-accent text-accent-foreground'
+            : 'text-muted-foreground hover:text-foreground hover:bg-accent/10'
+        }`}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
         type="button"
       >
-        <DotsThree size={20} weight={location.pathname === '/other' ? 'fill' : 'regular'} />
-        <span className="text-xs font-medium">Other</span>
+        Other
       </motion.button>
     </nav>
   );
