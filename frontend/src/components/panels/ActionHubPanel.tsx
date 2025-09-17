@@ -82,7 +82,7 @@ export const ActionHubPanel = () => {
       <AnimatePresence mode="wait">
         <motion.div
           key="actionhubpanel-empty"
-          className="h-full bg-card flex flex-col overflow-hidden"
+          className="h-full bg-muted/10 flex flex-col overflow-hidden"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
@@ -148,7 +148,7 @@ export const ActionHubPanel = () => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -30 }}
         transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
-        className="h-full bg-card flex flex-col overflow-hidden z-40"
+        className="h-full bg-muted/10 flex flex-col overflow-hidden z-40"
         style={{ '--bet-slip-panel-width': '340px' } as React.CSSProperties}
       >
         <motion.div 
@@ -233,51 +233,56 @@ export const ActionHubPanel = () => {
                             layout
                             whileHover={{ y: -2 }}
                           >
-                            <Card className="relative border-border/50 hover:border-accent/50 transition-colors">
-                              <CardHeader className="pb-2">
-                                <div className="flex items-start justify-between">
-                                  <div className="flex-1">
-                                    <CardTitle className="text-sm font-medium">
+                            <Card className="relative border border-border/30 shadow-sm ring-1 ring-border/20 hover:border-border/50 bg-card/50 transition-colors duration-200">
+                              <CardContent className="p-4">
+                                {/* Header section with bet details and odds */}
+                                <div className="flex items-start justify-between mb-3">
+                                  <div className="flex-1 min-w-0 pr-4">
+                                    <div className="text-sm font-medium text-foreground truncate mb-1">
                                       {formatBetDescription(bet)}
-                                    </CardTitle>
-                                    <p className="text-xs text-muted-foreground mt-1">
+                                    </div>
+                                    <div className="text-xs text-muted-foreground truncate">
                                       {bet.game.awayTeam.shortName} @ {bet.game.homeTeam.shortName}
-                                    </p>
+                                    </div>
                                   </div>
-                                  <div className="flex items-center space-x-2">
-                                    <Badge variant="outline" className="font-mono text-xs">
-                                      {formatOdds(bet.odds)}
-                                    </Badge>
+                                  <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-3 py-1 text-xs font-bold min-w-[60px] text-center flex-shrink-0">
+                                    {formatOdds(bet.odds)}
+                                  </Badge>
+                                </div>
+                                
+                                <Separator className="opacity-20 mb-3" />
+                                
+                                {/* Stakes and Win with delete button layout */}
+                                <div className="flex items-center">
+                                  <div className="flex-1 space-y-2 pr-3">
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-xs text-muted-foreground font-semibold">Stake:</span>
+                                      <Input
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        value={bet.stake || ''}
+                                        onChange={(e) => handleStakeChange(bet.id, e.target.value)}
+                                        className="w-20 h-7 text-xs bg-background/60 border-border/60 rounded-md text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        placeholder="0.00"
+                                      />
+                                    </div>
+                                    <div className="flex items-center justify-between text-xs bg-gradient-to-r from-secondary/15 to-secondary/25 rounded-md p-2 border border-border/30">
+                                      <span className="text-muted-foreground font-semibold">To Win:</span>
+                                      <span className="font-bold text-[color:var(--color-win)]">
+                                        ${(bet.potentialPayout - bet.stake).toFixed(2)}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center justify-center flex-shrink-0">
                                     <Button
                                       variant="ghost"
                                       size="sm"
                                       onClick={() => removeBet(bet.id)}
-                                      className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                                      className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md"
                                     >
                                       <Trash size={14} />
                                     </Button>
-                                  </div>
-                                </div>
-                              </CardHeader>
-                              <CardContent className="pt-0">
-                                <div className="space-y-2">
-                                  <div className="flex items-center justify-between">
-                                    <label className="text-xs text-muted-foreground">Stake:</label>
-                                    <Input
-                                      type="number"
-                                      min="0"
-                                      step="0.01"
-                                      value={bet.stake || ''}
-                                      onChange={(e) => handleStakeChange(bet.id, e.target.value)}
-                                      className="w-20 h-7 text-xs"
-                                      placeholder="0.00"
-                                    />
-                                  </div>
-                                  <div className="flex items-center justify-between text-xs">
-                                    <span className="text-muted-foreground">To Win:</span>
-                                    <span className="font-medium text-accent">
-                                      ${(bet.potentialPayout - bet.stake).toFixed(2)}
-                                    </span>
                                   </div>
                                 </div>
                               </CardContent>
@@ -291,66 +296,78 @@ export const ActionHubPanel = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <Card className="border-accent/20">
-                          <CardHeader className="pb-3">
-                            <div className="flex items-center justify-between">
-                              <CardTitle className="text-sm flex items-center gap-2">
-                                <Stack size={16} />
-                                Parlay ({betSlip.bets.length} picks)
-                              </CardTitle>
-                              <Badge variant="outline" className="border-accent/30 text-accent">
+                        <Card className="border border-accent/30 shadow-sm ring-1 ring-accent/15 hover:border-accent/50 bg-card/50 transition-colors duration-200">
+                          <CardContent className="p-4">
+                            {/* Parlay Header */}
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-2">
+                                <Stack size={16} className="text-accent" />
+                                <div className="text-sm font-bold text-foreground">
+                                  Parlay ({betSlip.bets.length} picks)
+                                </div>
+                              </div>
+                              <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-3 py-1 text-sm font-bold min-w-[70px] text-center">
                                 {formatOdds(betSlip.totalOdds)}
                               </Badge>
                             </div>
-                          </CardHeader>
-                          <CardContent className="space-y-3">
-                            {betSlip.bets.map((bet, index) => (
-                              <motion.div 
-                                key={bet.id} 
-                                className="flex items-center justify-between p-3 bg-muted/50 rounded-md border border-border/50"
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.3, delay: index * 0.1 }}
-                                whileHover={{ x: 2 }}
-                              >
-                                <div className="flex-1">
-                                  <div className="text-sm font-medium">{formatBetDescription(bet)}</div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {bet.game.awayTeam.shortName} @ {bet.game.homeTeam.shortName}
+                            
+                            {/* Parlay Legs */}
+                            <div className="space-y-3 mb-4">
+                              {betSlip.bets.map((bet, index) => (
+                                <motion.div 
+                                  key={bet.id} 
+                                  className="flex items-start py-2 border-b border-border/15 last:border-b-0"
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                                >
+                                  <div className="flex-1 space-y-1">
+                                    <div className="flex items-start justify-between">
+                                      <div className="flex-1 min-w-0 pr-3">
+                                        <div className="text-sm font-medium text-foreground truncate">
+                                          {formatBetDescription(bet)}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground truncate">
+                                          {bet.game.awayTeam.shortName} @ {bet.game.homeTeam.shortName}
+                                        </div>
+                                      </div>
+                                      <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-2 py-0.5 text-xs font-bold min-w-[55px] text-center flex-shrink-0">
+                                        {formatOdds(bet.odds)}
+                                      </Badge>
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <Badge variant="outline" className="text-xs font-mono">
-                                    {formatOdds(bet.odds)}
-                                  </Badge>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => removeBet(bet.id)}
-                                    className="h-6 w-6 p-0 text-destructive hover:text-destructive"
-                                  >
-                                    <Trash size={12} />
-                                  </Button>
-                                </div>
-                              </motion.div>
-                            ))}
-                            <Separator />
-                            <div className="space-y-3 bg-secondary/30 rounded-lg p-3">
+                                  <div className="flex items-center justify-center ml-3 flex-shrink-0">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => removeBet(bet.id)}
+                                      className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md"
+                                    >
+                                      <Trash size={12} />
+                                    </Button>
+                                  </div>
+                                </motion.div>
+                              ))}
+                            </div>
+                            
+                            <Separator className="opacity-20 mb-4" />
+                            
+                            <div className="space-y-3">
                               <div className="flex items-center justify-between">
-                                <label className="text-sm font-medium text-card-foreground">Total Stake:</label>
+                                <span className="text-sm font-semibold text-foreground">Total Stake:</span>
                                 <Input
                                   type="number"
                                   min="0"
                                   step="0.01"
                                   value={betSlip.bets[0]?.stake || ''}
                                   onChange={(e) => betSlip.bets[0] && handleStakeChange(betSlip.bets[0].id, e.target.value)}
-                                  className="w-24 h-8 text-sm"
+                                  className="w-24 h-8 text-sm bg-background/60 border-border/60 rounded-md text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                   placeholder="0.00"
                                 />
                               </div>
-                              <div className="flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground">Parlay Odds:</span>
-                                <span className="font-medium text-accent">{formatOdds(betSlip.totalOdds)}</span>
+                              <div className="flex items-center justify-between text-sm bg-gradient-to-r from-secondary/15 to-secondary/25 rounded-lg p-3 border border-border/30">
+                                <span className="text-muted-foreground font-semibold">Parlay Odds:</span>
+                                <span className="font-bold text-accent">{formatOdds(betSlip.totalOdds)}</span>
                               </div>
                             </div>
                           </CardContent>
@@ -365,7 +382,7 @@ export const ActionHubPanel = () => {
         </SmoothScrollContainer>
         {/* Bet Slip Summary - Fixed at bottom */}
         <motion.div 
-          className="border-t border-border bg-card/95 backdrop-blur-sm flex-shrink-0"
+          className="border-t border-border bg-muted/20 backdrop-blur-sm flex-shrink-0"
           style={{
             padding: 'var(--fluid-panel-padding)',
             borderRadius: 'var(--fluid-radius)',

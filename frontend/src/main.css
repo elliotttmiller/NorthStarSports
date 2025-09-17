@@ -201,7 +201,6 @@
   padding: 1rem; /* 16px */
   margin-bottom: 0.75rem; /* 12px */
   border: 1px solid hsl(var(--border));
-  background: hsl(var(--background));
 }
 
 .professional-modal {

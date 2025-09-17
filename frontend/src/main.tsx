@@ -6,7 +6,7 @@ import App from './App'
 
 function ErrorFallback({ error, resetErrorBoundary }: { error: Error, resetErrorBoundary: () => void }) {
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+    <div className="min-h-screen bg-muted/10 text-foreground flex items-center justify-center p-4">
       <div className="text-center max-w-md">
         <h2 className="text-xl font-bold mb-4 text-destructive">Application Error</h2>
         <div className="bg-card border rounded-lg p-4 mb-4">

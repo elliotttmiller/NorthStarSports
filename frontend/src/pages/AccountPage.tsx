@@ -11,7 +11,7 @@ export function AccountPage() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -30 }}
         transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
-        className="h-full w-full flex flex-col overflow-hidden bg-background"
+        className="h-full w-full flex flex-col overflow-hidden bg-muted/10"
       >
         <SmoothScrollContainer className="flex-1 w-full min-h-0" showScrollbar={false}>
           <div className="max-w-2xl mx-auto px-4 py-8 md:px-0 md:py-12 flex flex-col gap-6" style={{ fontSize: 'var(--fluid-base)' }}>

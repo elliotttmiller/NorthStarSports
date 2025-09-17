@@ -80,7 +80,7 @@ export function GameDetailPage() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -30 }}
         transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
-        className="h-full flex flex-col overflow-hidden bg-background"
+        className="h-full flex flex-col overflow-hidden bg-muted/10"
       >
         {/* Header */}
         <motion.div

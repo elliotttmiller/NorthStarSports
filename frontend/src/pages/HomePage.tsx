@@ -63,7 +63,7 @@ export function HomePage() {
 				initial="hidden"
 				animate="visible"
 				exit="exit"
-				className="h-full w-full flex flex-col overflow-hidden bg-background"
+				className="h-full w-full flex flex-col overflow-hidden bg-muted/10"
 			>
 				   <SmoothScrollContainer className="flex-1 w-full min-h-0" showScrollbar={false}>
 					   <motion.div

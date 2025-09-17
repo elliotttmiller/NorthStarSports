@@ -43,7 +43,7 @@ export const OtherPage = () => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -30 }}
         transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
-        className="h-full w-full flex flex-col overflow-hidden bg-card"
+        className="h-full w-full flex flex-col overflow-hidden bg-muted/10"
       >
         <SmoothScrollContainer className="flex-1 universal-responsive-container scrollbar-hide" showScrollbar={false}>
           <div className="container mx-auto px-4 max-w-screen-lg w-full">
