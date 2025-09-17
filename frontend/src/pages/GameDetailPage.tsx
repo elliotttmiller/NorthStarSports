@@ -12,7 +12,7 @@ import { ArrowLeft } from '@phosphor-icons/react';
 import { SmoothScrollContainer } from '@/components/VirtualScrolling';
 import { toast } from 'sonner';
 
-export function GameDetailPage() {
+export default function GameDetailPage() {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
   const [game, setGame] = useState<Game | null>(null);

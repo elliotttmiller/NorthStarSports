@@ -14,7 +14,7 @@ import {
   Star
 } from '@phosphor-icons/react';
 
-export const OtherPage = () => {
+const OtherPage = () => {
   const navigate = useNavigate();
   const { betSlip } = useBetSlip();
   const { setMobilePanel } = useNavigation();
@@ -122,3 +122,5 @@ export const OtherPage = () => {
     </AnimatePresence>
   );
 };
+
+export default OtherPage;

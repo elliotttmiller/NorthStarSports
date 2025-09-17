@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SmoothScrollContainer } from '@/components/VirtualScrolling'
-import { TrendUp, Trophy, ChartBar, Calendar, CurrencyDollar } from '@phosphor-icons/react'
+import { TrendUp, Trophy } from '@phosphor-icons/react'
 // ...existing code...
 const trendingGames = [
 	{
@@ -67,7 +67,7 @@ export function HomePage() {
 			>
 				   <SmoothScrollContainer className="flex-1 w-full min-h-0" showScrollbar={false}>
 					   <motion.div
-						   className="mx-auto w-full max-w-3xl md:max-w-4xl lg:max-w-5xl px-6 md:px-10 lg:px-16 space-y-8"
+						   className="mx-auto w-full max-w-4xl px-4 md:px-8 lg:px-12 space-y-6"
 						   style={{ padding: 'var(--fluid-panel-padding)', fontSize: 'var(--fluid-base)' }}
 						   variants={containerVariants}
 						   initial={false}
@@ -86,47 +86,24 @@ export function HomePage() {
 							   variants={sectionVariants}
 							   className="flex justify-center"
 						   >
-							   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-2xl">
+							   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
 								   {[
-									   { icon: CurrencyDollar, label: 'Balance', value: '$1,250.00', color: 'text-accent' },
-									   { icon: Trophy, label: 'Win Rate', value: '68%', color: 'text-accent' },
-									   { icon: ChartBar, label: 'Active', value: activeBetsCount, color: 'text-primary' },
-									   { icon: Calendar, label: 'This Week', value: '+$340', color: 'text-accent' }
+									   { label: 'Balance', value: '$1,250.00' },
+									   { label: 'Win Rate', value: '68%' },
+									   { label: 'Active Bets', value: activeBetsCount },
+									   { label: 'This Week', value: '+$340' }
 								   ].map((stat) => (
-									   <Card key={stat.label} className="bg-card/50 backdrop-blur-sm border-border/50 shadow-sm flex items-center justify-center min-h-[80px] md:min-h-[100px] min-w-[110px] md:min-w-[130px]" style={{ fontSize: 'var(--fluid-base)', borderRadius: 'var(--fluid-radius)' }}>
-										   <CardContent style={{ padding: '1.1rem 0.75rem' }}>
-											   <div className="flex flex-col items-center justify-center gap-1.5">
-												   <stat.icon size={22} className={stat.color} />
-												   <p className="text-xs md:text-sm text-muted-foreground">{stat.label}</p>
-												   <p className="font-semibold text-base md:text-lg text-foreground">{stat.value}</p>
+									   <Card key={stat.label} className="bg-card/50 backdrop-blur-sm border-border/50 shadow-sm min-h-[70px] md:min-h-[80px]" style={{ fontSize: 'var(--fluid-base)', borderRadius: 'var(--fluid-radius)' }}>
+										   <CardContent className="p-4 h-full">
+											   <div className="flex flex-col items-center justify-center h-full gap-1">
+												   <p className="text-xs md:text-sm text-muted-foreground font-medium">{stat.label}</p>
+												   <p className="font-bold text-sm md:text-base text-foreground">{stat.value}</p>
 											   </div>
 										   </CardContent>
 									   </Card>
 								   ))}
 							   </div>
 						   </motion.div>
-
-						{/* My Bets Navigation */}
-						<motion.div
-							variants={sectionVariants}
-						>
-							<Button
-								variant="outline"
-								size="lg"
-								asChild
-								className="w-full mb-4"
-							>
-								<Link to="/my-bets" className="flex items-center space-x-2">
-									<ChartBar size={20} />
-									<span>My Bets</span>
-									{activeBetsCount > 0 && (
-										<Badge variant="secondary">
-											{activeBetsCount}
-										</Badge>
-									)}
-								</Link>
-							</Button>
-						</motion.div>
 
 						{/* Trending Games */}
 						<motion.div
@@ -136,10 +113,10 @@ export function HomePage() {
 								<TrendUp size={20} className="text-accent" />
 								<h2 className="text-lg font-semibold text-foreground">Trending Live Games</h2>
 							</div>
-							<div className="space-y-3">
+							<div className="space-y-2">
 								{trendingGames.map((game) => (
 									<Card key={game.id} className="bg-card/50 backdrop-blur-sm border-border/50 hover:bg-card/70 transition-all cursor-pointer" style={{ fontSize: 'var(--fluid-base)', borderRadius: 'var(--fluid-radius)' }}>
-										<CardContent style={{ padding: 'var(--fluid-panel-padding)' }}>
+										<CardContent className="p-4">
 											<div className="flex items-center justify-between">
 												<div className="flex-1">
 													<div className="flex items-center space-x-2 mb-2">
@@ -165,7 +142,7 @@ export function HomePage() {
 						{/* View All Games Button */}
 						<motion.div
 							variants={sectionVariants}
-							className="text-center py-8"
+							className="text-center py-6"
 						>
 							<Button
 								asChild
@@ -180,7 +157,7 @@ export function HomePage() {
 						</motion.div>
 
 						{/* Bottom spacing */}
-						<div className="h-16" />
+						<div className="h-8" />
 					</motion.div>
 				</SmoothScrollContainer>
 			</motion.div>

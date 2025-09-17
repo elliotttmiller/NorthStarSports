@@ -101,285 +101,226 @@ export function MobileBetSlipPanel() {
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed right-0 bottom-0 left-0 z-[99] flex h-[88vh] max-h-[92vh] flex-col rounded-t-2xl border-t border-border bg-muted/20 shadow-2xl backdrop-blur-xl professional-scroll professional-spacing-mobile"
+          className="fixed right-0 bottom-0 left-0 z-[99] flex h-[85vh] max-h-[90vh] flex-col rounded-t-2xl border-t border-border bg-background/95 shadow-2xl backdrop-blur-xl"
         >
-          {/* Minimal header - more compact */}
-          <div className="flex items-center justify-between px-3 pt-3 pb-1">
-            <span className="font-bold text-base">Bet Slip</span>
+          {/* Compact header */}
+          <div className="flex items-center justify-between p-4 border-b border-border/20">
+            <div className="flex items-center gap-3">
+              <h3 className="font-bold text-lg">Bet Slip</h3>
+              {betSlip.bets.length > 0 && (
+                <Badge variant="secondary" className="font-bold">
+                  {betSlip.bets.length}
+                </Badge>
+              )}
+            </div>
             <Button
               variant="ghost"
-              size="icon"
+              size="sm"
               onClick={() => setIsBetSlipOpen(false)}
-              className="text-foreground hover:bg-muted/20 rounded-full h-8 w-8"
-              aria-label="Close betslip"
+              className="h-8 w-8 p-0"
             >
-              <X size={16} />
+              <X size={18} />
             </Button>
           </div>
-          {/* Bet type toggle - more compact */}
-          <div className="px-3 pb-2">
-            <Tabs value={betSlip.betType} onValueChange={setBetType} className="w-full">
-              <TabsList className="w-full grid grid-cols-2 bg-muted rounded-lg mb-1 border border-border/60 h-8">
-                <TabsTrigger
-                  value="single"
-                  className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-xs font-bold py-1 h-8 flex items-center justify-center transition-all text-center"
-                >
-                  Straight
-                </TabsTrigger>
-                <TabsTrigger
-                  value="parlay"
-                  className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-xs font-bold py-1 h-8 flex items-center justify-center transition-all text-center"
-                >
-                  Parlay
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
+
+          {/* Bet type toggle - compact */}
+          {betSlip.bets.length > 1 && (
+            <div className="px-4 py-2">
+              <Tabs value={betSlip.betType} onValueChange={setBetType} className="w-full">
+                <TabsList className="grid w-full grid-cols-2 h-9">
+                  <TabsTrigger value="single" className="text-sm">Straight</TabsTrigger>
+                  <TabsTrigger value="parlay" className="text-sm">Parlay</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+          )}
           
-          {/* Betslip content with invisible scrolling - more compact */}
-          <SmoothScrollContainer 
-            className="flex-1 min-h-0 professional-scroll" 
-            showScrollbar={false}
-            maxHeight="100%"
-          >
-            <div className="px-4 pb-3 space-y-3">
-              {betSlip.betType === 'single' ? (
+          {/* Compact bet content */}
+          <SmoothScrollContainer className="flex-1 min-h-0" showScrollbar={false}>
+            <div className="p-4 space-y-3">
+              {betSlip.bets.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <div className="text-lg font-semibold text-muted-foreground mb-2">
+                    Your bet slip is empty
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Tap odds on games to add bets
+                  </div>
+                </div>
+              ) : betSlip.betType === 'single' ? (
                 betSlip.bets.map((bet) => (
-                  <motion.div 
-                    key={bet.id} 
-                    className="bg-card/50 border border-border/20 rounded-xl p-3 shadow-sm ring-1 ring-border/10 hover:border-border/40 hover:shadow-md transition-all duration-300"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {/* Professional Header Layout */}
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-foreground mb-1 leading-tight">
+                  <div key={bet.id} className="bg-card border border-border rounded-xl p-3 space-y-3">
+                    {/* Bet header */}
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0 pr-3">
+                        <div className="font-semibold text-sm leading-tight mb-1">
                           {formatBetDescription(bet)}
                         </div>
                         <div className="text-xs text-muted-foreground leading-tight">
                           {formatMatchup(bet)}
                         </div>
                       </div>
-                      <div className="ml-4 flex-shrink-0">
-                        <Badge className="text-accent border-accent/30 bg-accent/10 font-mono px-6 py-1.5 text-sm font-bold rounded-lg min-w-[120px] flex items-center justify-center">
-                          {formatOdds(bet.odds)}
-                        </Badge>
-                      </div>
+                      <Badge className="bg-accent/10 text-accent border-accent/20 font-mono px-3 py-1 text-sm font-bold">
+                        {formatOdds(bet.odds)}
+                      </Badge>
                     </div>
                     
-                    {/* Divider */}
-                    <div className="h-px bg-border/20 mb-3"></div>
-                    
-                    {/* Financial Section - Grid Layout */}
-                    <div className="grid grid-cols-3 gap-2 items-center">
-                      {/* Stake Input */}
-                      <div className="col-span-1">
-                        <label className="block text-xs font-semibold text-muted-foreground mb-1">Stake</label>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="10000"
-                          step="1"
-                          value={bet.stake || ''}
-                          onChange={(e) => updateStake(bet.id, parseFloat(e.target.value) || 0)}
-                          className="h-8 text-sm bg-background/80 border-border/40 rounded-lg text-center font-semibold focus:border-accent/50 focus:ring-1 focus:ring-accent/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                          placeholder="0"
-                        />
-                      </div>
-                      
-                      {/* Win Amount */}
-                      <div className="col-span-1">
-                        <label className="block text-xs font-semibold text-muted-foreground mb-1">Win</label>
-                        <div className="h-8 flex items-center justify-center bg-gradient-to-r from-green-500/10 to-green-600/10 border border-green-500/20 rounded-lg px-2">
-                          <span className="text-sm font-bold text-green-600">
+                    {/* Well-Spaced Professional Summary */}
+                    <div className="flex items-center justify-between pt-3 border-t border-border/20 mt-3">
+                      <div className="flex items-end gap-4 flex-1">
+                        {/* Stake Input - Well Proportioned */}
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs text-muted-foreground mb-2">Stake</div>
+                          <Input
+                            type="number"
+                            min="0"
+                            placeholder="0"
+                            value={bet.stake || ''}
+                            onChange={(e) => updateStake(bet.id, parseFloat(e.target.value) || 0)}
+                            className="h-9 text-sm text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          />
+                        </div>
+                        
+                        {/* To Win - Well Spaced */}
+                        <div className="flex-1 text-center">
+                          <div className="text-xs text-muted-foreground mb-2">To Win</div>
+                          <div className="text-sm font-bold text-green-600 dark:text-green-400 py-2.5 px-3 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800">
                             ${bet.stake > 0 ? (bet.potentialPayout - bet.stake).toFixed(2) : '0.00'}
-                          </span>
+                          </div>
+                        </div>
+                        
+                        {/* Total - Well Spaced */}
+                        <div className="flex-1 text-center">
+                          <div className="text-xs text-muted-foreground mb-2">Total</div>
+                          <div className="text-sm font-bold text-accent py-2.5 px-3 bg-accent/10 rounded-md border border-accent/30">
+                            ${bet.potentialPayout.toFixed(2)}
+                          </div>
                         </div>
                       </div>
                       
-                      {/* Delete Button */}
-                      <div className="col-span-1 flex justify-center">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeBet(bet.id)}
-                          className="h-8 w-8 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200"
-                        >
-                          <Trash size={14} />
-                        </Button>
-                      </div>
+                      {/* Delete Button - Well Positioned */}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeBet(bet.id)}
+                        className="h-9 w-9 p-0 text-muted-foreground hover:text-destructive ml-4"
+                      >
+                        <Trash size={16} />
+                      </Button>
                     </div>
-                    
-                    {/* Total Payout Badge */}
-                    <div className="mt-3 pt-2 border-t border-border/20">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold text-muted-foreground">Total Payout</span>
-                        <div className="bg-accent/10 border border-accent/20 rounded-lg px-2.5 py-1">
-                          <span className="text-sm font-bold text-accent">
-                            ${bet.potentialPayout.toFixed(2)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
+                  </div>
                 ))
               ) : (
-                <motion.div 
-                  className="bg-card/50 border border-accent/20 rounded-xl p-3 shadow-sm ring-1 ring-accent/10 hover:border-accent/40 hover:shadow-md transition-all duration-300"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {/* Professional Parlay Header */}
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="p-1.5 bg-accent/10 rounded-lg">
-                        <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div className="text-sm font-bold text-foreground">Parlay Bet</div>
-                        <div className="text-xs text-muted-foreground">{betSlip.bets.length} selections</div>
-                      </div>
+                <div className="bg-card border-2 border-accent/20 rounded-xl p-3 space-y-3">
+                  {/* Parlay header */}
+                  <div className="flex items-center justify-between">
+                    <div className="font-semibold text-base">
+                      Parlay ({betSlip.bets.length} legs)
                     </div>
-                    <Badge className="text-accent border-accent/30 bg-accent/10 font-mono px-6 py-1.5 text-sm font-bold rounded-lg min-w-[120px] flex items-center justify-center">
+                    <Badge className="bg-accent/10 text-accent border-accent/20 font-mono px-3 py-1 text-sm font-bold">
                       {formatOdds(betSlip.totalOdds)}
                     </Badge>
                   </div>
                   
-                  {/* Parlay Legs - Professional List */}
-                  <div className="space-y-2 mb-3">
+                  {/* Parlay legs */}
+                  <div className="space-y-2">
                     {betSlip.bets.map((bet, index) => (
-                      <div key={bet.id} className="bg-background/50 border border-border/20 rounded-lg p-2.5">
-                        <div className="flex items-start justify-between mb-1.5">
-                          <div className="flex items-start gap-2 flex-1">
-                            <div className="w-4 h-4 bg-accent/20 text-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <span className="text-xs font-bold">{index + 1}</span>
+                      <div key={bet.id} className="flex items-start justify-between py-2 border-b border-border/10 last:border-b-0">
+                        <div className="flex items-start gap-2 flex-1 min-w-0">
+                          <div className="w-5 h-5 bg-accent/20 text-accent rounded-full flex items-center justify-center text-xs font-bold mt-0.5">
+                            {index + 1}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium leading-tight">
+                              {formatBetDescription(bet)}
                             </div>
-                            <div className="min-w-0 flex-1">
-                              <div className="text-sm font-semibold text-foreground leading-tight">
-                                {formatBetDescription(bet)}
-                              </div>
-                              <div className="text-xs text-muted-foreground leading-tight mt-0.5">
-                                {formatMatchup(bet)}
-                              </div>
+                            <div className="text-xs text-muted-foreground leading-tight">
+                              {formatMatchup(bet)}
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 ml-3">
-                            <Badge className="text-muted-foreground border-border/30 bg-muted/20 font-mono px-3 py-0.5 text-xs font-bold rounded min-w-[70px] flex items-center justify-center">
-                              {formatOdds(bet.odds)}
-                            </Badge>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => removeBet(bet.id)}
-                              className="h-6 w-6 rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200"
-                            >
-                              <Trash size={10} />
-                            </Button>
-                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 ml-2">
+                          <Badge variant="outline" className="font-mono px-2 py-0.5 text-xs">
+                            {formatOdds(bet.odds)}
+                          </Badge>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeBet(bet.id)}
+                            className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                          >
+                            <Trash size={10} />
+                          </Button>
                         </div>
                       </div>
                     ))}
                   </div>
                   
-                  {/* Divider */}
-                  <div className="h-px bg-border/20 mb-3"></div>
-                  
-                  {/* Parlay Financial Section */}
-                  <div className="grid grid-cols-2 gap-3 mb-3">
-                    <div>
-                      <label className="block text-xs font-semibold text-muted-foreground mb-1">Total Stake</label>
-                      <Input
-                        type="number"
-                        min="0"
-                        max="10000"
-                        step="1"
-                        value={betSlip.bets[0]?.stake || ''}
-                        onChange={(e) => betSlip.bets[0] && updateStake(betSlip.bets[0].id, parseFloat(e.target.value) || 0)}
-                        className="h-8 text-sm bg-background/80 border-border/40 rounded-lg text-center font-semibold focus:border-accent/50 focus:ring-1 focus:ring-accent/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        placeholder="0"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-muted-foreground mb-1">Total Win</label>
-                      <div className="h-8 flex items-center justify-center bg-gradient-to-r from-green-500/10 to-green-600/10 border border-green-500/20 rounded-lg">
-                        <span className="text-sm font-bold text-green-600">
+                  {/* Well-Spaced Parlay Summary */}
+                  <div className="flex items-center justify-between pt-3 border-t border-border/20 mt-3">
+                    <div className="flex items-end gap-4 flex-1">
+                      {/* Parlay Stake - Well Proportioned */}
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs text-muted-foreground mb-2">Stake</div>
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="0"
+                          value={betSlip.bets[0]?.stake || ''}
+                          onChange={(e) => betSlip.bets[0] && updateStake(betSlip.bets[0].id, parseFloat(e.target.value) || 0)}
+                          className="h-9 text-sm text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                      </div>
+                      
+                      {/* To Win - Well Spaced */}
+                      <div className="flex-1 text-center">
+                        <div className="text-xs text-muted-foreground mb-2">To Win</div>
+                        <div className="text-sm font-bold text-green-600 dark:text-green-400 py-2.5 px-3 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800">
                           ${betSlip.totalPayout > betSlip.totalStake ? (betSlip.totalPayout - betSlip.totalStake).toFixed(2) : '0.00'}
-                        </span>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  
-                  {/* Total Payout */}
-                  <div className="pt-2 border-t border-border/20">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-muted-foreground">Total Payout</span>
-                      <div className="bg-accent/10 border border-accent/20 rounded-lg px-3 py-1.5">
-                        <span className="text-base font-bold text-accent">
+                      
+                      {/* Total - Well Spaced */}
+                      <div className="flex-1 text-center">
+                        <div className="text-xs text-muted-foreground mb-2">Total</div>
+                        <div className="text-sm font-bold text-accent py-2.5 px-3 bg-accent/10 rounded-md border border-accent/30">
                           ${betSlip.totalPayout.toFixed(2)}
-                        </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               )}
             </div>
           </SmoothScrollContainer>
           
-          {/* Professional Summary Section */}
+          {/* Compact footer */}
           {betSlip.bets.length > 0 && (
-            <div className="border-t border-border/20 bg-muted/10 p-4 space-y-4">
-              {/* Enhanced Summary Card */}
-              <div className="bg-gradient-to-r from-secondary/10 to-secondary/20 border border-border/30 rounded-xl p-4">
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <div className="text-xs font-semibold text-muted-foreground mb-1">Total Stake</div>
-                    <div className="text-base font-bold text-foreground">
-                      ${betSlip.totalStake.toFixed(2)}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs font-semibold text-muted-foreground mb-1">Total Win</div>
-                    <div className="text-base font-bold text-green-600">
-                      ${betSlip.totalPayout > betSlip.totalStake ? (betSlip.totalPayout - betSlip.totalStake).toFixed(2) : '0.00'}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs font-semibold text-muted-foreground mb-1">Payout</div>
-                    <div className="text-base font-bold text-accent">
-                      ${betSlip.totalPayout.toFixed(2)}
-                    </div>
-                  </div>
-                </div>
+            <div className="border-t border-border/20 bg-muted/20 p-4 space-y-3">
+              <div className="flex justify-between text-sm">
+                <span>Total Stake: <span className="font-semibold">${betSlip.totalStake.toFixed(2)}</span></span>
+                <span>Payout: <span className="font-semibold text-accent">${betSlip.totalPayout.toFixed(2)}</span></span>
               </div>
               
-              {/* Professional Action Buttons */}
-              <div className="space-y-3">
+              <div className="flex gap-2">
                 <Button
                   variant="outline"
                   onClick={clearBetSlip}
-                  className="w-full h-11 text-sm border-border/40 bg-background/50 hover:bg-background/80 rounded-xl transition-all duration-200"
+                  className="flex-1 h-10"
                 >
-                  Clear Bet Slip
+                  Clear
                 </Button>
                 <Button
                   onClick={handlePlaceBets}
-                  disabled={placing}
-                  className="w-full h-12 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                  disabled={placing || betSlip.totalStake === 0}
+                  className="flex-[2] h-10"
                 >
-                  <TrendUp size={18} className="mr-2" />
-                  {placing ? 'Placing Bets...' : `Place ${betSlip.betType === 'single' ? 'Bets' : 'Parlay'} • $${betSlip.totalPayout.toFixed(2)}`}
+                  {placing ? 'Placing...' : 'Place Bet'}
                 </Button>
               </div>
               
-              {/* Toast Message */}
               {toast && (
-                <div className="w-full text-center text-xs font-semibold text-accent bg-accent/10 rounded-lg py-2 border border-accent/20">
+                <div className="text-center text-xs text-accent bg-accent/10 rounded py-1">
                   {toast}
                 </div>
               )}

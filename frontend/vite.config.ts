@@ -14,6 +14,7 @@ const __dirname = dirname(__filename);
 export default defineConfig({
   build: {
     outDir: 'dist', // outputs to frontend/dist
+    chunkSizeWarningLimit: 1000
   },
   server: {
     proxy: {
@@ -42,6 +43,16 @@ export default defineConfig({
             sizes: '512x512',
             type: 'image/svg+xml',
             purpose: 'any maskable'
+          },
+          {
+            src: '/pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
           }
         ]
       }

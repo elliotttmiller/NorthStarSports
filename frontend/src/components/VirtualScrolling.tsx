@@ -1,4 +1,4 @@
-import { useRef, ReactNode } from 'react'
+import { useRef, ReactNode, memo } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -12,7 +12,7 @@ interface VirtualScrollContainerProps<T> {
   scrollBehavior?: 'smooth' | 'auto'
 }
 
-export function VirtualScrollContainer<T>({
+export const VirtualScrollContainer = memo(function VirtualScrollContainer<T>({
   items,
   renderItem,
   className,
@@ -51,7 +51,7 @@ export function VirtualScrollContainer<T>({
       </div>
     </div>
   )
-}
+}) as <T>(props: VirtualScrollContainerProps<T>) => React.JSX.Element
 
 interface SmoothScrollContainerProps {
   children: ReactNode
@@ -60,7 +60,7 @@ interface SmoothScrollContainerProps {
   showScrollbar?: boolean
 }
 
-export function SmoothScrollContainer({
+export const SmoothScrollContainer = memo(function SmoothScrollContainer({
   children,
   className,
   maxHeight = '100%',
@@ -99,7 +99,7 @@ export function SmoothScrollContainer({
       </motion.div>
     </div>
   )
-}
+})
 
 interface InfiniteScrollProps<T> {
   items: T[]
@@ -111,7 +111,7 @@ interface InfiniteScrollProps<T> {
   threshold?: number
 }
 
-export function InfiniteScrollContainer<T>({
+export const InfiniteScrollContainer = memo(function InfiniteScrollContainer<T>({
   items,
   renderItem,
   loadMore,
@@ -175,4 +175,4 @@ export function InfiniteScrollContainer<T>({
       </div>
     </div>
   )
-}
+}) as <T>(props: InfiniteScrollProps<T>) => React.JSX.Element

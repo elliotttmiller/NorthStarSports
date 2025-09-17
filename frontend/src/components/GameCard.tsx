@@ -6,7 +6,7 @@
     return '';
   }
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, memo } from 'react'
 import { useBetSlip } from '@/context/BetSlipContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -16,6 +16,7 @@ import { formatOdds, formatTotalLine, formatTime } from '@/lib/formatters'
 import { Clock } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { PlayerPropsSection } from '@/components/PlayerPropsSection'
+import { TeamLogo } from '@/components/TeamLogo'
 import { cn } from '@/lib/utils'
 
 import type { Game, PropCategory } from '@/types'
@@ -26,7 +27,7 @@ interface GameCardProps {
   compact?: boolean
 }
 
-export function GameCard({ game, className, compact = false }: GameCardProps) {
+export const GameCard = memo(function GameCard({ game, className, compact = false }: GameCardProps) {
   const { addBet, removeBet, betSlip } = useBetSlip();
   // Helper to check if a bet is in the bet slip (matches addBet's betId logic)
   const getBetId = useCallback((betType: string, selection: string, periodOrQuarterOrHalf?: string) => {
@@ -77,11 +78,23 @@ export function GameCard({ game, className, compact = false }: GameCardProps) {
               {/* Home (top) team and bets, with time aligned right */}
               <div className="flex flex-col gap-2 pb-2 border-b border-border/20 last:border-b-0 last:pb-0">
                 <div className="flex flex-row items-center justify-between w-full">
-                  <div className="flex flex-row items-center gap-2">
-                    <span className="font-bold text-base md:text-lg truncate text-primary group-hover:text-accent transition-colors">
-                      {game.homeTeam.name} ({game.homeTeam.shortName})
-                    </span>
-                    <span className="text-xs text-muted-foreground">{game.homeTeam.record}</span>
+                  <div className="flex flex-row items-center gap-3">
+                    <TeamLogo 
+                      team={game.homeTeam.shortName || game.homeTeam.name}
+                      league={game.leagueId}
+                      size={compact ? "sm" : "md"}
+                      variant="circle"
+                      animate={true}
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-bold text-base md:text-lg truncate text-primary group-hover:text-accent transition-colors">
+                        {game.homeTeam.name}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground font-medium">{game.homeTeam.shortName}</span>
+                        <span className="text-xs text-muted-foreground">{game.homeTeam.record}</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex flex-row items-center gap-2 text-xs text-muted-foreground min-w-[90px] justify-end">
                     <Clock size={14} className="opacity-70" />
@@ -159,11 +172,23 @@ export function GameCard({ game, className, compact = false }: GameCardProps) {
               </div>
               {/* Away (bottom) team and bets */}
               <div className="flex flex-col gap-2 pt-2">
-                <div className="flex flex-row items-center gap-2">
-                  <span className="font-bold text-base md:text-lg truncate text-primary group-hover:text-accent transition-colors">
-                    {game.awayTeam.name} ({game.awayTeam.shortName})
-                  </span>
-                  <span className="text-xs text-muted-foreground">{game.awayTeam.record}</span>
+                <div className="flex flex-row items-center gap-3">
+                  <TeamLogo 
+                    team={game.awayTeam.shortName || game.awayTeam.name}
+                    league={game.leagueId}
+                    size={compact ? "sm" : "md"}
+                    variant="circle"
+                    animate={true}
+                  />
+                  <div className="flex flex-col">
+                    <span className="font-bold text-base md:text-lg truncate text-primary group-hover:text-accent transition-colors">
+                      {game.awayTeam.name}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground font-medium">{game.awayTeam.shortName}</span>
+                      <span className="text-xs text-muted-foreground">{game.awayTeam.record}</span>
+                    </div>
+                  </div>
                 </div>
                 <div className="flex flex-row gap-4 mt-2 w-full">
                   <Button
@@ -294,4 +319,13 @@ export function GameCard({ game, className, compact = false }: GameCardProps) {
       </Card>
     </motion.div>
   )
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison for performance optimization
+  return (
+    prevProps.game.id === nextProps.game.id &&
+    prevProps.game.odds === nextProps.game.odds &&
+    prevProps.game.status === nextProps.game.status &&
+    prevProps.compact === nextProps.compact &&
+    prevProps.className === nextProps.className
+  )
+})

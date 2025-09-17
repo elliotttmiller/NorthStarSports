@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card'
 import { SmoothScrollContainer } from '@/components/VirtualScrolling'
 import { motion, AnimatePresence } from 'framer-motion'
 
-export function AccountPage() {
+export default function AccountPage() {
   return (
     <AnimatePresence mode="wait">
       <motion.div

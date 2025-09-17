@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="45" fill="#003594" stroke="#869397" stroke-width="2"/>
+  <polygon points="50,20 30,40 70,40" fill="white"/>
+  <text x="50" y="65" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="18" font-weight="bold">
+    DAL
+  </text>
+</svg>

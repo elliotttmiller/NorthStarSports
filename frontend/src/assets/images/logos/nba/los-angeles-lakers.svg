@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="45" fill="#552583" stroke="#FDB927" stroke-width="2"/>
+  <text x="50" y="45" text-anchor="middle" dominant-baseline="middle" fill="#FDB927" font-size="28" font-weight="bold">
+    LAL
+  </text>
+  <text x="50" y="70" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="8">
+    LAKERS
+  </text>
+</svg>

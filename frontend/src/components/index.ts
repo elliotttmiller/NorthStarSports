@@ -15,6 +15,7 @@ export { GameCard } from './GameCard'
 export { OddsButton } from './OddsButton'
 export { BetSlipItem } from './BetSlipItem'
 export { PlayerPropsSection } from './PlayerPropsSection'
+export { TeamLogo, TeamLogoSmall, TeamLogoLarge, TeamLogoWithName, TeamLogoCircle, TeamMatchup } from './TeamLogo'
 
 // UI Enhancement Components
 export { SidebarToggle } from './SidebarToggle'

@@ -1,12 +1,15 @@
 import { Routes, Route } from 'react-router-dom'
-import { Suspense } from 'react'
+import { Suspense, lazy } from 'react'
 import { RootLayout } from '@/components/layouts/RootLayout'
 import { HomePage } from '@/pages/HomePage'
-import { GamePage } from '@/pages/GamePage'
-import { GameDetailPage } from '@/pages/GameDetailPage'
-import { MyBetsPage } from '@/pages/MyBetsPage'
-import { AccountPage } from '@/pages/AccountPage'
-import { OtherPage } from '@/pages/OtherPage'
+import { ProgressiveLoader } from '@/components/ProgressiveLoader'
+
+// Lazy load non-critical pages for better initial load performance
+const GamePage = lazy(() => import('@/pages/GamePage'))
+const GameDetailPage = lazy(() => import('@/pages/GameDetailPage'))
+const MyBetsPage = lazy(() => import('@/pages/MyBetsPage'))
+const AccountPage = lazy(() => import('@/pages/AccountPage'))
+const OtherPage = lazy(() => import('@/pages/OtherPage'))
 
 function LoadingFallback() {
   return (

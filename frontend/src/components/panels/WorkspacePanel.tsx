@@ -7,6 +7,7 @@ import { getGamesPaginated, PaginatedResponse } from '@/services/mockApi';
 import { Button } from '@/components/ui/button';
 import { GameCard } from '@/components/GameCard';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
+import { GameCardSkeleton } from '@/components/ProgressiveLoader';
 import { useInfiniteScroll, useSmoothScroll } from '@/hooks/useInfiniteScroll';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -133,8 +134,32 @@ const WorkspacePanel = () => {
 
   // ...existing code...
 
+  // Enhanced loading state with progressive skeletons
   if (initialLoading) {
-    return <SkeletonLoader type="games" count={4} />;
+    return (
+      <SmoothScrollContainer
+        className={cn('h-full universal-responsive-container px-0 sm:px-4')}
+        showScrollbar={false}
+      >
+        <div className="space-y-2 pt-2 pb-24 sm:pb-4">
+          <AnimatePresence>
+            {Array.from({ length: 6 }).map((_, index) => (
+              <motion.div
+                key={`skeleton-${index}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.3, 
+                  delay: index * 0.1 // Stagger the skeleton animations
+                }}
+              >
+                <GameCardSkeleton />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      </SmoothScrollContainer>
+    );
   }
 
   if (!navigation.selectedLeague || games.length === 0) {
@@ -239,20 +264,64 @@ const WorkspacePanel = () => {
                   </div>
                 </motion.div>
               )}
-              {/* Loading indicator */}
+              {/* Enhanced loading indicator for infinite scroll */}
               {loading && (
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-card/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-border"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                      <span className="text-sm text-muted-foreground">Loading more games...</span>
-                    </div>
-                  </motion.div>
-                </div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="py-4"
+                >
+                  {/* Show skeleton cards while loading more */}
+                  <div className="space-y-2">
+                    {Array.from({ length: 2 }).map((_, index) => (
+                      <motion.div
+                        key={`loading-skeleton-${index}`}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ 
+                          duration: 0.3, 
+                          delay: index * 0.1 
+                        }}
+                      >
+                        <GameCardSkeleton />
+                      </motion.div>
+                    ))}
+                  </div>
+                  {/* Floating loading indicator */}
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-card/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-border"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="relative">
+                          <div className="w-4 h-4 border-2 border-accent/20 border-t-accent rounded-full animate-spin" />
+                          <div className="absolute inset-0 w-4 h-4 border border-accent/10 rounded-full animate-pulse" />
+                        </div>
+                        <span className="text-sm text-muted-foreground">Loading more games...</span>
+                        {/* Progressive dots */}
+                        <div className="flex space-x-1 ml-2">
+                          <motion.div
+                            className="w-1 h-1 bg-accent rounded-full"
+                            animate={{ opacity: [0.3, 1, 0.3] }}
+                            transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+                          />
+                          <motion.div
+                            className="w-1 h-1 bg-accent rounded-full"
+                            animate={{ opacity: [0.3, 1, 0.3] }}
+                            transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+                          />
+                          <motion.div
+                            className="w-1 h-1 bg-accent rounded-full"
+                            animate={{ opacity: [0.3, 1, 0.3] }}
+                            transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+                          />
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+                </motion.div>
               )}
             </div>
           </SmoothScrollContainer>

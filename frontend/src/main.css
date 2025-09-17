@@ -16,6 +16,16 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
 
+/* Animation for shimmer effect */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
 :root {
 
   /* --- Modern Elegant Palette --- */
@@ -133,102 +143,25 @@
 
 /* Additional styles for enhanced UX - imported by the Spark runtime */
 
-/* Global scrollbar hiding - No white scrollbars anywhere */
-* {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-*::-webkit-scrollbar {
-  display: none;
-}
-
-/* Seamless scrolling class for explicit use */
+/* Hide all scrollbars for seamless UI */
 .seamless-scroll {
   -ms-overflow-style: none;
   scrollbar-width: none;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
 }
 
 .seamless-scroll::-webkit-scrollbar {
   display: none;
 }
 
-/* Professional smooth scrolling for all containers */
-.professional-scroll {
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+/* Smooth panel transitions */
+.panel-transition {
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
 }
 
-.professional-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-/* Professional component spacing and sizing */
-.professional-spacing-sm {
-  gap: 0.75rem; /* 12px */
-  padding: 0.75rem; /* 12px */
-}
-
-.professional-spacing-md {
-  gap: 1rem; /* 16px */
-  padding: 1rem; /* 16px */
-}
-
-.professional-spacing-lg {
-  gap: 1.25rem; /* 20px */
-  padding: 1.25rem; /* 20px */
-}
-
-.professional-spacing-xl {
-  gap: 1.5rem; /* 24px */
-  padding: 1.5rem; /* 24px */
-}
-
-/* Professional container sizing */
-.professional-container {
-  max-width: 100%;
-  margin: 0 auto;
-  min-height: 0;
-  flex: 1;
-}
-
-.professional-card {
-  border-radius: 0.75rem; /* 12px */
-  padding: 1rem; /* 16px */
-  margin-bottom: 0.75rem; /* 12px */
-  border: 1px solid hsl(var(--border));
-}
-
-.professional-modal {
-  border-radius: 1rem; /* 16px */
-  padding: 1.25rem; /* 20px */
-  max-width: 90vw;
-  max-height: 85vh;
-}
-
-/* Mobile professional spacing */
-@media (max-width: 1023px) {
-  .professional-spacing-mobile {
-    gap: 0.5rem; /* 8px */
-    padding: 0.75rem; /* 12px */
-  }
-  
-  .professional-card {
-    border-radius: 0.5rem; /* 8px */
-    padding: 0.75rem; /* 12px */
-    margin-bottom: 0.5rem; /* 8px */
-  }
-  
-  .professional-modal {
-    border-radius: 0.75rem; /* 12px */
-    padding: 1rem; /* 16px */
-    max-width: 95vw;
-    max-height: 90vh;
-  }
+.sidebar-transition {
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, width;
 }
 
 /* Mobile bottom navigation spacing */
@@ -441,53 +374,56 @@
   }
 }
 
-/* Virtual scrollbar styling - Completely Hidden */
+/* Virtual scrollbar styling - Enhanced for mobile */
 .virtual-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: oklch(from var(--accent) l c h / 0.4) transparent;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
 .virtual-scrollbar::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
+  width: 8px;
+  height: 8px;
 }
 
 .virtual-scrollbar::-webkit-scrollbar-track {
-  display: none;
   background: transparent;
+  border-radius: 4px;
 }
 
 .virtual-scrollbar::-webkit-scrollbar-thumb {
-  display: none;
-  background: transparent;
+  background: linear-gradient(180deg, 
+    oklch(from var(--accent) l c h / 0.4) 0%,
+    oklch(from var(--accent) l c h / 0.3) 100%);
+  border-radius: 4px;
+  border: 1px solid oklch(from var(--accent) l c h / 0.1);
+  transition: all 0.2s ease;
+  box-shadow: inset 0 1px 0 0 oklch(from var(--accent) l c h / 0.2);
 }
 
 .virtual-scrollbar::-webkit-scrollbar-thumb:hover {
-  display: none;
-  background: transparent;
+  background: linear-gradient(180deg, 
+    oklch(from var(--accent) l c h / 0.6) 0%,
+    oklch(from var(--accent) l c h / 0.5) 100%);
+  border-color: oklch(from var(--accent) l c h / 0.2);
 }
 
 .virtual-scrollbar::-webkit-scrollbar-thumb:active {
-  display: none;
-  background: transparent;
+  background: oklch(from var(--accent) l c h / 0.7);
 }
 
-/* Mobile touch optimizations - Completely seamless */
+/* Mobile touch optimizations */
 @media (max-width: 1023px) {
   .virtual-scrollbar::-webkit-scrollbar {
-    display: none;
-    width: 0;
-    height: 0;
+    width: 4px;
+    height: 4px;
   }
   
   .virtual-scrollbar::-webkit-scrollbar-thumb {
-    display: none;
     border: none;
     box-shadow: none;
-    background: transparent;
+    border-radius: 2px;
   }
 }
 
@@ -689,66 +625,4 @@
   color: oklch(from var(--accent) l c h / 1) !important;
   backdrop-filter: blur(8px) !important;
   -webkit-backdrop-filter: blur(8px) !important;
-}
-
-/* Remove number input arrows for clean betting inputs - Comprehensive approach */
-/* WebKit browsers (Chrome, Safari, Edge) */
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none !important;
-  appearance: none !important;
-  margin: 0 !important;
-  display: none !important;
-}
-
-/* Firefox */
-input[type="number"] {
-  -moz-appearance: textfield !important;
-  appearance: textfield !important;
-}
-
-/* Target specific input classes used in bet slip */
-input[data-slot="input"][type="number"]::-webkit-outer-spin-button,
-input[data-slot="input"][type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none !important;
-  appearance: none !important;
-  margin: 0 !important;
-  display: none !important;
-}
-
-input[data-slot="input"][type="number"] {
-  -moz-appearance: textfield !important;
-  appearance: textfield !important;
-}
-
-/* Ensure smooth input container styling */
-input[type="number"]:focus {
-  outline: none;
-}
-
-/* Additional comprehensive spinner removal */
-.w-16[type="number"]::-webkit-outer-spin-button,
-.w-16[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none !important;
-  margin: 0 !important;
-  display: none !important;
-}
-
-.w-16[type="number"] {
-  -moz-appearance: textfield !important;
-  appearance: textfield !important;
-}
-
-/* Global spinner removal for all number inputs */
-*[type="number"] {
-  -moz-appearance: textfield !important;
-  appearance: textfield !important;
-}
-
-*[type="number"]::-webkit-outer-spin-button,
-*[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none !important;
-  appearance: none !important;
-  margin: 0 !important;
-  display: none !important;
 }

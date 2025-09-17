@@ -8,7 +8,7 @@ import { useBetHistoryContext } from '@/context/BetHistoryContext'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { formatBetDescription, formatMatchup, formatParlayLegs } from '@/lib/betFormatters'
 
-export function MyBetsPage() {
+export default function MyBetsPage() {
   const { bets } = useBetsContext();
   const { betHistory } = useBetHistoryContext();
   const isMobile = useIsMobile();
