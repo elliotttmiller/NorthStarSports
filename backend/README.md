@@ -1,202 +1,272 @@
-# NorthStarSports Backend
+# NorthStar Sports - Backend API
 
-## Overview
-A professional, scalable Node.js + Express + TypeScript backend for the NorthStarSports betting platform. Built with Redis for data storage, comprehensive logging with Pino, and structured for local development and production deployment.
+Node.js/Express backend API for the NorthStar Sports betting platform.
 
-## Features
-- **RESTful API**: Complete endpoints for users, bets, games, and key-value operations
-- **Redis Integration**: Production-ready Redis Cloud connection for all data operations
-- **TypeScript**: Full type safety with comprehensive type definitions
-- **Professional Logging**: Structured logging with Pino and pretty-printing for development
-- **Modular Architecture**: Clean separation of controllers, services, routes, and middleware
-- **CORS Enabled**: Configured for frontend integration
-- **Production Ready**: Docker support, environment configuration, and deployment scripts
-
-## Tech Stack
-- **Runtime**: Node.js with TypeScript
-- **Framework**: Express.js
-- **Database**: Redis Cloud
-- **Logging**: Pino with pretty-printing
-- **Development**: Nodemon, ESLint, ts-node
-- **Testing**: Jest (configured)
-
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ and npm
-- Redis Cloud account (free tier available)
+- Node.js >= 18.0.0
+- npm >= 9.0.0
+- Redis Cloud instance or local Redis server
 
-### 1. Install Dependencies
+### Installation
 ```bash
-cd backend
+# Install dependencies
 npm install
+
+# Copy environment template
+cp .env.example .env
+
+# Configure your .env file with Redis credentials
 ```
 
-### 2. Environment Setup
-Create a `.env` file in the backend directory:
+### Development
 ```bash
-PORT=4000
-REDIS_HOST=redis-19041.c228.us-central1-1.gce.redns.redis-cloud.com
-REDIS_PORT=19041
-REDIS_USERNAME=default
-REDIS_PASSWORD=your-redis-password
-```
-
-### 3. Development Server
-```bash
+# Start development server with hot reload
 npm run dev
-```
-The backend will run on [http://localhost:4000](http://localhost:4000)
 
-### 4. Production Build
-```bash
+# Build for production
 npm run build
+
+# Start production server
 npm start
 ```
 
-## API Endpoints
+### Testing
+```bash
+# Run test suite
+npm test
 
-### Health Check
-- `GET /api/v1/health` — Server health status
+# Run tests with coverage
+npm run test:coverage
+
+# Run specific test file
+npm test user.test.js
+```
+
+## 🏗️ Architecture
+
+### Directory Structure
+```
+src/
+├── controllers/    # HTTP request handlers
+├── middlewares/    # Express middleware functions
+├── models/         # Data models and Redis schemas
+├── routes/         # API route definitions
+├── services/       # Business logic layer
+└── utils/          # Utility functions and helpers
+```
+
+### Key Components
+- **Controllers**: Handle HTTP requests and responses
+- **Services**: Contain business logic and data operations
+- **Models**: Define data structures and Redis operations
+- **Middleware**: Authentication, validation, error handling
+- **Routes**: API endpoint definitions
+
+## 📡 API Endpoints
 
 ### User Management
-- `GET /api/v1/user/:id` — Get user profile
-- `POST /api/v1/user/:id` — Create/update user profile
+```bash
+GET    /api/v1/user/:id          # Get user profile
+POST   /api/v1/user              # Create new user
+PUT    /api/v1/user/:id          # Update user profile
+DELETE /api/v1/user/:id          # Delete user account
+```
 
-### Betting Operations  
-- `GET /api/v1/bet/:id` — Get bet details
-- `POST /api/v1/bet/:id` — Place a bet
+### Games & Odds
+```bash
+GET    /api/v1/games             # Get all games
+GET    /api/v1/games/:id         # Get specific game
+GET    /api/v1/games/sport/:sport # Get games by sport
+POST   /api/v1/games             # Create new game (admin)
+```
 
-### Game Data
-- `GET /api/v1/game/:id` — Get game information
-- `POST /api/v1/game/:id` — Update game data
+### Betting
+```bash
+GET    /api/v1/bets/:userId      # Get user's bets
+POST   /api/v1/bets              # Place new bet
+PUT    /api/v1/bets/:id          # Update bet (if allowed)
+DELETE /api/v1/bets/:id          # Cancel bet (if allowed)
+```
 
 ### Key-Value Store
-- `GET /api/v1/kv/:key` — Get value for key
-- `POST /api/v1/kv/:key` — Set value for key (JSON body: `{ value: ... }`)
-
-### Redis Operations
-- `GET /api/v1/redis/:key` — Direct Redis key access
-- `POST /api/v1/redis/:key` — Set Redis key-value
-
-## Project Structure
-```
-backend/
-├── src/
-│   ├── controllers/     # Request handlers
-│   │   ├── userController.ts
-│   │   ├── betController.ts
-│   │   ├── gameController.ts
-│   │   ├── kvController.ts
-│   │   └── redisController.ts
-│   ├── services/        # Business logic
-│   │   ├── userService.ts
-│   │   ├── betService.ts
-│   │   ├── gameService.ts
-│   │   └── kvService.ts
-│   ├── routes/          # API route definitions
-│   │   ├── user.ts
-│   │   ├── bet.ts
-│   │   ├── game.ts
-│   │   ├── kv.ts
-│   │   └── redis.ts
-│   ├── middlewares/     # Express middleware
-│   │   ├── errorHandler.ts
-│   │   ├── validateRequest.ts
-│   │   └── validateUser.ts
-│   ├── models/          # Data models (JS legacy)
-│   ├── utils/           # Utility functions
-│   │   ├── logger.ts
-│   │   └── responseFormatter.ts
-│   ├── config/          # Configuration
-│   ├── app.ts           # Express app setup
-│   └── server.ts        # Server entry point
-├── tests/               # Test files
-├── Dockerfile          # Container configuration
-├── package.json        # Dependencies and scripts
-├── tsconfig.json       # TypeScript configuration
-└── README.md           # This file
-```
-
-## Redis Data Model
-
-### Key Patterns & Types
-
-| Key Pattern                  | Type        | Purpose/Fields                                                                 |
-|------------------------------|-------------|-------------------------------------------------------------------------------|
-| user:{userId}                | Hash        | User profile: username, email, balance, etc.                                  |
-| session:{sessionId}          | String      | UserId (for session management)                                               |
-| betslip:{userId}:active      | String/JSON | Current bet slip (bets, type, totalStake, totalPayout, totalOdds)             |
-| betslip:{userId}:history     | List        | List of betslip IDs (for bet history)                                         |
-| bet:{betId}                  | String/JSON | Bet details: gameId, odds, stake, payout, type, selection, playerProp, status |
-| game:{gameId}                | String/JSON | Game info: teams, odds, status, startTime, venue                              |
-| playerprop:{propId}          | String/JSON | Player prop details: playerId, statType, line, odds, etc.                     |
-| leaderboard:weekly           | Sorted Set  | userId -> score                                                               |
-| leaderboard:alltime          | Sorted Set  | userId -> score                                                               |
-
-### Usage Examples
-- Set user profile: `HSET user:123 username "elliott" email "elliott@email.com" balance 1000`
-- Store active bet slip: `SET betslip:123:active '{"bets":[...],"betType":"parlay",...}'`
-- Add bet to history: `LPUSH betslip:123:history betslipId`
-- Update leaderboard: `ZINCRBY leaderboard:weekly 100 123`
-
-See `src/services/kvService.ts` for complete CRUD functions.
-
-## Security Guidelines
-
-### Development
-- All secrets stored in `.env` (never commit real credentials)
-- Input validation with Joi schemas in controllers
-- Structured logging with Pino (no console.log in production)
-- CORS configured for frontend origin
-
-### Production
-- Use HTTPS (terminate SSL at load balancer/Nginx)
-- Sanitize and escape all user input
-- Use helmet middleware for security headers
-- Restrict CORS origins to production domains
-- Keep all dependencies updated
-- Run containers as non-root user
-- Use PM2 or similar for process management
-- Monitor logs and set up error alerts
-
-## Development Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server with hot reload |
-| `npm run build` | Compile TypeScript to JavaScript |
-| `npm start` | Run production build |
-| `npm run lint` | Run ESLint code analysis |
-| `npm run type-check` | Check TypeScript types without building |
-| `npm test` | Run test suite (when tests are added) |
-
-## Docker Support
-
-Build and run with Docker:
 ```bash
-docker build -t northstarsports-backend .
-docker run -p 4000:4000 --env-file .env northstarsports-backend
+GET    /api/v1/kv/:key           # Get value by key
+POST   /api/v1/kv                # Set key-value pair
+DELETE /api/v1/kv/:key           # Delete key
 ```
 
-## Contributing
+## 💾 Data Models
 
-1. Follow TypeScript best practices
-2. Use structured logging with the provided logger
-3. Add input validation for all endpoints
-4. Update this README when adding new features
-5. Ensure all environment variables are documented
+### User Model
+```typescript
+interface User {
+  id: string;
+  username: string;
+  email: string;
+  balance: number;
+  depositHistory: Transaction[];
+  betHistory: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
 
-## Deployment
+### Game Model
+```typescript
+interface Game {
+  id: string;
+  leagueId: string;
+  homeTeam: Team;
+  awayTeam: Team;
+  startTime: Date;
+  status: 'upcoming' | 'live' | 'finished';
+  odds: GameOdds;
+  venue?: string;
+}
+```
 
-The backend is ready for deployment to:
-- **Cloud Platforms**: AWS, GCP, Azure
-- **Container Orchestration**: Kubernetes, Docker Swarm
-- **Serverless**: AWS Lambda, Vercel, Netlify Functions
-- **Traditional VPS**: PM2 process management
+### Bet Model
+```typescript
+interface Bet {
+  id: string;
+  userId: string;
+  gameId: string;
+  betType: string;
+  selection: string;
+  odds: number;
+  amount: number;
+  status: 'pending' | 'won' | 'lost' | 'cancelled';
+  placedAt: Date;
+}
+```
+
+## 🔐 Security Features
+
+- **Helmet**: Security headers
+- **CORS**: Cross-origin resource sharing
+- **Rate Limiting**: Request throttling
+- **Input Validation**: Joi schema validation
+- **Error Handling**: Comprehensive error responses
+- **Logging**: Structured logging with Pino
+
+## ⚙️ Configuration
+
+### Environment Variables
+```bash
+# Server Configuration
+PORT=4000
+NODE_ENV=development
+
+# Redis Configuration
+REDIS_HOST=your-redis-host
+REDIS_PORT=12609
+REDIS_PASSWORD=your-redis-password
+
+# JWT Configuration (when implemented)
+JWT_SECRET=your-jwt-secret
+JWT_EXPIRES_IN=24h
+```
+
+### Redis Schema
+```javascript
+// User data
+user:{userId} = {User Object}
+
+// Game data
+game:{gameId} = {Game Object}
+games:sport:{sport} = [gameIds...]
+
+// Bet data
+bet:{betId} = {Bet Object}
+user:{userId}:bets = [betIds...]
+
+// Key-Value store
+kv:{key} = value
+```
+
+## 🔧 Development Tools
+
+### Available Scripts
+```bash
+npm run dev          # Start with nodemon (hot reload)
+npm run build        # Compile TypeScript to JavaScript
+npm start            # Start production server
+npm test             # Run Jest test suite
+npm run lint         # Run ESLint
+npm run type-check   # Run TypeScript compiler check
+npm run clean        # Remove dist directory
+```
+
+### Code Quality
+- **ESLint**: Code linting with TypeScript support
+- **Prettier**: Code formatting (configured in .prettierrc)
+- **Husky**: Git hooks for pre-commit checks
+- **Jest**: Unit and integration testing
+
+## 🐳 Docker Support
+
+### Dockerfile
+The backend includes a multi-stage Dockerfile for production builds:
+```bash
+docker build -t northstar-backend .
+docker run -p 4000:4000 northstar-backend
+```
+
+### Docker Compose
+Development environment with Redis:
+```bash
+docker-compose up backend redis
+```
+
+## 📊 Monitoring & Logging
+
+### Structured Logging
+```typescript
+import logger from '../utils/logger';
+
+// Log levels: trace, debug, info, warn, error, fatal
+logger.info('User created', { userId, email });
+logger.error('Database error', { error: err.message });
+```
+
+### Health Checks
+```bash
+GET /health          # Server health status
+GET /health/redis    # Redis connection status
+```
+
+## 🚀 Deployment
+
+### Production Deployment
+1. Build the application: `npm run build`
+2. Set production environment variables
+3. Start the server: `npm start`
+4. Configure reverse proxy (nginx/Apache)
+5. Set up SSL certificates
+6. Configure monitoring and logging
+
+### Environment-Specific Configs
+- **Development**: Hot reload, detailed logging
+- **Testing**: In-memory Redis, test database
+- **Production**: Optimized builds, error tracking
+
+## 🤝 Contributing
+
+1. Follow the established code style (ESLint + Prettier)
+2. Write tests for new features
+3. Update documentation for API changes
+4. Use conventional commits
+5. Ensure all tests pass before submitting PRs
+
+## 📚 Additional Resources
+
+- [Redis Documentation](https://redis.io/documentation)
+- [Express.js Guide](https://expressjs.com/en/guide/)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Jest Testing Framework](https://jestjs.io/docs/getting-started)
 
 ---
 
-**Repository**: [NorthStarSports](https://github.com/elliotttmiller/NorthStarSports)  
-**Maintainer**: Elliott Miller (@elliotttmiller)  
-**License**: MIT
+For questions or support, please refer to the main project documentation or open an issue.
