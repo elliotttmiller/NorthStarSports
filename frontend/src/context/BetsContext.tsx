@@ -20,10 +20,8 @@ interface BetsProviderProps {
   children: ReactNode;
 }
 export const BetsProvider: React.FC<BetsProviderProps> = ({ children }) => {
-
-
   // Fetch all active bets for the user
-  const { data: betsRaw } = useBets(USER_ID);
+  const { data: betsRaw, refetch: refetchBets } = useBets(USER_ID);
   const [bets, setLocalBets] = useState<Bet[]>(Array.isArray(betsRaw) ? betsRaw : []);
   const setBets = useSetBets();
 
@@ -32,32 +30,52 @@ export const BetsProvider: React.FC<BetsProviderProps> = ({ children }) => {
     if (Array.isArray(betsRaw)) setLocalBets(betsRaw);
   }, [betsRaw]);
 
-  // Actually refetch bets from backend
+  // Refresh bets by triggering hook refetch
   const refreshBets = useCallback(async () => {
-    const res = await fetch('/api/bets/' + USER_ID);
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data)) setLocalBets(data);
+    try {
+      if (refetchBets) {
+        await refetchBets();
+      } else {
+        // Fallback to direct fetch if refetch not available
+        const res = await fetch('/api/v1/redis/bets/' + USER_ID);
+        if (res.ok) {
+          const json = await res.json();
+          // Backend returns { success: true, data: [...] }, extract the data
+          const data = json.success ? json.data : json;
+          if (Array.isArray(data)) setLocalBets(data);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to refresh bets:', error);
     }
-  }, []);
+  }, [refetchBets]);
 
   const addBet = useCallback(async (bet: Bet) => {
-    const updatedBets: Bet[] = [...bets, bet];
-    await setBets(USER_ID, updatedBets);
+    setLocalBets(currentBets => {
+      const updatedBets: Bet[] = [...currentBets, bet];
+      setBets(USER_ID, updatedBets);
+      return updatedBets;
+    });
     await refreshBets();
-  }, [bets, setBets, refreshBets]);
+  }, [setBets, refreshBets]);
 
   const updateBet = useCallback(async (betId: string, bet: Partial<Bet>) => {
-    const updatedBets: Bet[] = bets.map((b: Bet) => b.id === betId ? { ...b, ...bet } : b);
-    await setBets(USER_ID, updatedBets);
+    setLocalBets(currentBets => {
+      const updatedBets: Bet[] = currentBets.map((b: Bet) => b.id === betId ? { ...b, ...bet } : b);
+      setBets(USER_ID, updatedBets);
+      return updatedBets;
+    });
     await refreshBets();
-  }, [bets, setBets, refreshBets]);
+  }, [setBets, refreshBets]);
 
   const deleteBet = useCallback(async (betId: string) => {
-    const updatedBets: Bet[] = bets.filter((b: Bet) => b.id !== betId);
-    await setBets(USER_ID, updatedBets);
+    setLocalBets(currentBets => {
+      const updatedBets: Bet[] = currentBets.filter((b: Bet) => b.id !== betId);
+      setBets(USER_ID, updatedBets);
+      return updatedBets;
+    });
     await refreshBets();
-  }, [bets, setBets, refreshBets]);
+  }, [setBets, refreshBets]);
 
   const value: BetsContextType = {
     bets,

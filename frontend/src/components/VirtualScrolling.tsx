@@ -24,7 +24,7 @@ export function VirtualScrollContainer<T>({
     <div
       ref={parentRef}
       className={cn(
-        'overflow-auto seamless-scroll',
+        'overflow-auto professional-scroll',
         className
       )}
       style={{
@@ -68,7 +68,7 @@ export function SmoothScrollContainer({
 }: SmoothScrollContainerProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const scrollbarClass = showScrollbar ? 'virtual-scrollbar' : 'seamless-scroll'
+  const scrollbarClass = showScrollbar ? 'virtual-scrollbar' : 'professional-scroll'
 
   return (
     <div

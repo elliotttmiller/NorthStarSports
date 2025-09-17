@@ -10,12 +10,14 @@ import {
   setBet,
   getGame,
   setGame,
-  getUserBets
+  getUserBets,
+  setUserBets
 } from '../controllers/redisController.js';
 
 const router: Router = express.Router();
 
 router.get('/bets/:userId', getUserBets);
+router.post('/bets/:userId', setUserBets);
 router.get('/user/:userId', getUser);
 router.post('/user/:userId', setUser);
 router.get('/betslip/:userId/active', getActiveBetSlip);

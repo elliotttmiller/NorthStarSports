@@ -5,10 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { SmoothScrollContainer } from '@/components/VirtualScrolling'
 import { useBetsContext } from '@/context/BetsContext'
 import { useBetHistoryContext } from '@/context/BetHistoryContext'
+import { useIsMobile } from '@/hooks/useIsMobile'
+import { formatBetDescription, formatMatchup, formatParlayLegs } from '@/lib/betFormatters'
 
 export function MyBetsPage() {
   const { bets } = useBetsContext();
   const { betHistory } = useBetHistoryContext();
+  const isMobile = useIsMobile();
   const safeBets = Array.isArray(bets) ? bets : [];
   const safeBetHistory = Array.isArray(betHistory) ? betHistory : [];
 
@@ -23,56 +26,243 @@ export function MyBetsPage() {
         className="h-full w-full flex flex-col overflow-hidden bg-background"
       >
         <SmoothScrollContainer className="flex-1 universal-responsive-container" showScrollbar={false}>
-          <div className="container mx-auto px-4 max-w-screen-lg w-full" style={{ padding: 'var(--fluid-panel-padding)', fontSize: 'var(--fluid-base)' }}>
+          <div className={`container mx-auto max-w-screen-lg w-full ${isMobile ? 'px-3' : 'px-6'}`} style={{ padding: 'var(--fluid-panel-padding)', fontSize: 'var(--fluid-base)' }}>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.1 }}
             >
               <Tabs defaultValue="active" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="active">Active Bets</TabsTrigger>
-                  <TabsTrigger value="history">History</TabsTrigger>
-                  <TabsTrigger value="stats">Statistics</TabsTrigger>
+                <TabsList className={`grid w-full grid-cols-3 mb-4 bg-muted/60 border border-border/30 ${isMobile ? 'h-10' : 'h-12'}`}>
+                  <TabsTrigger 
+                    value="active" 
+                    className={`${isMobile ? 'text-xs' : 'text-sm'} font-bold data-[state=active]:bg-accent data-[state=active]:text-accent-foreground rounded-md`}
+                  >
+                    {isMobile ? 'Active' : 'Active Bets'}
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="history" 
+                    className={`${isMobile ? 'text-xs' : 'text-sm'} font-bold data-[state=active]:bg-accent data-[state=active]:text-accent-foreground rounded-md`}
+                  >
+                    History
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="stats" 
+                    className={`${isMobile ? 'text-xs' : 'text-sm'} font-bold data-[state=active]:bg-accent data-[state=active]:text-accent-foreground rounded-md`}
+                  >
+                    {isMobile ? 'Stats' : 'Statistics'}
+                  </TabsTrigger>
                 </TabsList>
+
                 <TabsContent value="active" className="space-y-4">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 }}
                   >
+                    {/* Active Bets Summary Card */}
+                    {safeBets.length > 0 && (
+                      <Card className="mb-4 bg-gradient-to-r from-secondary/10 to-secondary/20 border-secondary/30">
+                        <CardContent className="p-4">
+                          <div className="grid grid-cols-3 gap-4 text-center">
+                            <div>
+                              <p className="text-xs text-muted-foreground font-semibold">Active Bets</p>
+                              <p className="text-lg font-bold text-foreground">{safeBets.length}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground font-semibold">Total Staked</p>
+                              <p className="text-lg font-bold text-foreground">
+                                ${safeBets.reduce((sum, bet) => sum + (bet.stake || 0), 0).toFixed(2)}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground font-semibold">Total Payout</p>
+                              <p className="text-lg font-bold text-[color:var(--color-win)]">
+                                ${safeBets.reduce((sum, bet) => sum + (bet.potentialPayout || 0), 0).toFixed(2)}
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
                     <Card style={{ fontSize: 'var(--fluid-base)', borderRadius: 'var(--fluid-radius)' }}>
-                      <CardContent>
-                        <div className="space-y-3 bg-transparent">
+                      <CardContent className={isMobile ? "p-3" : "p-4"}>
+                        <div className={`bg-transparent ${isMobile ? 'space-y-2' : 'space-y-3'}`}>
                           {safeBets.length === 0 ? (
-                            <motion.div className="text-muted-foreground text-center py-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                              <p>No active bets. Place a bet to see it here.</p>
+                            <motion.div className="text-muted-foreground text-center py-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+                              <div className="flex flex-col items-center gap-3">
+                                <div className="w-16 h-16 rounded-full bg-muted/20 flex items-center justify-center">
+                                  <svg className="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                  </svg>
+                                </div>
+                                <p className="text-sm font-medium">No active bets</p>
+                                <p className="text-xs">Place a bet to see it here</p>
+                              </div>
                             </motion.div>
-                          ) : safeBets.map((bet, index) => (
+                          ) : (
+                            <div className={isMobile ? 'space-y-2' : 'grid grid-cols-1 lg:grid-cols-2 gap-4'}>
+                              {safeBets.map((bet, index) => (
+                                <motion.div
+                                  key={bet.id}
+                                  className="group w-full rounded-lg bg-card border border-border/40 shadow-sm transition-all duration-200 p-3 cursor-pointer hover:-translate-y-0.5 hover:shadow-md hover:border-border/60"
+                                  style={{ boxSizing: 'border-box', willChange: 'transform' }}
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+                                  whileHover={{ y: -1, scale: 1.005 }}
+                                >
+                                  {/* Bet Header - Description and Odds */}
+                                  <div className="flex items-start justify-between mb-2">
+                                    <div className="flex-1 min-w-0">
+                                      <div className="text-sm font-bold text-foreground truncate mb-0.5">
+                                        {formatBetDescription(bet)}
+                                      </div>
+                                      <div className="text-xs text-muted-foreground truncate">
+                                        {formatMatchup(bet)}
+                                      </div>
+                                    </div>
+                                    <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-2 py-1 text-xs ml-2 flex-shrink-0">
+                                      {bet.odds > 0 ? `+${bet.odds}` : bet.odds}
+                                    </Badge>
+                                  </div>
+
+                                  {/* Parlay Legs */}
+                                  {bet.betType === 'parlay' && bet.legs && (
+                                    <div className="text-xs text-muted-foreground mb-2 space-y-1 pl-2 border-l-2 border-accent/20">
+                                      {formatParlayLegs(bet).map((leg, legIndex) => (
+                                        <div key={legIndex} className="flex items-center justify-between">
+                                          <span className="truncate flex-1">• {leg.description}</span>
+                                          <span className="text-xs font-mono ml-2 flex-shrink-0">
+                                            {bet.legs && bet.legs[legIndex] ? (bet.legs[legIndex].odds > 0 ? `+${bet.legs[legIndex].odds}` : bet.legs[legIndex].odds) : '-'}
+                                          </span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+
+                                  {/* Bet Financial Summary */}
+                                  <div className="flex items-center justify-between pt-2 border-t border-border/20">
+                                    <div className="flex items-center gap-4">
+                                      <div className="text-xs">
+                                        <span className="text-muted-foreground">Stake: </span>
+                                        <span className="font-semibold text-foreground">${bet.stake.toFixed(2)}</span>
+                                      </div>
+                                      <div className="text-xs">
+                                        <span className="text-muted-foreground">To Win: </span>
+                                        <span className="font-semibold text-[color:var(--color-win)]">
+                                          ${((bet.potentialPayout || 0) - (bet.stake || 0)).toFixed(2)}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="text-xs font-bold text-accent">
+                                      ${(bet.potentialPayout || 0).toFixed(2)}
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </TabsContent>
+
+                <TabsContent value="history" className="space-y-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                  >
+                    <Card style={{ fontSize: 'var(--fluid-base)', borderRadius: 'var(--fluid-radius)' }}>
+                      <CardHeader className="pb-3">
+                        <CardTitle style={{ fontSize: 'var(--fluid-lg)' }} className="flex items-center justify-between">
+                          <span>Betting History</span>
+                          {safeBetHistory.length > 0 && (
+                            <Badge variant="secondary" className="text-xs">
+                              {safeBetHistory.length} slip{safeBetHistory.length !== 1 ? 's' : ''}
+                            </Badge>
+                          )}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-3">
+                        <div className={`bg-transparent ${isMobile ? 'space-y-2' : 'space-y-3'}`}>
+                          {safeBetHistory.length === 0 ? (
+                            <motion.div className="text-muted-foreground text-center py-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+                              <div className="flex flex-col items-center gap-3">
+                                <div className="w-16 h-16 rounded-full bg-muted/20 flex items-center justify-center">
+                                  <svg className="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                </div>
+                                <p className="text-sm font-medium">No betting history</p>
+                                <p className="text-xs">Your completed bets will appear here</p>
+                              </div>
+                            </motion.div>
+                          ) : safeBetHistory.map((slip, i) => (
                             <motion.div
-                              key={bet.id}
-                              className="group w-full rounded-xl bg-background/90 border border-border/60 shadow-sm mb-2 transition-all duration-200 flex items-stretch px-4 py-3 gap-2 cursor-pointer hover:-translate-y-1 hover:shadow-lg"
+                              key={(Array.isArray(slip.bets) ? slip.bets.map(b=>b.id).join('-') : `slip-${i}`)}
+                              className="group w-full rounded-lg bg-card border border-border/40 shadow-sm transition-all duration-200 p-3 cursor-pointer hover:-translate-y-0.5 hover:shadow-md hover:border-border/60"
                               style={{ boxSizing: 'border-box', willChange: 'transform' }}
                               initial={{ opacity: 0, x: -20 }}
                               animate={{ opacity: 1, x: 0 }}
-                              transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
-                              whileHover={{ y: -2, scale: 1.01 }}
+                              transition={{ duration: 0.3, delay: 0.3 + i * 0.1 }}
+                              whileHover={{ y: -1, scale: 1.005 }}
                             >
-                              {/* Left: Team names, left-aligned */}
-                              <div className="flex flex-col justify-center gap-0.5 min-w-0 flex-1 text-left">
-                                <span className="text-sm font-semibold truncate">
-                                  {bet.game?.awayTeam?.shortName}
-                                  <span className="text-muted-foreground font-normal"> @ </span>
-                                  {bet.game?.homeTeam?.shortName}
-                                </span>
-                              </div>
-                              {/* Right: Odds, Stake, Remove, right-aligned */}
-                              <div className="flex items-center gap-2 min-w-0 justify-end text-right">
-                                <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-2 py-0.5 text-xs min-w-[32px] text-center flex items-center justify-center rounded-md">
-                                  {bet.odds > 0 ? `+${bet.odds}` : bet.odds}
+                              {/* Slip Header */}
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="outline" className="text-xs font-bold">
+                                    {slip.betType ? slip.betType.toUpperCase() : 'BET'}
+                                  </Badge>
+                                  <span className="text-xs text-muted-foreground">
+                                    {Array.isArray(slip.bets) ? slip.bets.length : 0} pick{(Array.isArray(slip.bets) ? slip.bets.length : 0) !== 1 ? 's' : ''}
+                                  </span>
+                                </div>
+                                <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-2 py-1 text-xs">
+                                  {slip.totalOdds > 0 ? `+${slip.totalOdds}` : slip.totalOdds}
                                 </Badge>
-                                <div className="w-16 h-8 flex items-center justify-end text-xs font-semibold bg-background/80 rounded-md px-2 py-1 shadow-xs">
-                                  ${bet.stake.toFixed(2)}
+                              </div>
+
+                              {/* Slip Legs */}
+                              <div className="space-y-1 mb-3">
+                                {(Array.isArray(slip.bets) ? slip.bets : []).map((bet) => (
+                                  <div key={bet.id} className="flex items-center justify-between py-1 border-b border-border/10 last:border-b-0">
+                                    <div className="flex flex-col min-w-0 flex-1">
+                                      <span className="text-xs font-semibold truncate text-foreground">
+                                        {formatBetDescription(bet)}
+                                      </span>
+                                      <span className="text-xs text-muted-foreground truncate">
+                                        {formatMatchup(bet)}
+                                      </span>
+                                    </div>
+                                    <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-1.5 py-0.5 text-xs ml-2 flex-shrink-0">
+                                      {bet.odds > 0 ? `+${bet.odds}` : bet.odds}
+                                    </Badge>
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Slip Financial Summary */}
+                              <div className="flex items-center justify-between pt-2 border-t border-border/20">
+                                <div className="flex items-center gap-4">
+                                  <div className="text-xs">
+                                    <span className="text-muted-foreground">Stake: </span>
+                                    <span className="font-semibold text-foreground">
+                                      ${(typeof slip.totalStake === 'number' ? slip.totalStake : 0).toFixed(2)}
+                                    </span>
+                                  </div>
+                                  <div className="text-xs">
+                                    <span className="text-muted-foreground">Won: </span>
+                                    <span className="font-semibold text-[color:var(--color-win)]">
+                                      ${Math.max(0, (typeof slip.totalPayout === 'number' ? slip.totalPayout : 0) - (typeof slip.totalStake === 'number' ? slip.totalStake : 0)).toFixed(2)}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="text-xs font-bold text-accent">
+                                  ${(typeof slip.totalPayout === 'number' ? slip.totalPayout : 0).toFixed(2)}
                                 </div>
                               </div>
                             </motion.div>
@@ -82,92 +272,83 @@ export function MyBetsPage() {
                     </Card>
                   </motion.div>
                 </TabsContent>
-                <TabsContent value="history" className="space-y-4">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
-                  >
-                    <Card style={{ fontSize: 'var(--fluid-base)', borderRadius: 'var(--fluid-radius)' }}>
-                      <CardHeader>
-                        <CardTitle style={{ fontSize: 'var(--fluid-lg)' }}>Betting History</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3 bg-transparent">
-                          {safeBetHistory.length === 0 ? (
-                            <motion.div className="text-muted-foreground text-center py-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                              <p>No betting history available yet. Place some bets to see your history here.</p>
-                            </motion.div>
-                          ) : safeBetHistory.map((slip, i) => (
-                            <motion.div
-                              key={(Array.isArray(slip.bets) ? slip.bets.map(b=>b.id).join('-') : `slip-${i}`)}
-                              className="group w-full rounded-xl bg-background/90 border border-border/60 shadow-sm mb-2 transition-all duration-200 flex flex-col px-4 py-3 gap-2 cursor-pointer hover:-translate-y-1 hover:shadow-lg"
-                              style={{ boxSizing: 'border-box', willChange: 'transform' }}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ duration: 0.3, delay: 0.3 + i * 0.1 }}
-                              whileHover={{ y: -2, scale: 1.01 }}
-                            >
-                              <div className="flex flex-wrap gap-2 items-center mb-1">
-                                <span className="text-xs font-bold text-muted-foreground">{slip.betType ? slip.betType.toUpperCase() : '-'}</span>
-                                <span className="text-xs text-muted-foreground">{Array.isArray(slip.bets) ? slip.bets.length : 0} picks</span>
-                                <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-2 py-0.5 text-xs min-w-[32px] text-center flex items-center justify-center rounded-md">
-                                  {slip.totalOdds > 0 ? `+${slip.totalOdds}` : slip.totalOdds}
-                                </Badge>
-                              </div>
-                              <div className="flex flex-col gap-1">
-                                {(Array.isArray(slip.bets) ? slip.bets : []).map((bet) => (
-                                  <div key={bet.id} className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold truncate">
-                                      {bet.game?.awayTeam?.shortName}
-                                      <span className="text-muted-foreground font-normal"> @ </span>
-                                      {bet.game?.homeTeam?.shortName}
-                                    </span>
-                                    <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-2 py-0.5 text-xs min-w-[32px] text-center flex items-center justify-center rounded-md">
-                                      {bet.odds > 0 ? `+${bet.odds}` : bet.odds}
-                                    </Badge>
-                                  </div>
-                                ))}
-                              </div>
-                              <div className="flex items-center justify-between mt-2">
-                                <span className="text-xs text-muted-foreground">Stake: <span className="font-semibold text-foreground">${(typeof slip.totalStake === 'number' ? slip.totalStake : 0).toFixed(2)}</span></span>
-                                <span className="text-xs text-muted-foreground">Payout: <span className="font-semibold text-accent">${(typeof slip.totalPayout === 'number' ? slip.totalPayout : 0).toFixed(2)}</span></span>
-                              </div>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </TabsContent>
+
                 <TabsContent value="stats" className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {[
-                      { title: 'Total Wagered', value: '$0.00' },
-                      { title: 'Win Rate', value: '0%' },
-                      { title: 'Net Profit', value: '$0.00' }
-                    ].map((stat, index) => (
-                      <motion.div
-                        key={stat.title}
-                        initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        transition={{ 
-                          duration: 0.3, 
-                          delay: 0.2 + index * 0.1,
-                          ease: [0.4, 0.0, 0.2, 1]
-                        }}
-                        whileHover={{ y: -4, scale: 1.02 }}
-                      >
-                        <Card className="hover:shadow-md transition-shadow" style={{ fontSize: 'var(--fluid-base)', borderRadius: 'var(--fluid-radius)' }}>
-                          <CardHeader className="pb-2">
-                            <CardTitle style={{ fontSize: 'var(--fluid-base)' }}>{stat.title}</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="text-2xl font-bold">{stat.value}</div>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    ))}
+                  <div className={`grid gap-3 ${isMobile ? 'grid-cols-1' : 'grid-cols-2 lg:grid-cols-3'}`}>
+                    {(() => {
+                      const totalWagered = safeBetHistory.reduce((sum, slip) => sum + (typeof slip.totalStake === 'number' ? slip.totalStake : 0), 0);
+                      const totalPayout = safeBetHistory.reduce((sum, slip) => sum + (typeof slip.totalPayout === 'number' ? slip.totalPayout : 0), 0);
+                      const netProfit = totalPayout - totalWagered;
+                      const totalBets = safeBetHistory.length;
+                      const winRate = totalBets > 0 ? ((totalPayout > 0 ? 1 : 0) / totalBets * 100) : 0; // Simplified win rate calculation
+                      
+                      const stats = [
+                        { 
+                          title: 'Total Wagered', 
+                          value: `$${totalWagered.toFixed(2)}`,
+                          icon: '💰',
+                          color: 'text-foreground'
+                        },
+                        { 
+                          title: 'Net Profit', 
+                          value: `${netProfit >= 0 ? '+' : ''}$${netProfit.toFixed(2)}`,
+                          icon: netProfit >= 0 ? '📈' : '📉',
+                          color: netProfit >= 0 ? 'text-[color:var(--color-win)]' : 'text-[color:var(--color-lose)]'
+                        },
+                        { 
+                          title: 'Total Bets', 
+                          value: totalBets.toString(),
+                          icon: '🎯',
+                          color: 'text-foreground'
+                        },
+                        { 
+                          title: 'Win Rate', 
+                          value: `${winRate.toFixed(1)}%`,
+                          icon: '🏆',
+                          color: 'text-accent'
+                        },
+                        { 
+                          title: 'Active Stakes', 
+                          value: `$${safeBets.reduce((sum, bet) => sum + (bet.stake || 0), 0).toFixed(2)}`,
+                          icon: '⚡',
+                          color: 'text-foreground'
+                        },
+                        { 
+                          title: 'Potential Win', 
+                          value: `$${safeBets.reduce((sum, bet) => sum + ((bet.potentialPayout || 0) - (bet.stake || 0)), 0).toFixed(2)}`,
+                          icon: '🚀',
+                          color: 'text-[color:var(--color-win)]'
+                        }
+                      ];
+
+                      return stats.map((stat, index) => (
+                        <motion.div
+                          key={stat.title}
+                          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          transition={{ 
+                            duration: 0.3, 
+                            delay: 0.2 + index * 0.1,
+                            ease: [0.4, 0.0, 0.2, 1]
+                          }}
+                          whileHover={{ y: -2, scale: 1.02 }}
+                        >
+                          <Card className="hover:shadow-md transition-all duration-200 bg-card border-border/40" style={{ fontSize: 'var(--fluid-base)', borderRadius: 'var(--fluid-radius)' }}>
+                            <CardContent className={isMobile ? "p-4" : "p-5"}>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                  <div className={`${isMobile ? 'text-2xl' : 'text-3xl'}`}>{stat.icon}</div>
+                                  <div>
+                                    <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground font-semibold`}>{stat.title}</p>
+                                    <p className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold ${stat.color}`}>{stat.value}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      ));
+                    })()}
                   </div>
                 </TabsContent>
               </Tabs>

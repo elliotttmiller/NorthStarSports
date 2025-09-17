@@ -1,12 +1,12 @@
 // Fetch all bets for a user
 export function useBets(userId) {
-  return useApi(`/bets/${userId}`);
+  return useApi(`/redis/bets/${userId}`);
 }
 
 // Set all bets for a user
 export function useSetBets() {
   return useCallback(async (userId, bets) => {
-    const res = await fetch(`${API_BASE}/bets/${userId}`,
+    const res = await fetch(`${API_BASE}/redis/bets/${userId}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -18,7 +18,7 @@ export function useSetBets() {
 }
 import { useState, useEffect, useCallback } from 'react';
 
-const API_BASE = '/api';
+const API_BASE = '/api/v1';
 
 // Generic fetch hook
 function useApi(endpoint, options = {}) {
@@ -26,27 +26,40 @@ function useApi(endpoint, options = {}) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    let isMounted = true;
+  const fetchData = useCallback(async () => {
     setLoading(true);
-    fetch(API_BASE + endpoint, options)
-      .then(res => res.ok ? res.json() : Promise.reject(res))
-      .then(json => { if (isMounted) setData(json); })
-      .catch(err => { if (isMounted) setError(err); })
-      .finally(() => { if (isMounted) setLoading(false); });
-    return () => { isMounted = false; };
-  }, [endpoint, options]);
+    setError(null);
+    try {
+      const res = await fetch(API_BASE + endpoint, options);
+      if (res.ok) {
+        const json = await res.json();
+        // Backend returns { success: true, data: ... }, extract the data
+        setData(json.success ? json.data : json);
+      } else {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [endpoint, JSON.stringify(options)]);
 
-  return { data, loading, error };
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // Return refetch function along with data, loading, error
+  return { data, loading, error, refetch: fetchData };
 }
 
 // User
 export function useUser(userId) {
-  return useApi(`/user/${userId}`);
+  return useApi(`/redis/user/${userId}`);
 }
 export function useSetUser() {
   return useCallback(async (userId, profile) => {
-    const res = await fetch(`${API_BASE}/user/${userId}`, {
+    const res = await fetch(`${API_BASE}/redis/user/${userId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(profile)
@@ -57,11 +70,11 @@ export function useSetUser() {
 
 // BetSlip
 export function useActiveBetSlip(userId) {
-  return useApi(`/betslip/${userId}/active`);
+  return useApi(`/redis/betslip/${userId}/active`);
 }
 export function useSetActiveBetSlip() {
   return useCallback(async (userId, betSlip) => {
-    const res = await fetch(`${API_BASE}/betslip/${userId}/active`, {
+    const res = await fetch(`${API_BASE}/redis/betslip/${userId}/active`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(betSlip)
@@ -70,11 +83,11 @@ export function useSetActiveBetSlip() {
   }, []);
 }
 export function useBetSlipHistory(userId, count = 10) {
-  return useApi(`/betslip/${userId}/history?count=${count}`);
+  return useApi(`/redis/betslip/${userId}/history?count=${count}`);
 }
 export function useAddBetSlipToHistory() {
   return useCallback(async (userId, betslipId) => {
-    const res = await fetch(`${API_BASE}/betslip/${userId}/history`, {
+    const res = await fetch(`${API_BASE}/redis/betslip/${userId}/history`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ betslipId })
@@ -85,11 +98,11 @@ export function useAddBetSlipToHistory() {
 
 // Bet
 export function useBet(betId) {
-  return useApi(`/bet/${betId}`);
+  return useApi(`/redis/bet/${betId}`);
 }
 export function useSetBet() {
   return useCallback(async (betId, bet) => {
-    const res = await fetch(`${API_BASE}/bet/${betId}`, {
+    const res = await fetch(`${API_BASE}/redis/bet/${betId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(bet)
@@ -100,11 +113,11 @@ export function useSetBet() {
 
 // Game
 export function useGame(gameId) {
-  return useApi(`/game/${gameId}`);
+  return useApi(`/redis/game/${gameId}`);
 }
 export function useSetGame() {
   return useCallback(async (gameId, game) => {
-    const res = await fetch(`${API_BASE}/game/${gameId}`, {
+    const res = await fetch(`${API_BASE}/redis/game/${gameId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(game)

@@ -4,6 +4,7 @@ import { useBetsContext } from '@/context/BetsContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { useNavigation } from '@/context/NavigationContext';
 import { formatOdds } from '@/lib/formatters';
+import { formatBetDescription, formatMatchup } from '@/lib/betFormatters';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,7 +19,7 @@ import { SmoothScrollContainer } from '@/components/VirtualScrolling';
 
 export const BetSlipModal = () => {
   const { betSlip, removeBet, updateStake, setBetType, clearBetSlip } = useBetSlip();
-  const { addBet } = useBetsContext();
+  const { addBet, refreshBets } = useBetsContext();
   const { navigation, setIsBetSlipOpen } = useNavigation();
   const [isPlacing, setIsPlacing] = useState(false);
   const [placementStage, setPlacementStage] = useState<'idle' | 'validating' | 'processing' | 'success'>('idle');
@@ -61,23 +62,50 @@ export const BetSlipModal = () => {
       // Place bets
       if (betSlip.betType === 'single') {
         for (const bet of betSlip.bets) {
-          await addBet(bet);
+          // Ensure all bet properties are preserved
+          await addBet({
+            ...bet,
+            // Make sure critical properties are maintained
+            betType: bet.betType,
+            selection: bet.selection,
+            line: bet.line,
+            game: bet.game
+          });
         }
       } else if (betSlip.betType === 'parlay') {
-        // Create a parlay bet object (using the first bet as a base)
+        // Create a parlay bet object with all individual bet details preserved
         const parlayBet = {
-          ...betSlip.bets[0],
           id: `parlay-${Date.now()}`,
+          gameId: `parlay-${Date.now()}`, // Unique game ID for parlay
           betType: 'parlay' as const,
-          legs: betSlip.bets,
+          selection: 'parlay' as any, // Parlay doesn't have a single selection
+          odds: betSlip.totalOdds,
+          line: undefined, // Parlays don't have lines
           stake: betSlip.totalStake,
           potentialPayout: betSlip.totalPayout,
-          odds: betSlip.totalOdds,
+          game: {
+            id: `parlay-${Date.now()}`,
+            homeTeam: { name: 'Parlay Bet', shortName: 'PAR' },
+            awayTeam: { name: `${betSlip.bets.length} Picks`, shortName: `${betSlip.bets.length}P` },
+            leagueId: 'PARLAY'
+          } as any,
+          legs: betSlip.bets.map(bet => ({
+            ...bet,
+            // Ensure each leg maintains its original properties
+            betType: bet.betType,
+            selection: bet.selection,
+            line: bet.line,
+            game: bet.game
+          }))
         };
         await addBet(parlayBet);
       }
       // Stage 3: Success
       setPlacementStage('success');
+      
+      // Ensure active bets are refreshed to show newly placed bets
+      await refreshBets();
+      
       await new Promise(resolve => setTimeout(resolve, 800));
       toast.success(
         `${betSlip.betType === 'single' ? 'Bets' : 'Parlay'} placed successfully! Good luck!`
@@ -93,35 +121,6 @@ export const BetSlipModal = () => {
       setIsPlacing(false);
     }
   };
-
-  // Enhanced bet description formatting
-  const formatBetDescription = useCallback((bet: Bet) => {
-    switch (bet.betType) {
-      case 'spread': {
-        const team = bet.selection === 'home' ? bet.game.homeTeam.shortName : bet.game.awayTeam.shortName;
-        const line = bet.line !== undefined ? (bet.line > 0 ? `+${bet.line}` : bet.line) : '';
-        return `${team} ${line}`;
-      }
-      case 'moneyline': {
-        const team = bet.selection === 'home' ? bet.game.homeTeam.shortName : bet.game.awayTeam.shortName;
-        return `${team} Win`;
-      }
-      case 'total': {
-        const overUnder = bet.selection === 'over' ? 'Over' : 'Under';
-        return `${overUnder} ${bet.line ?? ''}`;
-      }
-      case 'player_prop': {
-        if (bet.playerProp) {
-          return `${bet.playerProp.playerName} ${bet.playerProp.statType} ${bet.selection === 'over' ? 'Over' : 'Under'} ${bet.line ?? ''}`;
-        }
-        return 'Player Prop';
-      }
-      case 'parlay':
-        return 'Parlay Bet';
-      default:
-        return 'Unknown Bet';
-    }
-  }, []);
 
   // Keyboard handling for accessibility
   useEffect(() => {
@@ -156,7 +155,7 @@ export const BetSlipModal = () => {
           className="mobile-betslip-modal universal-responsive-container"
         >
           <DialogContent
-            className="fixed inset-0 z-[60] w-full h-full max-w-none bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden p-0 sm:max-w-lg sm:left-1/2 sm:top-1/2 sm:translate-x-[-50%] sm:translate-y-[-50%]"
+            className="fixed inset-0 z-[60] w-full h-full max-w-none bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden p-0 sm:max-w-lg sm:left-1/2 sm:top-1/2 sm:translate-x-[-50%] sm:translate-y-[-50%] professional-modal professional-scroll"
             style={{
               position: 'fixed',
               top: 0,
@@ -179,7 +178,7 @@ export const BetSlipModal = () => {
             }}
           >
             {/* Enhanced Header */}
-  <DialogHeader className="flex-shrink-0 border-b border-border/40 p-3 sm:p-4 bg-gradient-to-r from-card/90 to-card/80 backdrop-blur-2xl">
+            <DialogHeader className="flex-shrink-0 border-b border-border/40 professional-spacing-lg bg-gradient-to-r from-card/90 to-card/80 backdrop-blur-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <motion.div
@@ -272,9 +271,9 @@ export const BetSlipModal = () => {
         </DialogHeader>
 
         {/* Content Area with Enhanced Scrolling */}
-  <SmoothScrollContainer className="flex-1 min-h-0 overflow-auto seamless-scroll">
+  <SmoothScrollContainer className="flex-1 min-h-0 overflow-auto professional-scroll professional-container">
           <motion.div 
-            className="py-6 space-y-6"
+            className="py-6 space-y-6 professional-spacing-lg"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, staggerChildren: 0.1 }}
@@ -339,7 +338,7 @@ export const BetSlipModal = () => {
                           damping: 25
                         }}
                       >
-                        <Card className="border-border/50 bg-gradient-to-br from-card/95 to-card/80 backdrop-blur-sm hover:border-accent/40 transition-all duration-300 shadow-sm hover:shadow-lg">
+                        <Card className="professional-card border-border/50 bg-gradient-to-br from-card/95 to-card/80 backdrop-blur-sm hover:border-accent/40 transition-all duration-300 shadow-sm hover:shadow-lg">
                           <CardHeader className="pb-4">
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
@@ -347,7 +346,7 @@ export const BetSlipModal = () => {
                                   {formatBetDescription(bet)}
                                 </CardTitle>
                                 <p className="text-sm text-muted-foreground font-medium">
-                                  {bet.game.awayTeam.shortName} @ {bet.game.homeTeam.shortName}
+                                  {formatMatchup(bet)}
                                 </p>
                                 {bet.game && bet.game.leagueId && (
                                   <p className="text-xs text-muted-foreground/80 mt-1">
@@ -374,9 +373,9 @@ export const BetSlipModal = () => {
                             </div>
                           </CardHeader>
                           <CardContent className="pt-0">
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                               <div className="flex items-center justify-between">
-                                <label className="text-sm text-muted-foreground font-semibold">Stake:</label>
+                                <label className="text-sm text-muted-foreground font-semibold w-20">Stake:</label>
                                 <Input
                                   type="number"
                                   min="0"
@@ -384,13 +383,13 @@ export const BetSlipModal = () => {
                                   step="1"
                                   value={bet.stake || ''}
                                   onChange={(e) => handleStakeChange(bet.id, e.target.value)}
-                                  className="w-28 h-9 text-sm bg-background/60 backdrop-blur-sm border-border/60 focus:border-accent/60 rounded-lg font-medium"
+                                  className="w-24 h-9 text-sm bg-background/60 backdrop-blur-sm border-border/60 focus:border-accent/60 rounded-lg font-medium text-right"
                                   placeholder="0.00"
                                 />
                               </div>
                               <div className="flex items-center justify-between text-sm bg-gradient-to-r from-secondary/15 to-secondary/25 rounded-xl p-3 border border-border/30">
-                                <span className="text-muted-foreground font-semibold">Potential Win:</span>
-                                <span className="font-bold text-[color:var(--color-win)] text-base">
+                                <span className="text-muted-foreground font-semibold w-20">To Win:</span>
+                                <span className="font-bold text-[color:var(--color-win)] text-base w-24 text-right">
                                   ${bet.stake > 0 ? (bet.potentialPayout - bet.stake).toFixed(2) : '0.00'}
                                 </span>
                               </div>
@@ -406,7 +405,7 @@ export const BetSlipModal = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
                   >
-                    <Card className="border-accent/40 bg-gradient-to-br from-accent/8 to-accent/15 backdrop-blur-sm shadow-lg">
+                    <Card className="professional-card border-accent/40 bg-gradient-to-br from-accent/8 to-accent/15 backdrop-blur-sm shadow-lg">
                       <CardHeader className="pb-4">
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-lg flex items-center gap-3 font-bold">
@@ -446,7 +445,7 @@ export const BetSlipModal = () => {
                                     {formatBetDescription(bet)}
                                   </div>
                                   <div className="text-sm text-muted-foreground font-medium">
-                                    {bet.game.awayTeam.shortName} @ {bet.game.homeTeam.shortName}
+                                    {formatMatchup(bet)}
                                   </div>
                                 </div>
                                 <div className="flex items-center gap-3">
@@ -470,9 +469,9 @@ export const BetSlipModal = () => {
                           </AnimatePresence>
                         </div>
                         <Separator className="opacity-40" />
-                        <div className="space-y-4 bg-gradient-to-r from-secondary/20 to-secondary/30 rounded-2xl p-5 border border-border/50">
+                        <div className="space-y-3 bg-gradient-to-r from-secondary/20 to-secondary/30 rounded-xl p-4 border border-border/50">
                           <div className="flex items-center justify-between">
-                            <label className="text-base font-bold text-foreground">Total Stake:</label>
+                            <label className="text-sm text-muted-foreground font-semibold w-20">Stake:</label>
                             <Input
                               type="number"
                               min="0"
@@ -480,14 +479,14 @@ export const BetSlipModal = () => {
                               step="1"
                               value={betSlip.bets[0]?.stake || ''}
                               onChange={(e) => betSlip.bets[0] && handleStakeChange(betSlip.bets[0].id, e.target.value)}
-                              className="w-32 h-10 text-base bg-background/70 backdrop-blur-sm border-border/60 focus:border-accent/60 rounded-lg font-semibold"
+                              className="w-24 h-9 text-sm bg-background/60 backdrop-blur-sm border-border/60 focus:border-accent/60 rounded-lg font-medium text-right"
                               placeholder="0.00"
                             />
                           </div>
-                          <div className="flex items-center justify-between text-base">
-                            <span className="text-muted-foreground font-semibold">Total Payout:</span>
-                            <span className="font-bold text-[color:var(--color-win)] text-xl">
-                              ${betSlip.totalPayout.toFixed(2)}
+                          <div className="flex items-center justify-between text-sm bg-gradient-to-r from-secondary/15 to-secondary/25 rounded-xl p-3 border border-border/30">
+                            <span className="text-muted-foreground font-semibold w-20">To Win:</span>
+                            <span className="font-bold text-[color:var(--color-win)] text-base w-24 text-right">
+                              ${betSlip.totalPayout > betSlip.totalStake ? (betSlip.totalPayout - betSlip.totalStake).toFixed(2) : '0.00'}
                             </span>
                           </div>
                         </div>
@@ -506,45 +505,33 @@ export const BetSlipModal = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="border-t border-border/40 p-3 sm:p-5 bg-gradient-to-t from-card/95 to-card/70 backdrop-blur-2xl flex-shrink-0"
+            className="border-t border-border/40 professional-spacing-lg bg-gradient-to-t from-card/95 to-card/70 backdrop-blur-2xl flex-shrink-0"
             style={{ width: '100%', boxSizing: 'border-box' }}
           >
-            <div className="space-y-5">
+            <div className="space-y-6 professional-spacing-lg">
               {/* Summary Card */}
               <div
-                className="space-y-3 bg-gradient-to-r from-secondary/15 to-secondary/25 border border-border/40"
-                style={{
-                  borderRadius: 'var(--fluid-radius-lg)',
-                  padding: 'var(--fluid-panel-padding)',
-                  fontSize: 'var(--fluid-base)',
-                }}
+                className="professional-card space-y-4 bg-gradient-to-r from-secondary/15 to-secondary/25 border border-border/40 rounded-xl"
               >
-                <div className="flex items-center justify-between" style={{ fontSize: 'var(--fluid-lg)' }}>
-                  <span className="text-muted-foreground font-semibold">Total Stake:</span>
-                  <span className="font-bold text-foreground" style={{ fontSize: 'var(--fluid-xl)' }}>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground font-semibold w-20">Stake:</span>
+                  <span className="font-bold text-foreground text-base w-24 text-right">
                     ${betSlip.totalStake.toFixed(2)}
                   </span>
                 </div>
-                <div className="flex items-center justify-between" style={{ fontSize: 'var(--fluid-lg)' }}>
-                  <span className="text-muted-foreground font-semibold">Potential Payout:</span>
-                  <span className="font-bold text-accent" style={{ fontSize: 'var(--fluid-xl)' }}>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground font-semibold w-20">To Win:</span>
+                  <span className="font-bold text-[color:var(--color-win)] text-base w-24 text-right">
+                    ${betSlip.totalPayout > betSlip.totalStake ? (betSlip.totalPayout - betSlip.totalStake).toFixed(2) : '0.00'}
+                  </span>
+                </div>
+                <Separator className="opacity-30" />
+                <div className="flex items-center justify-between text-sm pt-1">
+                  <span className="text-muted-foreground font-semibold w-20">Payout:</span>
+                  <span className="font-bold text-accent text-lg w-24 text-right">
                     ${betSlip.totalPayout.toFixed(2)}
                   </span>
                 </div>
-                {betSlip.totalPayout > betSlip.totalStake && (
-                  <motion.div 
-                    className="flex items-center justify-between pt-2 border-t border-border/30"
-                    style={{ fontSize: 'var(--fluid-lg)' }}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: 0.2 }}
-                  >
-                    <span className="text-muted-foreground font-semibold">Profit:</span>
-                    <span className="font-bold text-[color:var(--color-win)]" style={{ fontSize: 'var(--fluid-xl)' }}>
-                      +${(betSlip.totalPayout - betSlip.totalStake).toFixed(2)}
-                    </span>
-                  </motion.div>
-                )}
               </div>
               
               {/* Place Bet Button with Enhanced States */}

@@ -247,13 +247,31 @@ export async function getUserBets(req: Request, res: Response, next: NextFunctio
   
   logInfo('Redis getUserBets called', { userId });
   try {
-    // This could be implemented to fetch all bets for a user
-    // For now, returning empty array as placeholder
-    const bets: any[] = [];
-    logInfo('Redis getUserBets success', { userId, count: bets.length });
-    res.json(success(bets));
+    const bets = await kvService.get(`bets:${userId}`) || [];
+    logInfo('Redis getUserBets success', { userId, count: Array.isArray(bets) ? bets.length : 0 });
+    res.json(success(Array.isArray(bets) ? bets : []));
   } catch (err) {
     logError('Redis getUserBets error', err as Error);
+    next(err);
+  }
+}
+
+export async function setUserBets(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const userId = req.params.userId;
+  if (!userId) {
+    logWarn('Missing userId parameter');
+    res.status(400).json(error('Missing userId parameter', 400));
+    return;
+  }
+  
+  logInfo('Redis setUserBets called', { userId });
+  try {
+    const bets = req.body;
+    await kvService.set(`bets:${userId}`, bets);
+    logInfo('Redis setUserBets success', { userId, count: Array.isArray(bets) ? bets.length : 0 });
+    res.json(success({ userId, bets }));
+  } catch (err) {
+    logError('Redis setUserBets error', err as Error);
     next(err);
   }
 }
