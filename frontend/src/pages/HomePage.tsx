@@ -78,8 +78,7 @@ export function HomePage() {
 							variants={sectionVariants}
 							className="text-center"
 						>
-							<h1 className="text-2xl font-bold text-foreground mb-2">Welcome to NSSPORTSCLUB</h1>
-							<p className="text-muted-foreground">Your professional sports betting platform</p>
+							<h1 className="text-xl md:text-2xl font-semibold text-foreground tracking-tight text-center mb-2">Welcome, NorthStar User</h1>
 						</motion.div>
 
 						{/* Quick Stats */}
