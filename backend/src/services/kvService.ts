@@ -108,12 +108,16 @@ export const kvService = {
     return Object.keys(user).length > 0 ? user : null;
   },
 
+  /**
+   * Cache active bet slip for 1 hour (volatile, user session)
+   */
   async setActiveBetSlip(userId: string, betSlip: any): Promise<boolean> {
     await redisReady;
     try {
       await redisClient.set(
         `betslip:${userId}:active`,
         JSON.stringify(betSlip),
+        { EX: 60 * 60 } // 1 hour TTL
       );
       logInfo("kvService.setActiveBetSlip success", { userId });
       return true;
@@ -156,9 +160,12 @@ export const kvService = {
     return history;
   },
 
+  /**
+   * Cache bet for 24 hours (volatile, can be refreshed)
+   */
   async setBet(betId: string, bet: any): Promise<boolean> {
     await redisReady;
-    await redisClient.set(`bet:${betId}`, JSON.stringify(bet));
+    await redisClient.set(`bet:${betId}`, JSON.stringify(bet), { EX: 60 * 60 * 24 }); // 24 hour TTL
     logInfo("kvService.setBet success", { betId });
     return true;
   },
@@ -170,9 +177,12 @@ export const kvService = {
     return val ? JSON.parse(val) : null;
   },
 
+  /**
+   * Cache game for 24 hours (volatile, can be refreshed)
+   */
   async setGame(gameId: string, game: any): Promise<boolean> {
     await redisReady;
-    await redisClient.set(`game:${gameId}`, JSON.stringify(game));
+    await redisClient.set(`game:${gameId}`, JSON.stringify(game), { EX: 60 * 60 * 24 }); // 24 hour TTL
     logInfo("kvService.setGame success", { gameId });
     return true;
   },

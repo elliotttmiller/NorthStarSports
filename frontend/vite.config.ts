@@ -14,6 +14,8 @@ export default defineConfig({
   build: {
     outDir: "dist", // outputs to frontend/dist
     chunkSizeWarningLimit: 1000,
+    minify: true, // ensure minification
+    // tree-shaking is enabled by default in Vite
   },
   server: {
     host: "0.0.0.0", // Allow external devices to connect

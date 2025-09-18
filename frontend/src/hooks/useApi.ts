@@ -15,14 +15,22 @@ export function useSetBets() {
   }, []);
 }
 import { useState, useEffect, useCallback } from "react";
+import { debounce } from "@/utils/debounce";
 
 const API_BASE = "/api/v1";
 
 // Generic fetch hook
-function useApi(endpoint, options = {}) {
+interface UseApiOptions extends RequestInit {
+  debounceMs?: number;
+}
+
+function useApi(endpoint: string, options: UseApiOptions = {}) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Optionally debounce API calls for endpoints prone to rapid requests
+  const debounceMs = options.debounceMs || 0;
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -31,7 +39,6 @@ function useApi(endpoint, options = {}) {
       const res = await fetch(API_BASE + endpoint, options);
       if (res.ok) {
         const json = await res.json();
-        // Backend returns { success: true, data: ... }, extract the data
         setData(json.success ? json.data : json);
       } else {
         throw new Error(`HTTP ${res.status}: ${res.statusText}`);
@@ -43,12 +50,19 @@ function useApi(endpoint, options = {}) {
     }
   }, [endpoint, JSON.stringify(options)]);
 
+  // Debounced version of fetchData
+  const debouncedFetchData = useCallback(
+    debounceMs > 0 ? debounce(fetchData, debounceMs) : fetchData,
+    [fetchData, debounceMs],
+  );
+
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    debouncedFetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedFetchData]);
 
   // Return refetch function along with data, loading, error
-  return { data, loading, error, refetch: fetchData };
+  return { data, loading, error, refetch: debouncedFetchData };
 }
 
 // User

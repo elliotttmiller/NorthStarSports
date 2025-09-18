@@ -346,10 +346,11 @@ export const CompactMobileGameRow = memo(
         <AnimatePresence>
           {isExpanded && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
+              initial={{ opacity: 0, scaleY: 0 }}
+              animate={{ opacity: 1, scaleY: 1 }}
+              exit={{ opacity: 0, scaleY: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
+              style={{ transformOrigin: "top" } as React.CSSProperties}
               className="border-t border-border bg-card/20"
             >
               <div className="p-4 space-y-4">
