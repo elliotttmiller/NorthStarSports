@@ -48,11 +48,11 @@ export function BottomNav() {
   };
 
   return (
-    <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-16 flex items-center justify-between px-4 w-full">
+  <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-20 flex items-center justify-center px-2 w-full" style={{paddingTop: '2px'}}>
       {/* Sports - Text Only */}
       <motion.button
         onClick={handleSportsClick}
-        className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium min-w-[60px] ${
+        className={`px-3 py-2 rounded-md transition-all duration-200 text-[15px] font-medium min-w-[48px] flex-1 flex items-center justify-center mx-1 ${
           (location.pathname === "/games" && !isMobile) ||
           navigation.mobilePanel === "navigation"
             ? "bg-accent text-accent-foreground"
@@ -68,7 +68,7 @@ export function BottomNav() {
       {/* Live - Text Only */}
       <motion.button
         onClick={handleLiveClick}
-        className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium min-w-[50px] ${
+        className={`px-3 py-2 rounded-md transition-all duration-200 text-[15px] font-medium min-w-[48px] flex-1 flex items-center justify-center mx-1 ${
           location.search.includes("filter=live")
             ? "bg-accent text-accent-foreground"
             : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
@@ -82,27 +82,27 @@ export function BottomNav() {
 
       {/* Home - Center Icon Only */}
       <motion.button
-          onClick={handleHomeClick}
-          className={`flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
-            location.pathname === "/"
-              ? "bg-accent text-accent-foreground shadow-lg scale-110"
-              : "bg-secondary text-accent-foreground hover:bg-accent hover:text-accent-foreground shadow-md"
-          }`}
-          whileHover={{ scale: location.pathname === "/" ? 1.15 : 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          type="button"
-        >
+        onClick={handleHomeClick}
+        className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 mx-2 self-center ${
+          location.pathname === "/"
+            ? "bg-accent text-accent-foreground shadow-lg scale-110"
+            : "bg-secondary text-accent-foreground hover:bg-accent hover:text-accent-foreground shadow-md"
+        }`}
+        whileHover={{ scale: location.pathname === "/" ? 1.15 : 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        type="button"
+      >
           <House
-            size={22}
+            size={24}
             weight={location.pathname === "/" ? "fill" : "regular"}
             color="currentColor"
           />
-        </motion.button>
+      </motion.button>
 
       {/* Bets - Text Only with Badge */}
       <motion.button
         onClick={handleBetsClick}
-        className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium min-w-[50px] relative ${
+        className={`px-3 py-2 rounded-md transition-all duration-200 text-[15px] font-medium min-w-[48px] flex-1 flex items-center justify-center relative mx-1 ${
           location.pathname === "/my-bets"
             ? "bg-accent text-accent-foreground"
             : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
@@ -122,7 +122,7 @@ export function BottomNav() {
       {/* Other - Text Only */}
       <motion.button
         onClick={handleOtherClick}
-        className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium min-w-[60px] ${
+        className={`px-3 py-2 rounded-md transition-all duration-200 text-[15px] font-medium min-w-[48px] flex-1 flex items-center justify-center mx-1 ${
           location.pathname === "/other"
             ? "bg-accent text-accent-foreground"
             : "text-muted-foreground hover:text-foreground hover:bg-accent/10"

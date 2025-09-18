@@ -105,7 +105,7 @@ export default function MyBetsPage() {
                             </div>
                             <div>
                               <p className="text-xs text-muted-foreground font-semibold">
-                                Total Payout
+                                Potential Payout
                               </p>
                               <p className="text-lg font-bold text-[color:var(--color-win)]">
                                 $

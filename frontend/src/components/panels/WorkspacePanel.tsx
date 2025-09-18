@@ -276,7 +276,7 @@ const WorkspacePanel = () => {
 
   if (!navigation.selectedLeague || games.length === 0) {
     return (
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="sync">
         <motion.div
           key="workspacepanel-empty"
           className="h-full flex items-center justify-center bg-background"
@@ -316,7 +316,7 @@ const WorkspacePanel = () => {
   }
 
   return (
-    <AnimatePresence mode="wait">
+  <AnimatePresence mode="sync">
       <motion.div
         key="workspacepanel-main"
         initial={{ opacity: 0, y: 30 }}
@@ -383,7 +383,7 @@ const WorkspacePanel = () => {
                       )}
                       {navigation.selectedLeague === "nba" && (
                         <img
-                          src="/logos/nba/NBA Logo.svg"
+                          src="/logos/nba/NBA.svg"
                           alt="NBA logo"
                           className="w-8 h-8 object-contain drop-shadow-md"
                           style={{ minWidth: 32, minHeight: 32 }}
