@@ -212,7 +212,7 @@ export const ActionHubPanel = () => {
             </Button>
           </div>
         </motion.div>
-        <SmoothScrollContainer className="flex-1" showScrollbar={false}>
+  <SmoothScrollContainer className="flex-1 min-h-0" maxHeight="100vh" showScrollbar={false}>
           <div className="p-4">
             <motion.div
               initial={{ opacity: 0 }}
@@ -456,75 +456,78 @@ export const ActionHubPanel = () => {
           </div>
         </SmoothScrollContainer>
         {/* Bet Slip Summary - Fixed at bottom */}
-        <motion.div
+        <div
           className="border-t border-border bg-muted/20 backdrop-blur-sm flex-shrink-0"
           style={{
             padding: "var(--fluid-panel-padding)",
             borderRadius: "var(--fluid-radius)",
             fontSize: "var(--fluid-base)",
           }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
         >
-          <div style={{ gap: "var(--fluid-gap)" }} className="flex flex-col">
-            <div
-              className="flex items-center justify-between"
-              style={{ fontSize: "var(--fluid-lg)" }}
-            >
-              <span className="text-muted-foreground">Total Stake:</span>
-              <span
-                className="font-semibold text-card-foreground"
-                style={{ fontSize: "var(--fluid-xl)" }}
-              >
-                ${betSlip.totalStake.toFixed(2)}
-              </span>
-            </div>
-            <div
-              className="flex items-center justify-between"
-              style={{ fontSize: "var(--fluid-lg)" }}
-            >
-              <span className="text-muted-foreground">Potential Payout:</span>
-              <span
-                className="font-semibold text-accent"
-                style={{ fontSize: "var(--fluid-xl)" }}
-              >
-                ${betSlip.totalPayout.toFixed(2)}
-              </span>
-            </div>
-            {betSlip.totalPayout > betSlip.totalStake && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
+            <div style={{ gap: "var(--fluid-gap)" }} className="flex flex-col">
               <div
                 className="flex items-center justify-between"
-                style={{ fontSize: "var(--fluid-base)" }}
+                style={{ fontSize: "var(--fluid-lg)" }}
               >
-                <span className="text-muted-foreground">Profit:</span>
+                <span className="text-muted-foreground">Total Stake:</span>
                 <span
-                  className="font-medium text-[color:var(--color-win)]"
-                  style={{ fontSize: "var(--fluid-lg)" }}
+                  className="font-semibold text-card-foreground"
+                  style={{ fontSize: "var(--fluid-xl)" }}
                 >
-                  +${(betSlip.totalPayout - betSlip.totalStake).toFixed(2)}
+                  ${betSlip.totalStake.toFixed(2)}
                 </span>
               </div>
-            )}
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button
-                onClick={handlePlaceBet}
-                disabled={isPlacing || betSlip.totalStake === 0}
-                className="w-full"
-                size="lg"
+              <div
+                className="flex items-center justify-between"
+                style={{ fontSize: "var(--fluid-lg)" }}
               >
-                {isPlacing ? (
-                  "Placing Bet..."
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <TrendUp size={16} />
-                    Place {betSlip.betType === "single" ? "Bets" : "Parlay"}
-                  </div>
-                )}
-              </Button>
-            </motion.div>
-          </div>
-        </motion.div>
+                <span className="text-muted-foreground">Potential Payout:</span>
+                <span
+                  className="font-semibold text-accent"
+                  style={{ fontSize: "var(--fluid-xl)" }}
+                >
+                  ${betSlip.totalPayout.toFixed(2)}
+                </span>
+              </div>
+              {betSlip.totalPayout > betSlip.totalStake && (
+                <div
+                  className="flex items-center justify-between"
+                  style={{ fontSize: "var(--fluid-base)" }}
+                >
+                  <span className="text-muted-foreground">Profit:</span>
+                  <span
+                    className="font-medium text-[color:var(--color-win)]"
+                    style={{ fontSize: "var(--fluid-lg)" }}
+                  >
+                    +${(betSlip.totalPayout - betSlip.totalStake).toFixed(2)}
+                  </span>
+                </div>
+              )}
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button
+                  onClick={handlePlaceBet}
+                  disabled={isPlacing || betSlip.totalStake === 0}
+                  className="w-full"
+                  size="lg"
+                >
+                  {isPlacing ? (
+                    "Placing Bet..."
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <TrendUp size={16} />
+                      Place {betSlip.betType === "single" ? "Bets" : "Parlay"}
+                    </div>
+                  )}
+                </Button>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
       </motion.div>
     </AnimatePresence>
   );

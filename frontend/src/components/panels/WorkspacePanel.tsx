@@ -162,7 +162,8 @@ const WorkspacePanel = () => {
   if (initialLoading) {
     return (
       <SmoothScrollContainer
-        className={cn("h-full universal-responsive-container px-0 sm:px-4")}
+        className={cn("flex-1 min-h-0 h-full universal-responsive-container px-0 sm:px-4")}
+        maxHeight="100vh"
         showScrollbar={false}
       >
         <div
@@ -412,13 +413,12 @@ const WorkspacePanel = () => {
               {/* Professional Table Header - Desktop Only */}
               {!isMobile && processedGames.length > 0 && (
                 <div className="bg-muted/50 border-b border-border mx-4 rounded-none">
-                  <div className="grid grid-cols-[80px_1fr_120px_120px_120px_50px] gap-4 items-center py-3 px-4 text-sm font-semibold text-muted-foreground">
-                    <div>TIME</div>
-                    <div>TEAM</div>
-                    <div className="text-center">SPREAD</div>
-                    <div className="text-center">TOTAL</div>
-                    <div className="text-center">MONEY LINE</div>
-                    <div className="text-center">MORE</div>
+                  <div className="grid grid-cols-[80px_1fr_120px_120px_120px_32px] gap-4 items-center py-2 px-4 min-h-[60px] text-sm font-semibold text-muted-foreground">
+                    <div className="flex justify-center items-center">TIME</div>
+                    <div className="flex justify-center items-center">TEAM</div>
+                    <div className="flex justify-center items-center">SPREAD</div>
+                    <div className="flex justify-center items-center">TOTAL</div>
+                    <div className="flex justify-center items-center">MONEY LINE</div>
                   </div>
                 </div>
               )}

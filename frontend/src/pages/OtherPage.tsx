@@ -75,9 +75,10 @@ const OtherPage = () => {
         transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
         className="h-full w-full flex flex-col overflow-hidden bg-muted/10"
       >
-        <SmoothScrollContainer
-          className="flex-1 universal-responsive-container scrollbar-hide"
-          showScrollbar={false}
+          <SmoothScrollContainer
+            className="flex-1 min-h-0 universal-responsive-container scrollbar-hide"
+            showScrollbar={false}
+            maxHeight="100vh"
         >
           <div className="container mx-auto px-4 max-w-screen-lg w-full">
             {/* Header */}

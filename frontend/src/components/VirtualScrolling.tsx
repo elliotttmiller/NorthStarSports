@@ -1,4 +1,4 @@
-import { useRef, ReactNode, memo } from "react";
+import React, { useRef, ReactNode, memo } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -64,7 +64,6 @@ export const SmoothScrollContainer = memo(function SmoothScrollContainer({
   showScrollbar = false,
 }: SmoothScrollContainerProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
-
   const scrollbarClass = showScrollbar
     ? "virtual-scrollbar"
     : "professional-scroll";
@@ -90,7 +89,7 @@ export const SmoothScrollContainer = memo(function SmoothScrollContainer({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
-        {children}
+  {children}
       </motion.div>
     </div>
   );

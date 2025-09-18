@@ -36,7 +36,15 @@ function useApi(endpoint: string, options: UseApiOptions = {}) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(API_BASE + endpoint, options);
+      // Always add ngrok-skip-browser-warning header
+      const mergedOptions = {
+        ...options,
+        headers: {
+          ...(options.headers || {}),
+          "ngrok-skip-browser-warning": "true",
+        },
+      };
+      const res = await fetch(API_BASE + endpoint, mergedOptions);
       if (res.ok) {
         const json = await res.json();
         setData(json.success ? json.data : json);

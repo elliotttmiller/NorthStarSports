@@ -35,12 +35,12 @@ function LayoutContent() {
       {/* Header - Always visible */}
       <Header />
       {/* Main Layout Container */}
-      <div className="flex-1 overflow-hidden relative container mx-auto px-4 max-w-screen-2xl">
+      <div className="flex-1 min-h-0 overflow-hidden relative container mx-auto px-4 max-w-screen-2xl">
         {isMobile ? (
           // MOBILE UI
           <>
-            <div className="h-full flex flex-col pb-16">
-              <div className="flex-1 overflow-hidden">
+            <div className="h-full min-h-0 flex flex-col pb-16">
+              <div className="flex-1 min-h-0 overflow-hidden">
                 <Outlet />
               </div>
               <AnimatePresence mode="wait">

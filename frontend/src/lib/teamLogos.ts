@@ -1,6 +1,6 @@
 /**
- * Team Logo Management System
- * Handles all team logos with fallbacks, sizing, and responsive design
+ * Complete Team Logo Config for NFL, NBA, NHL
+ * All logo paths use /logos/{league}/ and match your public directory
  */
 
 export interface TeamLogoConfig {
@@ -8,7 +8,7 @@ export interface TeamLogoConfig {
   name: string;
   abbreviation: string;
   city: string;
-  league: "nfl" | "nba";
+  league: "nfl" | "nba" | "nhl";
   primaryColor: string;
   secondaryColor: string;
   logoPath: {
@@ -17,7 +17,7 @@ export interface TeamLogoConfig {
   };
 }
 
-// NFL Teams Configuration
+// NFL Teams
 export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
   "arizona-cardinals": {
     id: "arizona-cardinals",
@@ -27,10 +27,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#97233F",
     secondaryColor: "#000000",
-    logoPath: {
-      svg: "/logos/nfl/arizona-cardinals.svg",
-      png: "/logos/nfl/arizona-cardinals.png",
-    },
+    logoPath: { svg: "/logos/nfl/arizona-cardinals.svg", png: "/logos/nfl/arizona-cardinals.png" },
   },
   "atlanta-falcons": {
     id: "atlanta-falcons",
@@ -40,10 +37,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#A71930",
     secondaryColor: "#000000",
-    logoPath: {
-      svg: "/logos/nfl/atlanta-falcons.svg",
-      png: "/logos/nfl/atlanta-falcons.png",
-    },
+    logoPath: { svg: "/logos/nfl/atlanta-falcons.svg", png: "/logos/nfl/atlanta-falcons.png" },
   },
   "baltimore-ravens": {
     id: "baltimore-ravens",
@@ -53,10 +47,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#241773",
     secondaryColor: "#000000",
-    logoPath: {
-      svg: "/logos/nfl/baltimore-ravens.svg",
-      png: "/logos/nfl/baltimore-ravens.png",
-    },
+    logoPath: { svg: "/logos/nfl/baltimore-ravens.svg", png: "/logos/nfl/baltimore-ravens.png" },
   },
   "buffalo-bills": {
     id: "buffalo-bills",
@@ -66,10 +57,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#00338D",
     secondaryColor: "#C60C30",
-    logoPath: {
-      svg: "/logos/nfl/buffalo-bills.svg",
-      png: "/logos/nfl/buffalo-bills.png",
-    },
+    logoPath: { svg: "/logos/nfl/buffalo-bills.svg", png: "/logos/nfl/buffalo-bills.png" },
   },
   "carolina-panthers": {
     id: "carolina-panthers",
@@ -79,10 +67,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#0085CA",
     secondaryColor: "#000000",
-    logoPath: {
-      svg: "/logos/nfl/carolina-panthers.svg",
-      png: "/logos/nfl/carolina-panthers.png",
-    },
+    logoPath: { svg: "/logos/nfl/carolina-panthers.svg", png: "/logos/nfl/carolina-panthers.png" },
   },
   "chicago-bears": {
     id: "chicago-bears",
@@ -92,10 +77,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#0B162A",
     secondaryColor: "#C83803",
-    logoPath: {
-      svg: "/logos/nfl/chicago-bears.svg",
-      png: "/logos/nfl/chicago-bears.png",
-    },
+    logoPath: { svg: "/logos/nfl/chicago-bears.svg", png: "/logos/nfl/chicago-bears.png" },
   },
   "cincinnati-bengals": {
     id: "cincinnati-bengals",
@@ -105,10 +87,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#FB4F14",
     secondaryColor: "#000000",
-    logoPath: {
-      svg: "/logos/nfl/cincinnati-bengals.svg",
-      png: "/logos/nfl/cincinnati-bengals.png",
-    },
+    logoPath: { svg: "/logos/nfl/cincinnati-bengals.svg", png: "/logos/nfl/cincinnati-bengals.png" },
   },
   "cleveland-browns": {
     id: "cleveland-browns",
@@ -118,10 +97,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#311D00",
     secondaryColor: "#FF3C00",
-    logoPath: {
-      svg: "/logos/nfl/cleveland-browns.svg",
-      png: "/logos/nfl/cleveland-browns.png",
-    },
+    logoPath: { svg: "/logos/nfl/cleveland-browns.svg", png: "/logos/nfl/cleveland-browns.png" },
   },
   "dallas-cowboys": {
     id: "dallas-cowboys",
@@ -131,10 +107,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#003594",
     secondaryColor: "#869397",
-    logoPath: {
-      svg: "/logos/nfl/dallas-cowboys.svg",
-      png: "/logos/nfl/dallas-cowboys.png",
-    },
+    logoPath: { svg: "/logos/nfl/dallas-cowboys.svg", png: "/logos/nfl/dallas-cowboys.png" },
   },
   "denver-broncos": {
     id: "denver-broncos",
@@ -144,10 +117,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#FB4F14",
     secondaryColor: "#002244",
-    logoPath: {
-      svg: "/logos/nfl/denver-broncos.svg",
-      png: "/logos/nfl/denver-broncos.png",
-    },
+    logoPath: { svg: "/logos/nfl/denver-broncos.svg", png: "/logos/nfl/denver-broncos.png" },
   },
   "detroit-lions": {
     id: "detroit-lions",
@@ -157,10 +127,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#0076B6",
     secondaryColor: "#B0B7BC",
-    logoPath: {
-      svg: "/logos/nfl/detroit-lions.svg",
-      png: "/logos/nfl/detroit-lions.png",
-    },
+    logoPath: { svg: "/logos/nfl/detroit-lions.svg", png: "/logos/nfl/detroit-lions.png" },
   },
   "green-bay-packers": {
     id: "green-bay-packers",
@@ -170,10 +137,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#203731",
     secondaryColor: "#FFB612",
-    logoPath: {
-      svg: "/logos/nfl/green-bay-packers.svg",
-      png: "/logos/nfl/green-bay-packers.png",
-    },
+    logoPath: { svg: "/logos/nfl/green-bay-packers.svg", png: "/logos/nfl/green-bay-packers.png" },
   },
   "houston-texans": {
     id: "houston-texans",
@@ -183,10 +147,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#03202F",
     secondaryColor: "#A71930",
-    logoPath: {
-      svg: "/logos/nfl/houston-texans.svg",
-      png: "/logos/nfl/houston-texans.png",
-    },
+    logoPath: { svg: "/logos/nfl/houston-texans.svg", png: "/logos/nfl/houston-texans.png" },
   },
   "indianapolis-colts": {
     id: "indianapolis-colts",
@@ -196,10 +157,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#002C5F",
     secondaryColor: "#A2AAAD",
-    logoPath: {
-      svg: "/logos/nfl/indianapolis-colts.svg",
-      png: "/logos/nfl/indianapolis-colts.png",
-    },
+    logoPath: { svg: "/logos/nfl/indianapolis-colts.svg", png: "/logos/nfl/indianapolis-colts.png" },
   },
   "jacksonville-jaguars": {
     id: "jacksonville-jaguars",
@@ -209,10 +167,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#006778",
     secondaryColor: "#D7A22A",
-    logoPath: {
-      svg: "/logos/nfl/jacksonville-jaguars.svg",
-      png: "/logos/nfl/jacksonville-jaguars.png",
-    },
+    logoPath: { svg: "/logos/nfl/jacksonville-jaguars.svg", png: "/logos/nfl/jacksonville-jaguars.png" },
   },
   "kansas-city-chiefs": {
     id: "kansas-city-chiefs",
@@ -222,10 +177,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#E31837",
     secondaryColor: "#FFB81C",
-    logoPath: {
-      svg: "/logos/nfl/kansas-city-chiefs.svg",
-      png: "/logos/nfl/kansas-city-chiefs.png",
-    },
+    logoPath: { svg: "/logos/nfl/kansas-city-chiefs.svg", png: "/logos/nfl/kansas-city-chiefs.png" },
   },
   "las-vegas-raiders": {
     id: "las-vegas-raiders",
@@ -235,10 +187,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#000000",
     secondaryColor: "#A5ACAF",
-    logoPath: {
-      svg: "/logos/nfl/las-vegas-raiders.svg",
-      png: "/logos/nfl/las-vegas-raiders.png",
-    },
+    logoPath: { svg: "/logos/nfl/las-vegas-raiders.svg", png: "/logos/nfl/las-vegas-raiders.png" },
   },
   "los-angeles-chargers": {
     id: "los-angeles-chargers",
@@ -248,10 +197,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#0080C6",
     secondaryColor: "#FFC20E",
-    logoPath: {
-      svg: "/logos/nfl/los-angeles-chargers.svg",
-      png: "/logos/nfl/los-angeles-chargers.png",
-    },
+    logoPath: { svg: "/logos/nfl/los-angeles-chargers.svg", png: "/logos/nfl/los-angeles-chargers.png" },
   },
   "los-angeles-rams": {
     id: "los-angeles-rams",
@@ -261,10 +207,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#003594",
     secondaryColor: "#FFA300",
-    logoPath: {
-      svg: "/logos/nfl/los-angeles-rams.svg",
-      png: "/logos/nfl/los-angeles-rams.png",
-    },
+    logoPath: { svg: "/logos/nfl/los-angeles-rams.svg", png: "/logos/nfl/los-angeles-rams.png" },
   },
   "miami-dolphins": {
     id: "miami-dolphins",
@@ -274,10 +217,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#008E97",
     secondaryColor: "#FC4C02",
-    logoPath: {
-      svg: "/logos/nfl/miami-dolphins.svg",
-      png: "/logos/nfl/miami-dolphins.png",
-    },
+    logoPath: { svg: "/logos/nfl/miami-dolphins.svg", png: "/logos/nfl/miami-dolphins.png" },
   },
   "minnesota-vikings": {
     id: "minnesota-vikings",
@@ -287,10 +227,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#4F2683",
     secondaryColor: "#FFC62F",
-    logoPath: {
-      svg: "/logos/nfl/minnesota-vikings.svg",
-      png: "/logos/nfl/minnesota-vikings.png",
-    },
+    logoPath: { svg: "/logos/nfl/minnesota-vikings.svg", png: "/logos/nfl/minnesota-vikings.png" },
   },
   "new-england-patriots": {
     id: "new-england-patriots",
@@ -300,10 +237,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#002244",
     secondaryColor: "#C60C30",
-    logoPath: {
-      svg: "/logos/nfl/new-england-patriots.svg",
-      png: "/logos/nfl/new-england-patriots.png",
-    },
+    logoPath: { svg: "/logos/nfl/new-england-patriots.svg", png: "/logos/nfl/new-england-patriots.png" },
   },
   "new-orleans-saints": {
     id: "new-orleans-saints",
@@ -313,10 +247,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#D3BC8D",
     secondaryColor: "#101820",
-    logoPath: {
-      svg: "/logos/nfl/new-orleans-saints.svg",
-      png: "/logos/nfl/new-orleans-saints.png",
-    },
+    logoPath: { svg: "/logos/nfl/new-orleans-saints.svg", png: "/logos/nfl/new-orleans-saints.png" },
   },
   "new-york-giants": {
     id: "new-york-giants",
@@ -326,10 +257,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#0B2265",
     secondaryColor: "#A71930",
-    logoPath: {
-      svg: "/logos/nfl/new-york-giants.svg",
-      png: "/logos/nfl/new-york-giants.png",
-    },
+    logoPath: { svg: "/logos/nfl/new-york-giants.svg", png: "/logos/nfl/new-york-giants.png" },
   },
   "new-york-jets": {
     id: "new-york-jets",
@@ -339,10 +267,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#125740",
     secondaryColor: "#000000",
-    logoPath: {
-      svg: "/logos/nfl/new-york-jets.svg",
-      png: "/logos/nfl/new-york-jets.png",
-    },
+    logoPath: { svg: "/logos/nfl/new-york-jets.svg", png: "/logos/nfl/new-york-jets.png" },
   },
   "philadelphia-eagles": {
     id: "philadelphia-eagles",
@@ -352,10 +277,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#004C54",
     secondaryColor: "#A5ACAF",
-    logoPath: {
-      svg: "/logos/nfl/philadelphia-eagles.svg",
-      png: "/logos/nfl/philadelphia-eagles.png",
-    },
+    logoPath: { svg: "/logos/nfl/philadelphia-eagles.svg", png: "/logos/nfl/philadelphia-eagles.png" },
   },
   "pittsburgh-steelers": {
     id: "pittsburgh-steelers",
@@ -365,10 +287,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#FFB612",
     secondaryColor: "#101820",
-    logoPath: {
-      svg: "/logos/nfl/pittsburgh-steelers.svg",
-      png: "/logos/nfl/pittsburgh-steelers.png",
-    },
+    logoPath: { svg: "/logos/nfl/pittsburgh-steelers.svg", png: "/logos/nfl/pittsburgh-steelers.png" },
   },
   "san-francisco-49ers": {
     id: "san-francisco-49ers",
@@ -378,10 +297,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#AA0000",
     secondaryColor: "#B3995D",
-    logoPath: {
-      svg: "/logos/nfl/san-francisco-49ers.svg",
-      png: "/logos/nfl/san-francisco-49ers.png",
-    },
+    logoPath: { svg: "/logos/nfl/san-francisco-49ers.svg", png: "/logos/nfl/san-francisco-49ers.png" },
   },
   "seattle-seahawks": {
     id: "seattle-seahawks",
@@ -391,10 +307,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#002244",
     secondaryColor: "#69BE28",
-    logoPath: {
-      svg: "/logos/nfl/seattle-seahawks.svg",
-      png: "/logos/nfl/seattle-seahawks.png",
-    },
+    logoPath: { svg: "/logos/nfl/seattle-seahawks.svg", png: "/logos/nfl/seattle-seahawks.png" },
   },
   "tampa-bay-buccaneers": {
     id: "tampa-bay-buccaneers",
@@ -404,10 +317,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#D50A0A",
     secondaryColor: "#FF7900",
-    logoPath: {
-      svg: "/logos/nfl/tampa-bay-buccaneers.svg",
-      png: "/logos/nfl/tampa-bay-buccaneers.png",
-    },
+    logoPath: { svg: "/logos/nfl/tampa-bay-buccaneers.svg", png: "/logos/nfl/tampa-bay-buccaneers.png" },
   },
   "tennessee-titans": {
     id: "tennessee-titans",
@@ -417,10 +327,7 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#0C2340",
     secondaryColor: "#4B92DB",
-    logoPath: {
-      svg: "/logos/nfl/tennessee-titans.svg",
-      png: "/logos/nfl/tennessee-titans.png",
-    },
+    logoPath: { svg: "/logos/nfl/tennessee-titans.svg", png: "/logos/nfl/tennessee-titans.png" },
   },
   "washington-commanders": {
     id: "washington-commanders",
@@ -430,14 +337,11 @@ export const NFL_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nfl",
     primaryColor: "#5A1414",
     secondaryColor: "#FFB612",
-    logoPath: {
-      svg: "/logos/nfl/washington-commanders.svg",
-      png: "/logos/nfl/washington-commanders.png",
-    },
+    logoPath: { svg: "/logos/nfl/washington-commanders.svg", png: "/logos/nfl/washington-commanders.png" },
   },
 };
 
-// NBA Teams Configuration
+// NBA Teams
 export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
   "atlanta-hawks": {
     id: "atlanta-hawks",
@@ -447,10 +351,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#E03A3E",
     secondaryColor: "#C1D32F",
-    logoPath: {
-      svg: "/logos/nba/atlanta-hawks.svg",
-      png: "/logos/nba/atlanta-hawks.png",
-    },
+    logoPath: { svg: "/logos/nba/atlanta-hawks.svg", png: "/logos/nba/atlanta-hawks.png" },
   },
   "boston-celtics": {
     id: "boston-celtics",
@@ -460,10 +361,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#007A33",
     secondaryColor: "#BA9653",
-    logoPath: {
-      svg: "/logos/nba/boston-celtics.svg",
-      png: "/logos/nba/boston-celtics.png",
-    },
+    logoPath: { svg: "/logos/nba/boston-celtics.svg", png: "/logos/nba/boston-celtics.png" },
   },
   "brooklyn-nets": {
     id: "brooklyn-nets",
@@ -473,10 +371,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#000000",
     secondaryColor: "#FFFFFF",
-    logoPath: {
-      svg: "/logos/nba/brooklyn-nets.svg",
-      png: "/logos/nba/brooklyn-nets.png",
-    },
+    logoPath: { svg: "/logos/nba/brooklyn-nets.svg", png: "/logos/nba/brooklyn-nets.png" },
   },
   "charlotte-hornets": {
     id: "charlotte-hornets",
@@ -486,10 +381,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#1D1160",
     secondaryColor: "#00788C",
-    logoPath: {
-      svg: "/logos/nba/charlotte-hornets.svg",
-      png: "/logos/nba/charlotte-hornets.png",
-    },
+    logoPath: { svg: "/logos/nba/charlotte-hornets.svg", png: "/logos/nba/charlotte-hornets.png" },
   },
   "chicago-bulls": {
     id: "chicago-bulls",
@@ -499,10 +391,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#CE1141",
     secondaryColor: "#000000",
-    logoPath: {
-      svg: "/logos/nba/chicago-bulls.svg",
-      png: "/logos/nba/chicago-bulls.png",
-    },
+    logoPath: { svg: "/logos/nba/chicago-bulls.svg", png: "/logos/nba/chicago-bulls.png" },
   },
   "cleveland-cavaliers": {
     id: "cleveland-cavaliers",
@@ -512,10 +401,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#860038",
     secondaryColor: "#FDBB30",
-    logoPath: {
-      svg: "/logos/nba/cleveland-cavaliers.svg",
-      png: "/logos/nba/cleveland-cavaliers.png",
-    },
+    logoPath: { svg: "/logos/nba/cleveland-cavaliers.svg", png: "/logos/nba/cleveland-cavaliers.png" },
   },
   "dallas-mavericks": {
     id: "dallas-mavericks",
@@ -525,10 +411,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#00538C",
     secondaryColor: "#002B5E",
-    logoPath: {
-      svg: "/logos/nba/dallas-mavericks.svg",
-      png: "/logos/nba/dallas-mavericks.png",
-    },
+    logoPath: { svg: "/logos/nba/dallas-mavericks.svg", png: "/logos/nba/dallas-mavericks.png" },
   },
   "denver-nuggets": {
     id: "denver-nuggets",
@@ -538,10 +421,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#0E2240",
     secondaryColor: "#FEC524",
-    logoPath: {
-      svg: "/logos/nba/denver-nuggets.svg",
-      png: "/logos/nba/denver-nuggets.png",
-    },
+    logoPath: { svg: "/logos/nba/denver-nuggets.svg", png: "/logos/nba/denver-nuggets.png" },
   },
   "detroit-pistons": {
     id: "detroit-pistons",
@@ -551,10 +431,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#C8102E",
     secondaryColor: "#1D42BA",
-    logoPath: {
-      svg: "/logos/nba/detroit-pistons.svg",
-      png: "/logos/nba/detroit-pistons.png",
-    },
+    logoPath: { svg: "/logos/nba/detroit-pistons.svg", png: "/logos/nba/detroit-pistons.png" },
   },
   "golden-state-warriors": {
     id: "golden-state-warriors",
@@ -564,10 +441,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#1D428A",
     secondaryColor: "#FFC72C",
-    logoPath: {
-      svg: "/logos/nba/golden-state-warriors.svg",
-      png: "/logos/nba/golden-state-warriors.png",
-    },
+    logoPath: { svg: "/logos/nba/golden-state-warriors.svg", png: "/logos/nba/golden-state-warriors.png" },
   },
   "houston-rockets": {
     id: "houston-rockets",
@@ -577,10 +451,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#CE1141",
     secondaryColor: "#000000",
-    logoPath: {
-      svg: "/logos/nba/houston-rockets.svg",
-      png: "/logos/nba/houston-rockets.png",
-    },
+    logoPath: { svg: "/logos/nba/houston-rockets.svg", png: "/logos/nba/houston-rockets.png" },
   },
   "indiana-pacers": {
     id: "indiana-pacers",
@@ -590,10 +461,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#002D62",
     secondaryColor: "#FDBB30",
-    logoPath: {
-      svg: "/logos/nba/indiana-pacers.svg",
-      png: "/logos/nba/indiana-pacers.png",
-    },
+    logoPath: { svg: "/logos/nba/indiana-pacers.svg", png: "/logos/nba/indiana-pacers.png" },
   },
   "los-angeles-clippers": {
     id: "los-angeles-clippers",
@@ -603,10 +471,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#C8102E",
     secondaryColor: "#1D428A",
-    logoPath: {
-      svg: "/logos/nba/los-angeles-clippers.svg",
-      png: "/logos/nba/los-angeles-clippers.png",
-    },
+    logoPath: { svg: "/logos/nba/los-angeles-clippers.svg", png: "/logos/nba/los-angeles-clippers.png" },
   },
   "los-angeles-lakers": {
     id: "los-angeles-lakers",
@@ -616,10 +481,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#552583",
     secondaryColor: "#FDB927",
-    logoPath: {
-      svg: "/logos/nba/los-angeles-lakers.svg",
-      png: "/logos/nba/los-angeles-lakers.png",
-    },
+    logoPath: { svg: "/logos/nba/los-angeles-lakers.svg", png: "/logos/nba/los-angeles-lakers.png" },
   },
   "memphis-grizzlies": {
     id: "memphis-grizzlies",
@@ -629,10 +491,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#5D76A9",
     secondaryColor: "#12173F",
-    logoPath: {
-      svg: "/logos/nba/memphis-grizzlies.svg",
-      png: "/logos/nba/memphis-grizzlies.png",
-    },
+    logoPath: { svg: "/logos/nba/memphis-grizzlies.svg", png: "/logos/nba/memphis-grizzlies.png" },
   },
   "miami-heat": {
     id: "miami-heat",
@@ -642,10 +501,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#98002E",
     secondaryColor: "#F9A01B",
-    logoPath: {
-      svg: "/logos/nba/miami-heat.svg",
-      png: "/logos/nba/miami-heat.png",
-    },
+    logoPath: { svg: "/logos/nba/miami-heat.svg", png: "/logos/nba/miami-heat.png" },
   },
   "milwaukee-bucks": {
     id: "milwaukee-bucks",
@@ -655,10 +511,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#00471B",
     secondaryColor: "#EEE1C6",
-    logoPath: {
-      svg: "/logos/nba/milwaukee-bucks.svg",
-      png: "/logos/nba/milwaukee-bucks.png",
-    },
+    logoPath: { svg: "/logos/nba/milwaukee-bucks.svg", png: "/logos/nba/milwaukee-bucks.png" },
   },
   "minnesota-timberwolves": {
     id: "minnesota-timberwolves",
@@ -668,10 +521,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#0C2340",
     secondaryColor: "#236192",
-    logoPath: {
-      svg: "/logos/nba/minnesota-timberwolves.svg",
-      png: "/logos/nba/minnesota-timberwolves.png",
-    },
+    logoPath: { svg: "/logos/nba/minnesota-timberwolves.svg", png: "/logos/nba/minnesota-timberwolves.png" },
   },
   "new-orleans-pelicans": {
     id: "new-orleans-pelicans",
@@ -681,10 +531,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#0C2340",
     secondaryColor: "#C8102E",
-    logoPath: {
-      svg: "/logos/nba/new-orleans-pelicans.svg",
-      png: "/logos/nba/new-orleans-pelicans.png",
-    },
+    logoPath: { svg: "/logos/nba/new-orleans-pelicans.svg", png: "/logos/nba/new-orleans-pelicans.png" },
   },
   "new-york-knicks": {
     id: "new-york-knicks",
@@ -694,10 +541,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#006BB6",
     secondaryColor: "#F58426",
-    logoPath: {
-      svg: "/logos/nba/new-york-knicks.svg",
-      png: "/logos/nba/new-york-knicks.png",
-    },
+    logoPath: { svg: "/logos/nba/new-york-knicks.svg", png: "/logos/nba/new-york-knicks.png" },
   },
   "oklahoma-city-thunder": {
     id: "oklahoma-city-thunder",
@@ -707,10 +551,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#007AC1",
     secondaryColor: "#EF3B24",
-    logoPath: {
-      svg: "/logos/nba/oklahoma-city-thunder.svg",
-      png: "/logos/nba/oklahoma-city-thunder.png",
-    },
+    logoPath: { svg: "/logos/nba/oklahoma-city-thunder.svg", png: "/logos/nba/oklahoma-city-thunder.png" },
   },
   "orlando-magic": {
     id: "orlando-magic",
@@ -720,10 +561,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#0077C0",
     secondaryColor: "#C4CED4",
-    logoPath: {
-      svg: "/logos/nba/orlando-magic.svg",
-      png: "/logos/nba/orlando-magic.png",
-    },
+    logoPath: { svg: "/logos/nba/orlando-magic.svg", png: "/logos/nba/orlando-magic.png" },
   },
   "philadelphia-76ers": {
     id: "philadelphia-76ers",
@@ -733,10 +571,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#006BB6",
     secondaryColor: "#ED174C",
-    logoPath: {
-      svg: "/logos/nba/philadelphia-76ers.svg",
-      png: "/logos/nba/philadelphia-76ers.png",
-    },
+    logoPath: { svg: "/logos/nba/philadelphia-76ers.svg", png: "/logos/nba/philadelphia-76ers.png" },
   },
   "phoenix-suns": {
     id: "phoenix-suns",
@@ -746,10 +581,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#1D1160",
     secondaryColor: "#E56020",
-    logoPath: {
-      svg: "/logos/nba/phoenix-suns.svg",
-      png: "/logos/nba/phoenix-suns.png",
-    },
+    logoPath: { svg: "/logos/nba/phoenix-suns.svg", png: "/logos/nba/phoenix-suns.png" },
   },
   "portland-trail-blazers": {
     id: "portland-trail-blazers",
@@ -759,10 +591,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#E03A3E",
     secondaryColor: "#000000",
-    logoPath: {
-      svg: "/logos/nba/portland-trail-blazers.svg",
-      png: "/logos/nba/portland-trail-blazers.png",
-    },
+    logoPath: { svg: "/logos/nba/portland-trail-blazers.svg", png: "/logos/nba/portland-trail-blazers.png" },
   },
   "sacramento-kings": {
     id: "sacramento-kings",
@@ -772,10 +601,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#5A2D81",
     secondaryColor: "#63727A",
-    logoPath: {
-      svg: "/logos/nba/sacramento-kings.svg",
-      png: "/logos/nba/sacramento-kings.png",
-    },
+    logoPath: { svg: "/logos/nba/sacramento-kings.svg", png: "/logos/nba/sacramento-kings.png" },
   },
   "san-antonio-spurs": {
     id: "san-antonio-spurs",
@@ -785,10 +611,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#C4CED4",
     secondaryColor: "#000000",
-    logoPath: {
-      svg: "/logos/nba/san-antonio-spurs.svg",
-      png: "/logos/nba/san-antonio-spurs.png",
-    },
+    logoPath: { svg: "/logos/nba/san-antonio-spurs.svg", png: "/logos/nba/san-antonio-spurs.png" },
   },
   "toronto-raptors": {
     id: "toronto-raptors",
@@ -798,10 +621,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#CE1141",
     secondaryColor: "#000000",
-    logoPath: {
-      svg: "/logos/nba/toronto-raptors.svg",
-      png: "/logos/nba/toronto-raptors.png",
-    },
+    logoPath: { svg: "/logos/nba/toronto-raptors.svg", png: "/logos/nba/toronto-raptors.png" },
   },
   "utah-jazz": {
     id: "utah-jazz",
@@ -811,10 +631,7 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#002B5C",
     secondaryColor: "#00471B",
-    logoPath: {
-      svg: "/logos/nba/utah-jazz.svg",
-      png: "/logos/nba/utah-jazz.png",
-    },
+    logoPath: { svg: "/logos/nba/utah-jazz.svg", png: "/logos/nba/utah-jazz.png" },
   },
   "washington-wizards": {
     id: "washington-wizards",
@@ -824,69 +641,335 @@ export const NBA_TEAMS: Record<string, TeamLogoConfig> = {
     league: "nba",
     primaryColor: "#002B5C",
     secondaryColor: "#E31837",
-    logoPath: {
-      svg: "/logos/nba/washington-wizards.svg",
-      png: "/logos/nba/washington-wizards.png",
-    },
+    logoPath: { svg: "/logos/nba/washington-wizards.svg", png: "/logos/nba/washington-wizards.png" },
   },
 };
 
-// Combined teams lookup
-export const ALL_TEAMS = { ...NFL_TEAMS, ...NBA_TEAMS };
+// NHL Teams
+export const NHL_TEAMS: Record<string, TeamLogoConfig> = {
+  "anaheim-ducks": {
+    id: "anaheim-ducks",
+    name: "Ducks",
+    abbreviation: "ANA",
+    city: "Anaheim",
+    league: "nhl",
+    primaryColor: "#B9975B",
+    secondaryColor: "#000000",
+    logoPath: { svg: "/logos/nhl/Anaheim Ducks.svg" },
+  },
+  "boston-bruins": {
+    id: "boston-bruins",
+    name: "Bruins",
+    abbreviation: "BOS",
+    city: "Boston",
+    league: "nhl",
+    primaryColor: "#FFB81C",
+    secondaryColor: "#000000",
+    logoPath: { svg: "/logos/nhl/Boston Bruins.svg" },
+  },
+  "buffalo-sabres": {
+    id: "buffalo-sabres",
+    name: "Sabres",
+    abbreviation: "BUF",
+    city: "Buffalo",
+    league: "nhl",
+    primaryColor: "#002654",
+    secondaryColor: "#FDBB2F",
+    logoPath: { svg: "/logos/nhl/Buffalo Sabres.svg" },
+  },
+  "calgary-flames": {
+    id: "calgary-flames",
+    name: "Flames",
+    abbreviation: "CGY",
+    city: "Calgary",
+    league: "nhl",
+    primaryColor: "#C8102E",
+    secondaryColor: "#F1BE48",
+    logoPath: { svg: "/logos/nhl/Calgary Flames.svg" },
+  },
+  "carolina-hurricanes": {
+    id: "carolina-hurricanes",
+    name: "Hurricanes",
+    abbreviation: "CAR",
+    city: "Carolina",
+    league: "nhl",
+    primaryColor: "#CC0000",
+    secondaryColor: "#000000",
+    logoPath: { svg: "/logos/nhl/Carolina Hurricanes.svg" },
+  },
+  "chicago-blackhawks": {
+    id: "chicago-blackhawks",
+    name: "Blackhawks",
+    abbreviation: "CHI",
+    city: "Chicago",
+    league: "nhl",
+    primaryColor: "#CF0A2C",
+    secondaryColor: "#000000",
+    logoPath: { svg: "/logos/nhl/Chicago Blackhawks.svg" },
+  },
+  "colorado-avalanche": {
+    id: "colorado-avalanche",
+    name: "Avalanche",
+    abbreviation: "COL",
+    city: "Colorado",
+    league: "nhl",
+    primaryColor: "#6F263D",
+    secondaryColor: "#A2AAAD",
+    logoPath: { svg: "/logos/nhl/Colorado Avalanche.svg" },
+  },
+  "columbus-blue-jackets": {
+    id: "columbus-blue-jackets",
+    name: "Blue Jackets",
+    abbreviation: "CBJ",
+    city: "Columbus",
+    league: "nhl",
+    primaryColor: "#002654",
+    secondaryColor: "#CE1126",
+    logoPath: { svg: "/logos/nhl/Columbus Blue Jackets.svg" },
+  },
+  "dallas-stars": {
+    id: "dallas-stars",
+    name: "Stars",
+    abbreviation: "DAL",
+    city: "Dallas",
+    league: "nhl",
+    primaryColor: "#006847",
+    secondaryColor: "#8F8F8C",
+    logoPath: { svg: "/logos/nhl/Dallas Stars.svg" },
+  },
+  "detroit-red-wings": {
+    id: "detroit-red-wings",
+    name: "Red Wings",
+    abbreviation: "DET",
+    city: "Detroit",
+    league: "nhl",
+    primaryColor: "#CE1126",
+    secondaryColor: "#FFFFFF",
+    logoPath: { svg: "/logos/nhl/Detroit Red Wings.svg" },
+  },
+  "edmonton-oilers": {
+    id: "edmonton-oilers",
+    name: "Oilers",
+    abbreviation: "EDM",
+    city: "Edmonton",
+    league: "nhl",
+    primaryColor: "#041E42",
+    secondaryColor: "#FF4C00",
+    logoPath: { svg: "/logos/nhl/Edmonton Oilers.svg" },
+  },
+  "florida-panthers": {
+    id: "florida-panthers",
+    name: "Panthers",
+    abbreviation: "FLA",
+    city: "Florida",
+    league: "nhl",
+    primaryColor: "#C8102E",
+    secondaryColor: "#B9975B",
+    logoPath: { svg: "/logos/nhl/Florida Panthers.svg" },
+  },
+  "los-angeles-kings": {
+    id: "los-angeles-kings",
+    name: "Kings",
+    abbreviation: "LAK",
+    city: "Los Angeles",
+    league: "nhl",
+    primaryColor: "#111111",
+    secondaryColor: "#A2AAAD",
+    logoPath: { svg: "/logos/nhl/Los Angeles Kings.svg" },
+  },
+  "minnesota-wild": {
+    id: "minnesota-wild",
+    name: "Wild",
+    abbreviation: "MIN",
+    city: "Minnesota",
+    league: "nhl",
+    primaryColor: "#A6192E",
+    secondaryColor: "#154734",
+    logoPath: { svg: "/logos/nhl/Minnesota Wild.svg" },
+  },
+  "montreal-canadiens": {
+    id: "montreal-canadiens",
+    name: "Canadiens",
+    abbreviation: "MTL",
+    city: "Montréal",
+    league: "nhl",
+    primaryColor: "#AF1E2D",
+    secondaryColor: "#192168",
+    logoPath: { svg: "/logos/nhl/Montréal Canadiens.svg" },
+  },
+  "nashville-predators": {
+    id: "nashville-predators",
+    name: "Predators",
+    abbreviation: "NSH",
+    city: "Nashville",
+    league: "nhl",
+    primaryColor: "#FFB81C",
+    secondaryColor: "#041E42",
+    logoPath: { svg: "/logos/nhl/Nashville Predators.svg" },
+  },
+  "new-jersey-devils": {
+    id: "new-jersey-devils",
+    name: "Devils",
+    abbreviation: "NJD",
+    city: "New Jersey",
+    league: "nhl",
+    primaryColor: "#CE1126",
+    secondaryColor: "#000000",
+    logoPath: { svg: "/logos/nhl/New Jersey Devils.svg" },
+  },
+  "new-york-islanders": {
+    id: "new-york-islanders",
+    name: "Islanders",
+    abbreviation: "NYI",
+    city: "New York",
+    league: "nhl",
+    primaryColor: "#00539B",
+    secondaryColor: "#F47D30",
+    logoPath: { svg: "/logos/nhl/New York Islanders.svg" },
+  },
+  "new-york-rangers": {
+    id: "new-york-rangers",
+    name: "Rangers",
+    abbreviation: "NYR",
+    city: "New York",
+    league: "nhl",
+    primaryColor: "#0038A8",
+    secondaryColor: "#CE1126",
+    logoPath: { svg: "/logos/nhl/New York Rangers.svg" },
+  },
+  "ottawa-senators": {
+    id: "ottawa-senators",
+    name: "Senators",
+    abbreviation: "OTT",
+    city: "Ottawa",
+    league: "nhl",
+    primaryColor: "#C8102E",
+    secondaryColor: "#000000",
+    logoPath: { svg: "/logos/nhl/Ottawa Senators.svg" },
+  },
+  "philadelphia-flyers": {
+    id: "philadelphia-flyers",
+    name: "Flyers",
+    abbreviation: "PHI",
+    city: "Philadelphia",
+    league: "nhl",
+    primaryColor: "#F74902",
+    secondaryColor: "#000000",
+    logoPath: { svg: "/logos/nhl/Philadelphia Flyers.svg" },
+  },
+  "pittsburgh-penguins": {
+    id: "pittsburgh-penguins",
+    name: "Penguins",
+    abbreviation: "PIT",
+    city: "Pittsburgh",
+    league: "nhl",
+    primaryColor: "#FCB514",
+    secondaryColor: "#000000",
+    logoPath: { svg: "/logos/nhl/Pittsburgh Penguins.svg" },
+  },
+  "san-jose-sharks": {
+    id: "san-jose-sharks",
+    name: "Sharks",
+    abbreviation: "SJS",
+    city: "San Jose",
+    league: "nhl",
+    primaryColor: "#006D75",
+    secondaryColor: "#EA7200",
+    logoPath: { svg: "/logos/nhl/San Jose Sharks.svg" },
+  },
+  "seattle-kraken": {
+    id: "seattle-kraken",
+    name: "Kraken",
+    abbreviation: "SEA",
+    city: "Seattle",
+    league: "nhl",
+    primaryColor: "#355464",
+    secondaryColor: "#97D2D4",
+    logoPath: { svg: "/logos/nhl/Seattle Kraken.svg" },
+  },
+  "st-louis-blues": {
+    id: "st-louis-blues",
+    name: "Blues",
+    abbreviation: "STL",
+    city: "St. Louis",
+    league: "nhl",
+    primaryColor: "#002F87",
+    secondaryColor: "#FCB514",
+    logoPath: { svg: "/logos/nhl/St. Louis Blues.svg" },
+  },
+  "tampa-bay-lightning": {
+    id: "tampa-bay-lightning",
+    name: "Lightning",
+    abbreviation: "TBL",
+    city: "Tampa Bay",
+    league: "nhl",
+    primaryColor: "#002868",
+    secondaryColor: "#FFFFFF",
+    logoPath: { svg: "/logos/nhl/Tampa Bay Lightning.svg" },
+  },
+  "toronto-maple-leafs": {
+    id: "toronto-maple-leafs",
+    name: "Maple Leafs",
+    abbreviation: "TOR",
+    city: "Toronto",
+    league: "nhl",
+    primaryColor: "#003E7E",
+    secondaryColor: "#FFFFFF",
+    logoPath: { svg: "/logos/nhl/Toronto Maple Leafs.svg" },
+  },
+  "utah-mammoth": {
+    id: "utah-mammoth",
+    name: "Mammoth",
+    abbreviation: "UTH",
+    city: "Utah",
+    league: "nhl",
+    primaryColor: "#A6192E",
+    secondaryColor: "#154734",
+    logoPath: { svg: "/logos/nhl/Utah Mammoth.svg" },
+  },
+  "vancouver-canucks": {
+    id: "vancouver-canucks",
+    name: "Canucks",
+    abbreviation: "VAN",
+    city: "Vancouver",
+    league: "nhl",
+    primaryColor: "#00205B",
+    secondaryColor: "#00843D",
+    logoPath: { svg: "/logos/nhl/vancouver canucks.svg" },
+  },
+  "vegas-golden-knights": {
+    id: "vegas-golden-knights",
+    name: "Golden Knights",
+    abbreviation: "VGK",
+    city: "Vegas",
+    league: "nhl",
+    primaryColor: "#B4975A",
+    secondaryColor: "#333F42",
+    logoPath: { svg: "/logos/nhl/Vegas Golden Knights.svg" },
+  },
+  "washington-capitals": {
+    id: "washington-capitals",
+    name: "Capitals",
+    abbreviation: "WSH",
+    city: "Washington",
+    league: "nhl",
+    primaryColor: "#C8102E",
+    secondaryColor: "#041E42",
+    logoPath: { svg: "/logos/nhl/Washington Capitals.svg" },
+  },
+  "winnipeg-jets": {
+    id: "winnipeg-jets",
+    name: "Jets",
+    abbreviation: "WPG",
+    city: "Winnipeg",
+    league: "nhl",
+    primaryColor: "#041E42",
+    secondaryColor: "#A2AAAD",
+    logoPath: { svg: "/logos/nhl/Winnipeg Jets.svg" },
+  },
+};
 
-/**
- * Get team configuration by ID, abbreviation, or name
- */
-export function getTeam(
-  identifier: string,
-  league?: "nfl" | "nba",
-): TeamLogoConfig | null {
-  const id = identifier.toLowerCase();
-
-  // If league is specified, search only within that league
-  const teamsToSearch = league
-    ? getTeamsByLeague(league)
-    : Object.values(ALL_TEAMS);
-
-  // Try exact ID match first
-  const teamById = teamsToSearch.find((team) => team.id === id);
-  if (teamById) return teamById;
-
-  // Try abbreviation match
-  const teamByAbbr = teamsToSearch.find(
-    (team) => team.abbreviation.toLowerCase() === id,
-  );
-  if (teamByAbbr) return teamByAbbr;
-
-  // Try name match
-  const teamByName = teamsToSearch.find(
-    (team) =>
-      team.name.toLowerCase() === id ||
-      `${team.city} ${team.name}`.toLowerCase() === id,
-  );
-  if (teamByName) return teamByName;
-
-  return null;
-}
-
-/**
- * Get team by league ID (maps common league IDs to our league format)
- */
-export function getLeagueFromLeagueId(leagueId: string): "nfl" | "nba" | null {
-  const id = leagueId.toLowerCase();
-
-  if (id.includes("nfl") || id.includes("football")) return "nfl";
-  if (id.includes("nba") || id.includes("basketball")) return "nba";
-
-  return null;
-}
-
-/**
- * Get teams by league
- */
-export function getTeamsByLeague(league: "nfl" | "nba"): TeamLogoConfig[] {
-  return Object.values(ALL_TEAMS).filter((team) => team.league === league);
-}
+export const ALL_TEAMS = { ...NFL_TEAMS, ...NBA_TEAMS, ...NHL_TEAMS };
 
 /**
  * Generate logo URL with fallback support
@@ -895,8 +978,6 @@ export function getLogoUrl(
   team: TeamLogoConfig,
   format: "svg" | "png" = "svg",
 ): string {
-  // For Vite, we need to use import.meta.url or dynamic imports for assets
-  // For now, let's construct the path correctly for the public directory approach
   const logoPath =
     team.logoPath[format] || team.logoPath.png || team.logoPath.svg;
 
@@ -912,7 +993,47 @@ export function getLogoUrl(
     `)}`;
   }
 
-  // Convert to public directory path for Vite
-  const publicPath = logoPath.replace("/src/assets/images/", "/assets/images/");
-  return publicPath;
+  return logoPath;
+}
+/**
+ * Get team by league ID (maps common league IDs to our league format)
+ */
+export function getLeagueFromLeagueId(leagueId: string): "nfl" | "nba" | "nhl" | null {
+  const id = leagueId.toLowerCase();
+
+  if (id.includes("nfl") || id.includes("football")) return "nfl";
+  if (id.includes("nba") || id.includes("basketball")) return "nba";
+  if (id.includes("nhl") || id.includes("hockey")) return "nhl";
+
+  return null;
+}
+
+export function getTeam(
+  identifier: string,
+  league?: "nfl" | "nba" | "nhl"
+): TeamLogoConfig | null {
+  const id = identifier.toLowerCase();
+  const teamsToSearch = league
+    ? Object.values(ALL_TEAMS).filter((team) => team.league === league)
+    : Object.values(ALL_TEAMS);
+
+  // Try exact ID match first
+  const teamById = teamsToSearch.find((team) => team.id === id);
+  if (teamById) return teamById;
+
+  // Try abbreviation match
+  const teamByAbbr = teamsToSearch.find(
+    (team) => team.abbreviation.toLowerCase() === id
+  );
+  if (teamByAbbr) return teamByAbbr;
+
+  // Try name match
+  const teamByName = teamsToSearch.find(
+    (team) =>
+      team.name.toLowerCase() === id ||
+      `${team.city} ${team.name}`.toLowerCase() === id
+  );
+  if (teamByName) return teamByName;
+
+  return null;
 }

@@ -123,7 +123,7 @@ export const ProfessionalGameRow = memo(
         onClick={() => setIsExpanded(!isExpanded)}
       >
         {/* Game Row */}
-        <div className="grid grid-cols-[80px_1fr_120px_120px_120px_50px] gap-4 items-center py-2 px-4 min-h-[60px]">
+        <div className="grid grid-cols-[80px_1fr_120px_120px_120px_32px] gap-4 items-center py-2 px-4 min-h-[60px]">
           {/* Time Column */}
           <div className="text-sm text-muted-foreground font-medium">
             {showTime && timeString}
@@ -314,6 +314,7 @@ export const ProfessionalGameRow = memo(
                 variant="ghost"
                 size="sm"
                 className="h-8 w-8 p-0 opacity-50 group-hover:opacity-100 transition-all duration-200 hover:bg-accent/20"
+                aria-label="Expand"
               >
                 <Plus size={16} />
               </Button>

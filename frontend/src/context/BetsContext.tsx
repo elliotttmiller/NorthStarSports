@@ -48,7 +48,11 @@ export const BetsProvider: React.FC<BetsProviderProps> = ({ children }) => {
         await refetchBets();
       } else {
         // Fallback to direct fetch if refetch not available
-        const res = await fetch("/api/v1/redis/bets/" + USER_ID);
+        const res = await fetch("/api/v1/redis/bets/" + USER_ID, {
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+          },
+        });
         if (res.ok) {
           const json = await res.json();
           // Backend returns { success: true, data: [...] }, extract the data
