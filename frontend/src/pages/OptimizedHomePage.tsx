@@ -1,7 +1,4 @@
 import { GameCard } from "@/components/GameCard";
-import { ProfessionalGameRow } from "@/components/ProfessionalGameRow";
-import { CompactMobileGameRow } from "@/components/CompactMobileGameRow";
-import { SmoothScrollContainer } from "@/components/VirtualScrolling";
 import { TrendUp, Trophy } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -30,16 +27,16 @@ const sectionVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-export function HomePage() {
+export function OptimizedHomePage() {
   const { betSlip } = useBetSlip();
-  const activeBetsCount = betSlip.bets.length; 
+  const activeBetsCount = betSlip.bets.length;
   const [trendingGames, setTrendingGames] = useState<Game[]>([]);
 
   useEffect(() => {
     getTrendingGames().then(setTrendingGames);
   }, []);
 
-  return ( 
+  return (
     <AnimatePresence mode="wait">
       <motion.div
         key="home-page"
@@ -47,9 +44,8 @@ export function HomePage() {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="h-full w-full flex flex-col bg-muted/10"
+        className="h-full w-full flex flex-col overflow-hidden bg-muted/10"
       >
-  <SmoothScrollContainer className="flex-1 min-h-0 universal-responsive-container scrollbar-hide" showScrollbar={false} maxHeight="100vh">
         <div className="pt-2 pb-24 sm:pb-4">
           <div
             className="mx-auto w-full max-w-4xl px-4 md:px-8 lg:px-12 space-y-6"
@@ -93,26 +89,18 @@ export function HomePage() {
 
               {/* Trending Games */}
               <motion.div variants={sectionVariants} className="mt-12">
-                  <div className="flex items-center space-x-2 mb-4">
-                    <TrendUp size={20} className="text-accent" />
-                    <h2 className="text-lg font-semibold text-foreground">
-                      Trending Live Games
-                    </h2>
-                  </div>
-                  <div className="space-y-2">
-                    {/* Desktop: ProfessionalGameRow, Mobile: CompactMobileGameRow */}
-                    {trendingGames.map((game, idx) => (
-                      <div key={game.id}>
-                        <div className="hidden md:block">
-                          <ProfessionalGameRow game={game} />
-                        </div>
-                        <div className="md:hidden">
-                          <CompactMobileGameRow game={game} index={idx} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
+                <div className="flex items-center space-x-2 mb-4">
+                  <TrendUp size={20} className="text-accent" />
+                  <h2 className="text-lg font-semibold text-foreground">
+                    Trending Live Games
+                  </h2>
+                </div>
+                <div className="space-y-2">
+                  {trendingGames.map((game) => (
+                    <GameCard key={game.id} game={game} />
+                  ))}
+                </div>
+              </motion.div>
 
               {/* View All Games Button */}
               <motion.div variants={sectionVariants} className="text-center py-6">
@@ -129,7 +117,6 @@ export function HomePage() {
             </motion.div>
           </div>
         </div>
-        </SmoothScrollContainer>
       </motion.div>
     </AnimatePresence>
   );

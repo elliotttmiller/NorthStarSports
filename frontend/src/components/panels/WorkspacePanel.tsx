@@ -390,6 +390,14 @@ const WorkspacePanel = () => {
                           style={{ minWidth: 32, minHeight: 32 }}
                         />
                       )}
+                      {navigation.selectedLeague === "nhl" && (
+                        <img
+                          src="/logos/nhl/NHL Logo.svg"
+                          alt="NHL logo"
+                          className="w-8 h-8 object-contain drop-shadow-md"
+                          style={{ minWidth: 32, minHeight: 32 }}
+                        />
+                      )}
                       <h2 className="text-lg font-bold">
                         {navigation.selectedLeague.toUpperCase()}
                       </h2>

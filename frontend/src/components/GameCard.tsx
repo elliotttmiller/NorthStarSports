@@ -153,23 +153,24 @@ export const GameCard = memo(
                           ? "bg-accent/20 border-accent text-accent-foreground"
                           : "hover:bg-accent/20 hover:border-accent hover:text-accent-foreground",
                       )}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const betId = getBetId("spread", "home");
-                        if (isBetInSlip("spread", "home")) {
-                          removeBet(betId);
-                        } else {
-                          handleBetClick(
-                            e,
-                            "spread",
-                            "home",
-                            game.odds.spread.home.odds,
-                            game.odds.spread.home.line || 0,
-                          );
-                        }
-                      }}
-                    >
-                      Spread {formatSpreadLine(game.odds.spread.home.line ?? 0)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const betId = getBetId("spread", "home");
+                          if (!game.odds?.spread?.home) return;
+                          if (isBetInSlip("spread", "home")) {
+                            removeBet(betId);
+                          } else {
+                            handleBetClick(
+                              e,
+                              "spread",
+                              "home",
+                              game.odds.spread.home.odds ?? -110,
+                              game.odds.spread.home.line ?? 0,
+                            );
+                          }
+                        }}
+                      >
+                        Spread {formatSpreadLine(game.odds?.spread?.home?.line ?? 0)}
                     </Button>
                     <Button
                       variant="outline"
@@ -180,22 +181,23 @@ export const GameCard = memo(
                           ? "bg-accent/20 border-accent text-accent-foreground"
                           : "hover:bg-accent/20 hover:border-accent hover:text-accent-foreground",
                       )}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const betId = getBetId("moneyline", "home");
-                        if (isBetInSlip("moneyline", "home")) {
-                          removeBet(betId);
-                        } else {
-                          handleBetClick(
-                            e,
-                            "moneyline",
-                            "home",
-                            game.odds.moneyline.home.odds,
-                          );
-                        }
-                      }}
-                    >
-                      ML {formatOdds(game.odds.moneyline.home.odds)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const betId = getBetId("moneyline", "home");
+                          if (!game.odds?.moneyline?.home) return;
+                          if (isBetInSlip("moneyline", "home")) {
+                            removeBet(betId);
+                          } else {
+                            handleBetClick(
+                              e,
+                              "moneyline",
+                              "home",
+                              game.odds.moneyline.home.odds ?? -110,
+                            );
+                          }
+                        }}
+                      >
+                        ML {formatOdds(game.odds?.moneyline?.home?.odds ?? -110)}
                     </Button>
                     <Button
                       variant="outline"
@@ -206,23 +208,24 @@ export const GameCard = memo(
                           ? "bg-accent/20 border-accent text-accent-foreground"
                           : "hover:bg-accent/20 hover:border-accent hover:text-accent-foreground",
                       )}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const betId = getBetId("total", "over");
-                        if (isBetInSlip("total", "over")) {
-                          removeBet(betId);
-                        } else {
-                          handleBetClick(
-                            e,
-                            "total",
-                            "over",
-                            game.odds.total.over?.odds || -110,
-                            game.odds.total.over?.line || 47.5,
-                          );
-                        }
-                      }}
-                    >
-                      Over {formatTotalLine(game.odds.total.over?.line || 47.5)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const betId = getBetId("total", "over");
+                          if (!game.odds?.total?.over) return;
+                          if (isBetInSlip("total", "over")) {
+                            removeBet(betId);
+                          } else {
+                            handleBetClick(
+                              e,
+                              "total",
+                              "over",
+                              game.odds.total.over?.odds ?? -110,
+                              game.odds.total.over?.line ?? 47.5,
+                            );
+                          }
+                        }}
+                      >
+                        Over {formatTotalLine(game.odds?.total?.over?.line ?? 47.5)}
                     </Button>
                   </div>
                 </div>
@@ -260,23 +263,24 @@ export const GameCard = memo(
                           ? "bg-accent/20 border-accent text-accent-foreground"
                           : "hover:bg-accent/20 hover:border-accent hover:text-accent-foreground",
                       )}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const betId = getBetId("spread", "away");
-                        if (isBetInSlip("spread", "away")) {
-                          removeBet(betId);
-                        } else {
-                          handleBetClick(
-                            e,
-                            "spread",
-                            "away",
-                            game.odds.spread.away.odds,
-                            game.odds.spread.away.line || 0,
-                          );
-                        }
-                      }}
-                    >
-                      Spread {formatSpreadLine(game.odds.spread.away.line ?? 0)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const betId = getBetId("spread", "away");
+                          if (!game.odds?.spread?.away) return;
+                          if (isBetInSlip("spread", "away")) {
+                            removeBet(betId);
+                          } else {
+                            handleBetClick(
+                              e,
+                              "spread",
+                              "away",
+                              game.odds.spread.away.odds ?? -110,
+                              game.odds.spread.away.line ?? 0,
+                            );
+                          }
+                        }}
+                      >
+                        Spread {formatSpreadLine(game.odds?.spread?.away?.line ?? 0)}
                     </Button>
                     <Button
                       variant="outline"
@@ -287,22 +291,23 @@ export const GameCard = memo(
                           ? "bg-accent/20 border-accent text-accent-foreground"
                           : "hover:bg-accent/20 hover:border-accent hover:text-accent-foreground",
                       )}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const betId = getBetId("moneyline", "away");
-                        if (isBetInSlip("moneyline", "away")) {
-                          removeBet(betId);
-                        } else {
-                          handleBetClick(
-                            e,
-                            "moneyline",
-                            "away",
-                            game.odds.moneyline.away.odds,
-                          );
-                        }
-                      }}
-                    >
-                      ML {formatOdds(game.odds.moneyline.away.odds)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const betId = getBetId("moneyline", "away");
+                          if (!game.odds?.moneyline?.away) return;
+                          if (isBetInSlip("moneyline", "away")) {
+                            removeBet(betId);
+                          } else {
+                            handleBetClick(
+                              e,
+                              "moneyline",
+                              "away",
+                              game.odds.moneyline.away.odds ?? -110,
+                            );
+                          }
+                        }}
+                      >
+                        ML {formatOdds(game.odds?.moneyline?.away?.odds ?? -110)}
                     </Button>
                     <Button
                       variant="outline"
@@ -313,24 +318,25 @@ export const GameCard = memo(
                           ? "bg-accent/20 border-accent text-accent-foreground"
                           : "hover:bg-accent/20 hover:border-accent hover:text-accent-foreground",
                       )}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const betId = getBetId("total", "under");
-                        if (isBetInSlip("total", "under")) {
-                          removeBet(betId);
-                        } else {
-                          handleBetClick(
-                            e,
-                            "total",
-                            "under",
-                            game.odds.total.under?.odds || -110,
-                            game.odds.total.under?.line || 47.5,
-                          );
-                        }
-                      }}
-                    >
-                      Under{" "}
-                      {formatTotalLine(game.odds.total.under?.line || 47.5)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const betId = getBetId("total", "under");
+                          if (!game.odds?.total?.under) return;
+                          if (isBetInSlip("total", "under")) {
+                            removeBet(betId);
+                          } else {
+                            handleBetClick(
+                              e,
+                              "total",
+                              "under",
+                              game.odds.total.under?.odds ?? -110,
+                              game.odds.total.under?.line ?? 47.5,
+                            );
+                          }
+                        }}
+                      >
+                        Under{" "}
+                        {formatTotalLine(game.odds?.total?.under?.line ?? 47.5)}
                     </Button>
                   </div>
                 </div>
