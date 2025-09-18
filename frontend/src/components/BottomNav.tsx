@@ -82,21 +82,22 @@ export function BottomNav() {
 
       {/* Home - Center Icon Only */}
       <motion.button
-        onClick={handleHomeClick}
-        className={`flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
-          location.pathname === "/"
-            ? "bg-accent text-accent-foreground shadow-lg scale-110"
-            : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground shadow-md"
-        }`}
-        whileHover={{ scale: location.pathname === "/" ? 1.15 : 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        type="button"
-      >
-        <House
-          size={22}
-          weight={location.pathname === "/" ? "fill" : "regular"}
-        />
-      </motion.button>
+          onClick={handleHomeClick}
+          className={`flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
+            location.pathname === "/"
+              ? "bg-accent text-accent-foreground shadow-lg scale-110"
+              : "bg-secondary text-accent-foreground hover:bg-accent hover:text-accent-foreground shadow-md"
+          }`}
+          whileHover={{ scale: location.pathname === "/" ? 1.15 : 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          type="button"
+        >
+          <House
+            size={22}
+            weight={location.pathname === "/" ? "fill" : "regular"}
+            color="currentColor"
+          />
+        </motion.button>
 
       {/* Bets - Text Only with Badge */}
       <motion.button
