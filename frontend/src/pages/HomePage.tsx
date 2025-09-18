@@ -11,6 +11,7 @@ import type { Game } from "@/types";
 
 import { useEffect, useState } from "react";
 import { getTrendingGames } from "@/services/mockApi";
+import { getLiveGames } from "@/services/mockApi";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -36,7 +37,7 @@ export function HomePage() {
   const [trendingGames, setTrendingGames] = useState<Game[]>([]);
 
   useEffect(() => {
-    getTrendingGames().then(setTrendingGames);
+    getLiveGames().then((games) => setTrendingGames(games.slice(0, 5)));
   }, []);
 
   return ( 
@@ -111,6 +112,11 @@ export function HomePage() {
                         </div>
                       </div>
                     ))}
+                    <div className="flex justify-center mt-2">
+                      <a href="/live" className="text-xs px-3 py-1 rounded bg-muted/30 hover:bg-muted/50 text-muted-foreground transition-all duration-150 shadow-sm border border-border">
+                        View All
+                      </a>
+                    </div>
                   </div>
                 </motion.div>
 
