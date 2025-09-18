@@ -20,9 +20,14 @@ export default function AccountPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="w-full"
+              className="w-full mb-8 md:mb-10"
             >
-              <h1 className="text-xl md:text-2xl font-semibold text-foreground tracking-tight text-center md:text-left mb-2">Welcome, NorthStar User</h1>
+              <div className="text-center md:text-left py-6 md:py-8 px-4 md:px-6">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground tracking-tight mb-3">
+                  Welcome, NorthStar User
+                </h1>
+                <div className="w-12 md:w-16 h-1 bg-accent mx-auto md:mx-0 rounded-full"></div>
+              </div>
             </motion.div>
             {/* Balance Card - Slim, professional, mobile-first */}
             <motion.div
