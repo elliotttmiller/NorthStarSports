@@ -308,60 +308,61 @@ export const BetSlipModal = memo(() => {
                 transition={{ duration: 0.5, staggerChildren: 0.1 }}
               >
                 {betSlip.bets.length === 0 ? (
-                  <motion.div
+                  <div
                     className="flex flex-col items-center justify-center py-20 text-center w-full max-w-full"
-                    style={{
-                      minHeight: "40vh",
-                      width: "100vw",
-                      boxSizing: "border-box",
-                      overflowWrap: "break-word",
-                    }}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
+                      style={{ minHeight: "40vh", boxSizing: "border-box" }}
                   >
                     <motion.div
-                      initial={{ scale: 0.8, rotate: -5 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{
-                        duration: 0.6,
-                        delay: 0.3,
-                        type: "spring",
-                        stiffness: 200,
-                      }}
-                      className="w-24 h-24 bg-gradient-to-br from-accent/25 to-accent/35 rounded-3xl flex items-center justify-center mb-8 border border-accent/20 shadow-lg"
-                      style={{ maxWidth: "100vw" }}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                      className="flex flex-col items-center justify-center"
                     >
-                      <Target
-                        size={36}
-                        className="text-accent"
-                        weight="duotone"
-                      />
+                        {/* Move width from motion.div style to a wrapping div */}
+                        <div style={{ width: "100vw" }}>
+                          <motion.div
+                            initial={{ scale: 0.8, rotate: -5 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{
+                              duration: 0.6,
+                              delay: 0.3,
+                              type: "spring",
+                              stiffness: 200,
+                            }}
+                            className="w-24 h-24 bg-gradient-to-br from-accent/25 to-accent/35 rounded-3xl flex items-center justify-center mb-8 border border-accent/20 shadow-lg"
+                          >
+                            <Target
+                              size={36}
+                              className="text-accent"
+                              weight="duotone"
+                            />
+                          </motion.div>
+                        </div>
+                      <motion.h3
+                        className="text-2xl font-bold mb-3"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.5 }}
+                        >
+                          {/* Move width from motion.h3 style to span */}
+                          <span style={{ wordBreak: "break-word", width: "100%" }}>
+                            Ready to Bet
+                          </span>
+                        </motion.h3>
+                      <motion.p
+                        className="text-muted-foreground text-base leading-relaxed"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.7 }}
+                        >
+                          {/* Move width from motion.p style to span */}
+                          <span style={{ maxWidth: "100vw", wordBreak: "break-word", width: "100%" }}>
+                            Browse games and tap odds to start building your perfect
+                            bet slip
+                          </span>
+                        </motion.p>
                     </motion.div>
-                    <motion.h3
-                      className="text-2xl font-bold mb-3"
-                      style={{ wordBreak: "break-word", width: "100%" }}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.5 }}
-                    >
-                      Ready to Bet
-                    </motion.h3>
-                    <motion.p
-                      className="text-muted-foreground text-base leading-relaxed"
-                      style={{
-                        maxWidth: "100vw",
-                        wordBreak: "break-word",
-                        width: "100%",
-                      }}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.7 }}
-                    >
-                      Browse games and tap odds to start building your perfect
-                      bet slip
-                    </motion.p>
-                  </motion.div>
+                  </div>
                 ) : (
                   <div className="space-y-4">
                     {betSlip.betType === "single" ? (
@@ -593,14 +594,14 @@ export const BetSlipModal = memo(() => {
 
             {/* Enhanced Summary & Place Bet Section */}
             {betSlip.bets.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="border-t border-border/40 professional-spacing-lg bg-gradient-to-t from-muted/40 to-muted/20 backdrop-blur-2xl flex-shrink-0"
-                style={{ width: "100%", boxSizing: "border-box" }}
-              >
-                <div className="space-y-6 professional-spacing-lg">
+              <div style={{ width: "100%", boxSizing: "border-box" }}>
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="border-t border-border/40 professional-spacing-lg bg-gradient-to-t from-muted/40 to-muted/20 backdrop-blur-2xl flex-shrink-0"
+                >
+                  <div className="space-y-6 professional-spacing-lg">
                   {/* Summary Card */}
                   <div className="professional-card space-y-4 bg-gradient-to-r from-secondary/15 to-secondary/25 border border-border/40 rounded-xl">
                     <div className="flex items-center justify-between text-sm">
@@ -695,6 +696,7 @@ export const BetSlipModal = memo(() => {
                   </motion.div>
                 </div>
               </motion.div>
+              </div>
             )}
           </DialogContent>
         </motion.div>
