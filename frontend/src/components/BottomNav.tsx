@@ -34,7 +34,7 @@ export function BottomNav() {
 
   const handleLiveClick = () => {
     setMobilePanel(null);
-    navigate("/games?filter=live");
+    navigate("/live");
   };
 
   const handleOtherClick = () => {

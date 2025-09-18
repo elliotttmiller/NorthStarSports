@@ -123,7 +123,8 @@ export async function getBetSlipHistory(
 
   logInfo("Redis getBetSlipHistory called", { userId });
   try {
-    const history = await kvService.get(`betslip:${userId}:history`);
+    const count = Number(req.query.count) || 10;
+    const history = await kvService.getBetSlipHistory(userId, count);
     if (!history) {
       logWarn("Bet slip history not found", { userId });
       res.json(success([])); // Return empty array if no history

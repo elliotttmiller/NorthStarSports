@@ -54,7 +54,7 @@ export const TeamLogo = memo(function TeamLogo({
         )
       : team;
 
-  if (!teamConfig) {
+  if (!teamConfig || imageError) {
     return (
       <div
         className={cn(
@@ -69,7 +69,7 @@ export const TeamLogo = memo(function TeamLogo({
   }
 
   const logoUrl = getLogoUrl(teamConfig, "svg");
-  const showFallback = imageError || !logoUrl;
+  const showFallback = !logoUrl;
 
   const containerClasses = cn(
     "flex items-center justify-center relative overflow-hidden",
@@ -99,39 +99,12 @@ export const TeamLogo = memo(function TeamLogo({
     />
   );
 
-  const FallbackLogo = () => (
-    <motion.div
-      className={cn(
-        "w-full h-full flex items-center justify-center text-white font-bold",
-        sizeMap[size],
-      )}
-      style={{
-        background: `linear-gradient(135deg, ${teamConfig.primaryColor}, ${teamConfig.secondaryColor})`,
-      }}
-      initial={animate ? { scale: 0.8, opacity: 0 } : false}
-      animate={animate ? { scale: 1, opacity: 1 } : false}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-    >
-      <span
-        className={cn(
-          "font-bold leading-none",
-          size === "xs" && "text-xs",
-          size === "sm" && "text-xs",
-          size === "md" && "text-sm",
-          size === "lg" && "text-base",
-          size === "xl" && "text-lg",
-          size === "2xl" && "text-xl",
-        )}
-      >
-        {teamConfig.abbreviation}
-      </span>
-    </motion.div>
-  );
+  // FallbackLogo removed: always show '?' icon if logo fails
 
   const LogoContainer = () => (
     <div className={containerClasses}>
       {/* Loading skeleton */}
-      {!imageLoaded && !showFallback && (
+      {!imageLoaded && showFallback === false && (
         <div
           className={cn("absolute inset-0 bg-muted animate-pulse", {
             "rounded-full": variant === "circle",
@@ -141,8 +114,8 @@ export const TeamLogo = memo(function TeamLogo({
         />
       )}
 
-      {showFallback && fallbackToAbbreviation ? (
-        <FallbackLogo />
+      {showFallback ? (
+        <span className="text-xs font-medium">?</span>
       ) : (
         <LogoImage />
       )}

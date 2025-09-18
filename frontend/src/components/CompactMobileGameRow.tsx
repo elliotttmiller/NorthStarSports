@@ -147,11 +147,12 @@ export const CompactMobileGameRow = memo(
                   transition={{ duration: 0.2 }}
                 >
                   <TeamLogo
-                    team={game.awayTeam.name}
+                    team={game.awayTeam.id || game.awayTeam.shortName || game.awayTeam.name}
                     league={game.leagueId}
                     size="xs"
                     variant="minimal"
                     className="flex-shrink-0 w-4 h-4"
+                    fallbackToAbbreviation={false}
                   />
                   <span className="text-xs font-medium text-foreground truncate leading-tight">
                     {game.awayTeam.shortName || game.awayTeam.name}
@@ -167,11 +168,12 @@ export const CompactMobileGameRow = memo(
                   transition={{ duration: 0.2 }}
                 >
                   <TeamLogo
-                    team={game.homeTeam.name}
+                    team={game.homeTeam.id || game.homeTeam.shortName || game.homeTeam.name}
                     league={game.leagueId}
                     size="xs"
                     variant="minimal"
                     className="flex-shrink-0 w-4 h-4"
+                    fallbackToAbbreviation={false}
                   />
                   <span className="text-xs font-medium text-foreground truncate leading-tight">
                     {game.homeTeam.shortName || game.homeTeam.name}

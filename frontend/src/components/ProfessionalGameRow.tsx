@@ -134,10 +134,11 @@ export const ProfessionalGameRow = memo(
             {/* Away Team */}
             <div className="flex items-center gap-3">
               <TeamLogo
-                team={game.awayTeam.name}
+                team={game.awayTeam.id || game.awayTeam.shortName || game.awayTeam.name}
                 league={game.leagueId}
                 size="sm"
                 variant="minimal"
+                fallbackToAbbreviation={false}
               />
               <span className="font-medium text-foreground">
                 {game.awayTeam.name}
@@ -149,10 +150,11 @@ export const ProfessionalGameRow = memo(
             {/* Home Team */}
             <div className="flex items-center gap-3">
               <TeamLogo
-                team={game.homeTeam.name}
+                team={game.homeTeam.id || game.homeTeam.shortName || game.homeTeam.name}
                 league={game.leagueId}
                 size="sm"
                 variant="minimal"
+                fallbackToAbbreviation={false}
               />
               <span className="font-medium text-foreground">
                 {game.homeTeam.name}
