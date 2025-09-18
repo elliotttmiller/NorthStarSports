@@ -371,10 +371,29 @@ const WorkspacePanel = () => {
                   )}
                 >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="flex items-center gap-3">
+                      {/* League Logo + Name */}
+                      {navigation.selectedLeague === "nfl" && (
+                        <img
+                          src="/logos/nfl/NFL.svg"
+                          alt="NFL logo"
+                          className="w-8 h-8 object-contain drop-shadow-md"
+                          style={{ minWidth: 32, minHeight: 32 }}
+                        />
+                      )}
+                      {navigation.selectedLeague === "nba" && (
+                        <img
+                          src="/logos/nba/NBA Logo.svg"
+                          alt="NBA logo"
+                          className="w-8 h-8 object-contain drop-shadow-md"
+                          style={{ minWidth: 32, minHeight: 32 }}
+                        />
+                      )}
                       <h2 className="text-lg font-bold">
-                        {navigation.selectedLeague}
+                        {navigation.selectedLeague.toUpperCase()}
                       </h2>
+                    </div>
+                    <div>
                       <p className="text-sm opacity-90">
                         {new Date().toLocaleDateString("en-US", {
                           weekday: "short",
@@ -382,9 +401,9 @@ const WorkspacePanel = () => {
                           day: "numeric",
                         })}
                       </p>
-                    </div>
-                    <div className="text-sm opacity-90">
-                      Week {Math.ceil(new Date().getDate() / 7)}
+                      <div className="text-sm opacity-90">
+                        Week {Math.ceil(new Date().getDate() / 7)}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
