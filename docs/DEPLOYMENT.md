@@ -21,6 +21,7 @@ Comprehensive deployment guide for the NorthStar Sports platform.
 ## 🚀 Quick Deployment
 
 ### Using Docker (Recommended)
+
 ```bash
 # Clone repository
 git clone https://github.com/elliotttmiller/NorthStarSports.git
@@ -34,6 +35,7 @@ docker-compose -f docker-compose.prod.yml logs -f
 ```
 
 ### Manual Deployment
+
 ```bash
 # Build both applications
 npm run build:all
@@ -48,6 +50,7 @@ cd frontend && npm run preview &
 ## 📋 Prerequisites
 
 ### System Requirements
+
 - **Server**: Linux (Ubuntu 20.04+ recommended)
 - **CPU**: 2+ cores
 - **RAM**: 4GB+ (8GB recommended)
@@ -55,6 +58,7 @@ cd frontend && npm run preview &
 - **Network**: High-speed internet connection
 
 ### Required Services
+
 - **Node.js** >= 18.0.0
 - **npm** >= 9.0.0
 - **Redis Cloud** instance or self-hosted Redis
@@ -62,6 +66,7 @@ cd frontend && npm run preview &
 - **SSL Certificate** (Let's Encrypt recommended)
 
 ### Domain & DNS
+
 - Domain name (e.g., `northstarsports.com`)
 - DNS configured to point to your server
 - Subdomain for API (e.g., `api.northstarsports.com`)
@@ -69,6 +74,7 @@ cd frontend && npm run preview &
 ## 🔧 Environment Configuration
 
 ### Backend Environment (.env)
+
 ```bash
 # Server Configuration
 NODE_ENV=production
@@ -104,6 +110,7 @@ PAYMENT_PROCESSOR_KEY=your-payment-key
 ```
 
 ### Frontend Environment (.env.production)
+
 ```bash
 # API Configuration
 VITE_API_URL=https://api.northstarsports.com
@@ -126,6 +133,7 @@ VITE_SENTRY_DSN=https://your-sentry-dsn
 ## 🏭 Production Build
 
 ### Backend Build Process
+
 ```bash
 cd backend
 
@@ -141,6 +149,7 @@ node dist/server.js --check
 ```
 
 ### Frontend Build Process
+
 ```bash
 cd frontend
 
@@ -156,6 +165,7 @@ npm run preview
 ```
 
 ### Build Optimization
+
 ```bash
 # Analyze bundle size
 cd frontend && npm run build:analyze
@@ -170,9 +180,11 @@ npm audit --audit-level high
 ## 🐳 Docker Deployment
 
 ### Production Docker Compose
+
 Create `docker-compose.prod.yml`:
+
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   frontend:
@@ -234,6 +246,7 @@ volumes:
 ```
 
 ### Docker Build Commands
+
 ```bash
 # Build images
 docker-compose -f docker-compose.prod.yml build
@@ -251,7 +264,9 @@ docker-compose -f docker-compose.prod.yml logs -f backend
 ## 🌐 Reverse Proxy Configuration
 
 ### Nginx Configuration
+
 Create `/etc/nginx/sites-available/northstarsports`:
+
 ```nginx
 # Redirect HTTP to HTTPS
 server {
@@ -281,7 +296,7 @@ server {
     location / {
         root /var/www/northstarsports/frontend/dist;
         try_files $uri $uri/ /index.html;
-        
+
         # Cache static assets
         location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
             expires 1y;
@@ -317,7 +332,7 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_cache_bypass $http_upgrade;
-        
+
         # Timeout settings
         proxy_connect_timeout 60s;
         proxy_send_timeout 60s;
@@ -331,6 +346,7 @@ server {
 ```
 
 ### Enable Nginx Site
+
 ```bash
 # Create symbolic link
 sudo ln -s /etc/nginx/sites-available/northstarsports /etc/nginx/sites-enabled/
@@ -345,6 +361,7 @@ sudo systemctl reload nginx
 ## 🔒 SSL Certificate Setup
 
 ### Using Let's Encrypt (Recommended)
+
 ```bash
 # Install Certbot
 sudo apt install certbot python3-certbot-nginx
@@ -358,6 +375,7 @@ sudo crontab -e
 ```
 
 ### Manual SSL Certificate
+
 ```bash
 # Generate private key
 openssl genrsa -out northstarsports.com.key 2048
@@ -374,6 +392,7 @@ sudo chmod 600 /etc/ssl/private/northstarsports.com.key
 ## 🎯 Application Server Setup
 
 ### PM2 Process Manager (Recommended)
+
 ```bash
 # Install PM2 globally
 npm install -g pm2
@@ -412,6 +431,7 @@ pm2 startup
 ```
 
 ### Systemd Service (Alternative)
+
 ```bash
 # Create service file
 sudo tee /etc/systemd/system/northstar-backend.service << EOF
@@ -442,6 +462,7 @@ sudo systemctl status northstar-backend
 ## 📊 Monitoring & Logging
 
 ### Application Monitoring
+
 ```bash
 # PM2 monitoring
 pm2 monit
@@ -454,6 +475,7 @@ pm2 restart northstar-backend
 ```
 
 ### Log Rotation Setup
+
 ```bash
 # Create logrotate configuration
 sudo tee /etc/logrotate.d/northstar << EOF
@@ -473,6 +495,7 @@ EOF
 ```
 
 ### Health Checks
+
 ```bash
 # Backend health check
 curl -f http://localhost:4000/health
@@ -487,6 +510,7 @@ redis-cli -h localhost ping
 ## 🔐 Security Hardening
 
 ### Server Security
+
 ```bash
 # Update system packages
 sudo apt update && sudo apt upgrade -y
@@ -507,6 +531,7 @@ sudo systemctl enable fail2ban
 ```
 
 ### Application Security
+
 - Keep dependencies updated
 - Use environment variables for secrets
 - Enable HTTPS only
@@ -518,6 +543,7 @@ sudo systemctl enable fail2ban
 ## 📈 Performance Optimization
 
 ### Backend Optimization
+
 ```javascript
 // Enable compression
 app.use(compression());
@@ -529,11 +555,12 @@ const redis = new Redis({
   password: process.env.REDIS_PASSWORD,
   maxRetriesPerRequest: 3,
   lazyConnect: true,
-  keepAlive: 30000
+  keepAlive: 30000,
 });
 ```
 
 ### Frontend Optimization
+
 - Code splitting and lazy loading
 - Image optimization and compression
 - CDN for static assets
@@ -541,6 +568,7 @@ const redis = new Redis({
 - Minification and compression
 
 ### Database Optimization
+
 ```bash
 # Redis optimization
 redis-cli CONFIG SET maxmemory-policy allkeys-lru
@@ -551,6 +579,7 @@ redis-cli CONFIG REWRITE
 ## 🔄 Backup & Recovery
 
 ### Redis Backup
+
 ```bash
 # Create backup script
 cat > backup-redis.sh << EOF
@@ -569,6 +598,7 @@ echo "0 2 * * * /path/to/backup-redis.sh" | crontab -
 ```
 
 ### Application Backup
+
 ```bash
 # Backup script
 cat > backup-app.sh << EOF
@@ -585,6 +615,7 @@ EOF
 ### Common Issues
 
 #### Backend Won't Start
+
 ```bash
 # Check logs
 pm2 logs northstar-backend
@@ -597,6 +628,7 @@ pm2 env northstar-backend
 ```
 
 #### Frontend 404 Errors
+
 ```bash
 # Check nginx configuration
 sudo nginx -t
@@ -609,6 +641,7 @@ sudo tail -f /var/log/nginx/error.log
 ```
 
 #### Redis Connection Issues
+
 ```bash
 # Test Redis connection
 redis-cli -h $REDIS_HOST -p $REDIS_PORT ping
@@ -620,6 +653,7 @@ sudo tail -f /var/log/redis/redis-server.log
 ### Recovery Procedures
 
 #### Backend Recovery
+
 ```bash
 # Stop services
 pm2 stop northstar-backend
@@ -632,6 +666,7 @@ pm2 start northstar-backend
 ```
 
 #### Database Recovery
+
 ```bash
 # Stop Redis
 sudo systemctl stop redis
@@ -646,6 +681,7 @@ sudo systemctl start redis
 ## 📋 Deployment Checklist
 
 ### Pre-Deployment
+
 - [ ] Code reviewed and tested
 - [ ] Environment variables configured
 - [ ] SSL certificates obtained
@@ -653,6 +689,7 @@ sudo systemctl start redis
 - [ ] Backup systems in place
 
 ### Deployment
+
 - [ ] Build applications
 - [ ] Deploy to servers
 - [ ] Configure reverse proxy
@@ -660,6 +697,7 @@ sudo systemctl start redis
 - [ ] Verify health checks
 
 ### Post-Deployment
+
 - [ ] Test all functionality
 - [ ] Monitor performance
 - [ ] Check error logs

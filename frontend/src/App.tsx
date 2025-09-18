@@ -1,15 +1,15 @@
-import { Routes, Route } from 'react-router-dom'
-import { Suspense, lazy } from 'react'
-import { RootLayout } from '@/components/layouts/RootLayout'
-import { HomePage } from '@/pages/HomePage'
-import { ProgressiveLoader } from '@/components/ProgressiveLoader'
+import { Routes, Route } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import { RootLayout } from "@/components/layouts/RootLayout";
+import { HomePage } from "@/pages/HomePage";
+import { ProgressiveLoader } from "@/components/ProgressiveLoader";
 
 // Lazy load non-critical pages for better initial load performance
-const GamePage = lazy(() => import('@/pages/GamePage'))
-const GameDetailPage = lazy(() => import('@/pages/GameDetailPage'))
-const MyBetsPage = lazy(() => import('@/pages/MyBetsPage'))
-const AccountPage = lazy(() => import('@/pages/AccountPage'))
-const OtherPage = lazy(() => import('@/pages/OtherPage'))
+const GamePage = lazy(() => import("@/pages/GamePage"));
+const GameDetailPage = lazy(() => import("@/pages/GameDetailPage"));
+const MyBetsPage = lazy(() => import("@/pages/MyBetsPage"));
+const AccountPage = lazy(() => import("@/pages/AccountPage"));
+const OtherPage = lazy(() => import("@/pages/OtherPage"));
 
 function LoadingFallback() {
   return (
@@ -19,7 +19,7 @@ function LoadingFallback() {
         <p className="text-muted-foreground">Loading NSSPORTSCLUB...</p>
       </div>
     </div>
-  )
+  );
 }
 
 function App() {
@@ -36,7 +36,7 @@ function App() {
         </Route>
       </Routes>
     </Suspense>
-  )
+  );
 }
 
-export default App
+export default App;

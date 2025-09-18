@@ -1,12 +1,12 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 interface SkeletonLoaderProps {
-  type: 'games' | 'navigation' | 'betslip';
+  type: "games" | "navigation" | "betslip";
   count?: number;
 }
 
 export const SkeletonLoader = ({ type, count = 3 }: SkeletonLoaderProps) => {
-  if (type === 'games') {
+  if (type === "games") {
     return (
       <div className="p-4 space-y-4">
         {Array.from({ length: count }).map((_, i) => (
@@ -40,7 +40,7 @@ export const SkeletonLoader = ({ type, count = 3 }: SkeletonLoaderProps) => {
     );
   }
 
-  if (type === 'navigation') {
+  if (type === "navigation") {
     return (
       <div className="p-4 space-y-3">
         {Array.from({ length: count }).map((_, i) => (
@@ -59,7 +59,7 @@ export const SkeletonLoader = ({ type, count = 3 }: SkeletonLoaderProps) => {
     );
   }
 
-  if (type === 'betslip') {
+  if (type === "betslip") {
     return (
       <div className="p-4 space-y-3">
         {Array.from({ length: count }).map((_, i) => (

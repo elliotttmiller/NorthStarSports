@@ -1,27 +1,27 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { SmoothScrollContainer } from '@/components/VirtualScrolling';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { SmoothScrollContainer } from "@/components/VirtualScrolling";
 // ...existing code...
-import { useNavigation } from '@/context/NavigationContext';
-import { Game } from '@/types';
-import { getGamesPaginated, PaginatedResponse } from '@/services/mockApi';
-import { Button } from '@/components/ui/button';
-import { GameCard } from '@/components/GameCard';
-import { ProfessionalGameRow } from '@/components/ProfessionalGameRow';
-import { CompactMobileGameRow } from '@/components/CompactMobileGameRow';
-import { SkeletonLoader } from '@/components/SkeletonLoader';
-import { GameCardSkeleton } from '@/components/ProgressiveLoader';
-import { useInfiniteScroll, useSmoothScroll } from '@/hooks/useInfiniteScroll';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from 'sonner';
-import { CaretUp } from '@phosphor-icons/react';
-import { cn } from '@/lib/utils';
-import { useKV } from '@/hooks/useKV';
+import { useNavigation } from "@/context/NavigationContext";
+import { Game } from "@/types";
+import { getGamesPaginated, PaginatedResponse } from "@/services/mockApi";
+import { Button } from "@/components/ui/button";
+import { GameCard } from "@/components/GameCard";
+import { ProfessionalGameRow } from "@/components/ProfessionalGameRow";
+import { CompactMobileGameRow } from "@/components/CompactMobileGameRow";
+import { SkeletonLoader } from "@/components/SkeletonLoader";
+import { GameCardSkeleton } from "@/components/ProgressiveLoader";
+import { useInfiniteScroll, useSmoothScroll } from "@/hooks/useInfiniteScroll";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
+import { CaretUp } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
+import { useKV } from "@/hooks/useKV";
 
 // Interface for layout preferences
 interface LayoutPreferences {
-  viewMode: 'fluid' | 'compact' | 'list';
-  sortBy: 'time' | 'popular' | 'odds';
+  viewMode: "fluid" | "compact" | "list";
+  sortBy: "time" | "popular" | "odds";
   showExpanded: boolean;
 }
 
@@ -31,14 +31,16 @@ const WorkspacePanel = () => {
 
   // State management
   const [games, setGames] = useState<Game[]>([]);
-  const [favoriteGames] = useKV<string[]>('favorite-games', []);
-  const [layoutPrefs] = useKV<LayoutPreferences>('workspace-layout-prefs', {
-    viewMode: 'fluid',
-    sortBy: 'time',
-    showExpanded: false
+  const [favoriteGames] = useKV<string[]>("favorite-games", []);
+  const [layoutPrefs] = useKV<LayoutPreferences>("workspace-layout-prefs", {
+    viewMode: "fluid",
+    sortBy: "time",
+    showExpanded: false,
   });
 
-  const [pagination, setPagination] = useState<PaginatedResponse<Game>['pagination'] | null>(null);
+  const [pagination, setPagination] = useState<
+    PaginatedResponse<Game>["pagination"] | null
+  >(null);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,39 +50,46 @@ const WorkspacePanel = () => {
   const loadMoreRef = useInfiniteScroll({
     hasNextPage: pagination?.hasNextPage ?? false,
     isFetchingNextPage: loading,
-    fetchNextPage: () => loadNextPage()
+    fetchNextPage: () => loadNextPage(),
   });
 
-  const loadGames = useCallback(async (page = 1, reset = false) => {
-    if (!navigation.selectedLeague) return;
-
-    if (reset) {
-      setInitialLoading(true);
-      setGames([]);
-    } else {
-      setLoading(true);
-    }
-
-    try {
-      const response = await getGamesPaginated(navigation.selectedLeague, page, 12);
+  const loadGames = useCallback(
+    async (page = 1, reset = false) => {
+      if (!navigation.selectedLeague) return;
 
       if (reset) {
-        setGames(response.data);
-        setCurrentPage(1);
+        setInitialLoading(true);
+        setGames([]);
       } else {
-        setGames(prevGames => [...prevGames, ...response.data]);
-        setCurrentPage(page);
+        setLoading(true);
       }
 
-      setPagination(response.pagination);
-    } catch (error) {
-      console.error('Failed to load games:', error);
-      toast.error('Failed to load games');
-    } finally {
-      setLoading(false);
-      setInitialLoading(false);
-    }
-  }, [navigation.selectedLeague]);
+      try {
+        const response = await getGamesPaginated(
+          navigation.selectedLeague,
+          page,
+          12,
+        );
+
+        if (reset) {
+          setGames(response.data);
+          setCurrentPage(1);
+        } else {
+          setGames((prevGames) => [...prevGames, ...response.data]);
+          setCurrentPage(page);
+        }
+
+        setPagination(response.pagination);
+      } catch (error) {
+        console.error("Failed to load games:", error);
+        toast.error("Failed to load games");
+      } finally {
+        setLoading(false);
+        setInitialLoading(false);
+      }
+    },
+    [navigation.selectedLeague],
+  );
 
   const loadNextPage = useCallback(() => {
     if (pagination?.hasNextPage && !loading) {
@@ -106,18 +115,31 @@ const WorkspacePanel = () => {
 
     // Sort games
     switch (layoutPrefs?.sortBy) {
-      case 'time':
-        processed.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+      case "time":
+        processed.sort(
+          (a, b) =>
+            new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
+        );
         break;
-      case 'popular':
+      case "popular":
         // Mock popularity sorting - in real app this would be based on betting volume
-        processed.sort((a, b) => (favoriteGames?.includes(b.id) ? 1 : 0) - (favoriteGames?.includes(a.id) ? 1 : 0));
+        processed.sort(
+          (a, b) =>
+            (favoriteGames?.includes(b.id) ? 1 : 0) -
+            (favoriteGames?.includes(a.id) ? 1 : 0),
+        );
         break;
-      case 'odds':
+      case "odds":
         // Sort by moneyline favorite
         processed.sort((a, b) => {
-          const aFav = Math.min(a.odds.moneyline.home.odds, a.odds.moneyline.away.odds);
-          const bFav = Math.min(b.odds.moneyline.home.odds, b.odds.moneyline.away.odds);
+          const aFav = Math.min(
+            a.odds.moneyline.home.odds,
+            a.odds.moneyline.away.odds,
+          );
+          const bFav = Math.min(
+            b.odds.moneyline.home.odds,
+            b.odds.moneyline.away.odds,
+          );
           return aFav - bFav;
         });
         break;
@@ -128,7 +150,7 @@ const WorkspacePanel = () => {
 
   const handleScrollToTop = () => {
     // Try to find the SmoothScrollContainer by class and scroll to top
-    const el = document.querySelector('.universal-responsive-container');
+    const el = document.querySelector(".universal-responsive-container");
     if (el) {
       scrollToTop(el as HTMLElement);
     }
@@ -140,38 +162,49 @@ const WorkspacePanel = () => {
   if (initialLoading) {
     return (
       <SmoothScrollContainer
-        className={cn('h-full universal-responsive-container px-0 sm:px-4')}
+        className={cn("h-full universal-responsive-container px-0 sm:px-4")}
         showScrollbar={false}
       >
-        <div className={cn("pt-2 pb-24 sm:pb-4", isMobile ? "px-2 space-y-2" : "mx-4 space-y-0")}>
+        <div
+          className={cn(
+            "pt-2 pb-24 sm:pb-4",
+            isMobile ? "px-2 space-y-2" : "mx-4 space-y-0",
+          )}
+        >
           {!isMobile && (
             // Desktop: Table header skeleton
             <div className="bg-muted/50 border border-border rounded-t-lg mb-0">
               <div className="grid grid-cols-[80px_1fr_120px_120px_120px_50px] gap-4 items-center py-3 px-4">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="h-4 bg-muted animate-pulse rounded"></div>
+                  <div
+                    key={i}
+                    className="h-4 bg-muted animate-pulse rounded"
+                  ></div>
                 ))}
               </div>
             </div>
           )}
-          
-          <div className={cn(
-            !isMobile && "bg-card/30 border border-t-0 border-border rounded-b-lg overflow-hidden"
-          )}>
+
+          <div
+            className={cn(
+              !isMobile &&
+                "bg-card/30 border border-t-0 border-border rounded-b-lg overflow-hidden",
+            )}
+          >
             <AnimatePresence>
               {Array.from({ length: 6 }).map((_, index) => (
                 <motion.div
                   key={`skeleton-${index}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    duration: 0.3, 
-                    delay: index * 0.1
+                  transition={{
+                    duration: 0.3,
+                    delay: index * 0.1,
                   }}
                   className={cn(
-                    isMobile 
-                      ? "bg-card/40 border border-border rounded-lg p-3 mb-2" 
-                      : "border-b border-border last:border-b-0"
+                    isMobile
+                      ? "bg-card/40 border border-border rounded-lg p-3 mb-2"
+                      : "border-b border-border last:border-b-0",
                   )}
                 >
                   {isMobile ? (
@@ -253,8 +286,12 @@ const WorkspacePanel = () => {
           transition={{ duration: 0.5 }}
         >
           <div className="text-center px-4">
-            <h3 className="text-lg font-medium text-foreground mb-2">Select a League</h3>
-            <p className="text-muted-foreground mb-4">Choose a sport and league to view games and place bets.</p>
+            <h3 className="text-lg font-medium text-foreground mb-2">
+              Select a League
+            </h3>
+            <p className="text-muted-foreground mb-4">
+              Choose a sport and league to view games and place bets.
+            </p>
 
             {/* Mobile-only: Show button to open sports navigation */}
             {isMobile && (
@@ -265,7 +302,7 @@ const WorkspacePanel = () => {
                 <Button
                   variant="secondary"
                   size="sm"
-                  onClick={() => setMobilePanel('navigation')}
+                  onClick={() => setMobilePanel("navigation")}
                   className="rounded-full px-4 py-2 mt-2 shadow-md"
                 >
                   Open Sports
@@ -292,7 +329,9 @@ const WorkspacePanel = () => {
         <div className="hidden md:grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 sm:px-8 lg:px-12 py-6 max-w-screen-lg mx-auto">
           <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
             <span className="text-sm text-muted-foreground mb-1">Balance</span>
-            <span className="text-2xl font-semibold text-foreground">$1,250.00</span>
+            <span className="text-2xl font-semibold text-foreground">
+              $1,250.00
+            </span>
           </div>
           <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
             <span className="text-sm text-muted-foreground mb-1">Win Rate</span>
@@ -303,17 +342,24 @@ const WorkspacePanel = () => {
             <span className="text-2xl font-semibold text-foreground">0</span>
           </div>
           <div className="flex flex-col items-center justify-center bg-card/80 border border-border rounded-xl shadow-sm p-6 min-h-[120px]">
-            <span className="text-sm text-muted-foreground mb-1">This Week</span>
-            <span className="text-2xl font-semibold text-foreground">+$340</span>
+            <span className="text-sm text-muted-foreground mb-1">
+              This Week
+            </span>
+            <span className="text-2xl font-semibold text-foreground">
+              +$340
+            </span>
           </div>
         </div>
         {/* Games Container - always fills available height */}
         <div className="flex-1 min-h-0 w-full flex flex-col">
           <SmoothScrollContainer
-            className={cn('h-full universal-responsive-container px-0 sm:px-4')}
+            className={cn("h-full universal-responsive-container px-0 sm:px-4")}
             showScrollbar={false}
           >
-            <div className="pt-2 pb-24 sm:pb-4" style={{ fontSize: 'var(--fluid-base)' }}>
+            <div
+              className="pt-2 pb-24 sm:pb-4"
+              style={{ fontSize: "var(--fluid-base)" }}
+            >
               {/* Professional League Header */}
               {navigation.selectedLeague && processedGames.length > 0 && (
                 <motion.div
@@ -321,17 +367,19 @@ const WorkspacePanel = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className={cn(
                     "bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-4 mb-0",
-                    isMobile ? "rounded-lg mx-2" : "rounded-t-lg mx-4"
+                    isMobile ? "rounded-lg mx-2" : "rounded-t-lg mx-4",
                   )}
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-lg font-bold">{navigation.selectedLeague}</h2>
+                      <h2 className="text-lg font-bold">
+                        {navigation.selectedLeague}
+                      </h2>
                       <p className="text-sm opacity-90">
-                        {new Date().toLocaleDateString('en-US', { 
-                          weekday: 'short', 
-                          month: 'short', 
-                          day: 'numeric' 
+                        {new Date().toLocaleDateString("en-US", {
+                          weekday: "short",
+                          month: "short",
+                          day: "numeric",
                         })}
                       </p>
                     </div>
@@ -369,7 +417,7 @@ const WorkspacePanel = () => {
                       <div className="text-center">ML</div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <AnimatePresence mode="popLayout">
                       {processedGames.map((game, index) => (
@@ -387,20 +435,27 @@ const WorkspacePanel = () => {
                 <div className="bg-card/30 border border-t-0 border-border mx-4 rounded-b-lg overflow-hidden">
                   <AnimatePresence mode="popLayout">
                     {processedGames.map((game, index) => {
-                      const currentTime = new Date(game.startTime).toLocaleTimeString('en-US', { 
-                        hour: 'numeric', 
-                        minute: '2-digit',
-                        hour12: true 
+                      const currentTime = new Date(
+                        game.startTime,
+                      ).toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
                       });
-                      const prevTime = index > 0 ? new Date(processedGames[index - 1].startTime).toLocaleTimeString('en-US', { 
-                        hour: 'numeric', 
-                        minute: '2-digit',
-                        hour12: true 
-                      }) : null;
-                      
+                      const prevTime =
+                        index > 0
+                          ? new Date(
+                              processedGames[index - 1].startTime,
+                            ).toLocaleTimeString("en-US", {
+                              hour: "numeric",
+                              minute: "2-digit",
+                              hour12: true,
+                            })
+                          : null;
+
                       const showTime = index === 0 || currentTime !== prevTime;
                       const isFirstInGroup = showTime && index > 0;
-                      
+
                       return (
                         <ProfessionalGameRow
                           key={game.id}
@@ -419,18 +474,20 @@ const WorkspacePanel = () => {
                 <div ref={loadMoreRef} className="h-16 w-full" />
               )}
               {/* End of results indicator */}
-              {pagination && !pagination.hasNextPage && processedGames.length > 0 && (
-                <motion.div
-                  className="text-center py-6"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <div className="text-sm text-muted-foreground">
-                    End of games list
-                  </div>
-                </motion.div>
-              )}
+              {pagination &&
+                !pagination.hasNextPage &&
+                processedGames.length > 0 && (
+                  <motion.div
+                    className="text-center py-6"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <div className="text-sm text-muted-foreground">
+                      End of games list
+                    </div>
+                  </motion.div>
+                )}
               {/* Enhanced loading indicator for infinite scroll */}
               {loading && (
                 <motion.div
@@ -445,9 +502,9 @@ const WorkspacePanel = () => {
                         key={`loading-skeleton-${index}`}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ 
-                          duration: 0.3, 
-                          delay: index * 0.1 
+                        transition={{
+                          duration: 0.3,
+                          delay: index * 0.1,
                         }}
                         className="bg-card/30 border border-border rounded-lg"
                       >
@@ -524,23 +581,37 @@ const WorkspacePanel = () => {
                           <div className="w-4 h-4 border-2 border-accent/20 border-t-accent rounded-full animate-spin" />
                           <div className="absolute inset-0 w-4 h-4 border border-accent/10 rounded-full animate-pulse" />
                         </div>
-                        <span className="text-sm text-muted-foreground">Loading more games...</span>
+                        <span className="text-sm text-muted-foreground">
+                          Loading more games...
+                        </span>
                         {/* Progressive dots */}
                         <div className="flex space-x-1 ml-2">
                           <motion.div
                             className="w-1 h-1 bg-accent rounded-full"
                             animate={{ opacity: [0.3, 1, 0.3] }}
-                            transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+                            transition={{
+                              duration: 1,
+                              repeat: Infinity,
+                              delay: 0,
+                            }}
                           />
                           <motion.div
                             className="w-1 h-1 bg-accent rounded-full"
                             animate={{ opacity: [0.3, 1, 0.3] }}
-                            transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+                            transition={{
+                              duration: 1,
+                              repeat: Infinity,
+                              delay: 0.2,
+                            }}
                           />
                           <motion.div
                             className="w-1 h-1 bg-accent rounded-full"
                             animate={{ opacity: [0.3, 1, 0.3] }}
-                            transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+                            transition={{
+                              duration: 1,
+                              repeat: Infinity,
+                              delay: 0.4,
+                            }}
                           />
                         </div>
                       </div>
@@ -550,7 +621,7 @@ const WorkspacePanel = () => {
               )}
             </div>
           </SmoothScrollContainer>
-          
+
           {/* Floating Action Button - Scroll to top */}
           <AnimatePresence>
             {processedGames.length > 5 && (

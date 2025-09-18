@@ -16,6 +16,7 @@ NorthStar Sports/
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Node.js** >= 18.0.0
 - **npm** >= 9.0.0
 - **Redis** (cloud instance or local)
@@ -24,41 +25,45 @@ NorthStar Sports/
 ### Development Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/elliotttmiller/NorthStarSports.git
    cd NorthStarSports
    ```
 
 2. **Install dependencies**
+
    ```bash
    # Install root dependencies
    npm install
-   
+
    # Install backend dependencies
    cd backend && npm install && cd ..
-   
+
    # Install frontend dependencies
    cd frontend && npm install && cd ..
    ```
 
 3. **Environment Configuration**
+
    ```bash
    # Copy environment templates
    cp backend/.env.example backend/.env
    cp frontend/.env.example frontend/.env
-   
+
    # Configure your environment variables
    ```
 
 4. **Start Development Servers**
+
    ```bash
    # Using Python orchestrator (recommended)
    python scripts/dev-start.py
-   
+
    # Or manually:
    # Terminal 1: Backend
    cd backend && npm run dev
-   
+
    # Terminal 2: Frontend
    cd frontend && npm run dev
    ```
@@ -71,6 +76,7 @@ NorthStar Sports/
 ## 🛠️ Technology Stack
 
 ### Frontend
+
 - **React 19** with TypeScript
 - **Vite** for build tooling
 - **TailwindCSS** for styling
@@ -80,6 +86,7 @@ NorthStar Sports/
 - **React Router** for navigation
 
 ### Backend
+
 - **Node.js** with TypeScript
 - **Express.js** web framework
 - **Redis** for data storage and caching
@@ -89,6 +96,7 @@ NorthStar Sports/
 - **Rate limiting** and security middleware
 
 ### DevOps
+
 - **Docker** containerization
 - **GitHub Actions** CI/CD
 - **ESLint** & **Prettier** for code quality
@@ -123,6 +131,7 @@ frontend/
 ## 🎯 Key Features
 
 ### ✅ Completed
+
 - Modern responsive UI design
 - Real-time sports odds display
 - Interactive bet slip functionality
@@ -134,6 +143,7 @@ frontend/
 - Comprehensive error handling
 
 ### 🚧 In Development
+
 - User authentication system
 - Live betting features
 - Advanced statistics
@@ -143,6 +153,7 @@ frontend/
 ## 📚 Available Scripts
 
 ### Root Level
+
 ```bash
 npm run dev:all        # Start both frontend and backend
 npm run build:all      # Build both applications
@@ -151,6 +162,7 @@ npm run lint:all       # Lint all code
 ```
 
 ### Backend Scripts
+
 ```bash
 npm run dev            # Development server with hot reload
 npm run build          # Build for production
@@ -160,6 +172,7 @@ npm run lint           # Lint TypeScript code
 ```
 
 ### Frontend Scripts
+
 ```bash
 npm run dev            # Vite development server
 npm run build          # Build for production
@@ -171,12 +184,14 @@ npm run lint           # Lint React/TypeScript code
 ## 🔧 Development Guidelines
 
 ### Code Style
+
 - **TypeScript** for type safety
 - **ESLint** + **Prettier** for formatting
 - **Conventional Commits** for git messages
 - **Component-driven** development
 
 ### Git Workflow
+
 1. Create feature branch from `main`
 2. Implement changes with tests
 3. Run linting and tests locally
@@ -184,6 +199,7 @@ npm run lint           # Lint React/TypeScript code
 5. Code review and merge
 
 ### Testing Strategy
+
 - **Unit tests** for utilities and services
 - **Integration tests** for API endpoints
 - **Component tests** for React components
@@ -200,6 +216,7 @@ npm run lint           # Lint React/TypeScript code
 ## 🚀 Deployment
 
 ### Docker Deployment
+
 ```bash
 # Build and start all services
 docker-compose up --build
@@ -209,6 +226,7 @@ docker-compose -f docker-compose.prod.yml up -d
 ```
 
 ### Manual Deployment
+
 ```bash
 # Build applications
 npm run build:all
@@ -221,6 +239,7 @@ cd frontend && npm run preview &
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](docs/CONTRIBUTING.md) for details on:
+
 - Code of conduct
 - Development setup
 - Pull request process

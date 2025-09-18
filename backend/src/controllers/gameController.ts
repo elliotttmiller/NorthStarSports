@@ -1,54 +1,65 @@
-import { Request, Response, NextFunction } from 'express';
-import { getGame as getGameService, setGame as setGameService } from '../services/gameService.js';
-import { success, error } from '../utils/responseFormatter.js';
-import { logInfo, logError, logWarn } from '../utils/logger.js';
+import { Request, Response, NextFunction } from "express";
+import {
+  getGame as getGameService,
+  setGame as setGameService,
+} from "../services/gameService.js";
+import { success, error } from "../utils/responseFormatter.js";
+import { logInfo, logError, logWarn } from "../utils/logger.js";
 
-export async function getGame(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function getGame(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
   const gameId = req.params.gameId;
   if (!gameId) {
-    logWarn('Missing gameId parameter');
-    res.status(400).json(error('Missing gameId parameter', 400));
+    logWarn("Missing gameId parameter");
+    res.status(400).json(error("Missing gameId parameter", 400));
     return;
   }
-  
-  logInfo('getGame called', { gameId });
+
+  logInfo("getGame called", { gameId });
   try {
     const game = await getGameService(gameId);
     if (!game) {
-      logWarn('Game not found', { gameId });
-      res.status(404).json(error('Game not found', 404));
+      logWarn("Game not found", { gameId });
+      res.status(404).json(error("Game not found", 404));
       return;
     }
-    logInfo('getGame success', { gameId });
+    logInfo("getGame success", { gameId });
     res.json(success(game));
   } catch (err) {
-    logError('getGame error', err as Error);
+    logError("getGame error", err as Error);
     next(err);
   }
 }
 
-export async function setGame(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function setGame(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
   const gameId = req.params.gameId;
   if (!gameId) {
-    logWarn('Missing gameId parameter');
-    res.status(400).json(error('Missing gameId parameter', 400));
+    logWarn("Missing gameId parameter");
+    res.status(400).json(error("Missing gameId parameter", 400));
     return;
   }
-  
-  logInfo('setGame called', { gameId });
+
+  logInfo("setGame called", { gameId });
   try {
     // Accept game data directly in body or nested under 'game' field
     const gameData = req.body.game || req.body;
     if (!gameData || Object.keys(gameData).length === 0) {
-      logWarn('Missing game data in body', { gameId });
-      res.status(400).json(error('Missing game data in body', 400));
+      logWarn("Missing game data in body", { gameId });
+      res.status(400).json(error("Missing game data in body", 400));
       return;
     }
     await setGameService(gameId, gameData);
-    logInfo('setGame success', { gameId });
+    logInfo("setGame success", { gameId });
     res.json(success({ gameId, game: gameData }));
   } catch (err) {
-    logError('setGame error', err as Error);
+    logError("setGame error", err as Error);
     next(err);
   }
 }

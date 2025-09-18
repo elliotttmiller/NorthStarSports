@@ -1,28 +1,32 @@
-import { Outlet } from 'react-router-dom'
-import { Header } from '../Header'
-import { BottomNav } from '../BottomNav'
-import { SideNavPanel } from '../panels/SideNavPanel'
-import { ActionHubPanel } from '../panels/ActionHubPanel'
-import { FloatingBetSlipButton } from '../FloatingBetSlipButton'
-import { BetSlipModal } from '../BetSlipModal'
-import { MobileBetSlipPanel } from '../MobileBetSlipPanel'
-import { NavigationProvider, useNavigation } from '../../context/NavigationContext'
-import { BetSlipProvider } from '../../context/BetSlipContext'
-import { UserProvider } from '@/context/UserContext';
-import { BetHistoryProvider } from '@/context/BetHistoryContext';
-import { BetsProvider } from '@/context/BetsContext';
-import { Toaster } from '@/components/ui/sonner'
-import { SidebarToggle } from '../SidebarToggle'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useIsMobile } from '@/hooks/useIsMobile'
-import React from 'react';
+import { Outlet } from "react-router-dom";
+import { Header } from "../Header";
+import { BottomNav } from "../BottomNav";
+import { SideNavPanel } from "../panels/SideNavPanel";
+import { ActionHubPanel } from "../panels/ActionHubPanel";
+import { FloatingBetSlipButton } from "../FloatingBetSlipButton";
+import { BetSlipModal } from "../BetSlipModal";
+import { MobileBetSlipPanel } from "../MobileBetSlipPanel";
+import {
+  NavigationProvider,
+  useNavigation,
+} from "../../context/NavigationContext";
+import { BetSlipProvider } from "../../context/BetSlipContext";
+import { UserProvider } from "@/context/UserContext";
+import { BetHistoryProvider } from "@/context/BetHistoryContext";
+import { BetsProvider } from "@/context/BetsContext";
+import { Toaster } from "@/components/ui/sonner";
+import { SidebarToggle } from "../SidebarToggle";
+import { motion, AnimatePresence } from "framer-motion";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import React from "react";
 
 // ...existing code...
 
 // Removed duplicate RootLayout implementation. Use the named export below.
 function LayoutContent() {
-  const { navigation, setMobilePanel, toggleSideNav, toggleActionHub } = useNavigation()
-  const isMobile = useIsMobile()
+  const { navigation, setMobilePanel, toggleSideNav, toggleActionHub } =
+    useNavigation();
+  const isMobile = useIsMobile();
 
   // ...existing code...
 
@@ -40,12 +44,12 @@ function LayoutContent() {
                 <Outlet />
               </div>
               <AnimatePresence mode="wait">
-                {navigation.mobilePanel === 'navigation' && (
+                {navigation.mobilePanel === "navigation" && (
                   <motion.div
                     key="mobile-sidenav"
-                    initial={{ x: '-100%' }}
+                    initial={{ x: "-100%" }}
                     animate={{ x: 0 }}
-                    exit={{ x: '-100%' }}
+                    exit={{ x: "-100%" }}
                     transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
                     className="fixed inset-0 top-16 z-40 bg-card"
                   >
@@ -62,16 +66,17 @@ function LayoutContent() {
             </div>
             <MobileBetSlipPanel />
             <AnimatePresence>
-              {navigation.mobilePanel && navigation.mobilePanel !== 'workspace' && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="fixed inset-0 bg-[color:var(--color-bg-overlay)]/80 backdrop-blur-md z-30"
-                  onClick={() => setMobilePanel(null)}
-                />
-              )}
+              {navigation.mobilePanel &&
+                navigation.mobilePanel !== "workspace" && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="fixed inset-0 bg-[color:var(--color-bg-overlay)]/80 backdrop-blur-md z-30"
+                    onClick={() => setMobilePanel(null)}
+                  />
+                )}
             </AnimatePresence>
           </>
         ) : (
@@ -109,9 +114,9 @@ function LayoutContent() {
               <AnimatePresence mode="wait">
                 {navigation.actionHubOpen && (
                   <motion.div
-                    initial={{ x: '100%', opacity: 0 }}
+                    initial={{ x: "100%", opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: '100%', opacity: 0 }}
+                    exit={{ x: "100%", opacity: 0 }}
                     transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
                     className="absolute top-0 right-0 bottom-0 w-96 bg-card/95 backdrop-blur-md border-l border-border z-40 shadow-2xl"
                   >
@@ -127,10 +132,8 @@ function LayoutContent() {
       </div>
       <Toaster />
     </div>
-  )
+  );
 }
-
-
 
 export function RootLayout() {
   return (

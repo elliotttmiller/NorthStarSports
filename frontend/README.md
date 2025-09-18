@@ -5,10 +5,12 @@ React/TypeScript frontend for the NorthStar Sports betting platform.
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js >= 18.0.0
 - npm >= 9.0.0
 
 ### Installation
+
 ```bash
 # Install dependencies
 npm install
@@ -18,6 +20,7 @@ cp .env.example .env.local
 ```
 
 ### Development
+
 ```bash
 # Start development server
 npm run dev
@@ -30,6 +33,7 @@ npm run preview
 ```
 
 ### Testing
+
 ```bash
 # Run test suite
 npm test
@@ -44,6 +48,7 @@ npm run test:watch
 ## 🏗️ Architecture
 
 ### Directory Structure
+
 ```
 src/
 ├── components/     # React components
@@ -61,6 +66,7 @@ src/
 ```
 
 ### Key Technologies
+
 - **React 19**: Latest React with concurrent features
 - **TypeScript**: Type-safe JavaScript
 - **Vite**: Fast build tool and dev server
@@ -72,14 +78,18 @@ src/
 ## 🎨 Component System
 
 ### UI Components (shadcn/ui)
+
 Pre-built, customizable components based on Radix UI:
+
 - `Button`, `Input`, `Card`, `Dialog`
 - `Table`, `Tabs`, `Select`, `Checkbox`
 - `Tooltip`, `Popover`, `Dropdown Menu`
 - And many more...
 
 ### Custom Components
+
 Application-specific components:
+
 - `GameCard` - Displays game information and betting options
 - `BetSlipModal` - Bet slip interface
 - `TeamLogo` - Team logo display component
@@ -87,6 +97,7 @@ Application-specific components:
 - `WorkspacePanel` - Main game display area
 
 ### Layout Components
+
 - `RootLayout` - Application shell
 - `Header` - Top navigation
 - `BottomNav` - Mobile navigation
@@ -95,11 +106,13 @@ Application-specific components:
 ## 📱 Responsive Design
 
 ### Mobile-First Approach
+
 - Components adapt from mobile to desktop
 - Touch-friendly interfaces
 - Optimized for various screen sizes
 
 ### Key Breakpoints
+
 ```css
 sm: 640px    /* Small tablets */
 md: 768px    /* Tablets */
@@ -109,6 +122,7 @@ xl: 1280px   /* Large laptops */
 ```
 
 ### Mobile-Specific Components
+
 - `CompactMobileGameRow` - Mobile game display
 - `MobileBetSlipPanel` - Mobile bet slip
 - `FloatingBetSlipButton` - Mobile bet slip trigger
@@ -116,14 +130,18 @@ xl: 1280px   /* Large laptops */
 ## 🎯 State Management
 
 ### React Context
+
 Global state management using React Context:
+
 - `UserContext` - User authentication and profile
 - `BetSlipContext` - Bet slip state and operations
 - `NavigationContext` - Navigation state
 - `BetsContext` - User's betting history
 
 ### Custom Hooks
+
 Reusable stateful logic:
+
 - `useApi` - API calls and error handling
 - `useIsMobile` - Responsive design utilities
 - `useInfiniteScroll` - Infinite scrolling
@@ -131,18 +149,21 @@ Reusable stateful logic:
 - `usePlayerProps` - Player props data
 
 ### Data Fetching
+
 React Query for server state management:
+
 ```typescript
 // Example usage
 const { data: games, isLoading } = useQuery({
-  queryKey: ['games', sport],
-  queryFn: () => fetchGamesBySport(sport)
+  queryKey: ["games", sport],
+  queryFn: () => fetchGamesBySport(sport),
 });
 ```
 
 ## 🎨 Styling System
 
 ### TailwindCSS Configuration
+
 ```javascript
 // Custom theme extensions
 theme: {
@@ -158,7 +179,9 @@ theme: {
 ```
 
 ### CSS Variables
+
 Design tokens for consistent theming:
+
 ```css
 :root {
   --background: 0 0% 100%;
@@ -169,7 +192,9 @@ Design tokens for consistent theming:
 ```
 
 ### Animation System
+
 Framer Motion for smooth animations:
+
 ```typescript
 // Example animation
 <motion.div
@@ -184,6 +209,7 @@ Framer Motion for smooth animations:
 ## 🔧 Development Tools
 
 ### Available Scripts
+
 ```bash
 npm run dev              # Start development server
 npm run build            # Build for production
@@ -195,13 +221,16 @@ npm run lint-and-type-check  # Run both linting and type checking
 ```
 
 ### Code Quality
+
 - **ESLint**: React and TypeScript linting
 - **Prettier**: Code formatting
 - **TypeScript**: Static type checking
 - **Jest**: Unit testing with React Testing Library
 
 ### Build Configuration
+
 Vite configuration with optimizations:
+
 - Code splitting
 - Tree shaking
 - Asset optimization
@@ -210,30 +239,35 @@ Vite configuration with optimizations:
 ## 📡 API Integration
 
 ### Service Layer
+
 Organized API calls in service files:
+
 ```typescript
 // services/gameService.ts
 export const gameService = {
-  getGames: () => api.get('/games'),
+  getGames: () => api.get("/games"),
   getGameById: (id: string) => api.get(`/games/${id}`),
-  getGamesBySport: (sport: string) => api.get(`/games/sport/${sport}`)
+  getGamesBySport: (sport: string) => api.get(`/games/sport/${sport}`),
 };
 ```
 
 ### Error Handling
+
 Centralized error handling with user feedback:
+
 ```typescript
 try {
   await gameService.getGames();
 } catch (error) {
-  showErrorToast('Failed to load games');
-  logger.error('API Error', error);
+  showErrorToast("Failed to load games");
+  logger.error("API Error", error);
 }
 ```
 
 ## 🎮 User Experience
 
 ### Key Features
+
 - **Responsive Design**: Optimized for all devices
 - **Smooth Animations**: Framer Motion transitions
 - **Real-time Updates**: Live betting odds
@@ -241,6 +275,7 @@ try {
 - **Accessibility**: ARIA labels and keyboard navigation
 
 ### Performance Optimizations
+
 - **Code Splitting**: Route-based splitting
 - **Lazy Loading**: Component lazy loading
 - **Virtual Scrolling**: Large list optimization
@@ -250,6 +285,7 @@ try {
 ## 🚀 Deployment
 
 ### Build Process
+
 ```bash
 # Production build
 npm run build
@@ -262,6 +298,7 @@ dist/
 ```
 
 ### Environment Variables
+
 ```bash
 # .env.local
 VITE_API_URL=http://localhost:4000
@@ -269,7 +306,9 @@ VITE_APP_ENV=development
 ```
 
 ### Static Hosting
+
 Deploy to any static hosting service:
+
 - **Vercel**: Zero-config deployment
 - **Netlify**: Continuous deployment
 - **AWS S3/CloudFront**: Scalable hosting
@@ -278,7 +317,9 @@ Deploy to any static hosting service:
 ## 🧪 Testing Strategy
 
 ### Unit Tests
+
 Component and utility testing:
+
 ```typescript
 import { render, screen } from '@testing-library/react';
 import { GameCard } from '../GameCard';
@@ -290,9 +331,11 @@ test('renders game information', () => {
 ```
 
 ### Integration Tests
+
 Context and hook testing:
+
 ```typescript
-test('bet slip adds and removes bets', () => {
+test("bet slip adds and removes bets", () => {
   const { result } = renderHook(() => useBetSlip());
   act(() => {
     result.current.addBet(mockBet);
@@ -304,13 +347,17 @@ test('bet slip adds and removes bets', () => {
 ## 📱 PWA Features
 
 ### Service Worker
+
 Offline functionality and caching:
+
 - Cache API responses
 - Offline page display
 - Background sync
 
 ### Manifest
+
 App-like installation:
+
 ```json
 {
   "name": "NorthStar Sports",
@@ -323,6 +370,7 @@ App-like installation:
 ## 🤝 Contributing
 
 ### Development Setup
+
 1. Fork and clone the repository
 2. Install dependencies: `npm install`
 3. Start development server: `npm run dev`
@@ -330,6 +378,7 @@ App-like installation:
 5. Submit pull request
 
 ### Code Style Guidelines
+
 - Use TypeScript for all new components
 - Follow existing naming conventions
 - Write tests for new features

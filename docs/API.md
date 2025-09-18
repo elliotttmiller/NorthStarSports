@@ -3,6 +3,7 @@
 Complete API reference for the NorthStar Sports backend services.
 
 ## 🌐 Base URL
+
 ```
 Development: http://localhost:4000
 Production:  https://api.northstarsports.com
@@ -11,7 +12,9 @@ Production:  https://api.northstarsports.com
 ## 📋 API Conventions
 
 ### Response Format
+
 All API responses follow this consistent format:
+
 ```json
 {
   "success": true,
@@ -22,6 +25,7 @@ All API responses follow this consistent format:
 ```
 
 ### Error Format
+
 ```json
 {
   "success": false,
@@ -35,6 +39,7 @@ All API responses follow this consistent format:
 ```
 
 ### Status Codes
+
 - `200` - OK: Successful operation
 - `201` - Created: Resource created successfully
 - `400` - Bad Request: Invalid request data
@@ -45,7 +50,9 @@ All API responses follow this consistent format:
 - `500` - Internal Server Error: Server error
 
 ## 🔐 Authentication
+
 Currently implementing JWT-based authentication. All protected endpoints will require:
+
 ```http
 Authorization: Bearer <jwt-token>
 ```
@@ -55,14 +62,17 @@ Authorization: Bearer <jwt-token>
 ## User Management
 
 ### Get User Profile
+
 ```http
 GET /api/v1/user/:id
 ```
 
 **Parameters:**
+
 - `id` (string, required) - User ID
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -70,7 +80,7 @@ GET /api/v1/user/:id
     "id": "user_123",
     "username": "johndoe",
     "email": "john@example.com",
-    "balance": 1250.00,
+    "balance": 1250.0,
     "createdAt": "2024-01-01T00:00:00Z",
     "updatedAt": "2024-01-15T12:00:00Z"
   }
@@ -78,11 +88,13 @@ GET /api/v1/user/:id
 ```
 
 ### Create User
+
 ```http
 POST /api/v1/user
 ```
 
 **Request Body:**
+
 ```json
 {
   "username": "johndoe",
@@ -92,6 +104,7 @@ POST /api/v1/user
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -99,7 +112,7 @@ POST /api/v1/user
     "id": "user_123",
     "username": "johndoe",
     "email": "john@example.com",
-    "balance": 0.00,
+    "balance": 0.0,
     "createdAt": "2024-01-15T12:00:00Z"
   },
   "message": "User created successfully"
@@ -107,11 +120,13 @@ POST /api/v1/user
 ```
 
 ### Update User Profile
+
 ```http
 PUT /api/v1/user/:id
 ```
 
 **Request Body:**
+
 ```json
 {
   "username": "newusername",
@@ -120,6 +135,7 @@ PUT /api/v1/user/:id
 ```
 
 ### Delete User
+
 ```http
 DELETE /api/v1/user/:id
 ```
@@ -129,17 +145,20 @@ DELETE /api/v1/user/:id
 ## Games & Sports
 
 ### Get All Games
+
 ```http
 GET /api/v1/games
 ```
 
 **Query Parameters:**
+
 - `sport` (string, optional) - Filter by sport (nfl, nba, mlb, nhl)
 - `status` (string, optional) - Filter by status (upcoming, live, finished)
 - `limit` (number, optional) - Limit results (default: 50)
 - `offset` (number, optional) - Pagination offset (default: 0)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -186,24 +205,29 @@ GET /api/v1/games
 ```
 
 ### Get Game by ID
+
 ```http
 GET /api/v1/games/:id
 ```
 
 ### Get Games by Sport
+
 ```http
 GET /api/v1/games/sport/:sport
 ```
 
 **Parameters:**
+
 - `sport` (string, required) - Sport identifier (nfl, nba, mlb, nhl)
 
 ### Create Game (Admin Only)
+
 ```http
 POST /api/v1/games
 ```
 
 **Request Body:**
+
 ```json
 {
   "leagueId": "nba",
@@ -225,16 +249,19 @@ POST /api/v1/games
 ## Betting System
 
 ### Get User Bets
+
 ```http
 GET /api/v1/bets/:userId
 ```
 
 **Query Parameters:**
+
 - `status` (string, optional) - Filter by status
 - `limit` (number, optional) - Limit results
 - `offset` (number, optional) - Pagination offset
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -247,25 +274,27 @@ GET /api/v1/bets/:userId
         "betType": "spread",
         "selection": "home",
         "odds": -110,
-        "amount": 50.00,
+        "amount": 50.0,
         "potentialPayout": 95.45,
         "status": "pending",
         "placedAt": "2024-01-15T12:00:00Z"
       }
     ],
     "totalCount": 10,
-    "totalAmount": 500.00,
-    "potentialPayout": 954.50
+    "totalAmount": 500.0,
+    "potentialPayout": 954.5
   }
 }
 ```
 
 ### Place Bet
+
 ```http
 POST /api/v1/bets
 ```
 
 **Request Body:**
+
 ```json
 {
   "userId": "user_123",
@@ -273,11 +302,12 @@ POST /api/v1/bets
   "betType": "spread",
   "selection": "home",
   "odds": -110,
-  "amount": 50.00
+  "amount": 50.0
 }
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -288,7 +318,7 @@ POST /api/v1/bets
     "betType": "spread",
     "selection": "home",
     "odds": -110,
-    "amount": 50.00,
+    "amount": 50.0,
     "potentialPayout": 95.45,
     "status": "pending",
     "placedAt": "2024-01-15T12:00:00Z"
@@ -298,6 +328,7 @@ POST /api/v1/bets
 ```
 
 ### Cancel Bet
+
 ```http
 DELETE /api/v1/bets/:id
 ```
@@ -307,11 +338,13 @@ DELETE /api/v1/bets/:id
 ## Key-Value Store
 
 ### Get Value
+
 ```http
 GET /api/v1/kv/:key
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -325,11 +358,13 @@ GET /api/v1/kv/:key
 ```
 
 ### Set Value
+
 ```http
 POST /api/v1/kv
 ```
 
 **Request Body:**
+
 ```json
 {
   "key": "user_settings_123",
@@ -338,6 +373,7 @@ POST /api/v1/kv
 ```
 
 ### Delete Key
+
 ```http
 DELETE /api/v1/kv/:key
 ```
@@ -347,11 +383,13 @@ DELETE /api/v1/kv/:key
 ## System Endpoints
 
 ### Health Check
+
 ```http
 GET /health
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -368,6 +406,7 @@ GET /health
 ```
 
 ### Redis Health Check
+
 ```http
 GET /health/redis
 ```
@@ -377,6 +416,7 @@ GET /health/redis
 ## Data Models
 
 ### User Model
+
 ```typescript
 interface User {
   id: string;
@@ -392,13 +432,14 @@ interface User {
 }
 
 interface UserSettings {
-  theme: 'light' | 'dark';
+  theme: "light" | "dark";
   notifications: boolean;
   timezone: string;
 }
 ```
 
 ### Game Model
+
 ```typescript
 interface Game {
   id: string;
@@ -406,7 +447,7 @@ interface Game {
   homeTeam: Team;
   awayTeam: Team;
   startTime: Date;
-  status: 'upcoming' | 'live' | 'finished';
+  status: "upcoming" | "live" | "finished";
   score?: GameScore;
   odds: GameOdds;
   venue?: string;
@@ -430,17 +471,18 @@ interface GameOdds {
 ```
 
 ### Bet Model
+
 ```typescript
 interface Bet {
   id: string;
   userId: string;
   gameId: string;
-  betType: 'spread' | 'moneyline' | 'total';
+  betType: "spread" | "moneyline" | "total";
   selection: string;
   odds: number;
   amount: number;
   potentialPayout: number;
-  status: 'pending' | 'won' | 'lost' | 'cancelled' | 'pushed';
+  status: "pending" | "won" | "lost" | "cancelled" | "pushed";
   placedAt: Date;
   settledAt?: Date;
   result?: BetResult;
@@ -452,11 +494,13 @@ interface Bet {
 ## Rate Limiting
 
 API endpoints are rate-limited to prevent abuse:
+
 - **General endpoints**: 100 requests per minute per IP
 - **Authentication endpoints**: 10 requests per minute per IP
 - **Betting endpoints**: 50 requests per minute per user
 
 Rate limit headers are included in responses:
+
 ```http
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 95
@@ -468,6 +512,7 @@ X-RateLimit-Reset: 1642248000
 ## Error Codes
 
 ### Client Errors (4xx)
+
 - `VALIDATION_ERROR` - Invalid request data
 - `AUTHENTICATION_REQUIRED` - Missing or invalid auth token
 - `INSUFFICIENT_PERMISSIONS` - User lacks required permissions
@@ -476,6 +521,7 @@ X-RateLimit-Reset: 1642248000
 - `INSUFFICIENT_FUNDS` - Not enough balance for bet
 
 ### Server Errors (5xx)
+
 - `INTERNAL_SERVER_ERROR` - Generic server error
 - `DATABASE_ERROR` - Redis connection or query error
 - `EXTERNAL_SERVICE_ERROR` - Third-party service failure
@@ -485,6 +531,7 @@ X-RateLimit-Reset: 1642248000
 ## Testing
 
 ### Using cURL
+
 ```bash
 # Get all games
 curl -X GET "http://localhost:4000/api/v1/games" \
@@ -503,6 +550,7 @@ curl -X POST "http://localhost:4000/api/v1/bets" \
 ```
 
 ### Using Postman
+
 Import the Postman collection available at `/docs/postman-collection.json`
 
 ---
@@ -510,6 +558,7 @@ Import the Postman collection available at `/docs/postman-collection.json`
 ## WebSocket Events (Coming Soon)
 
 Real-time updates will be available via WebSocket connection:
+
 - Live odds updates
 - Game score updates
 - Bet result notifications
@@ -520,9 +569,10 @@ Real-time updates will be available via WebSocket connection:
 ## Changelog
 
 ### v1.0.0 (2024-01-15)
+
 - Initial API release
 - User management endpoints
-- Game and betting endpoints  
+- Game and betting endpoints
 - Key-value store endpoints
 - Rate limiting and security features
 

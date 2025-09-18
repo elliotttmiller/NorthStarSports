@@ -1,15 +1,21 @@
-import { useState, useEffect } from 'react';
-import { useNavigation } from '@/context/NavigationContext';
-import { useNavigate } from 'react-router-dom';
-import { Sport } from '@/types';
-import { getSports } from '@/services/mockApi';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { SkeletonLoader } from '@/components/SkeletonLoader';
+import { useState, useEffect } from "react";
+import { useNavigation } from "@/context/NavigationContext";
+import { useNavigate } from "react-router-dom";
+import { Sport } from "@/types";
+import { getSports } from "@/services/mockApi";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { SkeletonLoader } from "@/components/SkeletonLoader";
 // ...existing code...
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from "framer-motion";
 
 export const SideNavPanel = () => {
-  const { navigation, selectSport, selectLeague, setMobilePanel } = useNavigation();
+  const { navigation, selectSport, selectLeague, setMobilePanel } =
+    useNavigation();
   const navigate = useNavigate();
   const [sports, setSports] = useState<Sport[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +26,7 @@ export const SideNavPanel = () => {
         const sportsData = await getSports();
         setSports(sportsData);
       } catch (error) {
-        console.error('Failed to load sports:', error);
+        console.error("Failed to load sports:", error);
       } finally {
         setLoading(false);
       }
@@ -31,13 +37,13 @@ export const SideNavPanel = () => {
   // ...existing code...
 
   const handleLeagueClick = (leagueId: string) => {
-    const sport = sports.find(s => s.leagues.some(l => l.id === leagueId));
+    const sport = sports.find((s) => s.leagues.some((l) => l.id === leagueId));
     if (sport) {
       selectSport(sport.id);
     }
     selectLeague(leagueId);
     setTimeout(() => {
-      navigate('/games');
+      navigate("/games");
     }, 150);
     if (window.innerWidth < 1024) {
       setMobilePanel(null);
@@ -50,7 +56,7 @@ export const SideNavPanel = () => {
       <AccordionItem key={sport.id} value={sport.id} className="border-border">
         <AccordionTrigger
           className={`text-left hover:no-underline px-2 py-2 transition-all duration-200 ${
-            isExpanded ? 'bg-muted/50' : 'hover:bg-muted/30'
+            isExpanded ? "bg-muted/50" : "hover:bg-muted/30"
           }`}
         >
           <motion.div
@@ -59,9 +65,11 @@ export const SideNavPanel = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.2, delay: index * 0.03 }}
           >
-            <span className={`font-medium text-sm transition-colors duration-200 ${
-              isExpanded ? 'text-card-foreground' : 'text-card-foreground/80'
-            }`}>
+            <span
+              className={`font-medium text-sm transition-colors duration-200 ${
+                isExpanded ? "text-card-foreground" : "text-card-foreground/80"
+              }`}
+            >
               {sport.name}
             </span>
             <div className="flex-1" />
@@ -78,17 +86,17 @@ export const SideNavPanel = () => {
                 onClick={() => handleLeagueClick(league.id)}
                 className={`w-full text-left px-2 py-1.5 rounded-md text-xs transition-all duration-300 ${
                   navigation.selectedLeague === league.id
-                    ? 'bg-accent text-accent-foreground shadow-sm scale-[1.02]'
-                    : 'text-muted-foreground hover:text-card-foreground hover:bg-muted/50'
+                    ? "bg-accent text-accent-foreground shadow-sm scale-[1.02]"
+                    : "text-muted-foreground hover:text-card-foreground hover:bg-muted/50"
                 }`}
                 whileHover={{ x: 2 }}
                 whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ 
-                  duration: 0.2, 
+                transition={{
+                  duration: 0.2,
                   delay: leagueIndex * 0.03,
-                  ease: [0.4, 0.0, 0.2, 1]
+                  ease: [0.4, 0.0, 0.2, 1],
                 }}
               >
                 <div className="flex items-center justify-between">
@@ -117,7 +125,9 @@ export const SideNavPanel = () => {
           transition={{ duration: 0.3 }}
         >
           <div className="p-3 border-b border-border flex-shrink-0">
-            <h2 className="text-base font-semibold text-card-foreground">Sports</h2>
+            <h2 className="text-base font-semibold text-card-foreground">
+              Sports
+            </h2>
             <p className="text-xs text-muted-foreground">Loading sports...</p>
           </div>
           <div className="flex-1">
@@ -137,23 +147,33 @@ export const SideNavPanel = () => {
         exit={{ opacity: 0, y: -30 }}
         transition={{ duration: 0.4, ease: [0.4, 0.0, 0.2, 1] }}
         className="h-full bg-card flex flex-col overflow-hidden shadow-lg border-r border-border"
-        style={{ '--nav-panel-width': '256px' } as React.CSSProperties}
+        style={{ "--nav-panel-width": "256px" } as React.CSSProperties}
       >
         {/* Sticky header for mobile and desktop */}
         <motion.div
           className="sticky top-0 z-10 bg-card/95 border-b border-border flex-shrink-0 px-4 py-3 md:py-4"
-          style={{ fontSize: 'var(--fluid-lg)', borderRadius: 'var(--fluid-radius)' }}
+          style={{
+            fontSize: "var(--fluid-lg)",
+            borderRadius: "var(--fluid-radius)",
+          }}
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <h2 className="font-semibold text-card-foreground text-lg md:text-xl">Sports</h2>
-          <p className="text-xs md:text-sm text-muted-foreground">Select league to view games</p>
+          <h2 className="font-semibold text-card-foreground text-lg md:text-xl">
+            Sports
+          </h2>
+          <p className="text-xs md:text-sm text-muted-foreground">
+            Select league to view games
+          </p>
         </motion.div>
 
         {/* Scrollable sports/league list */}
         <div className="flex-1 min-h-0 overflow-hidden">
-          <div className="h-full seamless-scroll overflow-y-auto px-2 md:px-4 py-2 md:py-4" style={{ fontSize: 'var(--fluid-base)' }}>
+          <div
+            className="h-full seamless-scroll overflow-y-auto px-2 md:px-4 py-2 md:py-4"
+            style={{ fontSize: "var(--fluid-base)" }}
+          >
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -178,7 +198,7 @@ export const SideNavPanel = () => {
                       transition={{
                         duration: 0.3,
                         delay: index * 0.05,
-                        ease: [0.4, 0.0, 0.2, 1]
+                        ease: [0.4, 0.0, 0.2, 1],
                       }}
                     >
                       {renderSportItem(sport, index)}

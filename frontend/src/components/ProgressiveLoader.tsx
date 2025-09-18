@@ -1,41 +1,41 @@
-import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 interface ProgressiveLoaderProps {
-  text?: string
-  showProgress?: boolean
-  delay?: number
+  text?: string;
+  showProgress?: boolean;
+  delay?: number;
 }
 
-export function ProgressiveLoader({ 
-  text = "Loading...", 
+export function ProgressiveLoader({
+  text = "Loading...",
   showProgress = true,
-  delay = 0
+  delay = 0,
 }: ProgressiveLoaderProps) {
-  const [progress, setProgress] = useState(0)
-  const [visible, setVisible] = useState(delay === 0)
+  const [progress, setProgress] = useState(0);
+  const [visible, setVisible] = useState(delay === 0);
 
   useEffect(() => {
     if (delay > 0) {
-      const timer = setTimeout(() => setVisible(true), delay)
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setVisible(true), delay);
+      return () => clearTimeout(timer);
     }
-  }, [delay])
+  }, [delay]);
 
   useEffect(() => {
-    if (!visible || !showProgress) return
+    if (!visible || !showProgress) return;
 
     const timer = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 90) return prev
-        return prev + Math.random() * 15
-      })
-    }, 100)
+      setProgress((prev) => {
+        if (prev >= 90) return prev;
+        return prev + Math.random() * 15;
+      });
+    }, 100);
 
-    return () => clearInterval(timer)
-  }, [visible, showProgress])
+    return () => clearInterval(timer);
+  }, [visible, showProgress]);
 
-  if (!visible) return null
+  if (!visible) return null;
 
   return (
     <motion.div
@@ -98,7 +98,7 @@ export function ProgressiveLoader({
         </motion.div>
       </motion.div>
     </motion.div>
-  )
+  );
 }
 
 // Skeleton loader for specific components
@@ -137,7 +137,10 @@ export function GameCardSkeleton() {
             {/* Betting buttons skeleton */}
             <div className="flex space-x-2">
               {[1, 2, 3].map((j) => (
-                <div key={j} className="w-16 h-8 bg-muted/20 rounded animate-pulse" />
+                <div
+                  key={j}
+                  className="w-16 h-8 bg-muted/20 rounded animate-pulse"
+                />
               ))}
             </div>
           </div>
@@ -150,5 +153,5 @@ export function GameCardSkeleton() {
         <div className="h-6 w-20 bg-muted/20 rounded animate-pulse" />
       </div>
     </motion.div>
-  )
+  );
 }

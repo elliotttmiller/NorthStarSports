@@ -5,11 +5,13 @@ Node.js/Express backend API for the NorthStar Sports betting platform.
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js >= 18.0.0
 - npm >= 9.0.0
 - Redis Cloud instance or local Redis server
 
 ### Installation
+
 ```bash
 # Install dependencies
 npm install
@@ -21,6 +23,7 @@ cp .env.example .env
 ```
 
 ### Development
+
 ```bash
 # Start development server with hot reload
 npm run dev
@@ -33,6 +36,7 @@ npm start
 ```
 
 ### Testing
+
 ```bash
 # Run test suite
 npm test
@@ -47,6 +51,7 @@ npm test user.test.js
 ## 🏗️ Architecture
 
 ### Directory Structure
+
 ```
 src/
 ├── controllers/    # HTTP request handlers
@@ -58,6 +63,7 @@ src/
 ```
 
 ### Key Components
+
 - **Controllers**: Handle HTTP requests and responses
 - **Services**: Contain business logic and data operations
 - **Models**: Define data structures and Redis operations
@@ -67,6 +73,7 @@ src/
 ## 📡 API Endpoints
 
 ### User Management
+
 ```bash
 GET    /api/v1/user/:id          # Get user profile
 POST   /api/v1/user              # Create new user
@@ -75,6 +82,7 @@ DELETE /api/v1/user/:id          # Delete user account
 ```
 
 ### Games & Odds
+
 ```bash
 GET    /api/v1/games             # Get all games
 GET    /api/v1/games/:id         # Get specific game
@@ -83,6 +91,7 @@ POST   /api/v1/games             # Create new game (admin)
 ```
 
 ### Betting
+
 ```bash
 GET    /api/v1/bets/:userId      # Get user's bets
 POST   /api/v1/bets              # Place new bet
@@ -91,6 +100,7 @@ DELETE /api/v1/bets/:id          # Cancel bet (if allowed)
 ```
 
 ### Key-Value Store
+
 ```bash
 GET    /api/v1/kv/:key           # Get value by key
 POST   /api/v1/kv                # Set key-value pair
@@ -100,6 +110,7 @@ DELETE /api/v1/kv/:key           # Delete key
 ## 💾 Data Models
 
 ### User Model
+
 ```typescript
 interface User {
   id: string;
@@ -114,6 +125,7 @@ interface User {
 ```
 
 ### Game Model
+
 ```typescript
 interface Game {
   id: string;
@@ -121,13 +133,14 @@ interface Game {
   homeTeam: Team;
   awayTeam: Team;
   startTime: Date;
-  status: 'upcoming' | 'live' | 'finished';
+  status: "upcoming" | "live" | "finished";
   odds: GameOdds;
   venue?: string;
 }
 ```
 
 ### Bet Model
+
 ```typescript
 interface Bet {
   id: string;
@@ -137,7 +150,7 @@ interface Bet {
   selection: string;
   odds: number;
   amount: number;
-  status: 'pending' | 'won' | 'lost' | 'cancelled';
+  status: "pending" | "won" | "lost" | "cancelled";
   placedAt: Date;
 }
 ```
@@ -154,6 +167,7 @@ interface Bet {
 ## ⚙️ Configuration
 
 ### Environment Variables
+
 ```bash
 # Server Configuration
 PORT=4000
@@ -170,6 +184,7 @@ JWT_EXPIRES_IN=24h
 ```
 
 ### Redis Schema
+
 ```javascript
 // User data
 user:{userId} = {User Object}
@@ -189,6 +204,7 @@ kv:{key} = value
 ## 🔧 Development Tools
 
 ### Available Scripts
+
 ```bash
 npm run dev          # Start with nodemon (hot reload)
 npm run build        # Compile TypeScript to JavaScript
@@ -200,6 +216,7 @@ npm run clean        # Remove dist directory
 ```
 
 ### Code Quality
+
 - **ESLint**: Code linting with TypeScript support
 - **Prettier**: Code formatting (configured in .prettierrc)
 - **Husky**: Git hooks for pre-commit checks
@@ -208,14 +225,18 @@ npm run clean        # Remove dist directory
 ## 🐳 Docker Support
 
 ### Dockerfile
+
 The backend includes a multi-stage Dockerfile for production builds:
+
 ```bash
 docker build -t northstar-backend .
 docker run -p 4000:4000 northstar-backend
 ```
 
 ### Docker Compose
+
 Development environment with Redis:
+
 ```bash
 docker-compose up backend redis
 ```
@@ -223,15 +244,17 @@ docker-compose up backend redis
 ## 📊 Monitoring & Logging
 
 ### Structured Logging
+
 ```typescript
-import logger from '../utils/logger';
+import logger from "../utils/logger";
 
 // Log levels: trace, debug, info, warn, error, fatal
-logger.info('User created', { userId, email });
-logger.error('Database error', { error: err.message });
+logger.info("User created", { userId, email });
+logger.error("Database error", { error: err.message });
 ```
 
 ### Health Checks
+
 ```bash
 GET /health          # Server health status
 GET /health/redis    # Redis connection status
@@ -240,6 +263,7 @@ GET /health/redis    # Redis connection status
 ## 🚀 Deployment
 
 ### Production Deployment
+
 1. Build the application: `npm run build`
 2. Set production environment variables
 3. Start the server: `npm start`
@@ -248,6 +272,7 @@ GET /health/redis    # Redis connection status
 6. Configure monitoring and logging
 
 ### Environment-Specific Configs
+
 - **Development**: Hot reload, detailed logging
 - **Testing**: In-memory Redis, test database
 - **Production**: Optimized builds, error tracking

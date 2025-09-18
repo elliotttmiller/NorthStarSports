@@ -13,13 +13,17 @@
   justify-content: stretch !important;
   overflow: hidden !important;
 }
-@import 'tailwindcss';
+@import "tailwindcss";
 @import "tw-animate-css";
 
 /* Animation for shimmer effect */
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .animate-shimmer {
@@ -27,20 +31,19 @@
 }
 
 :root {
-
   /* --- Modern Elegant Palette --- */
   /* Neutrals: deep slate blue-gray to soft off-white */
   --color-neutral-1: oklch(0.99 0.002 250); /* off-white */
   --color-neutral-2: oklch(0.97 0.004 250);
   --color-neutral-3: oklch(0.94 0.006 250);
-  --color-neutral-4: oklch(0.90 0.010 250);
+  --color-neutral-4: oklch(0.9 0.01 250);
   --color-neutral-5: oklch(0.84 0.014 250);
   --color-neutral-6: oklch(0.75 0.018 250);
   --color-neutral-7: oklch(0.66 0.022 250);
   --color-neutral-8: oklch(0.55 0.025 250);
   --color-neutral-9: oklch(0.45 0.028 250);
   --color-neutral-10: oklch(0.32 0.025 250); /* deep slate */
-  --color-neutral-11: oklch(0.22 0.020 250);
+  --color-neutral-11: oklch(0.22 0.02 250);
   --color-neutral-12: oklch(0.14 0.015 250);
   --color-neutral-contrast: oklch(0.09 0.008 250);
 
@@ -49,10 +52,10 @@
   --color-accent-2: oklch(0.95 0.036 265);
   --color-accent-3: oklch(0.92 0.054 265);
   --color-accent-4: oklch(0.88 0.072 265);
-  --color-accent-5: oklch(0.82 0.090 265);
+  --color-accent-5: oklch(0.82 0.09 265);
   --color-accent-6: oklch(0.75 0.108 265);
   --color-accent-7: oklch(0.68 0.126 265);
-  --color-accent-8: oklch(0.60 0.144 265);
+  --color-accent-8: oklch(0.6 0.144 265);
   --color-accent-9: oklch(0.48 0.18 265); /* main accent */
   --color-accent-10: oklch(0.42 0.15 265);
   --color-accent-11: oklch(0.35 0.13 265);
@@ -64,10 +67,10 @@
   --color-accent-secondary-2: oklch(0.95 0.028 145);
   --color-accent-secondary-3: oklch(0.92 0.042 145);
   --color-accent-secondary-4: oklch(0.88 0.056 145);
-  --color-accent-secondary-5: oklch(0.82 0.070 145);
+  --color-accent-secondary-5: oklch(0.82 0.07 145);
   --color-accent-secondary-6: oklch(0.75 0.084 145);
   --color-accent-secondary-7: oklch(0.68 0.098 145);
-  --color-accent-secondary-8: oklch(0.60 0.112 145);
+  --color-accent-secondary-8: oklch(0.6 0.112 145);
   --color-accent-secondary-9: oklch(0.58 0.14 145); /* main green */
   --color-accent-secondary-10: oklch(0.52 0.11 145);
   --color-accent-secondary-11: oklch(0.45 0.09 145);
@@ -76,7 +79,7 @@
 
   /* Foreground and background */
   --color-fg: oklch(0.97 0.004 250); /* near-white */
-  --color-fg-secondary: oklch(0.70 0.012 250);
+  --color-fg-secondary: oklch(0.7 0.012 250);
   --color-bg: oklch(0.16 0.007 250); /* deep slate blue-gray */
   --color-bg-inset: oklch(0.19 0.012 250);
   --color-bg-overlay: oklch(0.22 0.012 250);
@@ -90,7 +93,7 @@
   /* Border and shadow */
   --color-border: oklch(0.28 0.018 250);
   --color-border-soft: oklch(0.22 0.012 250);
-  --color-shadow: oklch(0.10 0.008 250);
+  --color-shadow: oklch(0.1 0.008 250);
 
   /* Focus ring */
   --color-focus-ring: oklch(0.48 0.18 265);
@@ -169,7 +172,7 @@
   .layout-container {
     padding-bottom: 5rem; /* 80px - space for bottom nav */
   }
-  
+
   /* Ensure mobile dialogs stay within viewport */
   [data-radix-dialog-content] {
     position: fixed !important;
@@ -219,7 +222,7 @@
 
 .fluid-card-inner:hover {
   /* Subtle elevation on hover */
-  box-shadow: 
+  box-shadow:
     0 4px 12px oklch(from var(--accent) l c h / 0.08),
     0 2px 4px oklch(from var(--accent) l c h / 0.05);
 }
@@ -249,9 +252,11 @@
 .fluid-game-card-compact {
   /* Compact card styling */
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     oklch(from var(--card) l c h / 0.98) 0%,
-    oklch(from var(--card) l c h / 0.95) 100%);
+    oklch(from var(--card) l c h / 0.95) 100%
+  );
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -259,9 +264,11 @@
 .fluid-game-card-desktop {
   /* Desktop card styling */
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     oklch(from var(--card) l c h / 0.98) 0%,
-    oklch(from var(--card) l c h / 0.92) 100%);
+    oklch(from var(--card) l c h / 0.92) 100%
+  );
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -270,17 +277,21 @@
 .betting-button {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     oklch(from var(--muted) l c h / 0.6) 0%,
-    oklch(from var(--muted) l c h / 0.4) 100%);
+    oklch(from var(--muted) l c h / 0.4) 100%
+  );
   border: 1px solid oklch(from var(--border) l c h / 0.8);
   transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .betting-button:hover {
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     oklch(from var(--accent) l c h / 0.12) 0%,
-    oklch(from var(--accent) l c h / 0.08) 100%);
+    oklch(from var(--accent) l c h / 0.08) 100%
+  );
   border-color: oklch(from var(--accent) l c h / 0.6);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px oklch(from var(--accent) l c h / 0.15);
@@ -292,16 +303,18 @@
 }
 
 .betting-button::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
+  background: linear-gradient(
+    90deg,
     transparent 0%,
     oklch(from var(--accent) l c h / 0.1) 50%,
-    transparent 100%);
+    transparent 100%
+  );
   transition: left 0.5s ease;
 }
 
@@ -321,13 +334,25 @@
 }
 
 @keyframes oddsUp {
-  0% { transform: translateY(2px); opacity: 0.5; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(2px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes oddsDown {
-  0% { transform: translateY(-2px); opacity: 0.5; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(-2px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Virtual scrolling optimizations */
@@ -349,23 +374,23 @@
     /* Reduce complexity on mobile */
     will-change: transform, opacity;
   }
-  
+
   .fluid-card-inner {
     /* Optimize touch interactions */
     touch-action: manipulation;
   }
-  
+
   .betting-button {
     /* Larger touch targets on mobile */
     min-height: 48px;
     font-size: 0.875rem;
   }
-  
+
   .game-card-wrapper {
     /* Adjusted spacing for mobile */
     min-height: 240px;
   }
-  
+
   .fluid-game-card-compact,
   .fluid-game-card-desktop {
     /* Reduced blur for performance */
@@ -393,9 +418,11 @@
 }
 
 .virtual-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, 
+  background: linear-gradient(
+    180deg,
     oklch(from var(--accent) l c h / 0.4) 0%,
-    oklch(from var(--accent) l c h / 0.3) 100%);
+    oklch(from var(--accent) l c h / 0.3) 100%
+  );
   border-radius: 4px;
   border: 1px solid oklch(from var(--accent) l c h / 0.1);
   transition: all 0.2s ease;
@@ -403,9 +430,11 @@
 }
 
 .virtual-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, 
+  background: linear-gradient(
+    180deg,
     oklch(from var(--accent) l c h / 0.6) 0%,
-    oklch(from var(--accent) l c h / 0.5) 100%);
+    oklch(from var(--accent) l c h / 0.5) 100%
+  );
   border-color: oklch(from var(--accent) l c h / 0.2);
 }
 
@@ -419,7 +448,7 @@
     width: 4px;
     height: 4px;
   }
-  
+
   .virtual-scrollbar::-webkit-scrollbar-thumb {
     border: none;
     box-shadow: none;
@@ -479,7 +508,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 5px oklch(from var(--accent) l c h / 0.3);
   }
   50% {
@@ -496,7 +526,7 @@
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
   }
-  
+
   .mobile-betslip-modal [data-radix-dialog-content] {
     position: fixed !important;
     inset: 0 !important;
@@ -521,9 +551,11 @@
 .betting-button-enhanced {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     oklch(from var(--card) l c h / 0.95) 0%,
-    oklch(from var(--card) l c h / 0.85) 100%);
+    oklch(from var(--card) l c h / 0.85) 100%
+  );
   border: 1px solid oklch(from var(--border) l c h / 0.6);
   transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
   backdrop-filter: blur(8px);
@@ -531,9 +563,11 @@
 }
 
 .betting-button-enhanced:hover {
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     oklch(from var(--accent) l c h / 0.15) 0%,
-    oklch(from var(--accent) l c h / 0.08) 100%);
+    oklch(from var(--accent) l c h / 0.08) 100%
+  );
   border-color: oklch(from var(--accent) l c h / 0.4);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px oklch(from var(--accent) l c h / 0.15);
@@ -545,23 +579,29 @@
 }
 
 .betting-button-enhanced.high-value {
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     oklch(0.85 0.15 85 / 0.1) 0%,
-    oklch(0.85 0.15 85 / 0.05) 100%);
+    oklch(0.85 0.15 85 / 0.05) 100%
+  );
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
 .betting-button-enhanced.accent-variant {
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     oklch(from var(--accent) l c h / 0.2) 0%,
-    oklch(from var(--accent) l c h / 0.1) 100%);
+    oklch(from var(--accent) l c h / 0.1) 100%
+  );
   border-color: oklch(from var(--accent) l c h / 0.4);
 }
 
 .betting-button-enhanced.accent-variant:hover {
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     oklch(from var(--accent) l c h / 0.3) 0%,
-    oklch(from var(--accent) l c h / 0.2) 100%);
+    oklch(from var(--accent) l c h / 0.2) 100%
+  );
   border-color: oklch(from var(--accent) l c h / 0.6);
 }
 
@@ -570,47 +610,51 @@
   .fluid-game-card-compact {
     /* Enhanced mobile styling */
     border-radius: var(--radius-xl);
-    background: linear-gradient(135deg, 
+    background: linear-gradient(
+      135deg,
       oklch(from var(--card) l c h / 0.98) 0%,
       oklch(from var(--card) l c h / 0.92) 50%,
-      oklch(from var(--card) l c h / 0.88) 100%);
+      oklch(from var(--card) l c h / 0.88) 100%
+    );
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    box-shadow: 
+    box-shadow:
       0 2px 8px oklch(from var(--background) l c h / 0.8),
       inset 0 1px 0 oklch(from var(--foreground) l c h / 0.1);
   }
-  
+
   .fluid-game-card-compact:hover {
     transform: translateY(-2px);
-    box-shadow: 
+    box-shadow:
       0 8px 24px oklch(from var(--accent) l c h / 0.15),
       0 2px 8px oklch(from var(--background) l c h / 0.8),
       inset 0 1px 0 oklch(from var(--foreground) l c h / 0.15);
   }
-  
+
   .betting-button-enhanced {
     /* Optimized for touch */
     min-height: 44px;
     border-radius: var(--radius-lg);
     font-weight: 600;
   }
-  
+
   .game-card-highlight {
     position: relative;
   }
-  
+
   .game-card-highlight::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent 0%,
       oklch(from var(--accent) l c h / 0.1) 50%,
-      transparent 100%);
+      transparent 100%
+    );
     animation: shimmer 2s infinite;
     pointer-events: none;
   }
@@ -618,9 +662,11 @@
 
 /* Toast notification styling for bets */
 .bet-toast {
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     oklch(from var(--accent) l c h / 0.95) 0%,
-    oklch(from var(--accent) l c h / 0.85) 100%) !important;
+    oklch(from var(--accent) l c h / 0.85) 100%
+  ) !important;
   border: 1px solid oklch(from var(--accent) l c h / 0.3) !important;
   color: oklch(from var(--accent) l c h / 1) !important;
   backdrop-filter: blur(8px) !important;

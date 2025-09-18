@@ -1,13 +1,13 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { X } from '@phosphor-icons/react'
-import { formatOdds, formatTotalLine } from '@/lib/formatters'
-import { formatBetDescription, formatMatchup } from '@/lib/betFormatters'
-import { Bet } from '@/types'
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { X } from "@phosphor-icons/react";
+import { formatOdds, formatTotalLine } from "@/lib/formatters";
+import { formatBetDescription, formatMatchup } from "@/lib/betFormatters";
+import { Bet } from "@/types";
 
 interface BetSlipItemProps {
-  bet: Bet
-  onRemove: () => void
+  bet: Bet;
+  onRemove: () => void;
 }
 
 export function BetSlipItem({ bet, onRemove }: BetSlipItemProps) {
@@ -16,12 +16,19 @@ export function BetSlipItem({ bet, onRemove }: BetSlipItemProps) {
       <CardContent className="p-3">
         <div className="flex justify-between items-start mb-2">
           <div className="flex-1">
-            <div className="font-medium text-sm">{formatBetDescription(bet)}</div>
+            <div className="font-medium text-sm">
+              {formatBetDescription(bet)}
+            </div>
             <div className="text-xs text-muted-foreground">
               {formatMatchup(bet)}
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={onRemove} className="h-6 w-6 p-0 ml-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onRemove}
+            className="h-6 w-6 p-0 ml-2"
+          >
             <X size={14} />
           </Button>
         </div>
@@ -41,5 +48,5 @@ export function BetSlipItem({ bet, onRemove }: BetSlipItemProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

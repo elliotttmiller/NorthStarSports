@@ -1,6 +1,6 @@
 /**
  * API Integration Helper for NorthStar Sports Frontend
- * 
+ *
  * This module provides:
  * - Centralized API configuration
  * - Request/response interceptors
@@ -9,31 +9,32 @@
  * - Development utilities
  */
 
-import { useState } from 'react';
+import { useState } from "react";
 
 // Environment configuration
 const config = {
   development: {
-    apiBaseUrl: 'http://localhost:4000',
+    apiBaseUrl: "http://localhost:4000",
     timeout: 10000,
     retries: 3,
-    logRequests: true
+    logRequests: true,
   },
   production: {
-    apiBaseUrl: process.env.VITE_API_BASE_URL || 'https://api.northstarsports.com',
+    apiBaseUrl:
+      process.env.VITE_API_BASE_URL || "https://api.northstarsports.com",
     timeout: 15000,
     retries: 2,
-    logRequests: false
+    logRequests: false,
   },
   test: {
-    apiBaseUrl: 'http://localhost:4000',
+    apiBaseUrl: "http://localhost:4000",
     timeout: 5000,
     retries: 1,
-    logRequests: false
-  }
+    logRequests: false,
+  },
 };
 
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || "development";
 const apiConfig = config[env as keyof typeof config] || config.development;
 
 // API Response Types
@@ -85,13 +86,13 @@ export class ApiClient {
   // Build request headers
   private buildHeaders(options?: RequestOptions): Record<string, string> {
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      ...options?.headers
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...options?.headers,
     };
 
     if (this.authToken && !options?.skipAuth) {
-      headers['Authorization'] = `Bearer ${this.authToken}`;
+      headers["Authorization"] = `Bearer ${this.authToken}`;
     }
 
     return headers;
@@ -102,20 +103,25 @@ export class ApiClient {
     if (apiConfig.logRequests) {
       console.group(`🌐 API ${method.toUpperCase()} ${url}`);
       if (data) {
-        console.log('📤 Request Data:', data);
+        console.log("📤 Request Data:", data);
       }
-      console.log('🕒 Timestamp:', new Date().toISOString());
+      console.log("🕒 Timestamp:", new Date().toISOString());
       console.groupEnd();
     }
   }
 
   // Log response (development only)
-  private logResponse(method: string, url: string, response: any, duration: number) {
+  private logResponse(
+    method: string,
+    url: string,
+    response: any,
+    duration: number,
+  ) {
     if (apiConfig.logRequests) {
       console.group(`📡 API Response ${method.toUpperCase()} ${url}`);
-      console.log('📥 Response:', response);
-      console.log('⏱️ Duration:', `${duration}ms`);
-      console.log('✅ Status:', response.success ? 'Success' : 'Error');
+      console.log("📥 Response:", response);
+      console.log("⏱️ Duration:", `${duration}ms`);
+      console.log("✅ Status:", response.success ? "Success" : "Error");
       console.groupEnd();
     }
   }
@@ -125,18 +131,18 @@ export class ApiClient {
     method: string,
     endpoint: string,
     data?: any,
-    options?: RequestOptions
+    options?: RequestOptions,
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     const timeout = options?.timeout || this.defaultTimeout;
     const maxRetries = options?.retries ?? this.maxRetries;
-    
-    let lastError: Error = new Error('Unknown error');
-    
+
+    let lastError: Error = new Error("Unknown error");
+
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         const startTime = performance.now();
-        
+
         this.logRequest(method, endpoint, data);
 
         const controller = new AbortController();
@@ -146,19 +152,21 @@ export class ApiClient {
           method,
           headers: this.buildHeaders(options),
           signal: controller.signal,
-          ...(data && method !== 'GET' ? { body: JSON.stringify(data) } : {})
+          ...(data && method !== "GET" ? { body: JSON.stringify(data) } : {}),
         };
 
         const response = await fetch(url, requestInit);
         clearTimeout(timeoutId);
 
-        const responseData = await response.json() as ApiResponse<T>;
+        const responseData = (await response.json()) as ApiResponse<T>;
         const duration = performance.now() - startTime;
-        
+
         this.logResponse(method, endpoint, responseData, duration);
 
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${responseData.message || response.statusText}`);
+          throw new Error(
+            `HTTP ${response.status}: ${responseData.message || response.statusText}`,
+          );
         }
 
         if (!responseData.success && responseData.error) {
@@ -166,17 +174,19 @@ export class ApiClient {
         }
 
         return responseData.data as T;
-        
       } catch (error) {
         lastError = error as Error;
-        
-        if (attempt < maxRetries && !error.name.includes('AbortError')) {
+
+        if (attempt < maxRetries && !error.name.includes("AbortError")) {
           const delay = Math.min(1000 * Math.pow(2, attempt), 5000);
-          console.warn(`🔄 Retry attempt ${attempt + 1}/${maxRetries} in ${delay}ms:`, error.message);
-          await new Promise(resolve => setTimeout(resolve, delay));
+          console.warn(
+            `🔄 Retry attempt ${attempt + 1}/${maxRetries} in ${delay}ms:`,
+            error.message,
+          );
+          await new Promise((resolve) => setTimeout(resolve, delay));
           continue;
         }
-        
+
         break;
       }
     }
@@ -184,7 +194,7 @@ export class ApiClient {
     const apiError: ApiError = {
       status: 0,
       message: lastError.message,
-      details: lastError
+      details: lastError,
     };
 
     throw apiError;
@@ -192,24 +202,32 @@ export class ApiClient {
 
   // HTTP Methods
   async get<T>(endpoint: string, options?: RequestOptions): Promise<T> {
-    return this.request<T>('GET', endpoint, undefined, options);
+    return this.request<T>("GET", endpoint, undefined, options);
   }
 
-  async post<T>(endpoint: string, data?: any, options?: RequestOptions): Promise<T> {
-    return this.request<T>('POST', endpoint, data, options);
+  async post<T>(
+    endpoint: string,
+    data?: any,
+    options?: RequestOptions,
+  ): Promise<T> {
+    return this.request<T>("POST", endpoint, data, options);
   }
 
-  async put<T>(endpoint: string, data?: any, options?: RequestOptions): Promise<T> {
-    return this.request<T>('PUT', endpoint, data, options);
+  async put<T>(
+    endpoint: string,
+    data?: any,
+    options?: RequestOptions,
+  ): Promise<T> {
+    return this.request<T>("PUT", endpoint, data, options);
   }
 
   async delete<T>(endpoint: string, options?: RequestOptions): Promise<T> {
-    return this.request<T>('DELETE', endpoint, undefined, options);
+    return this.request<T>("DELETE", endpoint, undefined, options);
   }
 
   // Health check
   async healthCheck(): Promise<{ status: string; timestamp: string }> {
-    return this.get('/health');
+    return this.get("/health");
   }
 
   // Test connection
@@ -230,7 +248,7 @@ export const apiClient = new ApiClient();
 export class ApiService {
   // User APIs
   static async getUsers() {
-    return apiClient.get('/api/users');
+    return apiClient.get("/api/users");
   }
 
   static async getUserById(id: string) {
@@ -238,7 +256,7 @@ export class ApiService {
   }
 
   static async createUser(userData: any) {
-    return apiClient.post('/api/users', userData);
+    return apiClient.post("/api/users", userData);
   }
 
   static async updateUser(id: string, userData: any) {
@@ -251,7 +269,7 @@ export class ApiService {
 
   // Game APIs
   static async getGames() {
-    return apiClient.get('/api/games');
+    return apiClient.get("/api/games");
   }
 
   static async getGameById(id: string) {
@@ -259,7 +277,7 @@ export class ApiService {
   }
 
   static async createGame(gameData: any) {
-    return apiClient.post('/api/games', gameData);
+    return apiClient.post("/api/games", gameData);
   }
 
   static async updateGame(id: string, gameData: any) {
@@ -272,7 +290,7 @@ export class ApiService {
 
   // Bet APIs
   static async getBets() {
-    return apiClient.get('/api/bets');
+    return apiClient.get("/api/bets");
   }
 
   static async getBetById(id: string) {
@@ -280,7 +298,7 @@ export class ApiService {
   }
 
   static async createBet(betData: any) {
-    return apiClient.post('/api/bets', betData);
+    return apiClient.post("/api/bets", betData);
   }
 
   static async updateBet(id: string, betData: any) {
@@ -324,7 +342,7 @@ export function useApi() {
   const [error, setError] = useState<ApiError | null>(null);
 
   const executeRequest = async <T>(
-    apiCall: () => Promise<T>
+    apiCall: () => Promise<T>,
   ): Promise<T | null> => {
     try {
       setLoading(true);
@@ -334,7 +352,7 @@ export function useApi() {
     } catch (err) {
       const apiError = err as ApiError;
       setError(apiError);
-      console.error('API Error:', apiError);
+      console.error("API Error:", apiError);
       return null;
     } finally {
       setLoading(false);
@@ -345,26 +363,26 @@ export function useApi() {
     loading,
     error,
     executeRequest,
-    clearError: () => setError(null)
+    clearError: () => setError(null),
   };
 }
 
 // Environment utilities
 export const EnvUtils = {
-  isDevelopment: () => env === 'development',
-  isProduction: () => env === 'production',
-  isTesting: () => env === 'test',
-  
+  isDevelopment: () => env === "development",
+  isProduction: () => env === "production",
+  isTesting: () => env === "test",
+
   getApiBaseUrl: () => apiConfig.apiBaseUrl,
-  
+
   // Debug utilities for development
   enableDebugMode: () => {
     if (EnvUtils.isDevelopment()) {
       (window as any).__NORTHSTAR_DEBUG__ = true;
-      console.log('🐛 Debug mode enabled');
+      console.log("🐛 Debug mode enabled");
     }
   },
-  
+
   // Connection testing utility
   testBackendConnection: async (): Promise<{
     connected: boolean;
@@ -378,13 +396,13 @@ export const EnvUtils = {
       return { connected, latency };
     } catch (error) {
       const latency = performance.now() - startTime;
-      return { 
-        connected: false, 
-        latency, 
-        error: (error as Error).message 
+      return {
+        connected: false,
+        latency,
+        error: (error as Error).message,
       };
     }
-  }
+  },
 };
 
 // Export everything

@@ -6,19 +6,17 @@ export function useBets(userId) {
 // Set all bets for a user
 export function useSetBets() {
   return useCallback(async (userId, bets) => {
-    const res = await fetch(`${API_BASE}/redis/bets/${userId}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bets)
-      }
-    );
+    const res = await fetch(`${API_BASE}/redis/bets/${userId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bets),
+    });
     return res.ok;
   }, []);
 }
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = '/api/v1';
+const API_BASE = "/api/v1";
 
 // Generic fetch hook
 function useApi(endpoint, options = {}) {
@@ -60,9 +58,9 @@ export function useUser(userId) {
 export function useSetUser() {
   return useCallback(async (userId, profile) => {
     const res = await fetch(`${API_BASE}/redis/user/${userId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(profile)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(profile),
     });
     return res.ok;
   }, []);
@@ -75,9 +73,9 @@ export function useActiveBetSlip(userId) {
 export function useSetActiveBetSlip() {
   return useCallback(async (userId, betSlip) => {
     const res = await fetch(`${API_BASE}/redis/betslip/${userId}/active`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(betSlip)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(betSlip),
     });
     return res.ok;
   }, []);
@@ -88,9 +86,9 @@ export function useBetSlipHistory(userId, count = 10) {
 export function useAddBetSlipToHistory() {
   return useCallback(async (userId, betslipId) => {
     const res = await fetch(`${API_BASE}/redis/betslip/${userId}/history`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ betslipId })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ betslipId }),
     });
     return res.ok;
   }, []);
@@ -103,9 +101,9 @@ export function useBet(betId) {
 export function useSetBet() {
   return useCallback(async (betId, bet) => {
     const res = await fetch(`${API_BASE}/redis/bet/${betId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(bet)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bet),
     });
     return res.ok;
   }, []);
@@ -118,9 +116,9 @@ export function useGame(gameId) {
 export function useSetGame() {
   return useCallback(async (gameId, game) => {
     const res = await fetch(`${API_BASE}/redis/game/${gameId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(game)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(game),
     });
     return res.ok;
   }, []);
@@ -133,9 +131,9 @@ export function useLeaderboard(type, count = 10) {
 export function useUpdateLeaderboard() {
   return useCallback(async (type, userId, score) => {
     const res = await fetch(`${API_BASE}/leaderboard/${type}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, score })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, score }),
     });
     return res.ok;
   }, []);

@@ -1,11 +1,11 @@
-import { useEffect, useCallback, useRef } from 'react'
+import { useEffect, useCallback, useRef } from "react";
 
 interface UseInfiniteScrollOptions {
-  hasNextPage: boolean
-  isFetchingNextPage: boolean
-  fetchNextPage: () => void
-  threshold?: number
-  rootMargin?: string
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
+  threshold?: number;
+  rootMargin?: string;
 }
 
 /**
@@ -17,39 +17,39 @@ export function useInfiniteScroll({
   isFetchingNextPage,
   fetchNextPage,
   threshold = 0.1,
-  rootMargin = '100px'
+  rootMargin = "100px",
 }: UseInfiniteScrollOptions) {
-  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const handleIntersect = useCallback(
     (entries: IntersectionObserverEntry[]) => {
-      const [entry] = entries
+      const [entry] = entries;
       if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage()
+        fetchNextPage();
       }
     },
-    [hasNextPage, isFetchingNextPage, fetchNextPage]
-  )
+    [hasNextPage, isFetchingNextPage, fetchNextPage],
+  );
 
   useEffect(() => {
-    const element = loadMoreRef.current
-    if (!element) return
+    const element = loadMoreRef.current;
+    if (!element) return;
 
     const observer = new IntersectionObserver(handleIntersect, {
       threshold,
-      rootMargin
-    })
+      rootMargin,
+    });
 
-    observer.observe(element)
+    observer.observe(element);
 
     return () => {
       if (element) {
-        observer.unobserve(element)
+        observer.unobserve(element);
       }
-    }
-  }, [handleIntersect, threshold, rootMargin])
+    };
+  }, [handleIntersect, threshold, rootMargin]);
 
-  return loadMoreRef
+  return loadMoreRef;
 }
 
 /**
@@ -57,50 +57,50 @@ export function useInfiniteScroll({
  */
 export function useSmoothScroll() {
   const scrollToTop = useCallback((element?: HTMLElement) => {
-    const target = element || window
+    const target = element || window;
     if (target === window) {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      element?.scrollTo({ top: 0, behavior: 'smooth' })
+      element?.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [])
+  }, []);
 
   const scrollToBottom = useCallback((element?: HTMLElement) => {
-    if (!element) return
-    element.scrollTo({ 
-      top: element.scrollHeight, 
-      behavior: 'smooth' 
-    })
-  }, [])
+    if (!element) return;
+    element.scrollTo({
+      top: element.scrollHeight,
+      behavior: "smooth",
+    });
+  }, []);
 
-  const scrollToElement = useCallback((
-    elementId: string, 
-    container?: HTMLElement,
-    offset = 0
-  ) => {
-    const targetElement = document.getElementById(elementId)
-    if (!targetElement) return
+  const scrollToElement = useCallback(
+    (elementId: string, container?: HTMLElement, offset = 0) => {
+      const targetElement = document.getElementById(elementId);
+      if (!targetElement) return;
 
-    if (container) {
-      const containerRect = container.getBoundingClientRect()
-      const elementRect = targetElement.getBoundingClientRect()
-      const relativeTop = elementRect.top - containerRect.top + container.scrollTop - offset
-      
-      container.scrollTo({
-        top: relativeTop,
-        behavior: 'smooth'
-      })
-    } else {
-      targetElement.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'center'
-      })
-    }
-  }, [])
+      if (container) {
+        const containerRect = container.getBoundingClientRect();
+        const elementRect = targetElement.getBoundingClientRect();
+        const relativeTop =
+          elementRect.top - containerRect.top + container.scrollTop - offset;
+
+        container.scrollTo({
+          top: relativeTop,
+          behavior: "smooth",
+        });
+      } else {
+        targetElement.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    },
+    [],
+  );
 
   return {
     scrollToTop,
     scrollToBottom,
-    scrollToElement
-  }
+    scrollToElement,
+  };
 }

@@ -2,23 +2,23 @@
   "folders": [
     {
       "name": "🏈 NorthStar Sports",
-      "path": "."
+      "path": ".",
     },
     {
       "name": "🔧 Backend",
-      "path": "./backend"
+      "path": "./backend",
     },
     {
-      "name": "🎨 Frontend", 
-      "path": "./frontend"
-    }
+      "name": "🎨 Frontend",
+      "path": "./frontend",
+    },
   ],
   "settings": {
     // General settings
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit",
-      "source.organizeImports": "explicit"
+      "source.organizeImports": "explicit",
     },
     "editor.rulers": [80, 120],
     "editor.wordWrap": "wordWrapColumn",
@@ -26,88 +26,88 @@
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
-    
+
     // TypeScript settings
     "typescript.preferences.importModuleSpecifier": "relative",
     "typescript.suggest.autoImports": true,
     "typescript.updateImportsOnFileMove.enabled": "always",
-    
+
     // File associations and exclusions
     "files.exclude": {
       "**/node_modules": true,
       "**/dist": true,
       "**/build": true,
       "**/.git": true,
-      "**/logs": true
+      "**/logs": true,
     },
     "search.exclude": {
       "**/node_modules": true,
       "**/dist": true,
       "**/build": true,
-      "**/logs": true
+      "**/logs": true,
     },
-    
+
     // Language specific settings
     "[typescript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.tabSize": 2
+      "editor.tabSize": 2,
     },
     "[typescriptreact]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.tabSize": 2
+      "editor.tabSize": 2,
     },
     "[javascript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.tabSize": 2
+      "editor.tabSize": 2,
     },
     "[json]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.tabSize": 2
+      "editor.tabSize": 2,
     },
     "[jsonc]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.tabSize": 2
+      "editor.tabSize": 2,
     },
     "[markdown]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.wordWrap": "wordWrapColumn",
-      "editor.wordWrapColumn": 80
+      "editor.wordWrapColumn": 80,
     },
-    
+
     // Terminal settings
     "terminal.integrated.defaultProfile.windows": "PowerShell",
     "terminal.integrated.env.windows": {},
     "terminal.integrated.cwd": "${workspaceFolder}",
-    
+
     // Git settings
     "git.autofetch": true,
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
-    
+
     // ESLint settings
     "eslint.workingDirectories": ["backend", "frontend"],
     "eslint.validate": [
       "javascript",
       "javascriptreact",
       "typescript",
-      "typescriptreact"
+      "typescriptreact",
     ],
-    
+
     // Prettier settings
     "prettier.configPath": ".prettierrc",
-    
+
     // Extension specific settings
     "emmet.includeLanguages": {
       "typescript": "html",
-      "typescriptreact": "html"
+      "typescriptreact": "html",
     },
-    
+
     // Testing
     "jest.autoRun": "off",
-    
+
     // Performance
     "typescript.disableAutomaticTypeAcquisition": false,
-    "typescript.preferences.includePackageJsonAutoImports": "on"
+    "typescript.preferences.includePackageJsonAutoImports": "on",
   },
   "launch": {
     "version": "0.2.0",
@@ -120,13 +120,11 @@
         "cwd": "${workspaceFolder}/backend",
         "runtimeArgs": ["--loader", "tsx"],
         "env": {
-          "NODE_ENV": "development"
+          "NODE_ENV": "development",
         },
         "console": "integratedTerminal",
-        "skipFiles": [
-          "<node_internals>/**"
-        ],
-        "envFile": "${workspaceFolder}/backend/.env"
+        "skipFiles": ["<node_internals>/**"],
+        "envFile": "${workspaceFolder}/backend/.env",
       },
       {
         "name": "Debug Frontend (Chrome)",
@@ -134,7 +132,7 @@
         "request": "launch",
         "url": "http://localhost:5000",
         "webRoot": "${workspaceFolder}/frontend/src",
-        "sourceMaps": true
+        "sourceMaps": true,
       },
       {
         "name": "Debug Backend Tests",
@@ -144,29 +142,25 @@
         "args": ["--runInBand", "--no-cache"],
         "cwd": "${workspaceFolder}/backend",
         "env": {
-          "NODE_ENV": "test"
+          "NODE_ENV": "test",
         },
         "console": "integratedTerminal",
-        "skipFiles": [
-          "<node_internals>/**"
-        ]
+        "skipFiles": ["<node_internals>/**"],
       },
       {
-        "name": "Debug Frontend Tests", 
+        "name": "Debug Frontend Tests",
         "type": "node",
         "request": "launch",
         "program": "${workspaceFolder}/frontend/node_modules/.bin/jest",
         "args": ["--runInBand", "--no-cache"],
         "cwd": "${workspaceFolder}/frontend",
         "env": {
-          "NODE_ENV": "test"
+          "NODE_ENV": "test",
         },
         "console": "integratedTerminal",
-        "skipFiles": [
-          "<node_internals>/**"
-        ]
-      }
-    ]
+        "skipFiles": ["<node_internals>/**"],
+      },
+    ],
   },
   "tasks": {
     "version": "2.0.0",
@@ -176,66 +170,69 @@
         "type": "shell",
         "command": "powershell",
         "args": [
-          "-File", 
+          "-File",
           "${workspaceFolder}/dev-tools.ps1",
-          "-Action", "Install",
-          "-Target", "All"
+          "-Action",
+          "Install",
+          "-Target",
+          "All",
         ],
         "group": "build",
         "presentation": {
           "echo": true,
           "reveal": "always",
           "focus": false,
-          "panel": "shared"
+          "panel": "shared",
         },
-        "problemMatcher": []
+        "problemMatcher": [],
       },
       {
         "label": "Build All Projects",
-        "type": "shell", 
+        "type": "shell",
         "command": "powershell",
         "args": [
           "-File",
-          "${workspaceFolder}/dev-tools.ps1", 
-          "-Action", "Build",
-          "-Target", "All"
+          "${workspaceFolder}/dev-tools.ps1",
+          "-Action",
+          "Build",
+          "-Target",
+          "All",
         ],
         "group": {
           "kind": "build",
-          "isDefault": true
-        },
-        "presentation": {
-          "echo": true,
-          "reveal": "always", 
-          "focus": false,
-          "panel": "shared"
-        },
-        "problemMatcher": [
-          "$tsc",
-          "$eslint-stylish"
-        ]
-      },
-      {
-        "label": "Run All Tests",
-        "type": "shell",
-        "command": "powershell", 
-        "args": [
-          "-File",
-          "${workspaceFolder}/dev-tools.ps1",
-          "-Action", "Test", 
-          "-Target", "All"
-        ],
-        "group": {
-          "kind": "test",
-          "isDefault": true
+          "isDefault": true,
         },
         "presentation": {
           "echo": true,
           "reveal": "always",
-          "focus": false, 
-          "panel": "shared"
+          "focus": false,
+          "panel": "shared",
         },
-        "problemMatcher": []
+        "problemMatcher": ["$tsc", "$eslint-stylish"],
+      },
+      {
+        "label": "Run All Tests",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-File",
+          "${workspaceFolder}/dev-tools.ps1",
+          "-Action",
+          "Test",
+          "-Target",
+          "All",
+        ],
+        "group": {
+          "kind": "test",
+          "isDefault": true,
+        },
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+        },
+        "problemMatcher": [],
       },
       {
         "label": "Start Development Servers",
@@ -243,33 +240,35 @@
         "command": "python",
         "args": ["dev-start.py"],
         "isBackground": true,
-        "group": "build", 
+        "group": "build",
         "presentation": {
           "echo": true,
           "reveal": "always",
           "focus": false,
-          "panel": "new"
+          "panel": "new",
         },
-        "problemMatcher": []
+        "problemMatcher": [],
       },
       {
         "label": "Clean All Projects",
         "type": "shell",
         "command": "powershell",
         "args": [
-          "-File", 
+          "-File",
           "${workspaceFolder}/dev-tools.ps1",
-          "-Action", "Clean",
-          "-Target", "All"
+          "-Action",
+          "Clean",
+          "-Target",
+          "All",
         ],
         "group": "build",
         "presentation": {
           "echo": true,
           "reveal": "always",
           "focus": false,
-          "panel": "shared"
+          "panel": "shared",
         },
-        "problemMatcher": []
+        "problemMatcher": [],
       },
       {
         "label": "Backend Only - Dev",
@@ -277,71 +276,68 @@
         "command": "npm",
         "args": ["run", "dev"],
         "options": {
-          "cwd": "${workspaceFolder}/backend"
+          "cwd": "${workspaceFolder}/backend",
         },
         "isBackground": true,
         "group": "build",
         "presentation": {
           "echo": true,
-          "reveal": "always", 
+          "reveal": "always",
           "focus": false,
-          "panel": "new"
+          "panel": "new",
         },
-        "problemMatcher": []
+        "problemMatcher": [],
       },
       {
-        "label": "Frontend Only - Dev", 
+        "label": "Frontend Only - Dev",
         "type": "shell",
         "command": "npm",
         "args": ["run", "dev"],
         "options": {
-          "cwd": "${workspaceFolder}/frontend"
+          "cwd": "${workspaceFolder}/frontend",
         },
         "isBackground": true,
         "group": "build",
         "presentation": {
           "echo": true,
           "reveal": "always",
-          "focus": false, 
-          "panel": "new"
+          "focus": false,
+          "panel": "new",
         },
-        "problemMatcher": []
+        "problemMatcher": [],
       },
       {
         "label": "Environment Sync",
         "type": "shell",
-        "command": "powershell", 
-        "args": [
-          "-File",
-          "${workspaceFolder}/env-sync.ps1",
-          "-Action", "Sync"
-        ],
+        "command": "powershell",
+        "args": ["-File", "${workspaceFolder}/env-sync.ps1", "-Action", "Sync"],
         "group": "build",
         "presentation": {
           "echo": true,
           "reveal": "always",
           "focus": false,
-          "panel": "shared"
+          "panel": "shared",
         },
-        "problemMatcher": []
+        "problemMatcher": [],
       },
       {
         "label": "Project Status",
         "type": "shell",
         "command": "powershell",
         "args": [
-          "-File", 
+          "-File",
           "${workspaceFolder}/dev-tools.ps1",
-          "-Action", "Status"
+          "-Action",
+          "Status",
         ],
         "group": "build",
         "presentation": {
           "echo": true,
           "reveal": "always",
           "focus": false,
-          "panel": "shared"
+          "panel": "shared",
         },
-        "problemMatcher": []
+        "problemMatcher": [],
       },
       {
         "label": "Full Reset",
@@ -349,19 +345,20 @@
         "command": "powershell",
         "args": [
           "-File",
-          "${workspaceFolder}/dev-tools.ps1", 
-          "-Action", "Reset"
+          "${workspaceFolder}/dev-tools.ps1",
+          "-Action",
+          "Reset",
         ],
         "group": "build",
         "presentation": {
           "echo": true,
           "reveal": "always",
           "focus": false,
-          "panel": "shared"
+          "panel": "shared",
         },
-        "problemMatcher": []
-      }
-    ]
+        "problemMatcher": [],
+      },
+    ],
   },
   "extensions": {
     "recommendations": [
@@ -370,7 +367,7 @@
       "ms-vscode.vscode-typescript-next",
       "bradlc.vscode-tailwindcss",
       "formulahendry.auto-rename-tag",
-      "christian-kohler.path-intellisense", 
+      "christian-kohler.path-intellisense",
       "ms-vscode.vscode-json",
       "redhat.vscode-yaml",
       "ms-python.python",
@@ -379,7 +376,7 @@
       "github.copilot-chat",
       "ms-vscode.vscode-node-azure-pack",
       "rangav.vscode-thunder-client",
-      "humao.rest-client"
-    ]
-  }
+      "humao.rest-client",
+    ],
+  },
 }

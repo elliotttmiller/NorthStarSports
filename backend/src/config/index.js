@@ -1,5 +1,5 @@
 // Centralized config loader
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
 export const REDIS_HOST = process.env.REDIS_HOST;

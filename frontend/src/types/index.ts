@@ -19,7 +19,7 @@ export interface Game {
   homeTeam: Team;
   awayTeam: Team;
   startTime: Date;
-  status: 'upcoming' | 'live' | 'finished';
+  status: "upcoming" | "live" | "finished";
   odds: GameOdds;
   venue?: string;
 }
@@ -82,15 +82,15 @@ export interface Bet {
   id: string;
   gameId: string;
   betType:
-    | 'spread'
-    | 'moneyline'
-    | 'total'
-    | 'player_prop'
-    | 'period_winner'
-    | 'quarter_winner'
-    | 'half_winner'
-    | 'parlay';
-  selection: 'home' | 'away' | 'over' | 'under';
+    | "spread"
+    | "moneyline"
+    | "total"
+    | "player_prop"
+    | "period_winner"
+    | "quarter_winner"
+    | "half_winner"
+    | "parlay";
+  selection: "home" | "away" | "over" | "under";
   odds: number;
   line?: number;
   stake: number;
@@ -108,7 +108,7 @@ export interface Bet {
 
 export interface BetSlip {
   bets: Bet[];
-  betType: 'single' | 'parlay';
+  betType: "single" | "parlay";
   totalStake: number;
   totalPayout: number;
   totalOdds: number;
@@ -117,7 +117,7 @@ export interface BetSlip {
 export interface NavigationState {
   selectedSport: string | null;
   selectedLeague: string | null;
-  mobilePanel: 'navigation' | 'workspace' | 'betslip' | null;
+  mobilePanel: "navigation" | "workspace" | "betslip" | null;
 }
 
 export interface AppState {
@@ -132,12 +132,18 @@ export interface PlayerProp {
   playerId: string;
   playerName: string;
   position: string;
-  team: 'home' | 'away';
+  team: "home" | "away";
   statType: string;
   line: number;
   overOdds: number;
   underOdds: number;
-  category: 'passing' | 'rushing' | 'receiving' | 'scoring' | 'defense' | 'kicking';
+  category:
+    | "passing"
+    | "rushing"
+    | "receiving"
+    | "scoring"
+    | "defense"
+    | "kicking";
 }
 
 export interface PropCategory {

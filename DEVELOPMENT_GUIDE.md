@@ -3,11 +3,13 @@
 ## 🚀 Quick Start
 
 1. **Setup Environment:**
+
    ```powershell
    .\env-sync.ps1 -Action Generate
    ```
 
 2. **Install Dependencies:**
+
    ```powershell
    .\dev-tools.ps1 -Action Install -Target All
    ```
@@ -20,10 +22,12 @@
 ## 🔧 Development Scripts
 
 ### Python Scripts
+
 - `dev-start.py` - Enhanced development server orchestration
 - `start.py` - Original simple startup script (legacy)
 
-### PowerShell Scripts  
+### PowerShell Scripts
+
 - `dev-tools.ps1` - Comprehensive development utilities
 - `env-sync.ps1` - Environment configuration management
 - `test-all-endpoints.ps1` - API endpoint testing
@@ -31,6 +35,7 @@
 ## 📋 Available Commands
 
 ### Development Tools (`dev-tools.ps1`)
+
 ```powershell
 # Build projects
 .\dev-tools.ps1 -Action Build -Target All
@@ -58,6 +63,7 @@
 ```
 
 ### Environment Management (`env-sync.ps1`)
+
 ```powershell
 # Sync environment files
 .\env-sync.ps1 -Action Sync
@@ -68,11 +74,12 @@
 # Generate new env files
 .\env-sync.ps1 -Action Generate
 
-# Backup current env files  
+# Backup current env files
 .\env-sync.ps1 -Action Backup
 ```
 
 ### Enhanced Dev Server (`dev-start.py`)
+
 ```bash
 # Start full stack with browser
 python dev-start.py
@@ -137,6 +144,7 @@ The frontend includes a comprehensive API service (`frontend/src/services/apiSer
 - **React Hooks:** `useApi()` hook for component integration
 
 ### Example Usage:
+
 ```typescript
 import { ApiService, useApi } from '../services/apiService';
 
@@ -154,7 +162,7 @@ function UserList() {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-  
+
   return <div>{/* Render users */}</div>;
 }
 ```
@@ -162,6 +170,7 @@ function UserList() {
 ## ⚙️ Environment Configuration
 
 ### Backend (.env)
+
 ```bash
 NODE_ENV=development
 PORT=4000
@@ -175,6 +184,7 @@ API_VERSION=v1
 ```
 
 ### Frontend (.env)
+
 ```bash
 NODE_ENV=development
 VITE_API_BASE_URL=http://localhost:4000
@@ -187,28 +197,33 @@ VITE_ENABLE_DEBUG=true
 ## 🧪 Testing
 
 ### Backend Tests
+
 - Unit tests with Jest
 - API endpoint testing with SuperTest
 - Type checking with TypeScript compiler
 
-### Frontend Tests  
+### Frontend Tests
+
 - Component tests with React Testing Library
 - Unit tests with Jest
 - Type checking with TypeScript compiler
 
 ### Integration Tests
+
 - Comprehensive API endpoint testing
 - Cross-browser compatibility (via debug configurations)
 
 ## 📊 Monitoring & Debugging
 
 ### VS Code Integration
+
 - Workspace configured for multi-project development
 - Debug configurations for backend, frontend, and full-stack
 - Integrated terminal tasks for common operations
 - Recommended extensions for optimal development experience
 
 ### Logging
+
 - Structured logging with Pino (backend)
 - Development-friendly console logging (frontend)
 - Request/response logging for API calls
@@ -219,24 +234,27 @@ VITE_ENABLE_DEBUG=true
 ### Common Issues
 
 1. **Port Conflicts:**
+
    ```powershell
    # Check what's using the ports
    netstat -ano | findstr :4000
    netstat -ano | findstr :5000
-   
+
    # Kill processes if needed
    .\dev-tools.ps1 -Action Status
    ```
 
 2. **Redis Connection Issues:**
+
    ```powershell
    # Validate environment
    .\env-sync.ps1 -Action Validate
-   
+
    # Check Redis credentials in .env files
    ```
 
 3. **Dependency Issues:**
+
    ```powershell
    # Full reset
    .\dev-tools.ps1 -Action Reset
@@ -251,11 +269,13 @@ VITE_ENABLE_DEBUG=true
 ## 🔄 Git Workflow
 
 The workspace is configured for efficient Git operations:
+
 - Auto-fetch enabled
 - Smart commit suggestions
 - Organized commit staging
 
 ### Recommended Workflow:
+
 1. Create feature branch
 2. Make changes
 3. Run tests: `.\dev-tools.ps1 -Action Test -Target All`

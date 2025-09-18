@@ -1,23 +1,23 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Game } from '@/types';
-import { getGameById } from '@/services/mockApi';
-import { formatDateDetailed } from '@/lib/formatters';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { SkeletonLoader } from '@/components/SkeletonLoader';
-import { ArrowLeft } from '@phosphor-icons/react';
-import { SmoothScrollContainer } from '@/components/VirtualScrolling';
-import { toast } from 'sonner';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { Game } from "@/types";
+import { getGameById } from "@/services/mockApi";
+import { formatDateDetailed } from "@/lib/formatters";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SkeletonLoader } from "@/components/SkeletonLoader";
+import { ArrowLeft } from "@phosphor-icons/react";
+import { SmoothScrollContainer } from "@/components/VirtualScrolling";
+import { toast } from "sonner";
 
 export default function GameDetailPage() {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState('main');
+  const [selectedTab, setSelectedTab] = useState("main");
 
   useEffect(() => {
     if (!gameId) return;
@@ -25,13 +25,11 @@ export default function GameDetailPage() {
     const loadGameData = async () => {
       setLoading(true);
       try {
-        const [gameData] = await Promise.all([
-          getGameById(gameId)
-        ]);
+        const [gameData] = await Promise.all([getGameById(gameId)]);
         setGame(gameData);
       } catch (error) {
-        console.error('Failed to load game data:', error);
-        toast.error('Failed to load game details');
+        console.error("Failed to load game data:", error);
+        toast.error("Failed to load game details");
       } finally {
         setLoading(false);
       }
@@ -58,8 +56,12 @@ export default function GameDetailPage() {
           transition={{ duration: 0.5 }}
         >
           <div className="text-center px-4">
-            <h3 className="text-lg font-medium text-foreground mb-2">Game Not Found</h3>
-            <p className="text-muted-foreground mb-4">The requested game could not be found.</p>
+            <h3 className="text-lg font-medium text-foreground mb-2">
+              Game Not Found
+            </h3>
+            <p className="text-muted-foreground mb-4">
+              The requested game could not be found.
+            </p>
             <Button onClick={() => navigate(-1)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Go Back
@@ -87,9 +89,12 @@ export default function GameDetailPage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex-shrink-0 bg-card border-b border-border"
-          style={{ fontSize: 'var(--fluid-lg)', borderRadius: 'var(--fluid-radius)' }}
+          style={{
+            fontSize: "var(--fluid-lg)",
+            borderRadius: "var(--fluid-radius)",
+          }}
         >
-          <div style={{ padding: 'var(--fluid-panel-padding)' }}>
+          <div style={{ padding: "var(--fluid-panel-padding)" }}>
             <div className="flex items-center gap-4 mb-4">
               <Button
                 variant="ghost"
@@ -101,11 +106,14 @@ export default function GameDetailPage() {
                 Back
               </Button>
               <Badge
-                variant={game.status === 'live' ? 'destructive' : 'secondary'}
-                className={game.status === 'live' ? 'animate-pulse' : ''}
+                variant={game.status === "live" ? "destructive" : "secondary"}
+                className={game.status === "live" ? "animate-pulse" : ""}
               >
-                {game.status === 'live' ? 'LIVE' : 
-                 game.status === 'finished' ? 'FINAL' : 'UPCOMING'}
+                {game.status === "live"
+                  ? "LIVE"
+                  : game.status === "finished"
+                    ? "FINAL"
+                    : "UPCOMING"}
               </Badge>
             </div>
 
@@ -141,18 +149,37 @@ export default function GameDetailPage() {
 
         {/* Content */}
         <div className="flex-1 min-h-0">
-          <Tabs value={selectedTab} onValueChange={setSelectedTab} className="h-full flex flex-col">
-            <div className="flex-shrink-0" style={{ padding: 'var(--fluid-panel-padding)' }}>
+          <Tabs
+            value={selectedTab}
+            onValueChange={setSelectedTab}
+            className="h-full flex flex-col"
+          >
+            <div
+              className="flex-shrink-0"
+              style={{ padding: "var(--fluid-panel-padding)" }}
+            >
               <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
                 <TabsTrigger value="main">Main Lines</TabsTrigger>
                 <TabsTrigger value="props">Player Props</TabsTrigger>
-                <TabsTrigger value="alt" className="hidden lg:block">Alt Lines</TabsTrigger>
-                <TabsTrigger value="special" className="hidden lg:block">Specials</TabsTrigger>
+                <TabsTrigger value="alt" className="hidden lg:block">
+                  Alt Lines
+                </TabsTrigger>
+                <TabsTrigger value="special" className="hidden lg:block">
+                  Specials
+                </TabsTrigger>
               </TabsList>
             </div>
 
-            <SmoothScrollContainer className="flex-1 px-0" showScrollbar={false}>
-              <div style={{ padding: 'var(--fluid-panel-padding)', fontSize: 'var(--fluid-base)' }}>
+            <SmoothScrollContainer
+              className="flex-1 px-0"
+              showScrollbar={false}
+            >
+              <div
+                style={{
+                  padding: "var(--fluid-panel-padding)",
+                  fontSize: "var(--fluid-base)",
+                }}
+              >
                 <TabsContent value="main" className="mt-0 space-y-6">
                   {/* Main Betting Lines */}
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -165,12 +192,16 @@ export default function GameDetailPage() {
                 </TabsContent>
                 <TabsContent value="alt" className="mt-0">
                   <div className="text-center py-12">
-                    <p className="text-muted-foreground">Alternative lines coming soon...</p>
+                    <p className="text-muted-foreground">
+                      Alternative lines coming soon...
+                    </p>
                   </div>
                 </TabsContent>
                 <TabsContent value="special" className="mt-0">
                   <div className="text-center py-12">
-                    <p className="text-muted-foreground">Special bets coming soon...</p>
+                    <p className="text-muted-foreground">
+                      Special bets coming soon...
+                    </p>
                   </div>
                 </TabsContent>
               </div>

@@ -69,7 +69,7 @@ export default {
     },
   },
   plugins: [
-    require('tailwindcss-fluid'),
-    require('@tailwindcss/container-queries'),
+    require("tailwindcss-fluid"),
+    require("@tailwindcss/container-queries"),
   ],
-}
+};

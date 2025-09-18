@@ -17,6 +17,7 @@ export default defineConfig({
   },
   server: {
     host: "0.0.0.0", // Allow external devices to connect
+    allowedHosts: ["noninherently-fractional-aleshia.ngrok-free.app"],
     proxy: {
       "/api": {
         target: "http://localhost:4000",

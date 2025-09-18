@@ -20,6 +20,7 @@ scripts/
 ## 🚀 Main Development Scripts
 
 ### dev-start.py - Development Orchestrator
+
 **Primary development server management script**
 
 ```bash
@@ -31,6 +32,7 @@ python scripts/dev-start.py --frontend-port 3000 --backend-port 5000
 ```
 
 **Features:**
+
 - Health checks for Redis, backend, and frontend
 - Process management with graceful shutdown
 - Enhanced logging with timestamps and colors
@@ -39,6 +41,7 @@ python scripts/dev-start.py --frontend-port 3000 --backend-port 5000
 - Development utilities integration
 
 **Options:**
+
 - `--no-browser` - Skip automatic browser opening
 - `--frontend-port PORT` - Custom frontend port (default: 5173)
 - `--backend-port PORT` - Custom backend port (default: 4000)
@@ -46,6 +49,7 @@ python scripts/dev-start.py --frontend-port 3000 --backend-port 5000
 - `--redis-check` - Perform Redis connection test
 
 ### start.py - Legacy Startup Script
+
 **Original project startup script (kept for compatibility)**
 
 ```bash
@@ -54,6 +58,7 @@ python scripts/start.py
 ```
 
 **Features:**
+
 - Simple backend and frontend startup
 - Basic process management
 - Environment validation
@@ -62,6 +67,7 @@ python scripts/start.py
 ## 🔧 PowerShell Utilities
 
 ### dev-tools.ps1 - Development Utilities
+
 **Collection of PowerShell functions for development workflow**
 
 ```powershell
@@ -80,6 +86,7 @@ Deploy-Local            # Local deployment test
 ```
 
 ### env-sync.ps1 - Environment Synchronization
+
 **Synchronize environment variables between development and production**
 
 ```powershell
@@ -92,6 +99,7 @@ Deploy-Local            # Local deployment test
 ```
 
 **Features:**
+
 - Environment file validation
 - Missing variable detection
 - Secure credential prompting
@@ -100,6 +108,7 @@ Deploy-Local            # Local deployment test
 ## 🧪 Backend Testing Scripts
 
 ### test-express.js - Express Server Test
+
 **Standalone Express server testing utility**
 
 ```bash
@@ -108,6 +117,7 @@ node scripts/backend/test-express.js
 ```
 
 **Tests:**
+
 - Server startup and shutdown
 - Route availability
 - Middleware functionality
@@ -115,6 +125,7 @@ node scripts/backend/test-express.js
 - Performance metrics
 
 ### test-all-endpoints.ps1 - API Endpoint Testing
+
 **Comprehensive API testing script using PowerShell**
 
 ```powershell
@@ -129,6 +140,7 @@ node scripts/backend/test-express.js
 ```
 
 **Features:**
+
 - User management endpoint tests
 - Game and betting endpoint tests
 - Key-value store endpoint tests
@@ -139,6 +151,7 @@ node scripts/backend/test-express.js
 ## 🎭 Demo and Setup Scripts
 
 ### create-demo-user.js - Demo User Creation
+
 **Creates demo user data via API endpoints**
 
 ```bash
@@ -153,12 +166,14 @@ node scripts/backend/create-demo-user.js --username "testuser" --balance 1000
 ```
 
 **Options:**
+
 - `--username USERNAME` - Custom username
 - `--email EMAIL` - Custom email
 - `--balance AMOUNT` - Initial balance
 - `--count NUMBER` - Number of users to create
 
 ### setup-demo.js - Demo Environment Setup
+
 **Sets up complete demo environment with sample data**
 
 ```bash
@@ -170,6 +185,7 @@ node scripts/backend/setup-demo.js --reset
 ```
 
 **Setup includes:**
+
 - Demo users with various balances
 - Sample games and odds
 - Mock betting history
@@ -251,6 +267,7 @@ SCRIPT_API_TIMEOUT=30000
 ### PowerShell Execution Policy
 
 Ensure PowerShell can execute scripts:
+
 ```powershell
 # Check current policy
 Get-ExecutionPolicy
@@ -262,6 +279,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ## 🔍 Debugging Scripts
 
 ### Enable Debug Mode
+
 ```bash
 # Python scripts with debug
 python scripts/dev-start.py --verbose
@@ -273,12 +291,14 @@ DEBUG=* node scripts/backend/create-demo-user.js
 ### Common Issues and Solutions
 
 #### PowerShell Script Issues
+
 ```powershell
 # If script won't run due to execution policy
 powershell -ExecutionPolicy Bypass -File scripts\dev-tools.ps1
 ```
 
 #### Python Script Issues
+
 ```bash
 # Ensure Python dependencies
 pip install requests psutil colorama
@@ -288,6 +308,7 @@ python3 scripts/dev-start.py
 ```
 
 #### Node.js Script Issues
+
 ```bash
 # Ensure in correct directory
 cd backend && node ../scripts/backend/test-express.js
@@ -299,6 +320,7 @@ node --version  # Should be 18+
 ## 📊 Script Performance Monitoring
 
 ### Logging and Metrics
+
 All scripts include comprehensive logging:
 
 - **Python scripts**: Color-coded console output with timestamps
@@ -306,6 +328,7 @@ All scripts include comprehensive logging:
 - **Node.js scripts**: JSON-formatted logs with performance metrics
 
 ### Log Files Location
+
 ```
 logs/
 ├── dev-start.log        # Development orchestrator logs
