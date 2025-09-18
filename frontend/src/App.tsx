@@ -3,6 +3,7 @@ import { Suspense, lazy } from "react";
 import { RootLayout } from "@/components/layouts/RootLayout";
 import { HomePage } from "@/pages/HomePage";
 import { ProgressiveLoader } from "@/components/ProgressiveLoader";
+import { LivePage } from "@/pages/LivePage";
 
 // Lazy load non-critical pages for better initial load performance
 const GamePage = lazy(() => import("@/pages/GamePage"));
@@ -33,6 +34,7 @@ function App() {
           <Route path="my-bets" element={<MyBetsPage />} />
           <Route path="account" element={<AccountPage />} />
           <Route path="other" element={<OtherPage />} />
+          <Route path="live" element={<LivePage />} />
         </Route>
       </Routes>
     </Suspense>
