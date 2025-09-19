@@ -40,6 +40,11 @@ export function HomePage() {
     getLiveGames().then((games) => setTrendingGames(games.slice(0, 5)));
   }, []);
 
+  // Order trending games by startTime ascending
+  const orderedTrendingGames = trendingGames.slice().sort(
+    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+  );
+
   return ( 
     <AnimatePresence mode="wait">
       <motion.div
@@ -102,7 +107,7 @@ export function HomePage() {
                   </div>
                   <div className="space-y-2">
                     {/* Desktop: ProfessionalGameRow, Mobile: CompactMobileGameRow */}
-                    {trendingGames.map((game, idx) => (
+                    {orderedTrendingGames.map((game, idx) => (
                       <div key={game.id}>
                         <div className="hidden md:block">
                           <ProfessionalGameRow game={game} />

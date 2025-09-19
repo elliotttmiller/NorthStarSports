@@ -205,13 +205,12 @@ npm run lint           # Lint React/TypeScript code
 - **Component tests** for React components
 - **E2E tests** for critical user flows
 
+
 ## 📖 Documentation
 
-- [API Documentation](docs/API.md)
-- [Frontend Guide](frontend/README.md)
-- [Backend Guide](backend/README.md)
-- [Deployment Guide](docs/DEPLOYMENT.md)
-- [Contributing Guidelines](docs/CONTRIBUTING.md)
+   - [Frontend Guide](frontend/README.md)
+   - [Backend Guide](backend/README.md)
+   - [Contributing Guidelines](CONTRIBUTING.md)
 
 ## 🚀 Deployment
 

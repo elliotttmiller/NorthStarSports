@@ -129,10 +129,10 @@ export const CompactMobileGameRow = memo(
         >
           {/* Time Header */}
           <div className="flex justify-between items-center mb-2">
+            <div className="text-xs text-muted-foreground">{game.leagueId}</div>
             <div className="text-xs text-muted-foreground font-medium">
               {timeString}
             </div>
-            <div className="text-xs text-muted-foreground">{game.leagueId}</div>
           </div>
 
           {/* Teams and Odds Grid - 4 columns to match header */}

@@ -23,7 +23,7 @@ export function LivePage() {
     getSports().then(setSports);
   }, []);
 
-  // Group live games by sport and league (case-insensitive, robust)
+  // Group and order live games by sport, league, and startTime
   let displayGames = liveGames;
   if (selectedSport) {
     const sportObj = sports.find((s: any) => s.id.toLowerCase() === selectedSport.toLowerCase());
@@ -35,6 +35,10 @@ export function LivePage() {
   if (selectedLeague) {
     displayGames = displayGames.filter((g) => (g.leagueId || '').toLowerCase() === selectedLeague.toLowerCase());
   }
+  // Order by startTime ascending
+  const orderedGames = displayGames.slice().sort(
+    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+  );
 
   return (
     <AnimatePresence mode="wait">
@@ -62,7 +66,7 @@ export function LivePage() {
                   {displayGames.length === 0 ? (
                     <div className="text-center text-muted-foreground py-8">No live games right now.</div>
                   ) : (
-                    displayGames.map((game, idx) => (
+                    orderedGames.map((game, idx) => (
                       <div key={game.id}>
                         <div className="hidden md:block">
                           <ProfessionalGameRow game={game} />

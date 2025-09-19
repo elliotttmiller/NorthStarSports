@@ -124,9 +124,9 @@ export const ProfessionalGameRow = memo(
       >
         {/* Game Row */}
         <div className="grid grid-cols-[80px_1fr_120px_120px_120px_32px] gap-4 items-center py-2 px-4 min-h-[60px]">
-          {/* Time Column */}
+          {/* League Column (now on left) */}
           <div className="text-xs text-muted-foreground font-medium">
-            {showTime && timeString}
+            {game.leagueId}
           </div>
 
           {/* Teams Column */}
@@ -321,6 +321,10 @@ export const ProfessionalGameRow = memo(
                 <Plus size={16} />
               </Button>
             </motion.div>
+          </div>
+          {/* Time Column (now on right) */}
+          <div className="text-xs text-muted-foreground font-medium text-right">
+            {showTime && timeString}
           </div>
         </div>
 

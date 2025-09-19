@@ -131,16 +131,16 @@ export const GameCard = memo(
                           </span>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex flex-row items-center gap-2 text-xs text-muted-foreground min-w-[90px] justify-end">
-                      <Clock size={14} className="opacity-70" />
-                      {formatTime(game.startTime)}
                       <Badge
                         variant="secondary"
                         className="ml-2 px-2 py-0.5 text-xs font-medium bg-muted/40"
                       >
                         {game.leagueId}
                       </Badge>
+                    </div>
+                    <div className="flex flex-row items-center gap-2 text-xs text-muted-foreground min-w-[90px] justify-end">
+                      <Clock size={14} className="opacity-70" />
+                      {formatTime(game.startTime)}
                     </div>
                   </div>
                   <div className="flex flex-row gap-4 mt-2 w-full">
