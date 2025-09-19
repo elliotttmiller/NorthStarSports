@@ -23,18 +23,17 @@ export function LivePage() {
     getSports().then(setSports);
   }, []);
 
-  // Group live games by sport and league
+  // Group live games by sport and league (case-insensitive, robust)
   let displayGames = liveGames;
   if (selectedSport) {
-    // Find all league IDs for the selected sport
-    const sportObj = sports.find((s: any) => s.id === selectedSport);
+    const sportObj = sports.find((s: any) => s.id.toLowerCase() === selectedSport.toLowerCase());
     if (sportObj) {
-      const leagueIds = sportObj.leagues.map((l: any) => l.id);
-      displayGames = liveGames.filter((g) => leagueIds.includes(g.leagueId));
+      const leagueIds = sportObj.leagues.map((l: any) => l.id.toLowerCase());
+      displayGames = liveGames.filter((g) => leagueIds.includes((g.leagueId || '').toLowerCase()));
     }
   }
   if (selectedLeague) {
-    displayGames = displayGames.filter((g) => g.leagueId === selectedLeague);
+    displayGames = displayGames.filter((g) => (g.leagueId || '').toLowerCase() === selectedLeague.toLowerCase());
   }
 
   return (
