@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback, memo } from "react";
-import type { Bet } from "../types";
+import type { Bet } from "@/types";
 import { useBetsContext } from "@/context/BetsContext";
 import { useBetSlip } from "@/context/BetSlipContext";
 import { useNavigation } from "@/context/NavigationContext";
 import { formatOdds } from "@/lib/formatters";
 import { formatBetDescription, formatMatchup } from "@/lib/betFormatters";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -31,38 +31,28 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { SmoothScrollContainer } from "@/components/VirtualScrolling";
 
-export const BetSlipModal = memo(() => {
-  const { betSlip, removeBet, updateStake, setBetType, clearBetSlip } =
-    useBetSlip();
+const BetSlipModalComponent = () => {
+  const { betSlip, removeBet, updateStake, setBetType, clearBetSlip } = useBetSlip();
   const { addBet, refreshBets } = useBetsContext();
   const { navigation, setIsBetSlipOpen } = useNavigation();
   const [isPlacing, setIsPlacing] = useState(false);
-  const [placementStage, setPlacementStage] = useState<
-    "idle" | "validating" | "processing" | "success"
-  >("idle");
+  const [placementStage, setPlacementStage] = useState<"idle" | "validating" | "processing" | "success">("idle");
 
   const isOpen = navigation.isBetSlipOpen;
 
-  // Handle close with smooth animation reset
   const handleClose = useCallback(() => {
-    if (isPlacing) return; // Prevent closing during bet placement
+    if (isPlacing) return;
     setPlacementStage("idle");
     setIsBetSlipOpen(false);
   }, [setIsBetSlipOpen, isPlacing]);
 
-  // Handle stake updates with validation
-  const handleStakeChange = useCallback(
-    (betId: string, value: string) => {
-      const stake = parseFloat(value) || 0;
-      if (stake >= 0 && stake <= 10000) {
-        // Max stake limit
-        updateStake(betId, stake);
-      }
-    },
-    [updateStake],
-  );
+  const handleStakeChange = useCallback((betId: string, value: string) => {
+    const stake = parseFloat(value) || 0;
+    if (stake >= 0 && stake <= 10000) {
+      updateStake(betId, stake);
+    }
+  }, [updateStake]);
 
-  // Enhanced bet placement with stages
   const handlePlaceBet = async () => {
     if (betSlip.bets.length === 0) {
       toast.error("No bets selected");
@@ -74,19 +64,14 @@ export const BetSlipModal = memo(() => {
     }
     setIsPlacing(true);
     try {
-      // Stage 1: Validation
       setPlacementStage("validating");
       await new Promise((resolve) => setTimeout(resolve, 600));
-      // Stage 2: Processing
       setPlacementStage("processing");
       await new Promise((resolve) => setTimeout(resolve, 1200));
-      // Place bets
       if (betSlip.betType === "single") {
         for (const bet of betSlip.bets) {
-          // Ensure all bet properties are preserved
           await addBet({
             ...bet,
-            // Make sure critical properties are maintained
             betType: bet.betType,
             selection: bet.selection,
             line: bet.line,
@@ -94,46 +79,36 @@ export const BetSlipModal = memo(() => {
           });
         }
       } else if (betSlip.betType === "parlay") {
-        // Create a parlay bet object with all individual bet details preserved
-        const parlayBet = {
+        const parlayBet: Bet = {
           id: `parlay-${Date.now()}`,
-          gameId: `parlay-${Date.now()}`, // Unique game ID for parlay
-          betType: "parlay" as const,
-          selection: "parlay" as any, // Parlay doesn't have a single selection
+          gameId: `parlay-${Date.now()}`,
+          betType: "parlay",
+          selection: "home", // Use a valid selection value, e.g. "home" for parlay
           odds: betSlip.totalOdds,
-          line: undefined, // Parlays don't have lines
+          line: undefined,
           stake: betSlip.totalStake,
           potentialPayout: betSlip.totalPayout,
           game: {
             id: `parlay-${Date.now()}`,
-            homeTeam: { name: "Parlay Bet", shortName: "PAR" },
-            awayTeam: {
-              name: `${betSlip.bets.length} Picks`,
-              shortName: `${betSlip.bets.length}P`,
-            },
+            homeTeam: { name: "Parlay Bet", shortName: "PAR", id: "parlay-home", logo: "" },
+            awayTeam: { name: `${betSlip.bets.length} Picks`, shortName: `${betSlip.bets.length}P`, id: "parlay-away", logo: "" },
             leagueId: "PARLAY",
-          } as any,
-          legs: betSlip.bets.map((bet) => ({
-            ...bet,
-            // Ensure each leg maintains its original properties
-            betType: bet.betType,
-            selection: bet.selection,
-            line: bet.line,
-            game: bet.game,
-          })),
+            startTime: new Date(),
+            status: "upcoming",
+            odds: {
+              spread: { home: { odds: 0, lastUpdated: new Date() }, away: { odds: 0, lastUpdated: new Date() } },
+              moneyline: { home: { odds: 0, lastUpdated: new Date() }, away: { odds: 0, lastUpdated: new Date() } },
+              total: { home: { odds: 0, lastUpdated: new Date() }, away: { odds: 0, lastUpdated: new Date() } }
+            },
+          },
+          legs: betSlip.bets.map((bet) => ({ ...bet })),
         };
         await addBet(parlayBet);
       }
-      // Stage 3: Success
       setPlacementStage("success");
-
-      // Ensure active bets are refreshed to show newly placed bets
       await refreshBets();
-
       await new Promise((resolve) => setTimeout(resolve, 800));
-      toast.success(
-        `${betSlip.betType === "single" ? "Bets" : "Parlay"} placed successfully! Good luck!`,
-      );
+      toast.success(`${betSlip.betType === "single" ? "Bets" : "Parlay"} placed successfully! Good luck!`);
       clearBetSlip();
       setTimeout(() => {
         handleClose();
@@ -146,17 +121,14 @@ export const BetSlipModal = memo(() => {
     }
   };
 
-  // Keyboard handling for accessibility
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen && !isPlacing) {
         handleClose();
       }
     };
-
     if (isOpen) {
       document.addEventListener("keydown", handleKeyDown);
-      // Prevent body scroll when modal is open
       document.body.style.overflow = "hidden";
       return () => {
         document.removeEventListener("keydown", handleKeyDown);
@@ -310,7 +282,7 @@ export const BetSlipModal = memo(() => {
                 {betSlip.bets.length === 0 ? (
                   <div
                     className="flex flex-col items-center justify-center py-20 text-center w-full max-w-full"
-                      style={{ minHeight: "40vh", boxSizing: "border-box" }}
+                    style={{ minHeight: "40vh", boxSizing: "border-box" }}
                   >
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -318,49 +290,45 @@ export const BetSlipModal = memo(() => {
                       transition={{ duration: 0.6, delay: 0.2 }}
                       className="flex flex-col items-center justify-center"
                     >
-                        {/* Move width from motion.div style to a wrapping div */}
-                        <div style={{ width: "100vw" }}>
-                          <motion.div
-                            initial={{ scale: 0.8, rotate: -5 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            transition={{
-                              duration: 0.6,
-                              delay: 0.3,
-                              type: "spring",
-                              stiffness: 200,
-                            }}
-                            className="w-24 h-24 bg-gradient-to-br from-accent/25 to-accent/35 rounded-3xl flex items-center justify-center mb-8 border border-accent/20 shadow-lg"
-                          >
-                            <Target
-                              size={36}
-                              className="text-accent"
-                              weight="duotone"
-                            />
-                          </motion.div>
-                        </div>
+                      <div style={{ width: "100vw" }}>
+                        <motion.div
+                          initial={{ scale: 0.8, rotate: -5 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          transition={{
+                            duration: 0.6,
+                            delay: 0.3,
+                            type: "spring",
+                            stiffness: 200,
+                          }}
+                          className="w-24 h-24 bg-gradient-to-br from-accent/25 to-accent/35 rounded-3xl flex items-center justify-center mb-8 border border-accent/20 shadow-lg"
+                        >
+                          <Target
+                            size={36}
+                            className="text-accent"
+                            weight="duotone"
+                          />
+                        </motion.div>
+                      </div>
                       <motion.h3
                         className="text-2xl font-bold mb-3"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.5 }}
-                        >
-                          {/* Move width from motion.h3 style to span */}
-                          <span style={{ wordBreak: "break-word", width: "100%" }}>
-                            Ready to Bet
-                          </span>
-                        </motion.h3>
+                      >
+                        <span style={{ wordBreak: "break-word", width: "100%" }}>
+                          Ready to Bet
+                        </span>
+                      </motion.h3>
                       <motion.p
                         className="text-muted-foreground text-base leading-relaxed"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.7 }}
-                        >
-                          {/* Move width from motion.p style to span */}
-                          <span style={{ maxWidth: "100vw", wordBreak: "break-word", width: "100%" }}>
-                            Browse games and tap odds to start building your perfect
-                            bet slip
-                          </span>
-                        </motion.p>
+                      >
+                        <span style={{ maxWidth: "100vw", wordBreak: "break-word", width: "100%" }}>
+                          Browse games and tap odds to start building your perfect bet slip
+                        </span>
+                      </motion.p>
                     </motion.div>
                   </div>
                 ) : (
@@ -384,7 +352,6 @@ export const BetSlipModal = memo(() => {
                           >
                             <Card className="professional-card border border-border/30 shadow-sm ring-1 ring-border/20 hover:border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-lg transition-colors duration-200">
                               <CardContent className="p-4">
-                                {/* Header section with bet details and odds */}
                                 <div className="flex items-start justify-between mb-3">
                                   <div className="flex-1 min-w-0 pr-4">
                                     <div className="text-base font-bold text-foreground truncate mb-1">
@@ -403,10 +370,7 @@ export const BetSlipModal = memo(() => {
                                     {formatOdds(bet.odds)}
                                   </Badge>
                                 </div>
-
                                 <Separator className="opacity-20 mb-3" />
-
-                                {/* Stakes and Win with delete button layout */}
                                 <div className="flex items-center">
                                   <div className="flex-1 space-y-3 pr-4">
                                     <div className="flex items-center justify-between">
@@ -419,12 +383,7 @@ export const BetSlipModal = memo(() => {
                                         max="10000"
                                         step="1"
                                         value={bet.stake || ""}
-                                        onChange={(e) =>
-                                          handleStakeChange(
-                                            bet.id,
-                                            e.target.value,
-                                          )
-                                        }
+                                        onChange={(e) => handleStakeChange(bet.id, e.target.value)}
                                         className="w-24 h-9 text-sm bg-background/60 backdrop-blur-sm border-border/60 focus:border-accent/60 rounded-lg font-medium text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         placeholder="0.00"
                                       />
@@ -434,12 +393,7 @@ export const BetSlipModal = memo(() => {
                                         To Win:
                                       </span>
                                       <span className="font-bold text-[color:var(--color-win)]">
-                                        $
-                                        {bet.stake > 0
-                                          ? (
-                                              bet.potentialPayout - bet.stake
-                                            ).toFixed(2)
-                                          : "0.00"}
+                                        ${bet.stake > 0 ? (bet.potentialPayout - bet.stake).toFixed(2) : "0.00"}
                                       </span>
                                     </div>
                                   </div>
@@ -460,127 +414,102 @@ export const BetSlipModal = memo(() => {
                         ))}
                       </AnimatePresence>
                     ) : (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4 }}
-                      >
+                      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                         <Card className="professional-card border border-accent/30 shadow-sm ring-1 ring-accent/15 hover:border-accent/50 bg-card/50 backdrop-blur-sm transition-colors duration-200">
-                          <CardContent className="p-4">
-                            {/* Clean Parlay Header */}
-                            <div className="flex items-center justify-between mb-4">
-                              <div className="flex items-center gap-3">
-                                <Stack size={20} className="text-accent" />
-                                <div className="text-lg font-bold text-foreground">
-                                  Parlay ({betSlip.bets.length} picks)
+                          <CardContent className="p-8">
+                            <div className="flex flex-col gap-8">
+                              {/* Header */}
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-4">
+                                  <Stack size={24} className="text-accent" />
+                                  <span className="text-xl font-bold text-foreground">
+                                    Parlay ({betSlip.bets.length} picks)
+                                  </span>
                                 </div>
+                                <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-6 py-2 text-lg font-bold min-w-[120px] text-center">
+                                  {formatOdds(betSlip.totalOdds)}
+                                </Badge>
                               </div>
-                              <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-4 py-2 text-base font-bold min-w-[90px] text-center">
-                                {formatOdds(betSlip.totalOdds)}
-                              </Badge>
-                            </div>
-
-                            {/* Parlay Legs - Clean List */}
-                            <div className="space-y-3 mb-4">
-                              <AnimatePresence>
-                                {betSlip.bets.map((bet, index) => (
-                                  <motion.div
-                                    key={bet.id}
-                                    layout
-                                    className="flex items-start justify-between py-2 border-b border-border/15 last:border-b-0"
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: 20 }}
-                                    transition={{
-                                      duration: 0.3,
-                                      delay: index * 0.1,
-                                    }}
-                                  >
-                                    <div className="flex items-start gap-3 flex-1 min-w-0">
-                                      <div className="w-6 h-6 bg-accent/20 text-accent rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
-                                        {index + 1}
-                                      </div>
-                                      <div className="flex-1 min-w-0">
-                                        <div className="text-base font-semibold text-foreground">
-                                          {formatBetDescription(bet)}
+                              {/* Bets List */}
+                              <div className="flex flex-col gap-3">
+                                <AnimatePresence>
+                                  {betSlip.bets.map((bet, index) => (
+                                    <motion.div
+                                      key={bet.id}
+                                      layout
+                                      className="flex items-center justify-between py-3 border-b border-border/20 last:border-b-0"
+                                      initial={{ opacity: 0, x: -20 }}
+                                      animate={{ opacity: 1, x: 0 }}
+                                      exit={{ opacity: 0, x: 20 }}
+                                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                                    >
+                                      <div className="flex items-center gap-4 flex-1 min-w-0">
+                                        <div className="w-7 h-7 bg-accent/20 text-accent rounded-full flex items-center justify-center text-base font-bold">
+                                          {index + 1}
                                         </div>
-                                        <div className="text-sm text-muted-foreground">
-                                          {formatMatchup(bet)}
+                                        <div className="flex-1 min-w-0">
+                                          <div className="text-base font-semibold text-foreground">
+                                            {formatBetDescription(bet)}
+                                          </div>
+                                          <div className="text-sm text-muted-foreground">
+                                            {formatMatchup(bet)}
+                                          </div>
                                         </div>
                                       </div>
+                                      <div className="flex items-center gap-3 ml-2">
+                                        <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-5 py-1 text-base font-bold min-w-[90px] text-center">
+                                          {formatOdds(bet.odds)}
+                                        </Badge>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() => removeBet(bet.id)}
+                                          className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg"
+                                        >
+                                          <Trash size={16} />
+                                        </Button>
+                                      </div>
+                                    </motion.div>
+                                  ))}
+                                </AnimatePresence>
+                              </div>
+                              {/* Summary Section */}
+                              <div className="bg-card/80 backdrop-blur border border-border/30 rounded-xl px-8 py-6 mt-4 flex flex-col gap-6 shadow-lg">
+                                <div className="flex flex-row gap-8 px-12">
+                                  <div className="flex-1">
+                                    <label className="text-xs font-medium text-muted-foreground mb-2 block">
+                                      Parlay Stake
+                                    </label>
+                                    <Input
+                                      type="number"
+                                      min="0"
+                                      max="10000"
+                                      step="1"
+                                      value={betSlip.bets[0]?.stake || ""}
+                                      onChange={(e) => betSlip.bets[0] && handleStakeChange(betSlip.bets[0].id, e.target.value)}
+                                      className="h-11 text-base bg-background/80 backdrop-blur border-border/50 focus:border-accent/60 rounded-lg font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                      placeholder="0.00"
+                                    />
+                                  </div>
+                                  <div className="flex-1">
+                                    <label className="text-xs font-medium text-muted-foreground mb-2 block">
+                                      To Win
+                                    </label>
+                                    <div className="h-11 flex items-center justify-center bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg px-5">
+                                      <span className="font-bold text-green-600 dark:text-green-400 text-lg">
+                                        ${betSlip.totalPayout > betSlip.totalStake ? (betSlip.totalPayout - betSlip.totalStake).toFixed(2) : "0.00"}
+                                      </span>
                                     </div>
-                                    <div className="flex items-center gap-3 ml-4">
-                                      <Badge className="text-accent border-accent/40 bg-accent/15 font-mono px-3 py-1 text-sm font-bold min-w-[70px] text-center">
-                                        {formatOdds(bet.odds)}
-                                      </Badge>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => removeBet(bet.id)}
-                                        className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg"
-                                      >
-                                        <Trash size={14} />
-                                      </Button>
-                                    </div>
-                                  </motion.div>
-                                ))}
-                              </AnimatePresence>
-                            </div>
-
-                            <Separator className="opacity-20 mb-4" />
-
-                            {/* Professional Parlay Stake and Payout Section */}
-                            <div className="bg-card/40 backdrop-blur-sm border border-border/30 rounded-xl p-4 space-y-4">
-                              {/* Stake Input Row */}
-                              <div className="flex items-center justify-between gap-4">
-                                <div className="flex-1">
-                                  <label className="text-xs font-medium text-muted-foreground mb-2 block">
-                                    Parlay Stake
-                                  </label>
-                                  <Input
-                                    type="number"
-                                    min="0"
-                                    max="10000"
-                                    step="1"
-                                    value={betSlip.bets[0]?.stake || ""}
-                                    onChange={(e) =>
-                                      betSlip.bets[0] &&
-                                      handleStakeChange(
-                                        betSlip.bets[0].id,
-                                        e.target.value,
-                                      )
-                                    }
-                                    className="h-10 text-sm bg-background/80 backdrop-blur-sm border-border/50 focus:border-accent/60 rounded-lg font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                    placeholder="0.00"
-                                  />
-                                </div>
-
-                                <div className="flex-1">
-                                  <label className="text-xs font-medium text-muted-foreground mb-2 block">
-                                    To Win
-                                  </label>
-                                  <div className="h-10 flex items-center justify-center bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg px-4">
-                                    <span className="font-bold text-green-600 dark:text-green-400">
-                                      $
-                                      {betSlip.totalPayout > betSlip.totalStake
-                                        ? (
-                                            betSlip.totalPayout -
-                                            betSlip.totalStake
-                                          ).toFixed(2)
-                                        : "0.00"}
-                                    </span>
                                   </div>
                                 </div>
-                              </div>
-
-                              {/* Total Payout Summary */}
-                              <div className="flex items-center justify-between pt-3 border-t border-border/20">
-                                <span className="text-sm font-semibold text-muted-foreground">
-                                  Total Payout:
-                                </span>
-                                <span className="font-bold text-accent text-lg">
-                                  ${betSlip.totalPayout.toFixed(2)}
-                                </span>
+                                <div className="flex items-center justify-between pt-4 border-t border-border/20 px-12">
+                                  <span className="text-base font-semibold text-muted-foreground">
+                                    Total Payout:
+                                  </span>
+                                  <span className="font-bold text-accent text-xl">
+                                    ${betSlip.totalPayout.toFixed(2)}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </CardContent>
@@ -591,8 +520,6 @@ export const BetSlipModal = memo(() => {
                 )}
               </motion.div>
             </SmoothScrollContainer>
-
-            {/* Enhanced Summary & Place Bet Section */}
             {betSlip.bets.length > 0 && (
               <div style={{ width: "100%", boxSizing: "border-box" }}>
                 <motion.div
@@ -602,100 +529,78 @@ export const BetSlipModal = memo(() => {
                   className="border-t border-border/40 professional-spacing-lg bg-gradient-to-t from-muted/40 to-muted/20 backdrop-blur-2xl flex-shrink-0"
                 >
                   <div className="space-y-6 professional-spacing-lg">
-                  {/* Summary Card */}
-                  <div className="professional-card space-y-4 bg-gradient-to-r from-secondary/15 to-secondary/25 border border-border/40 rounded-xl">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground font-semibold w-20">
-                        Stake:
-                      </span>
-                      <span className="font-bold text-foreground text-base w-24 text-right">
-                        ${betSlip.totalStake.toFixed(2)}
-                      </span>
+                    <div className="professional-card space-y-4 bg-gradient-to-r from-secondary/15 to-secondary/25 border border-border/40 rounded-xl">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground font-semibold w-20">
+                          Stake:
+                        </span>
+                        <span className="font-bold text-foreground text-base w-24 text-right">
+                          ${betSlip.totalStake.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground font-semibold w-20">
+                          To Win:
+                        </span>
+                        <span className="font-bold text-[color:var(--color-win)] text-base w-24 text-right">
+                          ${betSlip.totalPayout > betSlip.totalStake ? (betSlip.totalPayout - betSlip.totalStake).toFixed(2) : "0.00"}
+                        </span>
+                      </div>
+                      <Separator className="opacity-30" />
+                      <div className="flex items-center justify-between text-sm pt-1">
+                        <span className="text-muted-foreground font-semibold w-20">
+                          Payout:
+                        </span>
+                        <span className="font-bold text-accent text-lg w-24 text-right">
+                          ${betSlip.totalPayout.toFixed(2)}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground font-semibold w-20">
-                        To Win:
-                      </span>
-                      <span className="font-bold text-[color:var(--color-win)] text-base w-24 text-right">
-                        $
-                        {betSlip.totalPayout > betSlip.totalStake
-                          ? (betSlip.totalPayout - betSlip.totalStake).toFixed(
-                              2,
-                            )
-                          : "0.00"}
-                      </span>
-                    </div>
-                    <Separator className="opacity-30" />
-                    <div className="flex items-center justify-between text-sm pt-1">
-                      <span className="text-muted-foreground font-semibold w-20">
-                        Payout:
-                      </span>
-                      <span className="font-bold text-accent text-lg w-24 text-right">
-                        ${betSlip.totalPayout.toFixed(2)}
-                      </span>
-                    </div>
+                    <motion.div whileHover={!isPlacing ? { scale: 1.02 } : {}} whileTap={!isPlacing ? { scale: 0.98 } : {}}>
+                      <Button
+                        onClick={handlePlaceBet}
+                        disabled={isPlacing || betSlip.totalStake === 0}
+                        className={`w-full h-14 font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 ${placementStage === "success" ? "bg-[color:var(--color-win)] hover:bg-[color:var(--color-win)] text-white" : "bg-accent hover:bg-accent/90 text-accent-foreground"}`}
+                      >
+                        {isPlacing ? (
+                          <div className="flex items-center gap-3">
+                            {placementStage === "validating" && (
+                              <>
+                                <motion.div
+                                  animate={{ rotate: 360 }}
+                                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                  className="w-6 h-6 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full"
+                                />
+                                <span>Validating...</span>
+                              </>
+                            )}
+                            {placementStage === "processing" && (
+                              <>
+                                <motion.div
+                                  animate={{ scale: [1, 1.2, 1] }}
+                                  transition={{ duration: 0.8, repeat: Infinity }}
+                                  className="w-6 h-6 bg-accent-foreground rounded-full"
+                                />
+                                <span>Processing Bet...</span>
+                              </>
+                            )}
+                            {placementStage === "success" && (
+                              <>
+                                <CheckCircle size={24} weight="fill" />
+                                <span>Bet Placed!</span>
+                              </>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-3">
+                            <TrendUp size={22} />
+                            <span>Place {betSlip.betType === "single" ? "Bets" : "Parlay"}</span>
+                          </div>
+                        )}
+                      </Button>
+                    </motion.div>
                   </div>
-
-                  {/* Place Bet Button with Enhanced States */}
-                  <motion.div
-                    whileHover={!isPlacing ? { scale: 1.02 } : {}}
-                    whileTap={!isPlacing ? { scale: 0.98 } : {}}
-                  >
-                    <Button
-                      onClick={handlePlaceBet}
-                      disabled={isPlacing || betSlip.totalStake === 0}
-                      className={`w-full h-14 font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 ${
-                        placementStage === "success"
-                          ? "bg-[color:var(--color-win)] hover:bg-[color:var(--color-win)] text-white"
-                          : "bg-accent hover:bg-accent/90 text-accent-foreground"
-                      }`}
-                    >
-                      {isPlacing ? (
-                        <div className="flex items-center gap-3">
-                          {placementStage === "validating" && (
-                            <>
-                              <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{
-                                  duration: 1,
-                                  repeat: Infinity,
-                                  ease: "linear",
-                                }}
-                                className="w-6 h-6 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full"
-                              />
-                              <span>Validating...</span>
-                            </>
-                          )}
-                          {placementStage === "processing" && (
-                            <>
-                              <motion.div
-                                animate={{ scale: [1, 1.2, 1] }}
-                                transition={{ duration: 0.8, repeat: Infinity }}
-                                className="w-6 h-6 bg-accent-foreground rounded-full"
-                              />
-                              <span>Processing Bet...</span>
-                            </>
-                          )}
-                          {placementStage === "success" && (
-                            <>
-                              <CheckCircle size={24} weight="fill" />
-                              <span>Bet Placed!</span>
-                            </>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-3">
-                          <TrendUp size={22} />
-                          <span>
-                            Place{" "}
-                            {betSlip.betType === "single" ? "Bets" : "Parlay"}
-                          </span>
-                        </div>
-                      )}
-                    </Button>
-                  </motion.div>
-                </div>
-              </motion.div>
+                </motion.div>
               </div>
             )}
           </DialogContent>
@@ -703,4 +608,6 @@ export const BetSlipModal = memo(() => {
       </Dialog>
     </AnimatePresence>
   );
-});
+};
+BetSlipModalComponent.displayName = "BetSlipModal";
+export const BetSlipModal = memo(BetSlipModalComponent);
