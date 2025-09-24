@@ -40,20 +40,20 @@ const BetSlipModalComponent = () => {
 
   const isOpen = navigation.isBetSlipOpen;
 
-  const handleClose = useCallback(() => {
+  const handleClose = useCallback((): void => {
     if (isPlacing) return;
     setPlacementStage("idle");
     setIsBetSlipOpen(false);
   }, [setIsBetSlipOpen, isPlacing]);
 
-  const handleStakeChange = useCallback((betId: string, value: string) => {
+  const handleStakeChange = useCallback((betId: string, value: string): void => {
     const stake = parseFloat(value) || 0;
     if (stake >= 0 && stake <= 10000) {
       updateStake(betId, stake);
     }
   }, [updateStake]);
 
-  const handlePlaceBet = async () => {
+  const handlePlaceBet = async (): Promise<void> => {
     if (betSlip.bets.length === 0) {
       toast.error("No bets selected");
       return;
@@ -141,7 +141,7 @@ const BetSlipModalComponent = () => {
 
   return (
     <AnimatePresence mode="wait">
-      <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+  <Dialog open={isOpen} onOpenChange={(open: boolean) => !open && handleClose()}>
         <motion.div
           key="betslip-modal"
           initial={{ opacity: 0, y: 30 }}
@@ -168,7 +168,7 @@ const BetSlipModalComponent = () => {
               boxSizing: "border-box",
               overflow: "hidden",
             }}
-            onInteractOutside={(e) => {
+            onInteractOutside={(e: Event) => {
               if (!isPlacing) handleClose();
               else e.preventDefault();
             }}
@@ -239,7 +239,7 @@ const BetSlipModalComponent = () => {
                   {betSlip.bets.length > 1 && (
                     <Tabs
                       value={betSlip.betType}
-                      onValueChange={setBetType}
+                      onValueChange={(value: string) => setBetType(value as "single" | "parlay")}
                       className="w-auto"
                     >
                       <TabsList className="grid w-full grid-cols-2 h-9 bg-secondary/50 backdrop-blur-sm border border-border/40">
@@ -335,7 +335,7 @@ const BetSlipModalComponent = () => {
                   <div className="space-y-4">
                     {betSlip.betType === "single" ? (
                       <AnimatePresence mode="popLayout">
-                        {betSlip.bets.map((bet, index) => (
+                        {betSlip.bets.map((bet: Bet, index: number) => (
                           <motion.div
                             key={bet.id}
                             layout
@@ -383,7 +383,7 @@ const BetSlipModalComponent = () => {
                                         max="10000"
                                         step="1"
                                         value={bet.stake || ""}
-                                        onChange={(e) => handleStakeChange(bet.id, e.target.value)}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleStakeChange(bet.id, e.target.value)}
                                         className="w-24 h-9 text-sm bg-background/60 backdrop-blur-sm border-border/60 focus:border-accent/60 rounded-lg font-medium text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         placeholder="0.00"
                                       />

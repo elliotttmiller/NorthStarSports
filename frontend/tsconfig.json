@@ -39,13 +39,13 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-  "src",
-  "app",
-  "config",
-  ".next/types/**/*.ts",
-  "next-env.d.ts"
+    "src",
+    "app",
+    "config",
+    ".next/types/**/*.ts",
+    "next-env.d.ts"
   ],
   "exclude": [
-  "node_modules"
+    "node_modules"
   ]
 }
