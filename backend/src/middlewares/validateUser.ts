@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
-import { logWarn } from "../utils/logger.js";
 
 // More flexible user schema for testing
 const userSchema = Joi.object({
@@ -24,7 +23,6 @@ const userSchema = Joi.object({
 export default function validateUser(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): void {
   const userId = req.params.userId;
   if (!userId) {
@@ -55,5 +53,4 @@ export default function validateUser(
     });
     return;
   }
-  next();
 }

@@ -1,12 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import * as betService from "../services/betService.js";
 import { success, error } from "../utils/responseFormatter.js";
-import { logInfo, logError, logWarn } from "../utils/logger.js";
 
 export async function getBet(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const betId = req.params.betId;
   if (!betId) {
@@ -26,15 +24,12 @@ export async function getBet(
     logInfo("getBet success", { bet });
     res.json(success(bet));
   } catch (err) {
-    logError("getBet error", err as Error);
-    next(err);
   }
 }
 
 export async function setBet(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const betId = req.params.betId;
   if (!betId) {
@@ -49,15 +44,12 @@ export async function setBet(
     logInfo("setBet success", { betId });
     res.json(success({ betId }));
   } catch (err) {
-    logError("setBet error", err as Error);
-    next(err);
   }
 }
 
 export async function getUserBets(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const userId = req.params.userId;
   if (!userId) {
@@ -72,7 +64,5 @@ export async function getUserBets(
     logInfo("getUserBets success", { count: bets.length });
     res.json(success(bets));
   } catch (err) {
-    logError("getUserBets error", err as Error);
-    next(err);
   }
 }

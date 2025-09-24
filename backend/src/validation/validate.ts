@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { betSchema, gameSchema, userSchema } from "./schemas";
 
 export function validateBet(data: unknown) {

@@ -1,6 +1,6 @@
 import "dotenv/config";
-import logger, { logInfo, logError } from "./utils/logger.js";
 import app from "./app.js";
+import { logInfo } from "./utils/logger";
 import type { Server } from "http";
 
 const PORT = Number(process.env.PORT) || 4000;
@@ -30,8 +30,7 @@ class AppServer {
 
       // Setup graceful shutdown handlers
       this.setupGracefulShutdown();
-    } catch (error) {
-      logError("💥 Failed to start server", error as Error);
+    } catch {
       process.exit(1);
     }
   }
@@ -41,15 +40,13 @@ class AppServer {
       throw error;
     }
 
-    const bind = typeof PORT === "string" ? `Pipe ${PORT}` : `Port ${PORT}`;
+  // const bind = typeof PORT === "string" ? `Pipe ${PORT}` : `Port ${PORT}`;
 
     switch (error.code) {
       case "EACCES":
-        logError(`${bind} requires elevated privileges`);
         process.exit(1);
         break;
       case "EADDRINUSE":
-        logError(`${bind} is already in use`);
         process.exit(1);
         break;
       default:
@@ -68,15 +65,15 @@ class AppServer {
     });
 
     // Handle uncaught exceptions
-    process.on("uncaughtException", (error: Error) => {
-      logError("💥 Uncaught Exception", error);
-      this.shutdown().then(() => process.exit(1));
+    process.on("uncaughtException", async () => {
+      await this.shutdown();
+      process.exit(1);
     });
 
     // Handle unhandled promise rejections
-    process.on("unhandledRejection", (reason: any) => {
-      logError("💥 Unhandled Rejection", new Error(String(reason)));
-      this.shutdown().then(() => process.exit(1));
+    process.on("unhandledRejection", async () => {
+      await this.shutdown();
+      process.exit(1);
     });
   }
 
@@ -85,7 +82,6 @@ class AppServer {
 
     return new Promise<void>((resolve) => {
       const timeout = setTimeout(() => {
-        logError("⚠️  Forced shutdown after timeout");
         process.exit(1);
       }, 10000);
 
@@ -100,7 +96,6 @@ class AppServer {
 
 // Start the server
 const appServer = new AppServer();
-appServer.start().catch((error) => {
-  logError("💥 Failed to start application", error);
+appServer.start().catch(() => {
   process.exit(1);
 });

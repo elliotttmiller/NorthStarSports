@@ -1,12 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { kvService } from "../services/kvService.js";
 import { success, error } from "../utils/responseFormatter.js";
-import { logInfo, logError, logWarn } from "../utils/logger.js";
 
 export async function getKV(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const key = req.params.key;
   if (!key) {
@@ -26,15 +24,12 @@ export async function getKV(
     logInfo("getKV success", { key, value });
     res.json(success({ key, value }));
   } catch (err) {
-    logError("getKV error", err as Error);
-    next(err);
   }
 }
 
 export async function setKV(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const key = req.params.key;
   if (!key) {
@@ -55,7 +50,5 @@ export async function setKV(
     logInfo("setKV success", { key, value });
     res.json(success({ key, value }));
   } catch (err) {
-    logError("setKV error", err as Error);
-    next(err);
   }
 }

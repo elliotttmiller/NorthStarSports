@@ -1,6 +1,6 @@
-import express, { Application, Request, Response, NextFunction } from "express";
+import express from "express";
+import { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
-import logger, { logInfo, logError } from "./utils/logger.js";
 
 // Import routes
 import userRoutes from "./routes/user.js";
@@ -11,6 +11,7 @@ import redisRoutes from "./routes/redis.js";
 
 // Import middleware
 import errorHandler from "./middlewares/errorHandler.js";
+import { logInfo } from "./utils/logger";
 
 const app: Application = express();
 
@@ -34,7 +35,6 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Request logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
   const startTime = Date.now();
-
   res.on("finish", () => {
     const duration = Date.now() - startTime;
     logInfo("HTTP Request", {
@@ -46,7 +46,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
       ip: req.ip,
     });
   });
-
   next();
 });
 

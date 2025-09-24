@@ -1,14 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { logError } from "../utils/logger.js";
 
 // Centralized error handler middleware
 export default function errorHandler(
-  err: any,
   req: Request,
   res: Response,
-  next: NextFunction,
 ) {
-  logError("Global error handler", err, {
     path: req.path,
     method: req.method,
     body: req.body,

@@ -1,1 +1,3 @@
-// Removed unused imports and variables
+export default function UserProfilePage() {
+	return <div>User Profile Page</div>;
+}

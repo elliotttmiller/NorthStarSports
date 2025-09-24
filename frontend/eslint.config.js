@@ -16,7 +16,7 @@ export default [
   },
   {
     files: ["**/*.ts", "**/*.tsx"],
-    ignores: ["vite.config.ts"],
+  ignores: ["vite.config.ts", "next-env.d.ts"],
     languageOptions: {
       parser: tsParser,
       parserOptions: {

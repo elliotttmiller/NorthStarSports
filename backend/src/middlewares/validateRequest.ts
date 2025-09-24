@@ -1,11 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
-import { logWarn } from "../utils/logger.js";
 
 export default function validateRequest(
   schema: Joi.ObjectSchema,
-): (req: Request, res: Response, next: NextFunction) => void {
-  return (req: Request, res: Response, next: NextFunction): void => {
     const result = schema.validate(req.body);
     if (result.error) {
       const errorMessage =
@@ -25,6 +22,5 @@ export default function validateRequest(
       });
       return;
     }
-    next();
   };
 }

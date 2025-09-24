@@ -4,12 +4,10 @@ import {
   setGame as setGameService,
 } from "../services/gameService.js";
 import { success, error } from "../utils/responseFormatter.js";
-import { logInfo, logError, logWarn } from "../utils/logger.js";
 
 export async function getGame(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const gameId = req.params.gameId;
   if (!gameId) {
@@ -29,15 +27,12 @@ export async function getGame(
     logInfo("getGame success", { gameId });
     res.json(success(game));
   } catch (err) {
-    logError("getGame error", err as Error);
-    next(err);
   }
 }
 
 export async function setGame(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const gameId = req.params.gameId;
   if (!gameId) {
@@ -59,7 +54,5 @@ export async function setGame(
     logInfo("setGame success", { gameId });
     res.json(success({ gameId, game: gameData }));
   } catch (err) {
-    logError("setGame error", err as Error);
-    next(err);
   }
 }

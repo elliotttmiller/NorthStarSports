@@ -1,1 +1,3 @@
-// Removed unused imports and variables
+export default function LoginPage() {
+	return <div>Login Page</div>;
+}

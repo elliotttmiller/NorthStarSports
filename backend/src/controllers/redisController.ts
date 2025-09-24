@@ -1,13 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { kvService } from "../services/kvService.js";
 import { success, error } from "../utils/responseFormatter.js";
-import { logInfo, logError, logWarn } from "../utils/logger.js";
 
 // User operations
 export async function getUser(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const userId = req.params.userId;
   if (!userId) {
@@ -27,15 +25,12 @@ export async function getUser(
     logInfo("Redis getUser success", { userId });
     res.json(success(user));
   } catch (err) {
-    logError("Redis getUser error", err as Error);
-    next(err);
   }
 }
 
 export async function setUser(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const userId = req.params.userId;
   if (!userId) {
@@ -51,8 +46,6 @@ export async function setUser(
     logInfo("Redis setUser success", { userId });
     res.json(success({ userId, user: userData }));
   } catch (err) {
-    logError("Redis setUser error", err as Error);
-    next(err);
   }
 }
 
@@ -60,7 +53,6 @@ export async function setUser(
 export async function getActiveBetSlip(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const userId = req.params.userId;
   if (!userId) {
@@ -80,15 +72,12 @@ export async function getActiveBetSlip(
     logInfo("Redis getActiveBetSlip success", { userId });
     res.json(success(betSlip));
   } catch (err) {
-    logError("Redis getActiveBetSlip error", err as Error);
-    next(err);
   }
 }
 
 export async function setActiveBetSlip(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const userId = req.params.userId;
   if (!userId) {
@@ -104,15 +93,12 @@ export async function setActiveBetSlip(
     logInfo("Redis setActiveBetSlip success", { userId });
     res.json(success({ userId, betSlip: betSlipData }));
   } catch (err) {
-    logError("Redis setActiveBetSlip error", err as Error);
-    next(err);
   }
 }
 
 export async function getBetSlipHistory(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const userId = req.params.userId;
   if (!userId) {
@@ -133,15 +119,12 @@ export async function getBetSlipHistory(
     logInfo("Redis getBetSlipHistory success", { userId });
     res.json(success(history));
   } catch (err) {
-    logError("Redis getBetSlipHistory error", err as Error);
-    next(err);
   }
 }
 
 export async function addBetSlipToHistory(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const userId = req.params.userId;
   if (!userId) {
@@ -169,8 +152,6 @@ export async function addBetSlipToHistory(
     logInfo("Redis addBetSlipToHistory success", { userId });
     res.json(success({ userId, betSlipId, history: updatedHistory }));
   } catch (err) {
-    logError("Redis addBetSlipToHistory error", err as Error);
-    next(err);
   }
 }
 
@@ -178,7 +159,6 @@ export async function addBetSlipToHistory(
 export async function getBet(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const betId = req.params.betId;
   if (!betId) {
@@ -198,15 +178,12 @@ export async function getBet(
     logInfo("Redis getBet success", { betId });
     res.json(success(bet));
   } catch (err) {
-    logError("Redis getBet error", err as Error);
-    next(err);
   }
 }
 
 export async function setBet(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const betId = req.params.betId;
   if (!betId) {
@@ -222,8 +199,6 @@ export async function setBet(
     logInfo("Redis setBet success", { betId });
     res.json(success({ betId, bet: betData }));
   } catch (err) {
-    logError("Redis setBet error", err as Error);
-    next(err);
   }
 }
 
@@ -231,7 +206,6 @@ export async function setBet(
 export async function getGame(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const gameId = req.params.gameId;
   if (!gameId) {
@@ -251,15 +225,12 @@ export async function getGame(
     logInfo("Redis getGame success", { gameId });
     res.json(success(game));
   } catch (err) {
-    logError("Redis getGame error", err as Error);
-    next(err);
   }
 }
 
 export async function setGame(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const gameId = req.params.gameId;
   if (!gameId) {
@@ -275,8 +246,6 @@ export async function setGame(
     logInfo("Redis setGame success", { gameId });
     res.json(success({ gameId, game: gameData }));
   } catch (err) {
-    logError("Redis setGame error", err as Error);
-    next(err);
   }
 }
 
@@ -284,7 +253,6 @@ export async function setGame(
 export async function getUserBets(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const userId = req.params.userId;
   if (!userId) {
@@ -302,15 +270,12 @@ export async function getUserBets(
     });
     res.json(success(Array.isArray(bets) ? bets : []));
   } catch (err) {
-    logError("Redis getUserBets error", err as Error);
-    next(err);
   }
 }
 
 export async function setUserBets(
   req: Request,
   res: Response,
-  next: NextFunction,
 ): Promise<void> {
   const userId = req.params.userId;
   if (!userId) {
@@ -329,7 +294,5 @@ export async function setUserBets(
     });
     res.json(success({ userId, bets }));
   } catch (err) {
-    logError("Redis setUserBets error", err as Error);
-    next(err);
   }
 }

@@ -1,5 +1,3 @@
-// Deprecated: SPA page. Safe to delete after migration to Next.js.
-
 import { Card } from "@/components/ui/card";
 
 export default function AccountPage() {

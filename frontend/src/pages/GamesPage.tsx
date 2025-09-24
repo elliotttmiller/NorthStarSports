@@ -1,1 +1,3 @@
-// Removed unused imports and variables
+export default function GamesPage() {
+	return <div>Games Page</div>;
+}
