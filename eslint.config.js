@@ -17,12 +17,12 @@ export default [
     },
   },
   {
-    files: ["src/**/*.{ts,tsx,js,jsx}", "app/**/*.{ts,tsx,js,jsx}"],
-  ignores: ["vite.config.ts", "next-env.d.ts", "**/*.d.ts", ".next/**", "node_modules/**", "public/**", "dist/**", "build/**"],
+    files: ["frontend/src/**/*.{ts,tsx,js,jsx}", "frontend/app/**/*.{ts,tsx,js,jsx}"],
+    ignores: ["vite.config.ts", "next-env.d.ts", "**/*.d.ts", ".next/**", "node_modules/**", "public/**", "dist/**", "build/**"],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: "./tsconfig.json",
+        project: "./frontend/tsconfig.json",
         tsconfigRootDir: process.cwd(),
         ecmaVersion: 2021,
         sourceType: "module",

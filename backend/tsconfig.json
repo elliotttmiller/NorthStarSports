@@ -23,6 +23,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true
+  ,"types": ["node", "express"]
   },
   "include": ["src/**/*", "src/utils/*"],
   "exclude": ["node_modules", "dist", "tests/**/*"]
