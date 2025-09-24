@@ -1,8 +1,6 @@
 import {
   mockSports,
   mockAllGames,
-  TEAMS,
-  generateGamesForLeague,
 } from "@/lib/mockData";
 import type { Game, Sport, League, PlayerProp, PropCategory } from "@/types";
 

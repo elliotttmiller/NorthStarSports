@@ -21,6 +21,7 @@
     "express-rate-limit": "^8.1.0",
     "helmet": "^8.1.0",
     "joi": "^18.0.1",
+    "northstarsports-monorepo": "file:..",
     "pino": "^9.9.5",
     "redis": "^4.7.1"
   },

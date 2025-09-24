@@ -1,14 +1,29 @@
 import subprocess
-import sys
 import os
 import time
+import re
 
 def run_command(cmd, cwd=None):
     return subprocess.Popen(cmd, cwd=cwd, shell=True)
 
+def get_env_domain(env_path, var_name):
+    if not os.path.exists(env_path):
+        print(f"[ENV] .env file not found at {env_path}")
+        return None
+    with open(env_path, "r") as f:
+        for line in f:
+            match = re.match(rf"^{var_name}=(.+)", line)
+            if match:
+                url = match.group(1).strip()
+                # Remove protocol for ngrok --url param
+                domain = url.replace("https://", "").replace("http://", "")
+                return domain
+    print(f"[ENV] {var_name} not found in {env_path}")
+    return None
+
 def main():
-    print("[CLEAN] Stopping any running node, vite, or ngrok processes...")
-    for proc in ["node", "ngrok", "vite"]:
+    print("[CLEAN] Stopping any running node, ngrok processes...")
+    for proc in ["node", "ngrok"]:
         subprocess.call(f"taskkill /F /IM {proc}.exe", shell=True)
 
     print("[CLEAN] Cleaning npm cache...")
@@ -22,24 +37,19 @@ def main():
 
     time.sleep(5)  # Wait for servers to start
 
-
-    # Always expose frontend via ngrok
-    ngrok_port = "5173"
-    print("[NGROK] Exposing frontend (UI) on ngrok...")
-    ngrok_cmd = f"ngrok http --domain=noninherently-fractional-aleshia.ngrok-free.app {ngrok_port}"
+    # Read custom domain from .env
+    env_path = os.path.join("frontend", ".env")
+    var_name = "PUBLIC_DOMAIN_URL"
+    custom_domain = get_env_domain(env_path, var_name)
+    if not custom_domain:
+        custom_domain = "nssportsclub.ngrok.app"  # fallback
+    print(f"[NGROK] Exposing frontend (UI) on ngrok with custom domain: {custom_domain} ...")
+    ngrok_port = "3000"
+    ngrok_cmd = f"ngrok http --url={custom_domain} {ngrok_port}"
     ngrok_proc = run_command(ngrok_cmd)
+    time.sleep(5)  # Wait for ngrok to start
 
     print("[LOGS] Streaming backend, frontend, and ngrok output...")
-    print("Press Ctrl+C to stop all services.")
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("[STOP] Shutting down all services...")
-        for proc in [backend_proc, frontend_proc, ngrok_proc]:
-            if proc:
-                proc.terminate()
-        sys.exit(0)
 
 if __name__ == "__main__":
     main()

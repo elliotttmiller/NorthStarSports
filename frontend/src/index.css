@@ -1,10 +1,6 @@
 @import "tailwindcss";
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
   body {
     font-family: "Inter", sans-serif;
   }
@@ -13,17 +9,34 @@
   .scrollbar-hide,
   .seamless-scroll {
     -ms-overflow-style: none;
-    scrollbar-width: none;
+    scrollbar-width: none; /* Firefox only */ /* Limited browser support */
   }
 
   .scrollbar-hide::-webkit-scrollbar,
   .seamless-scroll::-webkit-scrollbar {
-    display: none;
+    display: none; /* Chrome/Safari only */
   }
 
+  /* Custom scrollbar for cross-browser compatibility */
+  .scrollbar-custom {
+    scrollbar-width: thin; /* Firefox, Chrome 121+, Edge, Opera */
+    scrollbar-color: #888 #fff;
+  }
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: #fff;
+  }
+  /* Note: Limited support for scrollbar-width in older browsers */
+
   .virtual-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+    scrollbar-width: thin; /* Firefox only */ /* Limited browser support */
+    scrollbar-color: rgba(155, 155, 155, 0.5) transparent; /* Firefox only */ /* Limited browser support */
   }
 
   .virtual-scrollbar::-webkit-scrollbar {
@@ -109,33 +122,4 @@
   --color-info: var(--color-accent-9);
 
   --radius: 0.5rem;
-}
-
-@theme {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-
-  --radius-sm: calc(var(--radius) * 0.5);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) * 1.5);
-  --radius-xl: calc(var(--radius) * 2);
-  --radius-2xl: calc(var(--radius) * 3);
-  --radius-full: 9999px;
 }

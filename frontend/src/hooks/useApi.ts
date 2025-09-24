@@ -1,33 +1,30 @@
-// Fetch all bets for a user
-export function useBets(userId) {
-  return useApi(`/redis/bets/${userId}`);
-}
-
-// Set all bets for a user
-export function useSetBets() {
-  return useCallback(async (userId, bets) => {
-    const res = await fetch(`${API_BASE}/redis/bets/${userId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(bets),
-    });
-    return res.ok;
-  }, []);
-}
 import { useState, useEffect, useCallback } from "react";
 import { debounce } from "@/utils/debounce";
+import { Bet, BetSlip } from "@/types";
 
 const API_BASE = "/api/v1";
+
+// Type definitions
+export interface Profile {
+  id: string;
+  name: string;
+  // Add more fields as needed
+}
+export interface Game {
+  id: string;
+  name: string;
+  // Add more fields as needed
+}
 
 // Generic fetch hook
 interface UseApiOptions extends RequestInit {
   debounceMs?: number;
 }
 
-function useApi(endpoint: string, options: UseApiOptions = {}) {
-  const [data, setData] = useState(null);
+function useApi<T = unknown>(endpoint: string, options: UseApiOptions = {}) {
+  const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
   // Optionally debounce API calls for endpoints prone to rapid requests
   const debounceMs = options.debounceMs || 0;
@@ -52,33 +49,48 @@ function useApi(endpoint: string, options: UseApiOptions = {}) {
         throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       }
     } catch (err) {
-      setError(err);
+      setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
       setLoading(false);
     }
-  }, [endpoint, JSON.stringify(options)]);
+  }, [endpoint, options]);
 
   // Debounced version of fetchData
-  const debouncedFetchData = useCallback(
-    debounceMs > 0 ? debounce(fetchData, debounceMs) : fetchData,
-    [fetchData, debounceMs],
-  );
+  const debouncedFetchData = debounceMs > 0
+    ? debounce(fetchData, debounceMs)
+    : fetchData;
 
   useEffect(() => {
     debouncedFetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFetchData]);
 
   // Return refetch function along with data, loading, error
   return { data, loading, error, refetch: debouncedFetchData };
 }
 
+// Fetch all bets for a user
+export function useBets(userId: string) {
+  return useApi<Bet[]>(`/redis/bets/${userId}`);
+}
+
+// Set all bets for a user
+export function useSetBets() {
+  return useCallback(async (userId: string, bets: Bet[]) => {
+    const res = await fetch(`${API_BASE}/redis/bets/${userId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bets),
+    });
+    return res.ok;
+  }, []);
+}
+
 // User
-export function useUser(userId) {
-  return useApi(`/redis/user/${userId}`);
+export function useUser(userId: string) {
+  return useApi<Profile>(`/redis/user/${userId}`);
 }
 export function useSetUser() {
-  return useCallback(async (userId, profile) => {
+  return useCallback(async (userId: string, profile: Profile) => {
     const res = await fetch(`${API_BASE}/redis/user/${userId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -89,11 +101,11 @@ export function useSetUser() {
 }
 
 // BetSlip
-export function useActiveBetSlip(userId) {
-  return useApi(`/redis/betslip/${userId}/active`);
+export function useActiveBetSlip(userId: string) {
+  return useApi<BetSlip>(`/redis/betslip/${userId}/active`);
 }
 export function useSetActiveBetSlip() {
-  return useCallback(async (userId, betSlip) => {
+  return useCallback(async (userId: string, betSlip: BetSlip) => {
     const res = await fetch(`${API_BASE}/redis/betslip/${userId}/active`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -102,11 +114,11 @@ export function useSetActiveBetSlip() {
     return res.ok;
   }, []);
 }
-export function useBetSlipHistory(userId, count = 10) {
-  return useApi(`/redis/betslip/${userId}/history?count=${count}`);
+export function useBetSlipHistory(userId: string, count = 10) {
+  return useApi<BetSlip[]>(`/redis/betslip/${userId}/history?count=${count}`);
 }
 export function useAddBetSlipToHistory() {
-  return useCallback(async (userId, betslipId) => {
+  return useCallback(async (userId: string, betslipId: string) => {
     const res = await fetch(`${API_BASE}/redis/betslip/${userId}/history`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -117,11 +129,11 @@ export function useAddBetSlipToHistory() {
 }
 
 // Bet
-export function useBet(betId) {
-  return useApi(`/redis/bet/${betId}`);
+export function useBet(betId: string) {
+  return useApi<Bet>(`/redis/bet/${betId}`);
 }
 export function useSetBet() {
-  return useCallback(async (betId, bet) => {
+  return useCallback(async (betId: string, bet: Bet) => {
     const res = await fetch(`${API_BASE}/redis/bet/${betId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -132,11 +144,11 @@ export function useSetBet() {
 }
 
 // Game
-export function useGame(gameId) {
-  return useApi(`/redis/game/${gameId}`);
+export function useGame(gameId: string) {
+  return useApi<Game>(`/redis/game/${gameId}`);
 }
 export function useSetGame() {
-  return useCallback(async (gameId, game) => {
+  return useCallback(async (gameId: string, game: Game) => {
     const res = await fetch(`${API_BASE}/redis/game/${gameId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -147,11 +159,11 @@ export function useSetGame() {
 }
 
 // Leaderboard
-export function useLeaderboard(type, count = 10) {
+export function useLeaderboard(type: string, count = 10) {
   return useApi(`/leaderboard/${type}?count=${count}`);
 }
 export function useUpdateLeaderboard() {
-  return useCallback(async (type, userId, score) => {
+  return useCallback(async (type: string, userId: string, score: number) => {
     const res = await fetch(`${API_BASE}/leaderboard/${type}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

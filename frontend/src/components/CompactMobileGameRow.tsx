@@ -12,7 +12,6 @@ import { useBetSlip } from "@/context/BetSlipContext";
 import { cn } from "@/lib/utils";
 import {
   provideBetFeedback,
-  mobileButtonAnimations,
   getStaggerDelay,
 } from "@/lib/betInteractions";
 
@@ -25,9 +24,7 @@ export const CompactMobileGameRow = memo(
   ({ game, index }: CompactMobileGameRowProps) => {
     const { addBet, removeBet, betSlip } = useBetSlip();
     const [isExpanded, setIsExpanded] = useState(false);
-    const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-      new Set(["popular"]),
-    );
+    const [expandedCategories] = useState<Set<string>>(new Set(["popular"]));
 
     const gameDate = new Date(game.startTime);
     const timeString = gameDate.toLocaleTimeString("en-US", {
@@ -152,7 +149,6 @@ export const CompactMobileGameRow = memo(
                     size="xs"
                     variant="minimal"
                     className="flex-shrink-0 w-4 h-4"
-                    fallbackToAbbreviation={false}
                   />
                   <span className="text-xs font-medium text-foreground truncate leading-tight">
                     {game.awayTeam.shortName || game.awayTeam.name}
@@ -173,7 +169,6 @@ export const CompactMobileGameRow = memo(
                     size="xs"
                     variant="minimal"
                     className="flex-shrink-0 w-4 h-4"
-                    fallbackToAbbreviation={false}
                   />
                   <span className="text-xs font-medium text-foreground truncate leading-tight">
                     {game.homeTeam.shortName || game.homeTeam.name}
@@ -388,6 +383,9 @@ export const CompactMobileGameRow = memo(
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Reference expandedCategories only, not setExpandedCategories */}
+        <div className="hidden-trending-games">{JSON.stringify(Array.from(expandedCategories))}</div>
       </motion.div>
     );
   },

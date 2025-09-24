@@ -4,17 +4,19 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "kill": "fuser -k 5000/tcp",
-    "build": "vite build",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "preview": "vite preview",
-    "start": "vite preview",
     "test": "jest --config jest.config.cjs --passWithNoTests",
     "type-check": "tsc --noEmit",
-    "lint-and-type-check": "npm run lint && npm run type-check"
+    "lint-and-type-check": "npm run lint && npm run type-check",
+    "clean": "rimraf .next node_modules/.tmp"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^4.1.3",
     "@octokit/core": "^6.1.4",
@@ -47,7 +49,6 @@
     "@radix-ui/react-toggle-group": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.8",
     "@tailwindcss/container-queries": "^0.1.1",
-    "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-query": "^5.83.1",
     "@tanstack/react-virtual": "^3.13.12",
     "class-variance-authority": "^0.7.1",
@@ -60,7 +61,10 @@
     "input-otp": "^1.4.2",
     "lucide-react": "^0.484.0",
     "marked": "^15.0.7",
+    "next": "^15.5.3",
+    "next-pwa": "^5.6.0",
     "next-themes": "^0.4.6",
+    "northstarsports-monorepo": "file:..",
     "octokit": "^4.1.2",
     "react": "^19.1.1",
     "react-day-picker": "^9.6.7",
@@ -77,7 +81,6 @@
     "tw-animate-css": "^1.2.4",
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
-    "vite-plugin-pwa": "^1.0.3",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -92,8 +95,6 @@
     "@types/testing-library__react": "^10.0.1",
     "@typescript-eslint/eslint-plugin": "^8.44.0",
     "@typescript-eslint/parser": "^8.44.0",
-    "@vitejs/plugin-react": "^4.3.4",
-    "@vitejs/plugin-react-swc": "^3.10.1",
     "eslint": "^9.28.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -103,8 +104,7 @@
     "jest-environment-jsdom": "^30.1.2",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.7.2",
-    "typescript-eslint": "^8.38.0",
-    "vite": "^6.3.6"
+    "typescript-eslint": "^8.38.0"
   },
   "workspaces": {
     "packages": [

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { X } from "@phosphor-icons/react";
-import { formatOdds, formatTotalLine } from "@/lib/formatters";
+import { formatOdds } from "@/lib/formatters";
 import { formatBetDescription, formatMatchup } from "@/lib/betFormatters";
 import { Bet } from "@/types";
 

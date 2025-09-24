@@ -1,3 +1,5 @@
+// Deprecated: SPA page. Safe to delete after migration to Next.js.
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SmoothScrollContainer } from "@/components/VirtualScrolling";

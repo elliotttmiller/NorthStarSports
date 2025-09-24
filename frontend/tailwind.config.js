@@ -1,4 +1,10 @@
 /** @type {import('tailwindcss').Config} */
+/**
+ * Tailwind CSS Design Tokens for NorthStar Sports
+ * - All custom colors, border radius, and spacing tokens are centralized here
+ * - Remove unused tokens for maintainability
+ * - Reference CSS variables for dynamic theming
+ */
 export default {
   content: [
     "./index.html",
@@ -18,53 +24,51 @@ export default {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
+        // Betting status colors
+        win: "var(--color-win)",
+        loss: "var(--color-loss)",
+        info: "var(--color-info)",
+        // Neutral and accent palette
+        neutral1: "var(--color-neutral-1)",
+        neutral10: "var(--color-neutral-10)",
+        accent9: "var(--color-accent-9)",
+        accentSecondary9: "var(--color-accent-secondary-9)",
+        // Card and UI colors
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Custom betting colors
-        win: "var(--color-win)",
-        loss: "var(--color-loss)",
-        info: "var(--color-info)",
+        // Add more colors as needed
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "1rem", // Large cards/buttons
+        xl: "1.5rem", // Extra large modals
+        full: "9999px", // Pills/circular
+      },
+      spacing: {
+        1: "0.25rem",
+        2: "0.5rem",
+        3: "0.75rem",
+        4: "1rem",
+        5: "1.25rem",
+        6: "1.5rem",
+        8: "2rem",
+        10: "2.5rem",
+        12: "3rem",
+        16: "4rem",
+        20: "5rem",
+        24: "6rem",
+        32: "8rem",
+        40: "10rem",
+        48: "12rem",
+        56: "14rem",
+        64: "16rem",
+        // Remove unused custom values for lean config
       },
       screens: {
-        coarse: { raw: "(pointer: coarse)" },
-        fine: { raw: "(pointer: fine)" },
-        pwa: { raw: "(display-mode: standalone)" },
+        coarse: { raw: "(pointer: coarse)" }, // Touch devices
+        fine: { raw: "(pointer: fine)" },     // Mouse devices
+        pwa: { raw: "(display-mode: standalone)" }, // PWA mode
       },
     },
   },

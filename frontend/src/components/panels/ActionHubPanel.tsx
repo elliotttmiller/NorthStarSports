@@ -3,7 +3,7 @@ import type { Bet } from "@/types";
 import { useBetSlip } from "@/context/BetSlipContext";
 import { formatOdds } from "@/lib/formatters";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -457,53 +457,30 @@ export const ActionHubPanel = () => {
         </SmoothScrollContainer>
         {/* Bet Slip Summary - Fixed at bottom */}
         <div
-          className="border-t border-border bg-muted/20 backdrop-blur-sm flex-shrink-0"
-          style={{
-            padding: "var(--fluid-panel-padding)",
-            borderRadius: "var(--fluid-radius)",
-            fontSize: "var(--fluid-base)",
-          }}
+          className="border-t border-border bg-muted/20 backdrop-blur-sm flex-shrink-0 fluid-panel"
         >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
           >
-            <div style={{ gap: "var(--fluid-gap)" }} className="flex flex-col">
-              <div
-                className="flex items-center justify-between"
-                style={{ fontSize: "var(--fluid-lg)" }}
-              >
+            <div className="flex flex-col fluid-gap">
+              <div className="flex items-center justify-between fluid-lg">
                 <span className="text-muted-foreground">Total Stake:</span>
-                <span
-                  className="font-semibold text-card-foreground"
-                  style={{ fontSize: "var(--fluid-xl)" }}
-                >
+                <span className="font-semibold text-card-foreground fluid-xl">
                   ${betSlip.totalStake.toFixed(2)}
                 </span>
               </div>
-              <div
-                className="flex items-center justify-between"
-                style={{ fontSize: "var(--fluid-lg)" }}
-              >
+              <div className="flex items-center justify-between fluid-lg">
                 <span className="text-muted-foreground">Potential Payout:</span>
-                <span
-                  className="font-semibold text-accent"
-                  style={{ fontSize: "var(--fluid-xl)" }}
-                >
+                <span className="font-semibold text-accent fluid-xl">
                   ${betSlip.totalPayout.toFixed(2)}
                 </span>
               </div>
               {betSlip.totalPayout > betSlip.totalStake && (
-                <div
-                  className="flex items-center justify-between"
-                  style={{ fontSize: "var(--fluid-base)" }}
-                >
+                <div className="flex items-center justify-between fluid-base">
                   <span className="text-muted-foreground">Profit:</span>
-                  <span
-                    className="font-medium text-[color:var(--color-win)]"
-                    style={{ fontSize: "var(--fluid-lg)" }}
-                  >
+                  <span className="font-medium fluid-lg fluid-win">
                     +${(betSlip.totalPayout - betSlip.totalStake).toFixed(2)}
                   </span>
                 </div>

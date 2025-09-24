@@ -38,7 +38,7 @@ const env = process.env.NODE_ENV || "development";
 const apiConfig = config[env as keyof typeof config] || config.development;
 
 // API Response Types
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   message?: string;
@@ -49,7 +49,7 @@ export interface ApiResponse<T = any> {
 export interface ApiError {
   status: number;
   message: string;
-  details?: any;
+  details?: unknown;
 }
 
 // Request Options
@@ -100,7 +100,7 @@ export class ApiClient {
   }
 
   // Log request (development only)
-  private logRequest(method: string, url: string, data?: any) {
+  private logRequest(method: string, url: string, data?: unknown) {
     if (apiConfig.logRequests) {
       console.group(`🌐 API ${method.toUpperCase()} ${url}`);
       if (data) {
@@ -115,14 +115,14 @@ export class ApiClient {
   private logResponse(
     method: string,
     url: string,
-    response: any,
+    response: unknown,
     duration: number,
   ) {
     if (apiConfig.logRequests) {
       console.group(`📡 API Response ${method.toUpperCase()} ${url}`);
       console.log("📥 Response:", response);
       console.log("⏱️ Duration:", `${duration}ms`);
-      console.log("✅ Status:", response.success ? "Success" : "Error");
+      console.log("✅ Status:", (response as ApiResponse).success ? "Success" : "Error");
       console.groupEnd();
     }
   }
@@ -131,7 +131,7 @@ export class ApiClient {
   private async request<T>(
     method: string,
     endpoint: string,
-    data?: any,
+    data?: unknown,
     options?: RequestOptions,
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
@@ -176,9 +176,14 @@ export class ApiClient {
 
         return responseData.data as T;
       } catch (error) {
-        lastError = error as Error;
+        const err = error instanceof Error ? error : new Error(String(error));
+        lastError = err;
 
-        if (attempt < maxRetries && !error.name.includes("AbortError")) {
+        if (
+          attempt < maxRetries &&
+          error instanceof Error &&
+          !error.name.includes("AbortError")
+        ) {
           const delay = Math.min(1000 * Math.pow(2, attempt), 5000);
           console.warn(
             `🔄 Retry attempt ${attempt + 1}/${maxRetries} in ${delay}ms:`,
@@ -208,7 +213,7 @@ export class ApiClient {
 
   async post<T>(
     endpoint: string,
-    data?: any,
+    data?: unknown,
     options?: RequestOptions,
   ): Promise<T> {
     return this.request<T>("POST", endpoint, data, options);
@@ -216,7 +221,7 @@ export class ApiClient {
 
   async put<T>(
     endpoint: string,
-    data?: any,
+    data?: unknown,
     options?: RequestOptions,
   ): Promise<T> {
     return this.request<T>("PUT", endpoint, data, options);
@@ -256,11 +261,11 @@ export class ApiService {
     return apiClient.get(`/api/users/${id}`);
   }
 
-  static async createUser(userData: any) {
+  static async createUser(userData: unknown) {
     return apiClient.post("/api/users", userData);
   }
 
-  static async updateUser(id: string, userData: any) {
+  static async updateUser(id: string, userData: unknown) {
     return apiClient.put(`/api/users/${id}`, userData);
   }
 
@@ -277,11 +282,11 @@ export class ApiService {
     return apiClient.get(`/api/games/${id}`);
   }
 
-  static async createGame(gameData: any) {
+  static async createGame(gameData: unknown) {
     return apiClient.post("/api/games", gameData);
   }
 
-  static async updateGame(id: string, gameData: any) {
+  static async updateGame(id: string, gameData: unknown) {
     return apiClient.put(`/api/games/${id}`, gameData);
   }
 
@@ -298,11 +303,11 @@ export class ApiService {
     return apiClient.get(`/api/bets/${id}`);
   }
 
-  static async createBet(betData: any) {
+  static async createBet(betData: unknown) {
     return apiClient.post("/api/bets", betData);
   }
 
-  static async updateBet(id: string, betData: any) {
+  static async updateBet(id: string, betData: unknown) {
     return apiClient.put(`/api/bets/${id}`, betData);
   }
 
@@ -315,7 +320,7 @@ export class ApiService {
     return apiClient.get(`/api/kv/${key}`);
   }
 
-  static async setKVValue(key: string, value: any) {
+  static async setKVValue(key: string, value: unknown) {
     return apiClient.post(`/api/kv/${key}`, { value });
   }
 
@@ -328,7 +333,7 @@ export class ApiService {
     return apiClient.get(`/api/redis/hash/${hash}/${field}`);
   }
 
-  static async setHashValue(hash: string, field: string, value: any) {
+  static async setHashValue(hash: string, field: string, value: unknown) {
     return apiClient.post(`/api/redis/hash/${hash}`, { field, value });
   }
 
@@ -350,10 +355,14 @@ export function useApi() {
       setError(null);
       const result = await apiCall();
       return result;
-    } catch (err) {
-      const apiError = err as ApiError;
-      setError(apiError);
-      console.error("API Error:", apiError);
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      setError({
+        status: 0,
+        message: err.message,
+        details: err,
+      });
+      console.error("API Error:", err);
       return null;
     } finally {
       setLoading(false);
@@ -379,7 +388,7 @@ export const EnvUtils = {
   // Debug utilities for development
   enableDebugMode: () => {
     if (EnvUtils.isDevelopment()) {
-      (window as any).__NORTHSTAR_DEBUG__ = true;
+      (window as Window & { __NORTHSTAR_DEBUG__?: boolean }).__NORTHSTAR_DEBUG__ = true;
       console.log("🐛 Debug mode enabled");
     }
   },

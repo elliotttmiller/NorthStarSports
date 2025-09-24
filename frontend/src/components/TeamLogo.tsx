@@ -10,14 +10,13 @@ import { cn } from "@/lib/utils";
 
 interface TeamLogoProps {
   team: string | TeamLogoConfig;
-  league?: "nfl" | "nba" | string; // Allow string for leagueId
+  league?: "nfl" | "nba" | string;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
   variant?: "default" | "circle" | "square" | "minimal";
   showName?: boolean;
   showAbbreviation?: boolean;
   className?: string;
   animate?: boolean;
-  fallbackToAbbreviation?: boolean;
 }
 
 const sizeMap = {
@@ -38,7 +37,6 @@ export const TeamLogo = memo(function TeamLogo({
   showAbbreviation = false,
   className,
   animate = false,
-  fallbackToAbbreviation = true,
 }: TeamLogoProps) {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -123,10 +121,7 @@ export const TeamLogo = memo(function TeamLogo({
       {/* Team color accent ring */}
       {variant !== "minimal" && (
         <div
-          className="absolute inset-0 rounded-full opacity-20 pointer-events-none"
-          style={{
-            boxShadow: `inset 0 0 0 1px ${teamConfig.primaryColor}`,
-          }}
+          className="absolute inset-0 rounded-full opacity-20 pointer-events-none teamlogo-accent-ring"
         />
       )}
     </div>
@@ -257,5 +252,12 @@ export const TeamMatchup = memo(function TeamMatchup({
     </motion.div>
   );
 });
+
+// Add displayName to all memoized exports
+TeamLogo.displayName = "TeamLogo";
+TeamLogoSmall.displayName = "TeamLogoSmall";
+TeamLogoLarge.displayName = "TeamLogoLarge";
+TeamLogoWithName.displayName = "TeamLogoWithName";
+TeamLogoCircle.displayName = "TeamLogoCircle";
 
 export default TeamLogo;

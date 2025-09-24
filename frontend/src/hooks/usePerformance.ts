@@ -21,7 +21,7 @@ export function usePerformance() {
 /**
  * Debounce hook for expensive operations
  */
-export function useDebounce<T extends (...args: any[]) => any>(
+export function useDebounce<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number,
 ): (...args: Parameters<T>) => void {
@@ -54,7 +54,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
 /**
  * Throttle hook for high-frequency events
  */
-export function useThrottle<T extends (...args: any[]) => any>(
+export function useThrottle<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number,
 ): (...args: Parameters<T>) => void {
@@ -128,19 +128,26 @@ export function useIntersectionObserver(
   return isIntersecting;
 }
 
+interface PerformanceMemory {
+  usedJSHeapSize: number;
+  totalJSHeapSize: number;
+  jsHeapSizeLimit: number;
+}
+
 /**
  * Memory usage monitoring hook
  */
 export function useMemoryMonitor() {
-  const [memoryInfo, setMemoryInfo] = useState<any>(null);
+  const [memoryInfo, setMemoryInfo] = useState<PerformanceMemory | null>(null);
 
   useEffect(() => {
     if ("memory" in performance) {
       const updateMemoryInfo = () => {
+        const mem = (performance as unknown as { memory: PerformanceMemory }).memory;
         setMemoryInfo({
-          usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
-          totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
-          jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit,
+          usedJSHeapSize: mem.usedJSHeapSize,
+          totalJSHeapSize: mem.totalJSHeapSize,
+          jsHeapSizeLimit: mem.jsHeapSizeLimit,
         });
       };
 

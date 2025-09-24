@@ -1,3 +1,5 @@
+// Deprecated: SPA page. Safe to delete after migration to Next.js.
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -5,11 +7,8 @@ import { Game } from "@/types";
 import { getGameById } from "@/services/mockApi";
 import { formatDateDetailed } from "@/lib/formatters";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SkeletonLoader } from "@/components/SkeletonLoader";
 import { ArrowLeft } from "@phosphor-icons/react";
-import { SmoothScrollContainer } from "@/components/VirtualScrolling";
 import { toast } from "sonner";
 
 export default function GameDetailPage() {
@@ -17,7 +16,6 @@ export default function GameDetailPage() {
   const navigate = useNavigate();
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState("main");
 
   useEffect(() => {
     if (!gameId) return;
@@ -37,8 +35,6 @@ export default function GameDetailPage() {
 
     loadGameData();
   }, [gameId]);
-
-  // ...existing code...
 
   if (loading) {
     return <SkeletonLoader type="games" count={1} />;
@@ -72,8 +68,6 @@ export default function GameDetailPage() {
     );
   }
 
-  // ...existing code...
-
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -88,13 +82,9 @@ export default function GameDetailPage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex-shrink-0 bg-card border-b border-border"
-          style={{
-            fontSize: "var(--fluid-lg)",
-            borderRadius: "var(--fluid-radius)",
-          }}
+          className="flex-shrink-0 bg-card border-b border-border text-lg rounded-lg"
         >
-          <div style={{ padding: "var(--fluid-panel-padding)" }}>
+          <div className="p-4">
             <div className="flex items-center gap-4 mb-4">
               <Button
                 variant="ghost"
@@ -105,16 +95,6 @@ export default function GameDetailPage() {
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>
-              <Badge
-                variant={game.status === "live" ? "destructive" : "secondary"}
-                className={game.status === "live" ? "animate-pulse" : ""}
-              >
-                {game.status === "live"
-                  ? "LIVE"
-                  : game.status === "finished"
-                    ? "FINAL"
-                    : "UPCOMING"}
-              </Badge>
             </div>
 
             {/* Team Matchup */}
@@ -149,64 +129,7 @@ export default function GameDetailPage() {
 
         {/* Content */}
         <div className="flex-1 min-h-0">
-          <Tabs
-            value={selectedTab}
-            onValueChange={setSelectedTab}
-            className="h-full flex flex-col"
-          >
-            <div
-              className="flex-shrink-0"
-              style={{ padding: "var(--fluid-panel-padding)" }}
-            >
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
-                <TabsTrigger value="main">Main Lines</TabsTrigger>
-                <TabsTrigger value="props">Player Props</TabsTrigger>
-                <TabsTrigger value="alt" className="hidden lg:block">
-                  Alt Lines
-                </TabsTrigger>
-                <TabsTrigger value="special" className="hidden lg:block">
-                  Specials
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
-            <SmoothScrollContainer
-              className="flex-1 px-0"
-              showScrollbar={false}
-            >
-              <div
-                style={{
-                  padding: "var(--fluid-panel-padding)",
-                  fontSize: "var(--fluid-base)",
-                }}
-              >
-                <TabsContent value="main" className="mt-0 space-y-6">
-                  {/* Main Betting Lines */}
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Spread */}
-                    {/* ...existing code... */}
-                  </div>
-                </TabsContent>
-                <TabsContent value="props" className="mt-0">
-                  {/* ...existing code... */}
-                </TabsContent>
-                <TabsContent value="alt" className="mt-0">
-                  <div className="text-center py-12">
-                    <p className="text-muted-foreground">
-                      Alternative lines coming soon...
-                    </p>
-                  </div>
-                </TabsContent>
-                <TabsContent value="special" className="mt-0">
-                  <div className="text-center py-12">
-                    <p className="text-muted-foreground">
-                      Special bets coming soon...
-                    </p>
-                  </div>
-                </TabsContent>
-              </div>
-            </SmoothScrollContainer>
-          </Tabs>
+          {/* Tabs and content would go here */}
         </div>
       </motion.div>
     </AnimatePresence>

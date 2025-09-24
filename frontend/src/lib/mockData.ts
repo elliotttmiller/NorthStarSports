@@ -1,4 +1,4 @@
-import type { Game, Team, Sport, League, GameOdds, OddsData } from "@/types";
+import type { Game, Team, Sport, OddsData, GameOdds } from "@/types";
 
 // Teams database - centralized team data with professional records
 export const TEAMS: Record<string, Team> = {

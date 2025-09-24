@@ -151,3 +151,25 @@ export interface PropCategory {
   name: string;
   props: PlayerProp[];
 }
+
+export interface Deposit {
+  amount: number;
+  date: string;
+}
+
+export interface BetHistoryItem {
+  betId: string;
+  result: string;
+  timestamp: string;
+}
+
+export interface Profile {
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  balance: number;
+  depositHistory: Deposit[];
+  betHistory: BetHistoryItem[];
+  // Add any other fields needed for user profiles
+}

@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { SmoothScrollContainer } from "@/components/VirtualScrolling";
-// ...existing code...
 import { useNavigation } from "@/context/NavigationContext";
 import { Game } from "@/types";
 import { getGamesPaginated, PaginatedResponse } from "@/services/mockApi";
 import { Button } from "@/components/ui/button";
-import { GameCard } from "@/components/GameCard";
 import { ProfessionalGameRow } from "@/components/ProfessionalGameRow";
 import { CompactMobileGameRow } from "@/components/CompactMobileGameRow";
-import { SkeletonLoader } from "@/components/SkeletonLoader";
-import { GameCardSkeleton } from "@/components/ProgressiveLoader";
 import { useInfiniteScroll, useSmoothScroll } from "@/hooks/useInfiniteScroll";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { motion, AnimatePresence } from "framer-motion";

@@ -1,34 +1,20 @@
-import PropTypes from "prop-types";
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useUser, useSetUser } from "@/hooks/useApi";
-// ...existing code...
+import { Profile, BetHistoryItem } from "@/types";
 
 // Integrate real user ID from AuthContext here when available
 const USER_ID = "demo";
 
-interface UserProfile {
-  username: string;
-  email: string;
-  balance: number;
-  depositHistory: { amount: number; date: string }[];
-  betHistory: string[]; // Array of betslip IDs
-}
-
 interface UserContextType {
-  user: UserProfile | null;
-  updateUser: (profile: Partial<UserProfile>) => Promise<void>;
+  user: Profile | null;
+  updateUser: (profile: Partial<Profile>) => Promise<void>;
   addDeposit: (amount: number) => Promise<void>;
   addBetSlipToHistory: (betslipId: string) => Promise<void>;
 }
 
-const defaultUser: UserProfile = {
+const defaultProfile: Profile = {
+  id: "",
+  name: "",
   username: "Demo",
   email: "demo@email.com",
   balance: 1000,
@@ -41,20 +27,23 @@ export const UserContext = createContext<UserContextType | undefined>(
 );
 
 interface UserProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
+
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const { data: remoteUser, loading } = useUser(USER_ID);
   const setRemoteUser = useSetUser();
-  const [user, setUser] = useState<UserProfile | null>(defaultUser);
+  const [user, setUser] = useState<Profile | null>(defaultProfile);
 
   useEffect(() => {
-    if (remoteUser && !loading) setUser(remoteUser);
+    if (remoteUser && !loading) setUser({ ...defaultProfile, ...remoteUser });
   }, [remoteUser, loading]);
 
   const updateUser = useCallback(
-    async (profile: Partial<UserProfile>) => {
-      const nextUser: UserProfile = {
+    async (profile: Partial<Profile>) => {
+      const nextUser: Profile = {
+        id: user?.id ?? "",
+        name: user?.name ?? "",
         username: profile.username ?? user?.username ?? "",
         email: profile.email ?? user?.email ?? "",
         balance: profile.balance ?? user?.balance ?? 0,
@@ -70,7 +59,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const addDeposit = useCallback(
     async (amount: number) => {
       const deposit = { amount, date: new Date().toISOString() };
-      const nextUser: UserProfile = {
+      const nextUser: Profile = {
+        id: user?.id ?? "",
+        name: user?.name ?? "",
         username: user?.username ?? "",
         email: user?.email ?? "",
         balance: (user?.balance || 0) + amount,
@@ -85,12 +76,19 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   const addBetSlipToHistory = useCallback(
     async (betslipId: string) => {
-      const nextUser: UserProfile = {
+      const betHistoryItem: BetHistoryItem = {
+        betId: betslipId,
+        result: "",
+        timestamp: new Date().toISOString(),
+      };
+      const nextUser: Profile = {
+        id: user?.id ?? "",
+        name: user?.name ?? "",
         username: user?.username ?? "",
         email: user?.email ?? "",
         balance: user?.balance ?? 0,
         depositHistory: user?.depositHistory ?? [],
-        betHistory: [...(user?.betHistory || []), betslipId],
+        betHistory: [...(user?.betHistory || []), betHistoryItem],
       };
       setUser(nextUser);
       await setRemoteUser(USER_ID, nextUser);
@@ -105,10 +103,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     addBetSlipToHistory,
   };
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
-};
-UserProvider.propTypes = {
-  children: PropTypes.node.isRequired,
+  return (
+    <UserContext.Provider value={value}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export const useUserContext = () => {

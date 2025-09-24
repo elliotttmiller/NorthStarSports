@@ -1,12 +1,4 @@
-import PropTypes from "prop-types";
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useActiveBetSlip, useSetActiveBetSlip } from "@/hooks/useApi";
 import { Bet, BetSlip, Game, PlayerProp } from "@/types";
 import { calculatePayout } from "@/services/mockApi";
@@ -50,7 +42,7 @@ export const useBetSlip = () => {
 };
 
 interface BetSlipProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 const defaultBetSlip: BetSlip = {
@@ -64,9 +56,7 @@ const defaultBetSlip: BetSlip = {
 // Integrate real user ID from AuthContext here when available
 const USER_ID = "demo";
 
-export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({
-  children,
-}) => {
+export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) => {
   const { data: remoteBetSlip } = useActiveBetSlip(USER_ID);
   const setRemoteBetSlip = useSetActiveBetSlip();
   const [betSlip, setBetSlip] = useState<BetSlip>(defaultBetSlip);
@@ -251,9 +241,8 @@ export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({
   };
 
   return (
-    <BetSlipContext.Provider value={value}>{children}</BetSlipContext.Provider>
+    <BetSlipContext.Provider value={value}>
+      {children}
+    </BetSlipContext.Provider>
   );
-};
-BetSlipProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };

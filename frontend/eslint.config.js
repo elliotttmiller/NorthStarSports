@@ -42,6 +42,9 @@ export default [
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       "react/react-in-jsx-scope": "off", // Disable obsolete rule for React 17+
+      "react/prop-types": "off", // Disable prop-types for TypeScript
+      "@typescript-eslint/no-explicit-any": "error", // Disallow explicit any
+      "@typescript-eslint/no-unused-vars": "error", // Disallow unused variables
     },
   },
 ];

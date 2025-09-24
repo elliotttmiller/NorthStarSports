@@ -6,12 +6,11 @@ import { useNavigation } from "@/context/NavigationContext";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { formatBetDescription, formatMatchup } from "@/lib/betFormatters";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, TrendUp, Trash } from "@phosphor-icons/react";
+import { X, Trash } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
 import { formatOdds } from "@/lib/formatters";
 import { SmoothScrollContainer } from "@/components/VirtualScrolling";
 
@@ -129,7 +128,7 @@ export function MobileBetSlipPanel() {
             <div className="px-4 py-2">
               <Tabs
                 value={betSlip.betType}
-                onValueChange={setBetType}
+                onValueChange={(value: string) => setBetType(value as "single" | "parlay")}
                 className="w-full"
               >
                 <TabsList className="grid w-full grid-cols-2 h-9">

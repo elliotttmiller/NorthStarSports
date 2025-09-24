@@ -1,11 +1,9 @@
-import PropTypes from "prop-types";
 import {
   createContext,
   useContext,
   useEffect,
   useState,
   useCallback,
-  ReactNode,
 } from "react";
 import { useBets, useSetBets } from "@/hooks/useApi";
 import { Bet } from "@/types";
@@ -26,8 +24,9 @@ export const BetsContext = createContext<BetsContextType | undefined>(
 );
 
 interface BetsProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
+
 export const BetsProvider: React.FC<BetsProviderProps> = ({ children }) => {
   // Fetch all active bets for the user
   const { data: betsRaw, refetch: refetchBets } = useBets(USER_ID);
@@ -113,10 +112,11 @@ export const BetsProvider: React.FC<BetsProviderProps> = ({ children }) => {
     deleteBet,
   };
 
-  return <BetsContext.Provider value={value}>{children}</BetsContext.Provider>;
-};
-BetsProvider.propTypes = {
-  children: PropTypes.node.isRequired,
+  return (
+    <BetsContext.Provider value={value}>
+      {children}
+    </BetsContext.Provider>
+  );
 };
 
 export function useBetsContext() {

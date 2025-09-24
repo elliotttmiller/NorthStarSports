@@ -4,11 +4,9 @@ import {
   useState,
   useCallback,
   useEffect,
-  ReactNode,
 } from "react";
 import { useBetSlipHistory, useAddBetSlipToHistory } from "@/hooks/useApi";
 import { BetSlip } from "@/types";
-import PropTypes from "prop-types";
 
 // Integrate real user ID from AuthContext here when available
 const USER_ID = "demo";
@@ -24,11 +22,10 @@ export const BetHistoryContext = createContext<
 >(undefined);
 
 interface BetHistoryProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
-export const BetHistoryProvider: React.FC<BetHistoryProviderProps> = ({
-  children,
-}) => {
+
+export const BetHistoryProvider: React.FC<BetHistoryProviderProps> = ({ children }) => {
   const { data: remoteHistory } = useBetSlipHistory(USER_ID, 20);
   const addRemoteBetSlip = useAddBetSlipToHistory();
   const [betHistory, setBetHistory] = useState<BetSlip[]>([]);
@@ -61,9 +58,6 @@ export const BetHistoryProvider: React.FC<BetHistoryProviderProps> = ({
       {children}
     </BetHistoryContext.Provider>
   );
-};
-BetHistoryProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export function useBetHistoryContext() {
