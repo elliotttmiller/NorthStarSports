@@ -1,1 +1,16 @@
-{}
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/AccountPage": "pages/AccountPage.js",
+  "/GamePage": "pages/GamePage.js",
+  "/GameDetailPage": "pages/GameDetailPage.js",
+  "/GamesPage": "pages/GamesPage.js",
+  "/HomePage": "pages/HomePage.js",
+  "/LivePage": "pages/LivePage.js",
+  "/LoginPage": "pages/LoginPage.js",
+  "/NotFoundPage": "pages/NotFoundPage.js",
+  "/MyBetsPage": "pages/MyBetsPage.js",
+  "/OtherPage": "pages/OtherPage.js",
+  "/UserProfilePage": "pages/UserProfilePage.js",
+  "/_document": "pages/_document.js"
+}
