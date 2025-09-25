@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import { logInfo, logWarn } from "../utils/logger";
+import { Request, Response } from "express";
 import {
   getGame as getGameService,
   setGame as setGameService,
@@ -26,7 +27,7 @@ export async function getGame(
     }
     logInfo("getGame success", { gameId });
     res.json(success(game));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -53,6 +54,6 @@ export async function setGame(
     await setGameService(gameId, gameData);
     logInfo("setGame success", { gameId });
     res.json(success({ gameId, game: gameData }));
-  } catch (err) {
+  } catch {
   }
 }

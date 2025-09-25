@@ -24,16 +24,17 @@ export default {
     },
     extend: {
       colors: {
-        // Betting status colors
+        accent: '#3b82f6',
+        destructive: '#ef4444',
+        muted: '#f3f4f6',
+        foreground: '#111827',
         win: "var(--color-win)",
         loss: "var(--color-loss)",
         info: "var(--color-info)",
-        // Neutral and accent palette
         neutral1: "var(--color-neutral-1)",
         neutral10: "var(--color-neutral-10)",
         accent9: "var(--color-accent-9)",
         accentSecondary9: "var(--color-accent-secondary-9)",
-        // Card and UI colors
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

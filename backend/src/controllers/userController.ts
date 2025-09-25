@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import { logInfo, logWarn } from "../utils/logger";
+import { Request, Response } from "express";
 import * as userService from "../services/userService.js";
 import { success, error } from "../utils/responseFormatter.js";
 
@@ -23,7 +24,7 @@ export async function getUser(
     }
     logInfo("getUser success", { user });
     res.json(success(user));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -43,6 +44,6 @@ export async function setUser(
     await userService.setUser(userId, req.body);
     logInfo("setUser success", { userId });
     res.json(success({ userId }));
-  } catch (err) {
+  } catch {
   }
 }

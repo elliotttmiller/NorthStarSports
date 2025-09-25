@@ -1,13 +1,13 @@
 import { betSchema, gameSchema, userSchema } from "./schemas";
 
 export function validateBet(data: unknown) {
-  return betSchema.safeParse(data);
+  return betSchema.validate(data);
 }
 
 export function validateGame(data: unknown) {
-  return gameSchema.safeParse(data);
+  return gameSchema.validate(data);
 }
 
 export function validateUser(data: unknown) {
-  return userSchema.safeParse(data);
+  return userSchema.validate(data);
 }

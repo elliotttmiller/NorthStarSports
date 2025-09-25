@@ -1,3 +1,7 @@
+/**
+ * Simple logger utilities for backend controllers and middlewares.
+ * Uses pino for structured logging.
+ */
 import pino from "pino";
 
 // Environment-based configuration

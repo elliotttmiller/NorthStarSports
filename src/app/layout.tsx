@@ -1,25 +1,27 @@
 import React from "react";
 import './globals.css';
 
-export const metadata = {
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
   title: "NorthStar Sports",
   description: "Your hub for sports betting, stats, and more.",
+  manifest: "/manifest.webmanifest",
   icons: {
     icon: "/icon.svg",
     shortcut: "/pwa-192x192.png",
     apple: "/pwa-512x512.png",
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="bg-muted text-foreground">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="manifest" href="/manifest.webmanifest" />
-        <link rel="icon" href="/icon.svg" />
-        <link rel="apple-touch-icon" href="/pwa-512x512.png" />
-      </head>
+      {/* The <head> is now fully managed by Next.js Metadata API */}
       <body className="min-h-screen flex flex-col font-sans antialiased bg-muted text-foreground">
         {/* Global header/navigation can go here */}
         {/* <Header /> */}

@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import { logInfo, logWarn } from "../utils/logger";
+import { Request, Response } from "express";
 import { kvService } from "../services/kvService.js";
 import { success, error } from "../utils/responseFormatter.js";
 
@@ -24,7 +25,7 @@ export async function getUser(
     }
     logInfo("Redis getUser success", { userId });
     res.json(success(user));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -45,7 +46,7 @@ export async function setUser(
     await kvService.set(`user:${userId}`, userData);
     logInfo("Redis setUser success", { userId });
     res.json(success({ userId, user: userData }));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -71,7 +72,7 @@ export async function getActiveBetSlip(
     }
     logInfo("Redis getActiveBetSlip success", { userId });
     res.json(success(betSlip));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -92,7 +93,7 @@ export async function setActiveBetSlip(
     await kvService.set(`betslip:${userId}:active`, betSlipData);
     logInfo("Redis setActiveBetSlip success", { userId });
     res.json(success({ userId, betSlip: betSlipData }));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -118,7 +119,7 @@ export async function getBetSlipHistory(
     }
     logInfo("Redis getBetSlipHistory success", { userId });
     res.json(success(history));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -151,7 +152,7 @@ export async function addBetSlipToHistory(
 
     logInfo("Redis addBetSlipToHistory success", { userId });
     res.json(success({ userId, betSlipId, history: updatedHistory }));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -177,7 +178,7 @@ export async function getBet(
     }
     logInfo("Redis getBet success", { betId });
     res.json(success(bet));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -198,7 +199,7 @@ export async function setBet(
     await kvService.set(`bet:${betId}`, betData);
     logInfo("Redis setBet success", { betId });
     res.json(success({ betId, bet: betData }));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -224,7 +225,7 @@ export async function getGame(
     }
     logInfo("Redis getGame success", { gameId });
     res.json(success(game));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -245,7 +246,7 @@ export async function setGame(
     await kvService.set(`game:${gameId}`, gameData);
     logInfo("Redis setGame success", { gameId });
     res.json(success({ gameId, game: gameData }));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -269,7 +270,7 @@ export async function getUserBets(
       count: Array.isArray(bets) ? bets.length : 0,
     });
     res.json(success(Array.isArray(bets) ? bets : []));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -293,6 +294,6 @@ export async function setUserBets(
       count: Array.isArray(bets) ? bets.length : 0,
     });
     res.json(success({ userId, bets }));
-  } catch (err) {
+  } catch {
   }
 }

@@ -1,54 +1,44 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { kvService } from "../services/kvService.js";
 import { success, error } from "../utils/responseFormatter.js";
+import { logInfo, logWarn } from "../utils/logger";
 
-export async function getKV(
-  req: Request,
-  res: Response,
-): Promise<void> {
+export async function getKV(req: Request, res: Response): Promise<void> {
   const key = req.params.key;
   if (!key) {
     logWarn("Missing key parameter");
     res.status(400).json(error("Missing key parameter", 400));
     return;
   }
-
-  logInfo("getKV called", { key });
+  logInfo("KV getKV called", { key });
   try {
     const value = await kvService.get(key);
-    if (value === null || typeof value === "undefined") {
-      logWarn("KV not found", { key });
-      res.status(404).json(error("Not Found", 404));
+    if (value === undefined) {
+      logWarn("Key not found in KV store", { key });
+      res.status(404).json(error("Key not found", 404));
       return;
     }
-    logInfo("getKV success", { key, value });
-    res.json(success({ key, value }));
-  } catch (err) {
+    logInfo("KV getKV success", { key });
+    res.json(success(value));
+  } catch {
+    res.status(500).json(error("Internal server error", 500));
   }
 }
 
-export async function setKV(
-  req: Request,
-  res: Response,
-): Promise<void> {
+export async function setKV(req: Request, res: Response): Promise<void> {
   const key = req.params.key;
   if (!key) {
     logWarn("Missing key parameter");
     res.status(400).json(error("Missing key parameter", 400));
     return;
   }
-
-  logInfo("setKV called", { key });
+  logInfo("KV setKV called", { key });
   try {
-    const { value } = req.body;
-    if (typeof value === "undefined") {
-      logWarn("Missing value in body", { key });
-      res.status(400).json(error("Missing value in body", 400));
-      return;
-    }
+    const value = req.body;
     await kvService.set(key, value);
-    logInfo("setKV success", { key, value });
+    logInfo("KV setKV success", { key });
     res.json(success({ key, value }));
-  } catch (err) {
+  } catch {
+    res.status(500).json(error("Internal server error", 500));
   }
 }

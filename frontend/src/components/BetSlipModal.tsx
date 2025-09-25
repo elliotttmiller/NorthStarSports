@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, memo } from "react";
 import type { Bet } from "@/types";
 import { useBetsContext } from "@/context/BetsContext";
-import { useBetSlip } from "@/context/BetSlipContext";
+import { useBetSlipStore } from '../../../src/stores/useBetSlipStore';
+import type { BetSlipState } from '../../../src/stores/useBetSlipStore';
 import { useNavigation } from "@/context/NavigationContext";
 import { formatOdds } from "@/lib/formatters";
 import { formatBetDescription, formatMatchup } from "@/lib/betFormatters";
@@ -32,8 +33,20 @@ import { toast } from "sonner";
 import { SmoothScrollContainer } from "@/components/VirtualScrolling";
 
 const BetSlipModalComponent = () => {
-  const { betSlip, removeBet, updateStake, setBetType, clearBetSlip } = useBetSlip();
-  const { addBet, refreshBets } = useBetsContext();
+  const bets = useBetSlipStore((state: BetSlipState) => state.bets);
+  const betType = useBetSlipStore((state: BetSlipState) => state.betType);
+  const addBet = useBetSlipStore((state: BetSlipState) => state.addBet);
+  const removeBet = useBetSlipStore((state: BetSlipState) => state.removeBet);
+  const updateStake = useBetSlipStore((state: BetSlipState) => state.updateStake);
+  const clearBetSlip = useBetSlipStore((state: BetSlipState) => state.clearBetSlip);
+  const setBetType = useBetSlipStore((state: BetSlipState) => state.setBetType);
+  const totalStake = bets.reduce((sum: number, bet: Bet) => sum + (bet.stake || 0), 0);
+  const totalPayout = bets.reduce((sum: number, bet: Bet) => sum + (bet.potentialPayout || 0), 0);
+  const totalOdds = betType === 'parlay' && bets.length > 0
+    ? bets.reduce((acc: number, bet: Bet) => acc * bet.odds, 1)
+    : bets[0]?.odds || 0;
+  const betSlip = { bets, betType, totalStake, totalPayout, totalOdds };
+  const { refreshBets } = useBetsContext();
   const { navigation, setIsBetSlipOpen } = useNavigation();
   const [isPlacing, setIsPlacing] = useState(false);
   const [placementStage, setPlacementStage] = useState<"idle" | "validating" | "processing" | "success">("idle");
@@ -47,7 +60,7 @@ const BetSlipModalComponent = () => {
   }, [setIsBetSlipOpen, isPlacing]);
 
   const handleStakeChange = useCallback((betId: string, value: string): void => {
-    const stake = parseFloat(value) || 0;
+    const stake: number = parseFloat(value) || 0;
     if (stake >= 0 && stake <= 10000) {
       updateStake(betId, stake);
     }
@@ -69,7 +82,7 @@ const BetSlipModalComponent = () => {
       setPlacementStage("processing");
       await new Promise((resolve) => setTimeout(resolve, 1200));
       if (betSlip.betType === "single") {
-        for (const bet of betSlip.bets) {
+        for (const bet of betSlip.bets as Bet[]) {
           await addBet({
             ...bet,
             betType: bet.betType,
@@ -101,7 +114,7 @@ const BetSlipModalComponent = () => {
               total: { home: { odds: 0, lastUpdated: new Date() }, away: { odds: 0, lastUpdated: new Date() } }
             },
           },
-          legs: betSlip.bets.map((bet) => ({ ...bet })),
+          legs: betSlip.bets.map((bet: Bet) => ({ ...bet })),
         };
         await addBet(parlayBet);
       }
@@ -433,7 +446,7 @@ const BetSlipModalComponent = () => {
                               {/* Bets List */}
                               <div className="flex flex-col gap-3">
                                 <AnimatePresence>
-                                  {betSlip.bets.map((bet, index) => (
+                                  {betSlip.bets.map((bet: Bet, index: number) => (
                                     <motion.div
                                       key={bet.id}
                                       layout

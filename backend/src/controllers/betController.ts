@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import { logInfo, logWarn } from "../utils/logger";
+import { Request, Response } from "express";
 import * as betService from "../services/betService.js";
 import { success, error } from "../utils/responseFormatter.js";
 
@@ -23,7 +24,7 @@ export async function getBet(
     }
     logInfo("getBet success", { bet });
     res.json(success(bet));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -43,7 +44,7 @@ export async function setBet(
     await betService.setBet(betId, req.body);
     logInfo("setBet success", { betId });
     res.json(success({ betId }));
-  } catch (err) {
+  } catch {
   }
 }
 
@@ -63,6 +64,6 @@ export async function getUserBets(
     const bets = await betService.getUserBets(userId);
     logInfo("getUserBets success", { count: bets.length });
     res.json(success(bets));
-  } catch (err) {
+  } catch {
   }
 }

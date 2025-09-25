@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { ComponentProps, ReactNode, CSSProperties } from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 

@@ -1,12 +1,13 @@
 import { kvService, connectRedis } from "./kvService.js";
 
-// Initialize Redis connection
 connectRedis().catch(console.error);
 
-  logInfo("gameService.getGame called", { gameId });
+export async function getGame(gameId: string) {
+  console.info("gameService.getGame called", { gameId });
   return await kvService.getGame(gameId);
 }
 
-  logInfo("gameService.setGame called", { gameId });
+export async function setGame(gameId: string, game: Record<string, unknown>) {
+  console.info("gameService.setGame called", { gameId });
   return await kvService.setGame(gameId, game);
 }

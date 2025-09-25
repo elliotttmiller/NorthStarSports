@@ -1,3 +1,16 @@
+/**
+ * Format bet type string for display
+ */
+export const formatBetType = (type: string): string => {
+  switch (type) {
+    case 'single':
+      return 'Single Bet';
+    case 'parlay':
+      return 'Parlay';
+    default:
+      return type.charAt(0).toUpperCase() + type.slice(1);
+  }
+};
 import { Bet } from "@/types";
 
 export const formatBetDescription = (bet: Bet) => {

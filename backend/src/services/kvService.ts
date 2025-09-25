@@ -1,83 +1,73 @@
-import { createClient, RedisClientType } from "redis";
+import { createClient } from "redis";
 
-let redisReady: Promise<void>;
+const redisClient = createClient({
+  username: process.env.REDIS_USERNAME || "default",
+  password: process.env.REDIS_PASSWORD,
+  socket: {
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT) || 6379,
+  },
+});
+
+let redisReady: Promise<void> | null = null;
+function logInfo(msg: string, obj?: Record<string, unknown>) {
+  if (obj) {
+    console.log(msg, obj);
+  } else {
+    console.log(msg);
+  }
+}
 
 function connectRedis(): Promise<void> {
   if (redisReady) return redisReady;
-
-  const client = createClient({
-    username: process.env.REDIS_USERNAME || "default",
-    password: process.env.REDIS_PASSWORD,
-    socket: {
-      host: process.env.REDIS_HOST,
-      port: Number(process.env.REDIS_PORT) || 6379,
-    },
-  });
-
-  });
-
-  client.on("connect", () => {
+  redisClient.on("connect", () => {
     logInfo("Redis client connecting...");
   });
-
-  client.on("ready", () => {
+  redisClient.on("ready", () => {
     logInfo("✅ Redis client ready");
   });
-
-  redisReady = client
-    .connect()
-    .then(() => {
-      logInfo("🔌 Redis connected successfully", {
-        host: process.env.REDIS_HOST,
-        port: process.env.REDIS_PORT,
-      });
-    })
-    .catch((err) => {
-      throw err;
+  redisReady = redisClient.connect().then(() => {
+    logInfo("🔌 Redis connected successfully", {
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
     });
-
+  });
   return redisReady;
 }
+
 
 export { redisClient, connectRedis, redisReady };
 
 export const kvService = {
+  async get(key: string): Promise<string | object | null> {
     logInfo("kvService.get called", { key });
-    await redisReady;
+    await connectRedis();
     const value = await redisClient.get(key);
     logInfo("kvService.get success", { key, hasValue: !!value });
-
     if (!value) return null;
-
-    // Try to parse as JSON, but return as string if it fails
     try {
       return JSON.parse(value);
-      // If it's not valid JSON, return the string value directly
+    } catch {
       logInfo("Returning non-JSON value as string", { key, value });
       return value;
     }
   },
 
+  async set(key: string, value: string | object): Promise<boolean> {
     logInfo("kvService.set called", { key, type: typeof value });
-    await redisReady;
+    await connectRedis();
     const toStore = typeof value === "string" ? value : JSON.stringify(value);
     await redisClient.set(key, toStore);
     logInfo("kvService.set success", { key });
     return true;
   },
 
-  async setUser(
-    userId: string,
-  ): Promise<boolean> {
-    await redisReady;
+  async setUser(userId: string, profile: Record<string, string | number | boolean | object | null>): Promise<boolean> {
+    await connectRedis();
     try {
-      // Convert profile object to field-value pairs for Redis hSet
       const fields: string[] = [];
       for (const [key, value] of Object.entries(profile)) {
-        fields.push(
-          key,
-          typeof value === "string" ? value : JSON.stringify(value),
-        );
+        fields.push(key, typeof value === "string" ? value : JSON.stringify(value));
       }
       await redisClient.hSet(`user:${userId}`, fields);
       logInfo("kvService.setUser success", { userId });
@@ -87,111 +77,84 @@ export const kvService = {
     }
   },
 
-    await redisReady;
+  async getUser(userId: string): Promise<Record<string, string> | null> {
+    await connectRedis();
     const user = await redisClient.hGetAll(`user:${userId}`);
-    logInfo("kvService.getUser", {
-      userId,
-      hasData: Object.keys(user).length > 0,
-    });
+    logInfo("kvService.getUser", { userId, hasData: Object.keys(user).length > 0 });
     return Object.keys(user).length > 0 ? user : null;
   },
 
-  /**
-   * Cache active bet slip for 1 hour (volatile, user session)
-   */
-    await redisReady;
+  async setActiveBetSlip(userId: string, betSlip: Record<string, unknown>): Promise<boolean> {
+    await connectRedis();
     try {
-      await redisClient.set(
-        `betslip:${userId}:active`,
-        JSON.stringify(betSlip),
-        { EX: 60 * 60 } // 1 hour TTL
-      );
+      await redisClient.set(`betslip:${userId}:active`, JSON.stringify(betSlip), { EX: 60 * 60 });
       logInfo("kvService.setActiveBetSlip success", { userId });
       return true;
     } catch (err) {
-        userId,
-      });
+      logInfo("kvService.setActiveBetSlip error", { userId });
       throw err;
     }
   },
 
-    await redisReady;
+  async getActiveBetSlip(userId: string): Promise<Record<string, unknown> | null> {
+    await connectRedis();
     const val = await redisClient.get(`betslip:${userId}:active`);
     logInfo("kvService.getActiveBetSlip", { userId, hasData: !!val });
     return val ? JSON.parse(val) : null;
   },
 
-  async addBetSlipToHistory(
-    userId: string,
-    betslipId: string,
-  ): Promise<boolean> {
-    await redisReady;
+  async addBetSlipToHistory(userId: string, betslipId: string): Promise<boolean> {
+    await connectRedis();
     await redisClient.lPush(`betslip:${userId}:history`, betslipId);
     logInfo("kvService.addBetSlipToHistory success", { userId, betslipId });
     return true;
   },
 
-  async getBetSlipHistory(
-    userId: string,
-    count: number = 10,
-  ): Promise<string[]> {
-    await redisReady;
-    const history = await redisClient.lRange(
-      `betslip:${userId}:history`,
-      0,
-      count - 1,
-    );
+  async getBetSlipHistory(userId: string, count: number = 10): Promise<string[]> {
+    await connectRedis();
+    const history = await redisClient.lRange(`betslip:${userId}:history`, 0, count - 1);
     logInfo("kvService.getBetSlipHistory", { userId, count: history.length });
     return history;
   },
 
-  /**
-   * Cache bet for 24 hours (volatile, can be refreshed)
-   */
-    await redisReady;
-    await redisClient.set(`bet:${betId}`, JSON.stringify(bet), { EX: 60 * 60 * 24 }); // 24 hour TTL
+  async setBet(betId: string, bet: Record<string, unknown>): Promise<boolean> {
+    await connectRedis();
+    await redisClient.set(`bet:${betId}`, JSON.stringify(bet), { EX: 60 * 60 * 24 });
     logInfo("kvService.setBet success", { betId });
     return true;
   },
 
-    await redisReady;
+  async getBet(betId: string): Promise<Record<string, unknown> | null> {
+    await connectRedis();
     const val = await redisClient.get(`bet:${betId}`);
     logInfo("kvService.getBet", { betId, hasData: !!val });
     return val ? JSON.parse(val) : null;
   },
 
-  /**
-   * Cache game for 24 hours (volatile, can be refreshed)
-   */
-    await redisReady;
-    await redisClient.set(`game:${gameId}`, JSON.stringify(game), { EX: 60 * 60 * 24 }); // 24 hour TTL
+  async setGame(gameId: string, game: Record<string, unknown>): Promise<boolean> {
+    await connectRedis();
+    await redisClient.set(`game:${gameId}`, JSON.stringify(game), { EX: 60 * 60 * 24 });
     logInfo("kvService.setGame success", { gameId });
     return true;
   },
 
-    await redisReady;
+  async getGame(gameId: string): Promise<Record<string, unknown> | null> {
+    await connectRedis();
     const val = await redisClient.get(`game:${gameId}`);
     logInfo("kvService.getGame", { gameId, hasData: !!val });
     return val ? JSON.parse(val) : null;
   },
 
-  async updateLeaderboard(
-    board: string,
-    userId: string,
-    score: number,
-  ): Promise<boolean> {
-    await redisReady;
+  async updateLeaderboard(board: string, userId: string, score: number): Promise<boolean> {
+    await connectRedis();
     await redisClient.zIncrBy(`leaderboard:${board}`, score, userId);
     logInfo("kvService.updateLeaderboard success", { board, userId, score });
     return true;
   },
 
-    await redisReady;
-    const leaderboard = await redisClient.zRangeWithScores(
-      `leaderboard:${board}`,
-      0,
-      count - 1,
-    );
+  async getLeaderboard(board: string, count: number = 10): Promise<{ score: number; value: string }[]> {
+    await connectRedis();
+    const leaderboard = await redisClient.zRangeWithScores(`leaderboard:${board}`, 0, count - 1);
     logInfo("kvService.getLeaderboard", { board, count: leaderboard.length });
     return leaderboard;
   },

@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import { logWarn } from "../utils/logger";
+import { Request, Response } from "express";
 import Joi from "joi";
 
 // More flexible user schema for testing

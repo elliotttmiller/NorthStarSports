@@ -1,3 +1,12 @@
+// Re-export formatBetDescription from betFormatters for test convenience
+export { formatBetDescription } from './betFormatters';
+/**
+ * Format a number into a USD currency string
+ */
+export const formatCurrency = (amount: number): string => {
+  if (typeof amount !== 'number' || isNaN(amount)) return '$0.00';
+  return `$${amount.toFixed(2)}`;
+};
 // Utility functions for formatting betting data
 
 /**

@@ -1,3 +1,4 @@
+import React from "react";
 import { ComponentProps } from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import CheckIcon from "lucide-react/dist/esm/icons/check";

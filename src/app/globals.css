@@ -1,35 +1,11 @@
 /* ...existing code... */
 /* This file contains global styles for your Next.js app. Move all global CSS here. */
 @import "tailwindcss/preflight";
-:root {
-  --color-accent: #3b82f6;
-  --color-destructive: #ef4444;
-  --color-muted: #f3f4f6;
-  --color-foreground: #111827;
-}
+/* Color tokens moved to tailwind.config.js theme.extend.colors */
 .hidden-trending-games {
   display: none;
 }
-.fluid-panel {
-  padding: var(--fluid-panel-padding);
-  border-radius: var(--fluid-radius);
-  font-size: var(--fluid-base);
-}
-.fluid-gap {
-  gap: var(--fluid-gap);
-}
-.fluid-lg {
-  font-size: var(--fluid-lg);
-}
-.fluid-xl {
-  font-size: var(--fluid-xl);
-}
-.fluid-base {
-  font-size: var(--fluid-base);
-}
-.fluid-win {
-  color: var(--color-win);
-}
+/* .fluid-* classes removed; use Tailwind utilities for padding, gap, font-size, border-radius, and color */
 .teamlogo-accent-ring {
   box-shadow: inset 0 0 0 1px var(--teamlogo-accent, #000);
 }
