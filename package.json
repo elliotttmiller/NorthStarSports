@@ -13,6 +13,7 @@
     "lint": "npm run lint --workspace=@northstar/frontend"
   },
   "dependencies": {
+    "prisma": "^6.16.2",
     "zustand": "^5.0.8"
   }
 }

@@ -11,7 +11,11 @@
     "type-check": "tsc --noEmit",
     "test": "cross-env NODE_OPTIONS=\"--loader ts-node/esm\" jest",
     "test:windows": "set NODE_OPTIONS=--loader ts-node/esm && jest",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "db:seed": "prisma db seed"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' prisma/seed.ts"
   },
   "dependencies": {
     "compression": "^1.8.1",
@@ -22,6 +26,7 @@
     "joi": "^18.0.1",
     "northstarsports-monorepo": "file:..",
     "pino": "^9.9.5",
+    "prisma": "^6.16.2",
     "redis": "^4.7.1"
   },
   "devDependencies": {
