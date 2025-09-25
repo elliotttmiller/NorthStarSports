@@ -25,7 +25,8 @@ const calculateParlayOdds = (oddsArray: number[]): number => {
   return decimal >= 2 ? Math.round((decimal - 1) * 100) : Math.round(-100 / (decimal - 1));
 };
 
-const calculateTotals = (bets: Bet[], betType: 'single' | 'parlay') => {
+// Centralized derived state calculation
+const _calculateTotals = (bets: Bet[], betType: 'single' | 'parlay') => {
   if (betType === 'parlay') {
     const totalStake = bets[0]?.stake ?? 0;
     const totalOdds = calculateParlayOdds(bets.map((b: Bet) => b.odds));
@@ -37,28 +38,25 @@ const calculateTotals = (bets: Bet[], betType: 'single' | 'parlay') => {
   return { totalStake, totalPayout, totalOdds: 0 };
 };
 
-export const useBetSlipStore = create<BetSlipState>((set: (fn: (state: BetSlipState) => Partial<BetSlipState>) => void) => ({
+export const useBetSlipStore = create<BetSlipState>((set) => ({
   ...initialState,
-  addBet: (bet: Bet) => set((state: BetSlipState) => {
+  addBet: (bet: Bet) => set((state) => {
     const newBets = [...state.bets, bet];
-    const totals = calculateTotals(newBets, state.betType);
-    return { bets: newBets, ...totals };
+    return { bets: newBets, ..._calculateTotals(newBets, state.betType) };
   }),
-  removeBet: (betId: string) => set((state: BetSlipState) => {
-    const newBets = state.bets.filter((b: Bet) => b.id !== betId);
-    const totals = calculateTotals(newBets, state.betType);
-    return { bets: newBets, ...totals };
+  removeBet: (betId: string) => set((state) => {
+    const newBets = state.bets.filter((b) => b.id !== betId);
+    return { bets: newBets, ..._calculateTotals(newBets, state.betType) };
   }),
-  updateStake: (betId: string, stake: number) => set((state: BetSlipState) => {
-    const newBets = state.bets.map((b: Bet) => b.id === betId ? { ...b, stake } : b);
-    const totals = calculateTotals(newBets, state.betType);
-    return { bets: newBets, ...totals };
+  updateStake: (betId: string, stake: number) => set((state) => {
+    const newBets = state.bets.map((b) => b.id === betId ? { ...b, stake } : b);
+    return { bets: newBets, ..._calculateTotals(newBets, state.betType) };
   }),
-  setBetType: (type: 'single' | 'parlay') => set((state: BetSlipState) => {
-    const totals = calculateTotals(state.bets, type);
-    return { betType: type, ...totals };
+  setBetType: (type: 'single' | 'parlay') => set((state) => {
+    return { betType: type, ..._calculateTotals(state.bets, type) };
   }),
   clearBetSlip: () => set(() => ({ ...initialState })),
 }));
 
 export { calculateParlayOdds };
+// _calculateTotals is intentionally not exported (internal only)

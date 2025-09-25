@@ -10,6 +10,7 @@
  */
 
 import { useState } from "react";
+import type { Bet, Game, User } from "@/types";
 
 // Environment configuration
 const config = {
@@ -250,98 +251,6 @@ export class ApiClient {
 // Create singleton instance
 export const apiClient = new ApiClient();
 
-// Specific API service methods
-export class ApiService {
-  // User APIs
-  static async getUsers() {
-    return apiClient.get("/api/users");
-  }
-
-  static async getUserById(id: string) {
-    return apiClient.get(`/api/users/${id}`);
-  }
-
-  static async createUser(userData: unknown) {
-    return apiClient.post("/api/users", userData);
-  }
-
-  static async updateUser(id: string, userData: unknown) {
-    return apiClient.put(`/api/users/${id}`, userData);
-  }
-
-  static async deleteUser(id: string) {
-    return apiClient.delete(`/api/users/${id}`);
-  }
-
-  // Game APIs
-  static async getGames() {
-    return apiClient.get("/api/games");
-  }
-
-  static async getGameById(id: string) {
-    return apiClient.get(`/api/games/${id}`);
-  }
-
-  static async createGame(gameData: unknown) {
-    return apiClient.post("/api/games", gameData);
-  }
-
-  static async updateGame(id: string, gameData: unknown) {
-    return apiClient.put(`/api/games/${id}`, gameData);
-  }
-
-  static async deleteGame(id: string) {
-    return apiClient.delete(`/api/games/${id}`);
-  }
-
-  // Bet APIs
-  static async getBets() {
-    return apiClient.get("/api/bets");
-  }
-
-  static async getBetById(id: string) {
-    return apiClient.get(`/api/bets/${id}`);
-  }
-
-  static async createBet(betData: unknown) {
-    return apiClient.post("/api/bets", betData);
-  }
-
-  static async updateBet(id: string, betData: unknown) {
-    return apiClient.put(`/api/bets/${id}`, betData);
-  }
-
-  static async deleteBet(id: string) {
-    return apiClient.delete(`/api/bets/${id}`);
-  }
-
-  // Redis/KV APIs
-  static async getKVValue(key: string) {
-    return apiClient.get(`/api/kv/${key}`);
-  }
-
-  static async setKVValue(key: string, value: unknown) {
-    return apiClient.post(`/api/kv/${key}`, { value });
-  }
-
-  static async deleteKVValue(key: string) {
-    return apiClient.delete(`/api/kv/${key}`);
-  }
-
-  // Redis Hash APIs
-  static async getHashValue(hash: string, field: string) {
-    return apiClient.get(`/api/redis/hash/${hash}/${field}`);
-  }
-
-  static async setHashValue(hash: string, field: string, value: unknown) {
-    return apiClient.post(`/api/redis/hash/${hash}`, { field, value });
-  }
-
-  static async getHashAll(hash: string) {
-    return apiClient.get(`/api/redis/hash/${hash}`);
-  }
-}
-
 // React hooks for API integration
 export function useApi() {
   const [loading, setLoading] = useState(false);
@@ -418,3 +327,11 @@ export const EnvUtils = {
 // Export everything
 export { apiConfig };
 export default ApiService;
+
+// Service abstraction interface
+export interface ApiService {
+  getBets(): Promise<Bet[]>;
+  getGames(): Promise<Game[]>;
+  getUser(userId: string): Promise<User | null>;
+  placeBet(bet: Bet): Promise<Bet>;
+}

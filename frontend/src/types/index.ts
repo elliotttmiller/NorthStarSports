@@ -173,3 +173,5 @@ export interface Profile {
   betHistory: BetHistoryItem[];
   // Add any other fields needed for user profiles
 }
+
+export type User = Profile;

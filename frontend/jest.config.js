@@ -1,8 +1,16 @@
 module.exports = {
   testEnvironment: "jsdom",
-  roots: ["<rootDir>/src"],
-  setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
+  testPathIgnorePatterns: ["/node_modules/", "/.next/"],
   transform: {
-    "^.+\\.[jt]sx?$": "babel-jest",
+    "^.+\\.(ts|tsx)$": "ts-jest",
+  },
+  globals: {
+    "ts-jest": {
+      tsconfig: "<rootDir>/tsconfig.json",
+    },
   },
 };
