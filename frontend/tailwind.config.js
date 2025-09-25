@@ -24,25 +24,50 @@ module.exports = {
     },
     extend: {
       colors: {
-        accent: '#3b82f6',
-        destructive: '#ef4444',
-        muted: '#f3f4f6',
-        foreground: '#111827',
-        win: "var(--color-win)",
-        loss: "var(--color-loss)",
-        info: "var(--color-info)",
+        border: "var(--color-border)",
+        input: "var(--color-border)",
+        ring: "var(--color-focus-ring)",
+        background: "var(--color-bg)",
+        foreground: "var(--color-fg)",
+        primary: {
+          DEFAULT: "var(--color-accent-9)",
+          foreground: "var(--color-accent-contrast)",
+        },
+        secondary: {
+          DEFAULT: "var(--color-neutral-11)",
+          foreground: "var(--color-fg-secondary)",
+        },
+        destructive: {
+          DEFAULT: "oklch(0.55 0.15 0)",
+          foreground: "var(--color-accent-contrast)",
+        },
+        muted: {
+          DEFAULT: "var(--color-neutral-12)",
+          foreground: "var(--color-fg-secondary)",
+        },
+        accent: {
+          DEFAULT: "var(--color-accent-9)",
+          foreground: "var(--color-accent-contrast)",
+        },
+        popover: {
+          DEFAULT: "var(--color-bg-inset)",
+          foreground: "var(--color-fg)",
+        },
+        card: {
+          DEFAULT: "var(--color-card)",
+          foreground: "var(--color-fg)",
+        },
+        win: "var(--color-accent-secondary-9)",
+        lose: "oklch(0.55 0.15 0)",
+        info: "var(--color-accent-9)",
         neutral1: "var(--color-neutral-1)",
         neutral10: "var(--color-neutral-10)",
         accent9: "var(--color-accent-9)",
         accentSecondary9: "var(--color-accent-secondary-9)",
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
       },
       borderRadius: {
-        lg: "1rem",
-        xl: "1.5rem",
+        lg: "var(--size-6)",
+        xl: "var(--size-8)",
         full: "9999px",
       },
       spacing: {

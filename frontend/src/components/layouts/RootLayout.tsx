@@ -29,7 +29,7 @@ function LayoutContent() {
   const isMobile = useIsMobile();
 
   return (
-    <div className="universal-responsive-container h-screen bg-background text-foreground flex flex-col overflow-hidden">
+    <div className="dark universal-responsive-container h-screen bg-background text-foreground flex flex-col overflow-hidden">
       <Header />
       <div className="flex-1 min-h-0 overflow-hidden relative container mx-auto px-4 max-w-screen-2xl">
         {isMobile ? (

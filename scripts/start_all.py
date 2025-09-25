@@ -91,8 +91,14 @@ def main():
     backend_proc = run_command(f"npm run dev -- --port {backend_port}", cwd="backend")
     time.sleep(2)
 
-    logger.info(f"Starting frontend on port {frontend_port}...")
-    frontend_proc = run_command(f"npm run dev -- --port {frontend_port}", cwd="frontend")
+    # Detect Next.js and use npx next dev for frontend
+    next_config = Path("frontend/next.config.js")
+    if next_config.exists():
+        logger.info(f"Detected Next.js. Starting frontend with npx next dev on port {frontend_port}...")
+        frontend_proc = run_command(f"npx next dev -p {frontend_port}", cwd="frontend")
+    else:
+        logger.info(f"Starting frontend with npm run dev on port {frontend_port}...")
+        frontend_proc = run_command(f"npm run dev -- --port {frontend_port}", cwd="frontend")
     time.sleep(2)
 
     # Strip protocol from domain for ngrok
