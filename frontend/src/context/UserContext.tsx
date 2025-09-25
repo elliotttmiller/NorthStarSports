@@ -1,3 +1,4 @@
+"use client";
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useUser, useSetUser } from "@/hooks/useApi";
 import { Profile, BetHistoryItem } from "@/types";

@@ -1,3 +1,4 @@
+"use client";
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useActiveBetSlip, useSetActiveBetSlip } from "@/hooks/useApi";
 import { Bet, BetSlip, Game, PlayerProp } from "@/types";
