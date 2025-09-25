@@ -39,24 +39,22 @@ export const BetSlipModal = () => {
 
   return (
     <Dialog open={true}>
-      <DialogContent className="sm:max-w-[425px] bg-background border-border/60">
-        <DialogTitle className="text-2xl">Bet Slip</DialogTitle>
-        <DialogDescription>
+      <DialogContent className="sm:max-w-[425px] bg-card rounded-xl shadow-lg border border-border/60">
+        <DialogTitle className="text-2xl text-foreground">Bet Slip</DialogTitle>
+        <DialogDescription className="mb-4 text-muted-foreground">
           Review your selections and place your bets.
         </DialogDescription>
-
         <Tabs
           value={"single"}
           onValueChange={(value) => setBetType(value as "single" | "parlay")}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger value="single">Single Bets</TabsTrigger>
             <TabsTrigger value="parlay" disabled={bets.length < 2}>
               Parlay
             </TabsTrigger>
           </TabsList>
-
           <div className="mt-4 max-h-[40vh] overflow-y-auto pr-2 space-y-4">
             {bets.length === 0 ? (
               <p className="text-muted-foreground text-center py-8">
@@ -77,24 +75,14 @@ export const BetSlipModal = () => {
                       {bet.game.homeTeam.shortName}
                     </p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Badge variant="secondary" className="font-mono text-base">
-                      {formatOdds(bet.odds)}
-                    </Badge>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                      onClick={() => removeBet(bet.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary" className="font-mono text-base">{formatOdds(bet.odds)}</Badge>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => removeBet(bet.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
                 </div>
               ))
             )}
           </div>
-
           {bets.length > 0 && (
             <div className="mt-6">
               <Separator />
@@ -120,7 +108,6 @@ export const BetSlipModal = () => {
                   </div>
                 ))}
               </TabsContent>
-
               <TabsContent value="parlay" className="mt-4 space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold">Parlay Odds</span>
@@ -151,9 +138,7 @@ export const BetSlipModal = () => {
                   </div>
                 </div>
               </TabsContent>
-
               <Separator className="my-6" />
-
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Total Stake:</span>
@@ -178,7 +163,6 @@ export const BetSlipModal = () => {
             </div>
           )}
         </Tabs>
-
         <DialogFooter className="mt-4">
           <Button variant="outline" onClick={clearBetSlip}>
             Clear All

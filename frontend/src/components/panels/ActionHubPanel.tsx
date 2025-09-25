@@ -25,13 +25,13 @@ export const ActionHubPanel = () => {
   const handleParlayStakeChange = (value: string) => { const stake = parseFloat(value) || 0; if (bets.length > 0) { updateStake(bets[0].id, stake); } };
 
   return (
-    <div className="p-4 flex flex-col h-full">
+    <div className="p-6 flex flex-col h-full bg-card rounded-xl shadow-lg border border-border/60">
       <Card className="flex-1 flex flex-col bg-transparent border-0 shadow-none">
         <CardHeader>
-          <CardTitle className="text-2xl">Bet Slip</CardTitle>
+          <CardTitle className="text-2xl text-foreground">Bet Slip</CardTitle>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col p-0">
-          <Tabs value={betType} onValueChange={(value) => setBetType(value as "single" | "parlay")} className="w-full flex-1 flex flex-col">
+          <Tabs value={betType} onValueChange={(value) => setBetType(value as 'single' | 'parlay')} className="w-full flex-1 flex flex-col">
             <div className="px-6">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="single">Single</TabsTrigger>
@@ -57,18 +57,18 @@ export const ActionHubPanel = () => {
               )}
             </div>
             {bets.length > 0 && (
-              <div className="p-6 border-t border-border/60 bg-background">
+              <div className="p-6 border-t border-border/60 bg-background rounded-lg">
                 <TabsContent value="single" className="space-y-4">
                   {bets.map((bet: Bet) => (
                     <div key={`stake-${bet.id}`} className="grid grid-cols-2 gap-4 items-center">
                       <p className="font-semibold text-sm truncate">{bet.selection}</p>
-                      <Input type="number" placeholder="Stake" value={bet.stake || ""} onChange={(e) => handleStakeChange(bet.id, e.target.value)} />
+                      <Input type="number" placeholder="Stake" value={bet.stake || ''} onChange={(e) => handleStakeChange(bet.id, e.target.value)} />
                     </div>
                   ))}
                 </TabsContent>
                 <TabsContent value="parlay" className="space-y-4">
                   <div className="flex items-center justify-between"><span className="font-semibold">Parlay Odds</span><Badge className="font-mono text-lg">{formatOdds(totalOdds)}</Badge></div>
-                  <Input type="number" placeholder="Total Stake" value={totalStake || ""} onChange={(e) => handleParlayStakeChange(e.target.value)} />
+                  <Input type="number" placeholder="Total Stake" value={totalStake || ''} onChange={(e) => handleParlayStakeChange(e.target.value)} />
                 </TabsContent>
                 <Separator className="my-4 bg-border/60" />
                 <div className="space-y-2 text-sm">

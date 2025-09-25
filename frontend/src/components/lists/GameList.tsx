@@ -1,11 +1,12 @@
 "use client";
 import { GameCard } from "../cards/GameCard";
-import { useBets } from "../../context/BetsContext";
+import { useBetsStore } from "@/store/betsStore";
 import { Game } from "@/types";
 import { Skeleton } from "../ui/skeleton";
 
 export const GameList = () => {
-  const { games, loading } = useBets();
+  const games = useBetsStore((state) => state.games);
+  const loading = useBetsStore((state) => state.loading);
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -44,17 +44,21 @@ export const GameCard = ({ game }: { game: Game }) => {
     );
 
   return (
-    <Card className="bg-card/60 border-border/50 transition-all hover:border-border/80 p-4">
+    <Card className="bg-card rounded-xl shadow-md border border-border/60 p-6 transition-all hover:border-accent/80">
       <CardContent className="p-0">
-        <div className="flex justify-between items-center mb-3">
+        <div className="flex justify-between items-center mb-4">
           <div className="flex gap-4 items-center">
-            <div className="w-10 h-10 bg-secondary rounded-full"></div>
+            <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center shadow-sm">
+              {/* Team logo placeholder */}
+            </div>
             <span className="text-lg font-semibold text-foreground">
               {game.awayTeam.name}
             </span>
           </div>
           <div className="flex gap-4 items-center">
-            <div className="w-10 h-10 bg-secondary rounded-full"></div>
+            <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center shadow-sm">
+              {/* Team logo placeholder */}
+            </div>
             <span className="text-lg font-semibold text-foreground">
               {game.homeTeam.name}
             </span>
