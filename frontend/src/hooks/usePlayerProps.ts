@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import type { PlayerProp, PropCategory } from "@/types";
-import { useBetSlip } from "@/context/BetSlipContext";
+import { useBetSlipStore } from "@/store/betSlipStore";
 
 /**
  * Hook to manage player prop interactions and state
  */
 export function usePlayerProps(categories: PropCategory[]) {
-  const { betSlip } = useBetSlip();
+  const bets = useBetSlipStore((state) => state.bets);
 
   // Calculate statistics for all props
   const stats = useMemo(() => {
@@ -30,19 +30,19 @@ export function usePlayerProps(categories: PropCategory[]) {
 
   // Get selected props from bet slip
   const getSelectedProps = useMemo(() => {
-    return betSlip.bets
-      .filter((bet) => bet.betType === "player_prop")
-      .map((bet) => ({
+    return bets
+      .filter((bet: any) => bet.betType === "player_prop")
+      .map((bet: any) => ({
         playerId: bet.playerProp?.playerId,
         playerName: bet.playerProp?.playerName,
         statType: bet.playerProp?.statType,
         category: bet.playerProp?.category,
       }));
-  }, [betSlip.bets]);
+  }, [bets]);
 
   // Check if a specific prop is selected
   const isPropSelected = (prop: PlayerProp) => {
-    return betSlip.bets.some(
+    return bets.some(
       (bet) =>
         bet.betType === "player_prop" &&
         bet.playerProp?.playerId === prop.playerId &&
@@ -52,7 +52,7 @@ export function usePlayerProps(categories: PropCategory[]) {
 
   // Get count of selections for a player
   const getPlayerSelectionCount = (playerId: string) => {
-    return betSlip.bets.filter(
+    return bets.filter(
       (bet) =>
         bet.betType === "player_prop" && bet.playerProp?.playerId === playerId,
     ).length;

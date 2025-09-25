@@ -8,7 +8,7 @@ import {
 } from "@/lib/formatters";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
-import { useBetSlip } from "@/context/BetSlipContext";
+import { useBetSlipStore } from "@/store/betSlipStore";
 import { cn } from "@/lib/utils";
 import {
   provideBetFeedback,
@@ -22,7 +22,9 @@ interface CompactMobileGameRowProps {
 
 export const CompactMobileGameRow = memo(
   ({ game, index }: CompactMobileGameRowProps) => {
-    const { addBet, removeBet, betSlip } = useBetSlip();
+    const addBet = useBetSlipStore((state) => state.addBet);
+    const removeBet = useBetSlipStore((state) => state.removeBet);
+    const bets = useBetSlipStore((state) => state.bets);
     const [isExpanded, setIsExpanded] = useState(false);
     const [expandedCategories] = useState<Set<string>>(new Set(["popular"]));
 
@@ -45,11 +47,11 @@ export const CompactMobileGameRow = memo(
       (betType: string, selection: string) => {
         const betId = getBetId(betType, selection);
         return (
-          Array.isArray(betSlip?.bets) &&
-          betSlip.bets.some((b) => b.id === betId)
+          Array.isArray(bets) &&
+          bets.some((b) => b.id === betId)
         );
       },
-      [betSlip, getBetId],
+      [bets, getBetId],
     );
 
     const handleBetClick = (
@@ -102,7 +104,20 @@ export const CompactMobileGameRow = memo(
           return;
       }
 
-      addBet(game, betType, selection, odds, line);
+      // When calling addBet, pass a single Bet object
+      // Example usage:
+      // addBet({ id, gameId, betType, selection, odds, line, stake: 0, potentialPayout: 0, game });
+      addBet({
+        id: `${game.id}-${betType}-${selection}`,
+        gameId: game.id,
+        betType,
+        selection,
+        odds,
+        line,
+        stake: 0,
+        potentialPayout: 0,
+        game,
+      });
 
       // Provide mobile-specific feedback
       const teamName =

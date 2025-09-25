@@ -1,13 +1,13 @@
 "use client";
 
-import { useBetSlip } from "@/context/BetSlipContext";
+import { useBetSlipStore } from "@/store/betSlipStore";
 import { Calculator } from "@phosphor-icons/react";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export const Header = () => {
-  const { betSlip, setIsBetSlipOpen } = useBetSlip();
-  const betCount = betSlip.bets.length;
+  const bets = useBetSlipStore((state) => state.bets);
+  const betCount = bets.length;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -21,7 +21,7 @@ export const Header = () => {
           <Button
             variant="outline"
             className="relative"
-            onClick={() => setIsBetSlipOpen(true)}
+            // onClick={() => /* open bet slip modal logic here */}
           >
             <Calculator size={20} />
             <span className="ml-2 hidden sm:inline">Bet Slip</span>
