@@ -1,0 +1,30 @@
+// Prisma schema for NorthStarSports
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Team {
+  id        Int    @id @default(autoincrement())
+  name      String
+  shortName String @unique
+  logo      String
+  homeGames Game[] @relation("HomeTeam")
+  awayGames Game[] @relation("AwayTeam")
+}
+
+model Game {
+  id         String @id
+  leagueId   String
+  startTime  DateTime
+  status     String
+  homeTeamId Int
+  awayTeamId Int
+  homeTeam   Team   @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam   Team   @relation("AwayTeam", fields: [awayTeamId], references: [id])
+}

@@ -9,7 +9,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": "../",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -25,6 +25,6 @@
     "skipLibCheck": true
   ,"types": ["node", "express"]
   },
-  "include": ["src/**/*", "src/utils/*"],
+  "include": ["src/**/*", "src/utils/*", "prisma/**/*", "../frontend/src/lib/mock-data.ts"],
   "exclude": ["node_modules", "dist", "tests/**/*"]
 }
