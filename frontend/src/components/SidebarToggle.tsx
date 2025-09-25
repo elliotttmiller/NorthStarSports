@@ -2,8 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CaretLeft, CaretRight, List } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useBetSlip } from "@/context/BetSlipContext";
-import { useNavigation } from "@/context/NavigationContext";
+import { useBetSlipStore } from "@/store/betSlipStore";
+import { useNavigationStore } from "@/store/navigationStore";
 
 interface SidebarToggleProps {
   side: "left" | "right";
@@ -19,10 +19,11 @@ export function SidebarToggle({
   className,
 }: SidebarToggleProps) {
   const isLeft = side === "left";
-  const { betSlip } = useBetSlip();
-  const { navigation } = useNavigation();
-  const betCount = betSlip?.bets?.length || 0;
-  const showBetBadge = !isLeft && !navigation.isBetSlipOpen && betCount > 0;
+  const betSlip = useBetSlipStore(state => state);
+  const betCount = betSlip.bets.length;
+  const navigation = useNavigationStore(state => state);
+  const isBetSlipOpen = navigation.mobilePanel === "betslip";
+  const showBetBadge = !isLeft && !isBetSlipOpen && betCount > 0;
 
   return (
     <motion.div
@@ -84,8 +85,7 @@ export function SidebarToggle({
         </Button>
         {showBetBadge && (
           <span
-            className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center bg-[color:var(--color-accent)] text-[color:var(--color-accent-contrast)] text-xs font-bold shadow-md border-2 border-white"
-            style={{ zIndex: 2 }}
+            className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center bg-[color:var(--color-accent)] text-[color:var(--color-accent-contrast)] text-xs font-bold shadow-md border-2 border-white z-2"
             data-testid="desktop-betslip-badge"
           >
             {betCount}

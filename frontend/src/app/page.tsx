@@ -1,16 +1,21 @@
-import { GameList } from "../components/lists/GameList";
-import { Header } from "../components/layout/Header";
+import { SideNavPanel } from "@/components/panels/SideNavPanel";
+import { WorkspacePanel } from "@/components/panels/WorkspacePanel";
+import { ActionHubPanel } from "@/components/panels/ActionHubPanel";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground mb-6">
-          Games
-        </h1>
-        <GameList />
+    <div className="grid h-screen w-full grid-cols-[280px_1fr_320px] grid-rows-1">
+      <aside className="border-r border-border/60 bg-card/80">
+        <SideNavPanel />
+      </aside>
+
+      <main className="overflow-y-auto">
+        <WorkspacePanel />
       </main>
+
+      <aside className="border-l border-border/60 bg-card/80">
+        <ActionHubPanel />
+      </aside>
     </div>
   );
 }

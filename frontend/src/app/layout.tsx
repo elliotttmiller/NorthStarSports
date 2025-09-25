@@ -1,37 +1,36 @@
-
+import type { Metadata } from "next";
+import { Inter as FontSans } from "next/font/google";
+import "../globals.css";
 import { cn } from "@/lib/utils";
-import "@/globals.css";
-import { BetSlipProvider } from "@/context/BetSlipContext";
-import { UserProvider } from "@/context/UserContext";
-import { BetHistoryProvider } from "@/context/BetHistoryContext";
-import { BetsProvider } from "@/context/BetsContext";
-import { NavigationProvider } from "@/context/NavigationContext";
-import type { ReactNode } from "react";
+import { BetSlipModal } from "@/components/BetSlipModal";
+import { Toaster } from "@/components/ui/sonner";
 
-export const metadata = {
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+export const metadata: Metadata = {
   title: "NorthStar Sports",
-  description: "Polished, professional sports betting UI with custom dark theme.",
+  description: "Next-generation sports betting platform",
 };
 
-interface RootLayoutProps {
-  children: ReactNode;
-}
-
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en" className="dark">
-      <body className={cn("min-h-screen bg-background font-sans antialiased text-foreground")}> 
-        <NavigationProvider>
-          <BetSlipProvider>
-            <UserProvider>
-              <BetHistoryProvider>
-                <BetsProvider>
-                  {children}
-                </BetsProvider>
-              </BetHistoryProvider>
-            </UserProvider>
-          </BetSlipProvider>
-        </NavigationProvider>
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased overflow-hidden",
+          fontSans.variable
+        )}
+      >
+        {children}
+        <BetSlipModal />
+        <Toaster richColors theme="dark" position="top-right" />
       </body>
     </html>
   );

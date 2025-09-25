@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { Bet, Game } from "@/types";
-import { useBetSlip } from "@/context/BetSlipContext";
-import { useBetsContext } from "@/context/BetsContext";
-import { useNavigation } from "@/context/NavigationContext";
+import { useBetSlipStore } from "@/store/betSlipStore";
+import { useBetsStore } from "@/store/betsStore";
+import { useNavigationStore } from "@/store/navigationStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { formatBetDescription, formatMatchup } from "@/lib/betFormatters";
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,15 +17,21 @@ import { SmoothScrollContainer } from "@/components/VirtualScrolling";
 
 // Minimal mobile betslip panel, can be styled further
 export function MobileBetSlipPanel() {
-  const { betSlip, removeBet, updateStake, setBetType, clearBetSlip } =
-    useBetSlip();
-  const { addBet, refreshBets } = useBetsContext();
-  const { navigation, setIsBetSlipOpen } = useNavigation();
+  const betSlip = useBetSlipStore(state => state);
+  const addBet = useBetSlipStore(state => state.addBet);
+  const removeBet = useBetSlipStore(state => state.removeBet);
+  const updateStake = useBetSlipStore(state => state.updateStake);
+  const clearBetSlip = useBetSlipStore(state => state.clearBetSlip);
+  const setBetType = useBetSlipStore(state => state.setBetType);
+  const games = useBetsStore(state => state.games);
+  const loading = useBetsStore(state => state.loading);
+  const navigation = useNavigationStore(state => state);
+  const setIsBetSlipOpen = useNavigationStore(state => state.setMobilePanel);
   const isMobile = useIsMobile();
   const [placing, setPlacing] = useState(false);
   const [toast, setToast] = useState<string>("");
 
-  const isOpen = navigation.isBetSlipOpen;
+  const isOpen = navigation.mobilePanel === "betslip";
 
   const showToast = (message: string) => {
     setToast(message);
@@ -74,15 +80,12 @@ export function MobileBetSlipPanel() {
         await addBet(parlayBet);
       }
 
-      // Refresh active bets to show newly placed bets
-      await refreshBets();
-
       showToast("Bet(s) placed successfully!");
       clearBetSlip();
 
       // Close panel after a short delay
       setTimeout(() => {
-        setIsBetSlipOpen(false);
+        setIsBetSlipOpen(null);
       }, 1500);
     } catch (error) {
       console.error("Failed to place bets:", error);
@@ -117,7 +120,7 @@ export function MobileBetSlipPanel() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsBetSlipOpen(false)}
+              onClick={() => setIsBetSlipOpen(null)}
               className="h-8 w-8 p-0"
             >
               <X size={18} />

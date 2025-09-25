@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useNavigation } from "@/context/NavigationContext";
-import { useBetSlip } from "@/context/BetSlipContext";
+import { useNavigationStore } from "@/store/navigationStore";
+import { useBetSlipStore } from "@/store/betSlipStore";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { House } from "@phosphor-icons/react";
@@ -8,8 +8,9 @@ import { House } from "@phosphor-icons/react";
 export function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { navigation, setMobilePanel } = useNavigation();
-  const { betSlip } = useBetSlip();
+  const navigation = useNavigationStore(state => state);
+  const setMobilePanel = useNavigationStore(state => state.setMobilePanel);
+  const betSlip = useBetSlipStore(state => state);
   const isMobile = useIsMobile();
 
   const handleBetsClick = () => {
@@ -48,7 +49,7 @@ export function BottomNav() {
   };
 
   return (
-  <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-20 flex items-center justify-center px-2 w-full" style={{paddingTop: '2px'}}>
+  <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-20 flex items-center justify-center px-2 w-full pt-[2px]">
       {/* Sports - Text Only */}
       <motion.button
         onClick={handleSportsClick}

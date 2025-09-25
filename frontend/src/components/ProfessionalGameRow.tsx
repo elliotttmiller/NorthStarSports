@@ -9,7 +9,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus } from "@phosphor-icons/react";
 import { Button } from "./ui/button";
-import { useBetSlip } from "@/context/BetSlipContext";
+import { useBetSlipStore } from "@/store/betSlipStore";
 import { cn } from "@/lib/utils";
 import { provideBetFeedback } from "@/lib/betInteractions";
 
@@ -21,7 +21,9 @@ interface ProfessionalGameRowProps {
 
 export const ProfessionalGameRow = memo(
   ({ game, isFirstInGroup, showTime }: ProfessionalGameRowProps) => {
-    const { addBet, removeBet, betSlip } = useBetSlip();
+    const addBet = useBetSlipStore(state => state.addBet);
+    const removeBet = useBetSlipStore(state => state.removeBet);
+    const betSlip = useBetSlipStore(state => state);
     const [isExpanded, setIsExpanded] = useState(false);
     const [expandedCategories] = useState<Set<string>>(new Set());
 
@@ -34,14 +36,14 @@ export const ProfessionalGameRow = memo(
 
     // Helper to check if a bet is in the bet slip
     const getBetId = useCallback(
-      (betType: string, selection: string) => {
+      (betType: "spread" | "total" | "moneyline", selection: "away" | "home" | "over" | "under") => {
         return `${game.id}-${betType}-${selection}`;
       },
       [game.id],
     );
 
     const isBetInSlip = useCallback(
-      (betType: string, selection: string) => {
+      (betType: "spread" | "total" | "moneyline", selection: "away" | "home" | "over" | "under") => {
         const betId = getBetId(betType, selection);
         return (
           Array.isArray(betSlip?.bets) &&
@@ -50,6 +52,26 @@ export const ProfessionalGameRow = memo(
       },
       [betSlip, getBetId],
     );
+
+    const createBet = (
+      game: Game,
+      betType: "spread" | "total" | "moneyline",
+      selection: "away" | "home" | "over" | "under",
+      odds: number,
+      line?: number
+    ) => {
+      addBet({
+        id: `${game.id}-${betType}-${selection}${line ? `-${line}` : ""}`,
+        gameId: game.id,
+        betType,
+        selection,
+        odds,
+        line,
+        stake: 0,
+        potentialPayout: 0,
+        game,
+      });
+    };
 
     const handleBetClick = (
       betType: "spread" | "total" | "moneyline",
@@ -101,7 +123,7 @@ export const ProfessionalGameRow = memo(
           return;
       }
 
-      addBet(game, betType, selection, odds, line);
+      createBet(game, betType, selection, odds, line);
 
       // Provide feedback
       const teamName =

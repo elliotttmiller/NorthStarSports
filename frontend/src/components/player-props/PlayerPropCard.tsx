@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useBetSlip } from "@/context/BetSlipContext";
+import { useBetSlipStore } from "@/store/betSlipStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PlayerProp } from "@/types";
@@ -21,7 +21,8 @@ export function PlayerPropCard({
   compact = false,
   className,
 }: PlayerPropCardProps) {
-  const { addBet, betSlip } = useBetSlip();
+  const addBet = useBetSlipStore((state) => state.addBet);
+  const betSlip = useBetSlipStore((state) => state);
 
   // Check if this prop is already in bet slip
   const isOverSelected = betSlip.bets.some(
@@ -37,11 +38,32 @@ export function PlayerPropCard({
       bet.selection === "under",
   );
 
+  const createBet = (
+    game: Game,
+    selection: "over" | "under",
+    odds: number,
+    line?: number,
+    prop?: any
+  ) => {
+    addBet({
+      id: `${game.id}-player_prop-${selection}${line ? `-${line}` : ""}`,
+      gameId: game.id,
+      betType: "player_prop",
+      selection,
+      odds,
+      line,
+      stake: 0,
+      potentialPayout: 0,
+      game,
+      playerProp: prop,
+    });
+  };
+
   const handlePlayerPropClick = useCallback(
     (e: React.MouseEvent, selection: "over" | "under") => {
       e.stopPropagation();
       const odds = selection === "over" ? prop.overOdds : prop.underOdds;
-      addBet(game, "player_prop", selection, odds, prop.line, prop);
+      createBet(game, selection, odds, prop.line, prop);
       if ("vibrate" in navigator) {
         navigator.vibrate([10, 5, 15]);
       }
@@ -58,7 +80,7 @@ export function PlayerPropCard({
         },
       );
     },
-    [addBet, game, prop],
+    [createBet, game, prop],
   );
 
   return (
