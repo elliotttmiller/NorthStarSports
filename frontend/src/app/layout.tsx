@@ -4,6 +4,7 @@ import "../globals.css";
 import { cn } from "@/lib/utils";
 import { BetSlipModal } from "@/components/BetSlipModal";
 import { Toaster } from "@/components/ui/sonner";
+import { MSWProvider } from './msw-provider';
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -28,9 +29,12 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        {children}
-        <BetSlipModal />
-        <Toaster richColors theme="dark" position="top-right" />
+        <MSWProvider>
+          {/* The application no longer needs to be wrapped in providers */}
+          {children}
+          <BetSlipModal />
+          <Toaster richColors theme="dark" position="top-right" />
+        </MSWProvider>
       </body>
     </html>
   );

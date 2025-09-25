@@ -1,4 +1,4 @@
-import type { ApiService } from './apiService';
+import type { ApiService } from './ApiService';
 import type { Bet, Game, User } from '@/types';
 
 export class PrismaApiService implements ApiService {

@@ -1,6 +1,6 @@
 import { MockApiService } from './MockApiService';
 import { PrismaApiService } from './PrismaApiService';
-import type { ApiService } from './apiService';
+import type { ApiService } from './ApiService';
 
 const DATA_SOURCE = process.env.NEXT_PUBLIC_DATA_SOURCE || 'mock';
 
