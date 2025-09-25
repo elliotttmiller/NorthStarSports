@@ -19,79 +19,71 @@ module.exports = {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
-      },
-    },
-    extend: {
-      colors: {
-        border: "var(--color-border)",
-        input: "var(--color-border)",
-        ring: "var(--color-focus-ring)",
-        background: "var(--color-bg)",
-        foreground: "var(--color-fg)",
-        primary: {
-          DEFAULT: "var(--color-accent-9)",
-          foreground: "var(--color-accent-contrast)",
+        extend: {
+          colors: {
+            border: "var(--color-border)",
+            input: "var(--color-border)",
+            ring: "var(--color-focus-ring)",
+            background: "var(--color-bg)",
+            foreground: "var(--color-fg)",
+            primary: {
+              DEFAULT: "var(--color-accent-9)",
+              foreground: "var(--color-accent-contrast)",
+            },
+            secondary: {
+              DEFAULT: "var(--color-neutral-11)",
+              foreground: "var(--color-fg-secondary)",
+            },
+            destructive: {
+              DEFAULT: "oklch(0.55 0.15 0)",
+              foreground: "var(--color-accent-contrast)",
+            },
+            muted: {
+              DEFAULT: "var(--color-neutral-12)",
+              foreground: "var(--color-fg-secondary)",
+            },
+            accent: {
+              DEFAULT: "var(--color-accent-9)",
+              foreground: "var(--color-accent-contrast)",
+            },
+            popover: {
+              DEFAULT: "var(--color-bg-inset)",
+              foreground: "var(--color-fg)",
+            },
+            card: {
+              DEFAULT: "var(--color-card)",
+              foreground: "var(--color-fg)",
+            },
+            win: "var(--color-accent-secondary-9)",
+          },
+          borderRadius: {
+            lg: "var(--radius-lg)",
+            md: "var(--radius-md)",
+            sm: "var(--radius-sm)",
+            xl: "var(--radius-xl)",
+            "2xl": "var(--radius-2xl)",
+            full: "var(--radius-full)",
+          },
+          keyframes: {
+            "accordion-down": {
+              from: { height: "0" },
+              to: { height: "var(--radix-accordion-content-height)" },
+            },
+            "accordion-up": {
+              from: { height: "var(--radix-accordion-content-height)" },
+              to: { height: "0" },
+            },
+            shimmer: {
+              '0%': { transform: 'translateX(-100%)' },
+              '100%': { transform: 'translateX(100%)' },
+            },
+          },
+          animation: {
+            "accordion-down": "accordion-down 0.2s ease-out",
+            "accordion-up": "accordion-up 0.2s ease-out",
+            shimmer: "shimmer 2s infinite",
+          },
         },
-        secondary: {
-          DEFAULT: "var(--color-neutral-11)",
-          foreground: "var(--color-fg-secondary)",
-        },
-        destructive: {
-          DEFAULT: "oklch(0.55 0.15 0)",
-          foreground: "var(--color-accent-contrast)",
-        },
-        muted: {
-          DEFAULT: "var(--color-neutral-12)",
-          foreground: "var(--color-fg-secondary)",
-        },
-        accent: {
-          DEFAULT: "var(--color-accent-9)",
-          foreground: "var(--color-accent-contrast)",
-        },
-        popover: {
-          DEFAULT: "var(--color-bg-inset)",
-          foreground: "var(--color-fg)",
-        },
-        card: {
-          DEFAULT: "var(--color-card)",
-          foreground: "var(--color-fg)",
-        },
-        win: "var(--color-accent-secondary-9)",
-        lose: "oklch(0.55 0.15 0)",
-        info: "var(--color-accent-9)",
-        neutral1: "var(--color-neutral-1)",
-        neutral10: "var(--color-neutral-10)",
-        accent9: "var(--color-accent-9)",
-        accentSecondary9: "var(--color-accent-secondary-9)",
-      },
-      borderRadius: {
-        lg: "var(--size-6)",
-        xl: "var(--size-8)",
-        full: "9999px",
-      },
-      spacing: {
-        1: "0.25rem",
-        2: "0.5rem",
-        3: "0.75rem",
-        4: "1rem",
-        5: "1.25rem",
-        6: "1.5rem",
-        8: "2rem",
-        10: "2.5rem",
-        12: "3rem",
-        16: "4rem",
-        20: "5rem",
-        24: "6rem",
-        32: "8rem",
-        40: "10rem",
-        48: "12rem",
-        56: "14rem",
-        64: "16rem",
-      },
-      screens: {
-        coarse: { raw: "(pointer: coarse)" },
-        fine: { raw: "(pointer: fine)" },
         pwa: { raw: "(display-mode: standalone)" },
       },
     },

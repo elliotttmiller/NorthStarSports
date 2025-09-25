@@ -8,18 +8,20 @@ import type { AppProps } from "next/app";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className="dark bg-background text-foreground min-h-screen">
-      <NavigationProvider>
-        <BetSlipProvider>
-          <UserProvider>
-            <BetHistoryProvider>
-              <BetsProvider>
-                <Component {...pageProps} />
-              </BetsProvider>
-            </BetHistoryProvider>
-          </UserProvider>
-        </BetSlipProvider>
-      </NavigationProvider>
-    </div>
+    <html lang="en" className="dark">
+      <body className="min-h-screen bg-background font-sans antialiased text-foreground">
+        <NavigationProvider>
+          <BetSlipProvider>
+            <UserProvider>
+              <BetHistoryProvider>
+                <BetsProvider>
+                  <Component {...pageProps} />
+                </BetsProvider>
+              </BetHistoryProvider>
+            </UserProvider>
+          </BetSlipProvider>
+        </NavigationProvider>
+      </body>
+    </html>
   );
 }
