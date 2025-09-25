@@ -10,7 +10,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { SkeletonLoader } from "@/components/SkeletonLoader";
-// ...existing code...
 import { motion, AnimatePresence } from "framer-motion";
 
 export const SideNavPanel = () => {
@@ -33,8 +32,6 @@ export const SideNavPanel = () => {
     };
     loadSports();
   }, []);
-
-  // ...existing code...
 
   const handleLeagueClick = (leagueId: string) => {
     const sport = sports.find((s) => s.leagues.some((l) => l.id === leagueId));

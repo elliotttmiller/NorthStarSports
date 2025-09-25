@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useBetSlip } from "@/context/BetSlipContext";
 import { useNavigation } from "@/context/NavigationContext";
-// ...existing code...
 
 interface SidebarToggleProps {
   side: "left" | "right";
@@ -23,7 +22,6 @@ export function SidebarToggle({
   const { betSlip } = useBetSlip();
   const { navigation } = useNavigation();
   const betCount = betSlip?.bets?.length || 0;
-  // Only show badge on right toggle, when betslip is closed, and there are bets
   const showBetBadge = !isLeft && !navigation.isBetSlipOpen && betCount > 0;
 
   return (

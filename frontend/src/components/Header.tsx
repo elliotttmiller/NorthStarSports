@@ -85,3 +85,15 @@ export const Header = () => {
     </header>
   );
 };
+
+      {/* Mobile Account Icon - Top Right */}
+      <div className="md:hidden flex items-center">
+        <Button variant="ghost" size="sm" asChild className="h-8 w-8 p-0">
+          <Link to="/account">
+            <User
+              size={18}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            />
+          </Link>
+        </Button>
+      </div>
