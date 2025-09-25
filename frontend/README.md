@@ -69,7 +69,7 @@ src/
 
 - **React 19**: Latest React with concurrent features
 - **TypeScript**: Type-safe JavaScript
-- **Vite**: Fast build tool and dev server
+- **Next.js**: Fast build tool and dev server
 - **TailwindCSS**: Utility-first CSS framework
 - **Framer Motion**: Animation library
 - **React Query**: Data fetching and caching
@@ -229,7 +229,7 @@ npm run lint-and-type-check  # Run both linting and type checking
 
 ### Build Configuration
 
-Vite configuration with optimizations:
+Next.js configuration with optimizations:
 
 - Code splitting
 - Tree shaking
@@ -301,8 +301,8 @@ dist/
 
 ```bash
 # .env.local
-VITE_API_URL=http://localhost:4000
-VITE_APP_ENV=development
+NEXT_PUBLIC_API_URL=http://localhost:4000
+NEXT_PUBLIC_APP_ENV=development
 ```
 
 ### Static Hosting
@@ -391,7 +391,7 @@ App-like installation:
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
 - [TailwindCSS Documentation](https://tailwindcss.com/docs)
 - [Framer Motion Guide](https://www.framer.com/motion/)
-- [Vite Guide](https://vitejs.dev/guide/)
+- [Next.js Guide](https://nextjs.org/docs)
 
 ---
 

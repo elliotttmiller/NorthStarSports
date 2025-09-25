@@ -78,7 +78,7 @@ NorthStar Sports/
 ### Frontend
 
 - **React 19** with TypeScript
-- **Vite** for build tooling
+- **Next.js** for build tooling
 - **TailwindCSS** for styling
 - **Framer Motion** for animations
 - **Radix UI** component library
@@ -174,7 +174,7 @@ npm run lint           # Lint TypeScript code
 ### Frontend Scripts
 
 ```bash
-npm run dev            # Vite development server
+npm run dev            # Next.js development server
 npm run build          # Build for production
 npm run preview        # Preview production build
 npm run test           # Run Jest tests

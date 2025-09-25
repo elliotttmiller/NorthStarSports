@@ -3,7 +3,7 @@
 
 *   **Document ID:** NSS-BP-2025-09-12-FINAL-V4
 *   **Version:** 4.0
-*   **Status:** Finalized - Ready for Clean-Slate Construction on Vite Stack
+*   **Status:** Finalized - Ready for Clean-Slate Construction on Next.js Stack
 
 ---
 
@@ -59,7 +59,7 @@ The entire application is a single, interconnected organism powered by a central
 
 ```mermaid
 graph TD
-    subgraph "Vite + React Application"
+    subgraph "Next.js + React Application"
         subgraph "RootLayout.tsx (Universal Container)"
             A[Global Context Providers<br>(BetSlipContext, NavigationContext)]
             
@@ -109,20 +109,20 @@ graph TD
 
 | Layer | Technology | Rationale |
 | :--- | :--- | :--- |
-| **Core Framework** | **Vite + React** | Provides a lightning-fast development experience and a robust foundation for building component-based user interfaces. |
-| **Routing** | **React Router DOM** | The industry-standard library for managing client-side routing and layouts in a Vite + React application. |
+| **Core Framework** | **Next.js + React** | Provides a lightning-fast development experience and a robust foundation for building component-based user interfaces. |
+| **Routing** | **Next.js Routing** | The industry-standard library for managing client-side routing and layouts in a Next.js + React application. |
 | **Language** | **TypeScript** | Ensures a robust, scalable, and maintainable codebase by adding a layer of static type safety. |
 | **Styling** | **Tailwind CSS** | A utility-first framework that enables rapid, custom UI development and serves as the single source of truth for our Design System. |
 | **Component Primitives** | **`shadcn/ui`** | A collection of professional, accessible, and unstyled components that we can fully own and customize to match our bespoke design. |
 | **State Management**| **React Context API** | The ideal lightweight, powerful, and built-in solution for the application's global state needs. |
 | **Animation** | **Framer Motion** | The industry-leading library for creating fluid, state-of-the-art animations in React. |
-| **Deployment**| **Vercel** | A world-class platform that provides seamless, zero-configuration deployment for Vite applications. |
+| **Deployment**| **Vercel** | A world-class platform that provides seamless, zero-configuration deployment for Next.js applications. |
 
 ---
 
 ### **7.0 The PWA Transformation**
 
-The final step in the development process will be to convert the application into a **Progressive Web App (PWA)** using the `vite-plugin-pwa` library. This will provide:
+The final step in the development process will be to convert the application into a **Progressive Web App (PWA)** using the `next-pwa` library. This will provide:
 
 *   **Installability (Enhanced Bookmark):** Allowing users to "Add to Home Screen" for a native-app-like presence on their device.
 *   **Network Independence:** Caching the app shell for instant loading, even on poor network connections.
@@ -134,4 +134,4 @@ The final step in the development process will be to convert the application int
 
 | Version | Date | Author | Changes |
 | :--- | :--- | :--- | :--- |
-| 4.0 | 2025-09-12 | Project Lead | Finalized blueprint reflecting the full pivot to the Vite + `shadcn/ui` technology stack. |
+| 4.0 | 2025-09-12 | Project Lead | Finalized blueprint reflecting the full pivot to the Next.js + `shadcn/ui` technology stack. |

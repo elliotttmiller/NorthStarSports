@@ -21,7 +21,7 @@ const config = {
   },
   production: {
     apiBaseUrl:
-      process.env.VITE_API_BASE_URL || "https://api.northstarsports.com",
+      process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.northstarsports.com",
     timeout: 15000,
     retries: 2,
     logRequests: false,

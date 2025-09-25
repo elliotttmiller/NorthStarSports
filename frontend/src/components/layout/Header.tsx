@@ -1,5 +1,4 @@
 "use client";
-
 import { useBetSlip } from "@/context/BetSlipContext";
 import { Calculator } from "@phosphor-icons/react";
 import { Button } from "../ui/button";
@@ -18,20 +17,11 @@ export const Header = () => {
           </a>
         </div>
         <div className="flex items-center justify-end">
-          <Button
-            variant="outline"
-            className="relative"
-            onClick={() => setIsBetSlipOpen(true)}
-          >
+          <Button variant="outline" className="relative" onClick={() => setIsBetSlipOpen(true)}>
             <Calculator size={20} />
             <span className="ml-2 hidden sm:inline">Bet Slip</span>
             {betCount > 0 && (
-              <Badge
-                variant="destructive"
-                className="absolute -right-2 -top-2 h-5 w-5 justify-center p-0"
-              >
-                {betCount}
-              </Badge>
+              <Badge variant="destructive" className="absolute -right-2 -top-2 h-5 w-5 justify-center p-0">{betCount}</Badge>
             )}
           </Button>
         </div>

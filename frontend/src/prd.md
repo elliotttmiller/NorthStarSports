@@ -62,4 +62,4 @@
 
 ## Current Status
 
-Application rebuilt with Vite + React + TypeScript + shadcn/ui stack. Now optimizing both desktop and mobile experiences for professional polish and functionality.
+Application rebuilt with Next.js + React + TypeScript + shadcn/ui stack. Now optimizing both desktop and mobile experiences for professional polish and functionality.

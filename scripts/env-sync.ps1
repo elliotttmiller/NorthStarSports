@@ -43,11 +43,11 @@ function Get-EnvTemplate {
         }
         Frontend = @{
             "NODE_ENV" = "development"
-            "VITE_API_BASE_URL" = "http://localhost:4000"
-            "VITE_APP_NAME" = "NorthStar Sports"
-            "VITE_APP_VERSION" = "1.0.0"
-            "VITE_LOG_LEVEL" = "info"
-            "VITE_ENABLE_DEBUG" = "true"
+            "NEXT_PUBLIC_API_BASE_URL" = "http://localhost:4000"
+            "NEXT_PUBLIC_APP_NAME" = "NorthStar Sports"
+            "NEXT_PUBLIC_APP_VERSION" = "1.0.0"
+            "NEXT_PUBLIC_LOG_LEVEL" = "info"
+            "NEXT_PUBLIC_ENABLE_DEBUG" = "true"
         }
     }
 }
@@ -164,7 +164,7 @@ function Test-EnvironmentConfiguration {
         
         # Check for required variables
         $requiredBackend = @("REDIS_HOST", "REDIS_PORT", "PORT")
-        $requiredFrontend = @("VITE_API_BASE_URL")
+        $requiredFrontend = @("NEXT_PUBLIC_API_BASE_URL")
         
         foreach ($var in $requiredBackend) {
             if (-not $backendEnv.ContainsKey($var) -or -not $backendEnv[$var]) {
@@ -180,7 +180,7 @@ function Test-EnvironmentConfiguration {
         
         # Check for consistency
         $backendPort = $backendEnv["PORT"]
-        $frontendApiUrl = $frontendEnv["VITE_API_BASE_URL"]
+        $frontendApiUrl = $frontendEnv["NEXT_PUBLIC_API_BASE_URL"]
         
         if ($backendPort -and $frontendApiUrl) {
             if ($frontendApiUrl -notlike "*:$backendPort*") {

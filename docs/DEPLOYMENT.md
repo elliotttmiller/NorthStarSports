@@ -113,21 +113,21 @@ PAYMENT_PROCESSOR_KEY=your-payment-key
 
 ```bash
 # API Configuration
-VITE_API_URL=https://api.northstarsports.com
-VITE_API_VERSION=v1
+NEXT_PUBLIC_API_URL=https://api.northstarsports.com
+NEXT_PUBLIC_API_VERSION=v1
 
 # Application Configuration
-VITE_APP_NAME=NorthStar Sports
-VITE_APP_VERSION=1.0.0
-VITE_APP_ENV=production
+NEXT_PUBLIC_APP_NAME=NorthStar Sports
+NEXT_PUBLIC_APP_VERSION=1.0.0
+NEXT_PUBLIC_APP_ENV=production
 
 # Feature Flags
-VITE_ENABLE_ANALYTICS=true
-VITE_ENABLE_SERVICE_WORKER=true
+NEXT_PUBLIC_ENABLE_ANALYTICS=true
+NEXT_PUBLIC_ENABLE_SERVICE_WORKER=true
 
 # External Services
-VITE_GOOGLE_ANALYTICS_ID=UA-XXXXXXXXX-X
-VITE_SENTRY_DSN=https://your-sentry-dsn
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=UA-XXXXXXXXX-X
+NEXT_PUBLIC_SENTRY_DSN=https://your-sentry-dsn
 ```
 
 ## 🏭 Production Build

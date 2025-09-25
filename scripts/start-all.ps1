@@ -1,8 +1,8 @@
 # Start All NorthStarSports Services and Ngrok
 # Professional clean restart/startup with unified real-time logs
 
-# Stop any running node, vite, or ngrok processes
-Get-Process -Name node,ngrok,vite -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+# Stop any running node or ngrok processes
+Get-Process -Name node,ngrok -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
 
 # Clean npm caches (optional, for a truly clean start)
 npm cache clean --force

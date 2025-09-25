@@ -1,4 +1,3 @@
-
 @import "tailwindcss/preflight";
 
 @layer base {
@@ -166,4 +165,28 @@ body {
 
 .teamlogo-accent-ring {
   box-shadow: inset 0 0 0 1px var(--teamlogo-accent, #000);
+}
+
+/* BetSlipModal custom classes for lint compliance */
+.betslip-ready-minheight { min-height: 40vh; box-sizing: border-box; }
+.betslip-break-word { word-break: break-word; width: 100%; }
+.betslip-maxwidth { max-width: 100vw; }
+.betslip-summary-container { width: 100%; box-sizing: border-box; }
+/* Universal custom scrollbar styles for all browsers */
+/* Firefox */
+.betslip-ready-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+}
+/* Chrome, Edge, Safari, Opera */
+.betslip-ready-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.betslip-ready-container::-webkit-scrollbar-thumb {
+  background: rgba(155, 155, 155, 0.5);
+  border-radius: 4px;
+}
+.betslip-ready-container::-webkit-scrollbar-track {
+  background: transparent;
 }
