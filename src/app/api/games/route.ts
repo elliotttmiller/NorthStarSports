@@ -1,18 +1,44 @@
+
 import { z } from 'zod';
 
-import { games } from '../../../frontend/src/lib/mock-data';
+// Local mock data for games (move to backend for API reliability)
+interface Game {
+  id: string;
+  leagueId: string;
+  startTime: Date;
+  status: string;
+  homeTeam: string;
+  awayTeam: string;
+}
 
-// Define the schema for query parameters
+const games: Game[] = [
+  {
+    id: '1',
+    leagueId: 'nba',
+    startTime: new Date('2025-09-24T19:00:00Z'),
+    status: 'UPCOMING',
+    homeTeam: 'Lakers',
+    awayTeam: 'Warriors',
+  },
+  {
+    id: '2',
+    leagueId: 'nfl',
+    startTime: new Date('2025-09-24T21:00:00Z'),
+    status: 'UPCOMING',
+    homeTeam: '49ers',
+    awayTeam: 'Cowboys',
+  },
+];
+
+// Query schema for validation
 const gamesQuerySchema = z.object({
   league: z.string().optional(),
-  date: z.string().optional(), // Or use z.coerce.date() for stricter validation
+  date: z.string().optional(),
 });
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-
-    // Validate the search parameters
     const validation = gamesQuerySchema.safeParse({
       league: searchParams.get('league'),
       date: searchParams.get('date'),
@@ -35,10 +61,11 @@ export async function GET(req: Request) {
     }
 
     if (date) {
-      // Compare only the date part (YYYY-MM-DD)
-      filteredGames = filteredGames.filter((game) =>
-        game.startTime.toISOString().slice(0, 10) === date
-      );
+      filteredGames = filteredGames.filter((game) => {
+        // Compare only the date part (YYYY-MM-DD)
+        const gameDate = game.startTime.toISOString().slice(0, 10);
+        return gameDate === date;
+      });
     }
 
     return new Response(JSON.stringify(filteredGames), { status: 200 });

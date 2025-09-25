@@ -20,24 +20,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import React from "react";
 
+
 // ...existing code...
 
-// Removed duplicate RootLayout implementation. Use the named export below.
+// Restore original RootLayout implementation
 function LayoutContent() {
-  const { navigation, setMobilePanel, toggleSideNav, toggleActionHub } =
-    useNavigation();
+  const { navigation, setMobilePanel, toggleSideNav, toggleActionHub } = useNavigation();
   const isMobile = useIsMobile();
-
-  // ...existing code...
 
   return (
     <div className="universal-responsive-container h-screen bg-background text-foreground flex flex-col overflow-hidden">
-      {/* Header - Always visible */}
       <Header />
-      {/* Main Layout Container */}
       <div className="flex-1 min-h-0 overflow-hidden relative container mx-auto px-4 max-w-screen-2xl">
         {isMobile ? (
-          // MOBILE UI
           <>
             <div className="h-full min-h-0 flex flex-col pb-16">
               <div className="flex-1 min-h-0 overflow-hidden">
@@ -66,21 +61,19 @@ function LayoutContent() {
             </div>
             <MobileBetSlipPanel />
             <AnimatePresence>
-              {navigation.mobilePanel &&
-                navigation.mobilePanel !== "workspace" && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="fixed inset-0 bg-[color:var(--color-bg-overlay)]/80 backdrop-blur-md z-30"
-                    onClick={() => setMobilePanel(null)}
-                  />
-                )}
+              {navigation.mobilePanel && navigation.mobilePanel !== "workspace" && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="fixed inset-0 bg-[color:var(--color-bg-overlay)]/80 backdrop-blur-md z-30"
+                  onClick={() => setMobilePanel(null)}
+                />
+              )}
             </AnimatePresence>
           </>
         ) : (
-          // DESKTOP UI
           <div className="h-full flex relative">
             <div className="absolute left-0 top-1/2 -translate-y-1/2 z-30">
               <SidebarToggle
@@ -124,7 +117,6 @@ function LayoutContent() {
                   </motion.div>
                 )}
               </AnimatePresence>
-              {/* Desktop only: BetSlipModal */}
               <BetSlipModal />
             </div>
           </div>

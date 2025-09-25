@@ -1,0 +1,195 @@
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { SmoothScrollContainer } from "@/components/VirtualScrolling";
+import { useBetSlip } from "@/context/BetSlipContext";
+import { TrendUp, Trophy } from "@phosphor-icons/react";
+import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
+
+const trendingGames = [
+  {
+    id: 1,
+    homeTeam: "Lakers",
+    awayTeam: "Warriors",
+    homeOdds: "-110",
+    awayOdds: "+125",
+    league: "NBA",
+    time: "8:00 PM EST",
+    live: true,
+    trending: true,
+  },
+  {
+    id: 2,
+    homeTeam: "Chiefs",
+    awayTeam: "Bills",
+    homeOdds: "-150",
+    awayOdds: "+130",
+    league: "NFL",
+    time: "1:00 PM EST",
+    live: false,
+    trending: true,
+  },
+];
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      staggerChildren: 0.13,
+      delayChildren: 0.1,
+      duration: 0.4,
+    },
+  },
+  exit: { opacity: 0, y: -30, transition: { duration: 0.3 } },
+};
+const sectionVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
+
+export default function HomePage() {
+  const { betSlip } = useBetSlip();
+  const activeBetsCount = betSlip?.bets?.length ?? 0;
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="home-page"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className="h-full w-full flex flex-col overflow-hidden bg-muted/10"
+      >
+        <SmoothScrollContainer
+          className="flex-1 w-full min-h-0"
+          showScrollbar={false}
+        >
+          <motion.div
+            className="mx-auto w-full max-w-4xl px-4 md:px-8 lg:px-12 space-y-6"
+            style={{
+              padding: "var(--fluid-panel-padding)",
+              fontSize: "var(--fluid-base)",
+            }}
+            variants={containerVariants}
+            initial={false}
+            animate="visible"
+          >
+            {/* Welcome Section */}
+            <motion.div
+              variants={sectionVariants}
+              className="text-center py-8 md:py-12"
+            >
+              <div className="max-w-4xl mx-auto px-4">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground tracking-tight mb-4">
+                  Welcome, NorthStar User
+                </h1>
+                <div className="w-16 md:w-24 h-1 bg-accent mx-auto rounded-full"></div>
+              </div>
+            </motion.div>
+
+            {/* Quick Stats */}
+            <motion.div
+              variants={sectionVariants}
+              className="flex justify-center"
+            >
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
+                {[
+                  { label: "Balance", value: "$1,250.00" },
+                  { label: "Win Rate", value: "68%" },
+                  { label: "Active Bets", value: activeBetsCount },
+                  { label: "This Week", value: "+$340" },
+                ].map((stat) => (
+                  <Card
+                    key={stat.label}
+                    className="bg-card/50 backdrop-blur-sm border-border/50 shadow-sm min-h-[70px] md:min-h-[80px]"
+                    style={{
+                      fontSize: "var(--fluid-base)",
+                      borderRadius: "var(--fluid-radius)",
+                    }}
+                  >
+                    <CardContent className="p-4 h-full">
+                      <div className="flex flex-col items-center justify-center h-full gap-1">
+                        <p className="text-xs md:text-sm text-muted-foreground font-medium">
+                          {stat.label}
+                        </p>
+                        <p className="font-bold text-sm md:text-base text-foreground">
+                          {stat.value}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Trending Games */}
+            <motion.div variants={sectionVariants}>
+              <div className="flex items-center space-x-2 mb-4">
+                <TrendUp size={20} className="text-accent" />
+                <h2 className="text-lg font-semibold text-foreground">
+                  Trending Live Games
+                </h2>
+              </div>
+              <div className="space-y-2">
+                {trendingGames.map((game) => (
+                  <Card
+                    key={game.id}
+                    className="bg-card/50 backdrop-blur-sm border-border/50 hover:bg-card/70 transition-all cursor-pointer"
+                    style={{
+                      fontSize: "var(--fluid-base)",
+                      borderRadius: "var(--fluid-radius)",
+                    }}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <Badge variant="secondary" className="text-xs">
+                              {game.league}
+                            </Badge>
+                            {game.live && (
+                              <Badge
+                                variant="outline"
+                                className="text-xs border-accent/30 text-accent"
+                              >
+                                LIVE
+                              </Badge>
+                            )}
+                            <span className="text-sm text-muted-foreground">
+                              {game.time}
+                            </span>
+                          </div>
+                          <p className="text-sm font-medium">
+                            {game.awayTeam} @ {game.homeTeam}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* View All Games Button */}
+            <motion.div variants={sectionVariants} className="text-center py-6">
+              <Button asChild size="lg" className="px-8 py-3">
+                <Link href="/games" className="flex items-center space-x-2">
+                  <Trophy size={20} />
+                  <span>View All Sports & Games</span>
+                </Link>
+              </Button>
+            </motion.div>
+
+            {/* Bottom spacing */}
+            <div className="h-8" />
+          </motion.div>
+        </SmoothScrollContainer>
+      </motion.div>
+    </AnimatePresence>
+  );
+}

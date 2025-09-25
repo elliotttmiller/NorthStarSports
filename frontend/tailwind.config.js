@@ -5,7 +5,7 @@
  * - Remove unused tokens for maintainability
  * - Reference CSS variables for dynamic theming
  */
-export default {
+module.exports = {
   content: [
     "./index.html",
     "./src/pages/**/*.{js,ts,jsx,tsx}",
@@ -39,12 +39,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Add more colors as needed
       },
       borderRadius: {
-        lg: "1rem", // Large cards/buttons
-        xl: "1.5rem", // Extra large modals
-        full: "9999px", // Pills/circular
+        lg: "1rem",
+        xl: "1.5rem",
+        full: "9999px",
       },
       spacing: {
         1: "0.25rem",
@@ -64,12 +63,11 @@ export default {
         48: "12rem",
         56: "14rem",
         64: "16rem",
-        // Remove unused custom values for lean config
       },
       screens: {
-        coarse: { raw: "(pointer: coarse)" }, // Touch devices
-        fine: { raw: "(pointer: fine)" },     // Mouse devices
-        pwa: { raw: "(display-mode: standalone)" }, // PWA mode
+        coarse: { raw: "(pointer: coarse)" },
+        fine: { raw: "(pointer: fine)" },
+        pwa: { raw: "(display-mode: standalone)" },
       },
     },
   },

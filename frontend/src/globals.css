@@ -1,16 +1,27 @@
-/* Replace deprecated Tailwind v4 directives with recommended imports */
-@import "tailwindcss/preflight";
 
-/* Minimal global styles only. Move all design tokens to tailwind.config.js */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 :root {
-  /* Example: Only keep color tokens here if needed for CSS variables */
   --color-accent: #3b82f6;
   --color-destructive: #ef4444;
   --color-muted: #f3f4f6;
   --color-foreground: #111827;
+  --color-win: #22c55e;
+  --color-loss: #ef4444;
+  --color-info: #3b82f6;
+  --color-neutral-1: #f3f4f6;
+  --color-neutral-10: #111827;
+  --color-accent-9: #2563eb;
+  --color-accent-secondary-9: #6366f1;
 }
 
-/* Add any truly global resets or accessibility styles here */
+body {
+  font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
+  background: var(--color-neutral-1);
+  color: var(--color-foreground);
+}
 
 .hidden-trending-games {
   display: none;
