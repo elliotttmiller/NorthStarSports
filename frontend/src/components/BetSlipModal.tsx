@@ -40,12 +40,10 @@ export const BetSlipModal = () => {
   return (
     <Dialog open={true}>
       <DialogContent className="sm:max-w-[425px] bg-background border-border/60">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">Bet Slip</DialogTitle>
-          <DialogDescription>
-            Review your selections and place your bets.
-          </DialogDescription>
-        </DialogHeader>
+        <DialogTitle className="text-2xl">Bet Slip</DialogTitle>
+        <DialogDescription>
+          Review your selections and place your bets.
+        </DialogDescription>
 
         <Tabs
           value={"single"}

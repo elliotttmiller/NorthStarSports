@@ -12,19 +12,17 @@ import { Badge } from "../ui/badge";
 import { Bet } from "@/types";
 
 export const ActionHubPanel = () => {
-  const betSlip = useBetSlipStore((state: BetSlipState) => ({
-    bets: state.bets,
-    betType: state.betType,
-    totalStake: state.totalStake,
-    totalPayout: state.totalPayout,
-    totalOdds: state.totalOdds
-  }));
-  const removeBet = useBetSlipStore((state: BetSlipState) => state.removeBet);
-  const updateStake = useBetSlipStore((state: BetSlipState) => state.updateStake);
-  const clearBetSlip = useBetSlipStore((state: BetSlipState) => state.clearBetSlip);
-  const setBetType = useBetSlipStore((state: BetSlipState) => state.setBetType);
+  const bets = useBetSlipStore((state) => state.bets);
+  const betType = useBetSlipStore((state) => state.betType);
+  const totalStake = useBetSlipStore((state) => state.totalStake);
+  const totalPayout = useBetSlipStore((state) => state.totalPayout);
+  const totalOdds = useBetSlipStore((state) => state.totalOdds);
+  const removeBet = useBetSlipStore((state) => state.removeBet);
+  const updateStake = useBetSlipStore((state) => state.updateStake);
+  const clearBetSlip = useBetSlipStore((state) => state.clearBetSlip);
+  const setBetType = useBetSlipStore((state) => state.setBetType);
   const handleStakeChange = (betId: string, value: string) => { const stake = parseFloat(value) || 0; updateStake(betId, stake); };
-  const handleParlayStakeChange = (value: string) => { const stake = parseFloat(value) || 0; if (betSlip.bets.length > 0) { updateStake(betSlip.bets[0].id, stake); } };
+  const handleParlayStakeChange = (value: string) => { const stake = parseFloat(value) || 0; if (bets.length > 0) { updateStake(bets[0].id, stake); } };
 
   return (
     <div className="p-4 flex flex-col h-full">
@@ -33,18 +31,18 @@ export const ActionHubPanel = () => {
           <CardTitle className="text-2xl">Bet Slip</CardTitle>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col p-0">
-          <Tabs value={betSlip.betType} onValueChange={(value) => setBetType(value as "single" | "parlay")} className="w-full flex-1 flex flex-col">
+          <Tabs value={betType} onValueChange={(value) => setBetType(value as "single" | "parlay")} className="w-full flex-1 flex flex-col">
             <div className="px-6">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="single">Single</TabsTrigger>
-                <TabsTrigger value="parlay" disabled={betSlip.bets.length < 2}>Parlay</TabsTrigger>
+                <TabsTrigger value="parlay" disabled={bets.length < 2}>Parlay</TabsTrigger>
               </TabsList>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {betSlip.bets.length === 0 ? (
+              {bets.length === 0 ? (
                 <p className="text-muted-foreground text-center pt-16">Your bet slip is empty.</p>
               ) : (
-                betSlip.bets.map((bet: Bet) => (
+                bets.map((bet: Bet) => (
                   <div key={bet.id} className="flex items-start justify-between">
                     <div>
                       <p className="font-semibold text-foreground">{bet.selection} {bet.line && `(${bet.line})`}</p>
@@ -58,10 +56,10 @@ export const ActionHubPanel = () => {
                 ))
               )}
             </div>
-            {betSlip.bets.length > 0 && (
+            {bets.length > 0 && (
               <div className="p-6 border-t border-border/60 bg-background">
                 <TabsContent value="single" className="space-y-4">
-                  {betSlip.bets.map((bet: Bet) => (
+                  {bets.map((bet: Bet) => (
                     <div key={`stake-${bet.id}`} className="grid grid-cols-2 gap-4 items-center">
                       <p className="font-semibold text-sm truncate">{bet.selection}</p>
                       <Input type="number" placeholder="Stake" value={bet.stake || ""} onChange={(e) => handleStakeChange(bet.id, e.target.value)} />
@@ -69,17 +67,17 @@ export const ActionHubPanel = () => {
                   ))}
                 </TabsContent>
                 <TabsContent value="parlay" className="space-y-4">
-                  <div className="flex items-center justify-between"><span className="font-semibold">Parlay Odds</span><Badge className="font-mono text-lg">{formatOdds(betSlip.totalOdds)}</Badge></div>
-                  <Input type="number" placeholder="Total Stake" value={betSlip.totalStake || ""} onChange={(e) => handleParlayStakeChange(e.target.value)} />
+                  <div className="flex items-center justify-between"><span className="font-semibold">Parlay Odds</span><Badge className="font-mono text-lg">{formatOdds(totalOdds)}</Badge></div>
+                  <Input type="number" placeholder="Total Stake" value={totalStake || ""} onChange={(e) => handleParlayStakeChange(e.target.value)} />
                 </TabsContent>
                 <Separator className="my-4 bg-border/60" />
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span className="text-muted-foreground">Total Stake:</span><span className="font-semibold">{formatCurrency(betSlip.totalStake)}</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Total Payout:</span><span className="font-semibold text-win">{formatCurrency(betSlip.totalPayout)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Total Stake:</span><span className="font-semibold">{formatCurrency(totalStake)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Total Payout:</span><span className="font-semibold text-win">{formatCurrency(totalPayout)}</span></div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 mt-4">
                   <Button variant="outline" onClick={clearBetSlip}>Clear</Button>
-                  <Button disabled={betSlip.totalStake === 0}>Place Bet</Button>
+                  <Button disabled={totalStake === 0}>Place Bet</Button>
                 </div>
               </div>
             )}
