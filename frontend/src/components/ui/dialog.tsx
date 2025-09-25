@@ -32,9 +32,11 @@ function DialogContent({ className, children, ...props }: DialogContentProps) {
         )}
       >
         <DialogPrimitive.Content {...props} />
-  {children}
-  {/* Radix DialogPrimitive.Close does accept children at runtime */}
-  <DialogPrimitive.Close
+        {/* Visually hidden DialogTitle for accessibility if not present */}
+        <DialogPrimitive.Title className="sr-only">Dialog</DialogPrimitive.Title>
+        {children}
+        {/* Radix DialogPrimitive.Close does accept children at runtime */}
+        <DialogPrimitive.Close
           className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-all duration-200 hover:opacity-100 hover:bg-secondary/80 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4"
           data-slot="dialog-close"
         >
