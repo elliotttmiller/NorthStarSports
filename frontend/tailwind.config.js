@@ -13,6 +13,7 @@ module.exports = {
     "./src/layouts/**/*.{js,ts,jsx,tsx}",
     "./src/hooks/**/*.{js,ts,jsx,tsx}",
     "./src/context/**/*.{js,ts,jsx,tsx}",
+    "./src/app/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     container: {
