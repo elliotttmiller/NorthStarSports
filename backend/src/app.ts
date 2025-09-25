@@ -1,5 +1,4 @@
-
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import userRoutes from "./routes/user.js";
 import betRoutes from "./routes/bet.js";
@@ -9,26 +8,35 @@ import redisRoutes from "./routes/redis.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import { logInfo } from "./utils/logger";
 
-const app: express.Express = express();
+const app = express();
 
-// CORS configuration
+// --- PROFESSIONAL DYNAMIC CORS CONFIGURATION ---
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || [];
+
 const corsOptions: cors.CorsOptions = {
-  origin:
-    process.env.NODE_ENV === "production"
-      ? (process.env.FRONTEND_URL?.split(",") ?? [])
-      : ["http://localhost:5173", "http://localhost:3000"],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.length === 0 || allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    const msg =
+      "The CORS policy for this site does not allow access from the specified Origin.";
+    return callback(new Error(msg), false);
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
 };
 app.use(cors(corsOptions));
+console.log(`CORS enabled for the following origins: ${allowedOrigins.join(", ")}`);
 
 // Body parsing middleware
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Request logging middleware
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   const startTime = Date.now();
   res.on("finish", () => {
     const duration = Date.now() - startTime;
@@ -53,7 +61,7 @@ app.use(`${API_VERSION}/kv`, kvRoutes);
 app.use(`${API_VERSION}/redis`, redisRoutes);
 
 // Health check endpoint
-app.get(`${API_VERSION}/health`, (req, res) => {
+app.get(`${API_VERSION}/health`, (req: Request, res: Response) => {
   const healthCheck = {
     uptime: process.uptime(),
     message: "OK",
@@ -65,7 +73,7 @@ app.get(`${API_VERSION}/health`, (req, res) => {
 });
 
 // API documentation endpoint
-app.get(`${API_VERSION}/docs`, (req, res) => {
+app.get(`${API_VERSION}/docs`, (req: Request, res: Response) => {
   const apiDocs = {
     name: "NorthStar Sports API",
     version: "1.0.0",
@@ -97,7 +105,7 @@ app.get(`${API_VERSION}/docs`, (req, res) => {
 });
 
 // Handle 404 for API routes
-app.use("/api", (req, res) => {
+app.use("/api", (req: Request, res: Response) => {
   res.status(404).json({
     error: "API endpoint not found",
     path: req.path,
@@ -106,7 +114,7 @@ app.use("/api", (req, res) => {
 });
 
 // Handle all other routes
-app.use("*", (req, res) => {
+app.use("*", (req: Request, res: Response) => {
   res.status(404).json({
     error: "Route not found",
     message: "This endpoint does not exist",
