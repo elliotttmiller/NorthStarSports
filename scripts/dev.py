@@ -162,11 +162,11 @@ def main():
 
     # --- Service Startup ---
     logger.info("Starting Backend Service...")
-    run_command(["npm", "run", "dev:backend"], cwd=Path.cwd(), env_update={"PORT": str(args.backend_port)})
+    run_command(["npm", "run", "dev"], cwd=Path("backend"), env_update={"PORT": str(args.backend_port)})
     time.sleep(5)
 
     logger.info("Starting Frontend Service...")
-    run_command(["npm", "run", "dev:port", "--workspace=@northstar/frontend"], cwd=Path.cwd())
+    run_command(["npm", "run", "dev"], cwd=Path("frontend"))
     time.sleep(10)
 
     # --- Ngrok Tunnel ---
