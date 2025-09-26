@@ -1,37 +1,11 @@
 {
-  "name": "northstar-monorepo",
+  "name": "northstar-sports",
+  "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
   "scripts": {
-    "dev": "npm run dev --workspace=@northstar/frontend",
-    "dev:frontend": "npm run dev --workspace=@northstar/frontend",
-    "dev:backend": "npm run dev --workspace=@northstar/backend",
-    "build": "npm run build --workspace=@northstar/frontend",
-    "lint": "npm run lint --workspace=@northstar/frontend",
-    "test:frontend": "npm test --workspace=@northstar/frontend"
+    "dev": "echo 'Use frontend or backend package.json'",
+    "build": "echo 'Use frontend or backend package.json'"
   },
-  "dependencies": {
-    "client-only": "^0.0.1",
-    "pg": "^8.16.3",
-    "postgres": "^3.4.7",
-    "prisma": "^6.16.2",
-    "zustand": "^5.0.8"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^6.8.0",
-    "@testing-library/react": "^16.3.0",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^24.5.2",
-    "eslint-plugin-next": "^0.0.0",
-    "jest": "^30.1.3",
-    "jest-environment-jsdom": "^30.1.2"
-  },
-  "msw": {
-    "workerDirectory": [
-      "frontend\\public"
-    ]
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
