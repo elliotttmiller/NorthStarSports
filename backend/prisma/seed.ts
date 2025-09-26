@@ -1,77 +1,31 @@
 import { PrismaClient } from '@prisma/client';
-import mockGames from '../../frontend/src/mock/games.json';
+// Import the new, schema-aligned mock data
+import { teams, games, odds } from './data/mock-data';
 
 const db = new PrismaClient();
 
-type MockGame = {
-  id: string;
-  leagueId: string;
-  startTime: string;
-  status: string;
-  homeTeam: {
-    id: string;
-    name: string;
-    shortName: string;
-    logo: string;
-  };
-  awayTeam: {
-    id: string;
-    name: string;
-    shortName: string;
-    logo: string;
-  };
-  odds: {
-    moneyline: {
-      home: { odds: number; lastUpdated: string };
-      away: { odds: number; lastUpdated: string };
-    };
-    spread: {
-      home: { odds: number; line: number; lastUpdated: string };
-      away: { odds: number; line: number; lastUpdated: string };
-    };
-    total: {
-      home: { odds: number; line: number; lastUpdated: string };
-      away: { odds: number; line: number; lastUpdated: string };
-      over: { odds: number; line: number; lastUpdated: string };
-      under: { odds: number; line: number; lastUpdated: string };
-    };
-  };
-};
-
 async function main() {
   console.log('Starting database seeding...');
-
-  // Step 1: Clear existing data
+  console.log('Deleting existing odds data...');
+  await db.odds.deleteMany({});
+  console.log('Deleting existing game data...');
   await db.game.deleteMany({});
+  console.log('Deleting existing team data...');
   await db.team.deleteMany({});
-
-  // Step 2: Seed Teams
-  const teamNames = new Set<string>();
-  mockGames.forEach((game: MockGame) => {
-    teamNames.add(game.homeTeam.name);
-    teamNames.add(game.awayTeam.name);
+  console.log(`Seeding ${teams.length} teams...`);
+  await db.team.createMany({
+    data: teams,
   });
 
-  const teamData = Array.from(teamNames).map(name => ({
-    name,
-    shortName: name,
-    logo: `/logos/${name.toLowerCase().replace(/\s+/g, '-')}.svg`, // Default logo path
-  }));
-  await db.team.createMany({ data: teamData });
+  console.log(`Seeding ${games.length} games...`);
+  await db.game.createMany({
+    data: games,
+  });
 
-  // Step 3: Seed Games
-  const createdTeams = await db.team.findMany();
-  const teamIdMap = new Map<string, number>((createdTeams as Array<{ name: string; id: number }>).map((t) => [t.name, t.id]));
-
-  const gameData = mockGames.map((game: MockGame) => ({
-    id: game.id,
-    leagueId: game.leagueId,
-    startTime: new Date(game.startTime),
-    status: game.status,
-    homeTeamId: teamIdMap.get(game.homeTeam.name)!,
-    awayTeamId: teamIdMap.get(game.awayTeam.name)!,
-  }));
-  await db.game.createMany({ data: gameData });
+  console.log(`Seeding ${odds.length} sets of odds...`);
+  await db.odds.createMany({
+    data: odds,
+  });
 
   console.log('Seeding finished successfully.');
 }
@@ -82,5 +36,6 @@ main()
     process.exit(1);
   })
   .finally(async () => {
+    // Ensure the database connection is always closed
     await db.$disconnect();
   });
