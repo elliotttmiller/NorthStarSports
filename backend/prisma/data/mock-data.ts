@@ -1,4 +1,8 @@
-import { GameStatus } from '@prisma/client';
+export enum GameStatus {
+  UPCOMING = 'UPCOMING',
+  ONGOING = 'ONGOING',
+  COMPLETED = 'COMPLETED',
+}
 
 // This data is shaped exactly like our Prisma schema.
 // No complex transformations will be needed in the seed script.

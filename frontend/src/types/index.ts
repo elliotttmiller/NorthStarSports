@@ -19,7 +19,15 @@ export interface Game {
   homeTeam: Team;
   awayTeam: Team;
   startTime: Date;
-  status: "upcoming" | "live" | "finished";
+  status:
+    | "upcoming"
+    | "live"
+    | "finished"
+    | "UPCOMING"
+    | "LIVE"
+    | "FINISHED"
+    | "ONGOING"
+    | "COMPLETED";
   odds: GameOdds;
   venue?: string;
 }

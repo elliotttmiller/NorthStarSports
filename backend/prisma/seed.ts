@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 // Import the new, schema-aligned mock data
 import { teams, games, odds } from './data/mock-data';
