@@ -3,8 +3,6 @@ import { useUserStore } from "@/store/userStore";
 import { CircleUserRound, Home, Shield, Flame, LogOut } from "lucide-react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const NavLink = ({ icon: Icon, label, active }: { icon: React.ElementType, label: string, active?: boolean }) => (
   <Button variant={active ? "secondary" : "ghost"} className="w-full justify-start text-lg h-12 px-4">
@@ -15,18 +13,12 @@ const NavLink = ({ icon: Icon, label, active }: { icon: React.ElementType, label
 
 export const SideNavPanel = () => {
   const user = useUserStore((state) => state.user);
-  if (!user) {
-    return <Skeleton className="h-16 w-full rounded-xl" />;
-  }
   return (
-    <div className="flex h-full flex-col p-4">
+    <div className="flex h-full flex-col p-4" aria-label="Side navigation" role="navigation">
       <div className="flex items-center gap-3 p-4 mb-4">
-        <Avatar>
-          <AvatarImage src={user.avatar || undefined} alt={user.name || "User"} />
-          <AvatarFallback>{user.name?.[0] || "U"}</AvatarFallback>
-        </Avatar>
+        <CircleUserRound className="h-12 w-12 text-muted-foreground" />
         <div>
-          <p className="text-xl font-bold text-foreground">{user?.name || "Guest User"}</p>
+          <p className="text-xl font-bold">{user?.name || "Guest User"}</p>
           <p className="text-sm text-muted-foreground">{user?.email || "Welcome"}</p>
         </div>
       </div>

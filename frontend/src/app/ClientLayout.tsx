@@ -20,12 +20,7 @@ export function ClientLayout({ children, fontSans }: { children: React.ReactNode
   const [isBetSlipOpen, setBetSlipOpen] = useState(false);
 
   return (
-    <body
-      className={cn(
-        "h-screen w-full bg-background text-foreground flex flex-col overflow-hidden",
-        fontSans
-      )}
-    >
+    <div className={cn("h-screen w-full bg-background text-foreground flex flex-col overflow-hidden", fontSans)}>
       {/* Top Navigation Bar */}
       <NavigationMenu aria-label="Top navigation" role="navigation">
         <Header />
@@ -59,12 +54,9 @@ export function ClientLayout({ children, fontSans }: { children: React.ReactNode
       <NavigationMenu orientation="horizontal" aria-label="Bottom navigation" role="navigation">
         <BottomNav />
       </NavigationMenu>
-      {/* Floating Bet Slip Button (for mobile) */}
-      <FloatingBetSlipButton onClick={() => setBetSlipOpen(true)} />
-      {/* Mobile Bet Slip Panel */}
-      <MobileBetSlipPanel open={isBetSlipOpen} onOpenChange={setBetSlipOpen} />
-      {/* Toaster for notifications */}
-      <Toaster richColors theme="dark" position="top-right" />
-    </body>
+      <FloatingBetSlipButton />
+      <MobileBetSlipPanel />
+      <Toaster position="top-right" />
+    </div>
   );
 }

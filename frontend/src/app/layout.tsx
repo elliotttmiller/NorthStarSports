@@ -4,6 +4,9 @@ import "@/globals.css";
 import "@/index.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { AppShell } from "@/components/layout/AppShell";
+import { BetSlipModal } from "@/components/BetSlipModal";
+import { Toaster } from "react-hot-toast";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -12,11 +15,7 @@ const fontSans = Inter({
   display: "swap",
 });
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={fontSans.variable}>
       <head>
@@ -42,10 +41,11 @@ export default function RootLayout({
         <SidebarProvider>
           <AppSidebar aria-label="Sidebar navigation" role="complementary" />
           <main aria-label="Main content" role="main">
-            <SidebarTrigger />
-            <ClientLayout fontSans={fontSans.variable}>{children}</ClientLayout>
+            <AppShell>{children}</AppShell>
           </main>
         </SidebarProvider>
+        <BetSlipModal />
+        <Toaster position="top-right" />
       </body>
     </html>
   );

@@ -21,25 +21,10 @@
     /* Linting */
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "@/components/*": [
-        "src/components/*"
-      ],
-      "@/utils/*": [
-        "src/utils/*"
-      ],
-      "@/ui/*": [
-        "src/components/ui/*"
-      ],
-      "@/lib/*": [
-        "src/lib/*"
-      ],
-      "@/hooks/*": [
-        "src/hooks/*"
-      ],
       "@/*": [
-        "./src/*"
+        "src/*"
       ]
     },
     "allowJs": true,

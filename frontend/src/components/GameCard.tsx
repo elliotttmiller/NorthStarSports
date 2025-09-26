@@ -1,33 +1,15 @@
 "use client";
 import { Game, Bet } from "@/types";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardAction,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useBetSlipStore } from "@/store/betSlipStore";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { formatOdds } from "@/lib/formatters";
-import { Separator } from "@/components/ui/separator";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useEffect, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export const GameCard = ({ game }: { game: Game }) => {
   const { addBet, bets } = useBetSlipStore();
-  const [selectedBet, setSelectedBet] = useState<string>("");
-
-  const createBet = (selection: "home" | "away" | "over" | "under", odds: number, line?: number) => {
-    // Determine betType based on selection
-    let betType: Bet["betType"] = "moneyline";
-    if (selection === "over" || selection === "under") {
-      betType = "total";
-    }
-    // You can add more logic for other bet types if needed
+  const createBet = (selection: Bet["selection"], odds: number, line?: number) => {
     const bet: Bet = {
       id: `${game.id}-${selection}-${line || ""}`,
       gameId: game.id,
@@ -37,66 +19,50 @@ export const GameCard = ({ game }: { game: Game }) => {
       game,
       stake: 0,
       potentialPayout: 0,
-      betType
+      betType: "moneyline"
     };
     addBet(bet);
     toast.success(`${selection} added to slip!`);
   };
-  const isBetInSlip = (selection: "home" | "away" | "over" | "under", line?: number) => bets.some((b: Bet) => b.gameId === game.id && b.selection === selection && b.line === line);
+  const isBetInSlip = (selection: Bet["selection"], line?: number) => bets.some((b) => b.gameId === game.id && b.selection === selection && b.line === line);
 
-  useEffect(() => {
-    if (selectedBet) {
-      // Map selectedBet to odds and line
-      if (selectedBet === "away" && game.odds.moneyline?.away) {
-        createBet("away", game.odds.moneyline.away.odds);
-        toast.success("Away bet added to slip!");
-      } else if (selectedBet === "home" && game.odds.moneyline?.home) {
-        createBet("home", game.odds.moneyline.home.odds);
-        toast.success("Home bet added to slip!");
-      } else if (selectedBet === "over" && game.odds.total?.over) {
-        createBet("over", game.odds.total.over.odds, game.odds.total.over.line);
-        toast.success("Over bet added to slip!");
-      }
-      setSelectedBet(""); // Reset after adding
-    }
-  }, [selectedBet]);
-
-  if (!game) {
-    return <Skeleton className="h-32 w-full rounded-xl" />;
-  }
+  const over = game.odds.total?.over;
 
   return (
-    <Card className="bg-card/60 border-border/50 transition-all hover:border-border/80 p-4">
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-center">
+    <Card className="bg-card/60 border-border/50 transition-all hover:border-border/80 p-4" aria-label={`Game card for ${game.awayTeam.name} vs ${game.homeTeam.name}`} role="listitem">
+      <CardContent className="p-0">
+        <div className="flex justify-between items-center mb-3">
           <div className="flex gap-4 items-center">
-            <div className="size-10 bg-secondary rounded-full" />
-            <CardTitle className="text-lg font-semibold text-foreground">
-              {game.awayTeam.name}
-            </CardTitle>
+            <div className="w-10 h-10 bg-secondary rounded-full"></div>
+            <span className="text-lg font-semibold text-foreground">{game.awayTeam.name}</span>
           </div>
           <div className="flex gap-4 items-center">
-            <div className="size-10 bg-secondary rounded-full" />
-            <CardTitle className="text-lg font-semibold text-foreground">
-              {game.homeTeam.name}
-            </CardTitle>
+            <div className="w-10 h-10 bg-secondary rounded-full"></div>
+            <span className="text-lg font-semibold text-foreground">{game.homeTeam.name}</span>
           </div>
         </div>
-        <CardDescription className="text-sm text-muted-foreground">
-          {new Date(game.startTime).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-        </CardDescription>
-        <CardAction>
-          {/* You can add quick actions or icons here if needed */}
-        </CardAction>
-      </CardHeader>
-      <Separator className="my-4 bg-border/30" />
-      <div className="px-6 py-4">
-        <ToggleGroup type="single" value={selectedBet} onValueChange={setSelectedBet} className="grid grid-cols-3 gap-2 text-sm">
-          <ToggleGroupItem value="away" disabled={!game.odds.moneyline?.away} className={cn("font-mono", isBetInSlip("away") && "bg-primary/80")}>{game.odds.moneyline?.away ? formatOdds(game.odds.moneyline.away.odds) : "Away N/A"}</ToggleGroupItem>
-          <ToggleGroupItem value="over" disabled={!game.odds.total?.over} className={cn("font-mono", isBetInSlip("over", game.odds.total?.over?.line) && "bg-primary/80")}>{game.odds.total?.over ? `O ${game.odds.total.over.line}` : "O/U N/A"}</ToggleGroupItem>
-          <ToggleGroupItem value="home" disabled={!game.odds.moneyline?.home} className={cn("font-mono", isBetInSlip("home") && "bg-primary/80")}>{game.odds.moneyline?.home ? formatOdds(game.odds.moneyline.home.odds) : "Home N/A"}</ToggleGroupItem>
-        </ToggleGroup>
-      </div>
+        <p className="text-sm text-muted-foreground mb-4">{new Date(game.startTime).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+        <div className="grid grid-cols-3 gap-2 text-sm">
+          <Button variant={isBetInSlip("away") ? "default" : "secondary"} className={cn("font-mono", isBetInSlip("away") && "bg-primary/80")}
+            onClick={() => createBet("away", game.odds.moneyline.away.odds)}>
+            {formatOdds(game.odds.moneyline.away.odds)}
+          </Button>
+          {over ? (
+            <Button variant={isBetInSlip("over", over.line) ? "default" : "secondary"} className={cn("font-mono", isBetInSlip("over", over.line) && "bg-primary/80")}
+              onClick={() => createBet("over", over.odds, over.line)}>
+              O {over.line}
+            </Button>
+          ) : (
+            <Button variant="secondary" disabled>
+              O -
+            </Button>
+          )}
+          <Button variant={isBetInSlip("home") ? "default" : "secondary"} className={cn("font-mono", isBetInSlip("home") && "bg-primary/80")}
+            onClick={() => createBet("home", game.odds.moneyline.home.odds)}>
+            {formatOdds(game.odds.moneyline.home.odds)}
+          </Button>
+        </div>
+      </CardContent>
     </Card>
   );
 };
