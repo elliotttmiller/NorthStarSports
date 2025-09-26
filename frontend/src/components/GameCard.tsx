@@ -46,28 +46,44 @@ export const GameCard = ({ game }: { game: Game }) => {
           <Button
             variant={isBetInSlip("away") ? "default" : "secondary"}
             className={cn("font-mono", isBetInSlip("away") && "bg-primary/80")}
-            onClick={() => createBet("away", game.odds.moneyline.away.odds)}
+            onClick={() =>
+              game.odds.moneyline?.away?.odds
+                ? createBet("away", game.odds.moneyline.away.odds)
+                : undefined
+            }
+            disabled={!game.odds.moneyline?.away?.odds}
           >
-            {formatOdds(game.odds.moneyline.away.odds)}
+            {game.odds.moneyline?.away?.odds
+              ? formatOdds(game.odds.moneyline.away.odds)
+              : "N/A"}
           </Button>
           <Button
-            variant={isBetInSlip("over", game.odds.total.over?.line) ? "default" : "secondary"}
-            className={cn("font-mono", isBetInSlip("over", game.odds.total.over?.line) && "bg-primary/80")}
+            variant={isBetInSlip("over", game.odds.total?.over?.line) ? "default" : "secondary"}
+            className={cn("font-mono", isBetInSlip("over", game.odds.total?.over?.line) && "bg-primary/80")}
             onClick={() =>
-              game.odds.total.over
+              game.odds.total?.over
                 ? createBet("over", game.odds.total.over.odds, game.odds.total.over.line)
                 : undefined
             }
-            disabled={!game.odds.total.over}
+            disabled={!game.odds.total?.over}
           >
-            {game.odds.total.over ? `O ${game.odds.total.over.line}` : "N/A"}
+            {game.odds.total?.over
+              ? formatOdds(game.odds.total.over.odds)
+              : "N/A"}
           </Button>
           <Button
             variant={isBetInSlip("home") ? "default" : "secondary"}
             className={cn("font-mono", isBetInSlip("home") && "bg-primary/80")}
-            onClick={() => createBet("home", game.odds.moneyline.home.odds)}
+            onClick={() =>
+              game.odds.moneyline?.home?.odds
+                ? createBet("home", game.odds.moneyline.home.odds)
+                : undefined
+            }
+            disabled={!game.odds.moneyline?.home?.odds}
           >
-            {formatOdds(game.odds.moneyline.home.odds)}
+            {game.odds.moneyline?.home?.odds
+              ? formatOdds(game.odds.moneyline.home.odds)
+              : "N/A"}
           </Button>
         </div>
       </CardContent>
