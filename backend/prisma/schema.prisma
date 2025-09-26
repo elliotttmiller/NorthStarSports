@@ -1,30 +1,72 @@
-// Prisma schema for NorthStarSports
-
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
 }
 
+// --- ENUMS ---
+// Use an enum to enforce a strict, consistent set of possible game statuses.
+enum GameStatus {
+  UPCOMING
+  LIVE
+  FINISHED
+  POSTPONED
+}
+
+// --- DATA MODELS ---
+
 model Team {
-  id        Int    @id @default(autoincrement())
+  id        String @id @default(cuid())
   name      String
   shortName String @unique
-  logo      String
-  homeGames Game[] @relation("HomeTeam")
-  awayGames Game[] @relation("AwayTeam")
+  logo      String? // Make logo optional as some teams might not have one initially.
+
+  homeGames Game[] @relation("HomeGames")
+  awayGames Game[] @relation("AwayGames")
 }
 
 model Game {
-  id         String @id
-  leagueId   String
-  startTime  DateTime
-  status     String
-  homeTeamId Int
-  awayTeamId Int
-  homeTeam   Team   @relation("HomeTeam", fields: [homeTeamId], references: [id])
-  awayTeam   Team   @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  id        String     @id @default(cuid())
+  leagueId  String
+  startTime DateTime
+  status    GameStatus // Use the GameStatus enum for type safety.
+
+  // --- RELATIONS ---
+  homeTeam   Team   @relation("HomeGames", fields: [homeTeamId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  homeTeamId String
+  awayTeam   Team   @relation("AwayGames", fields: [awayTeamId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  awayTeamId String
+
+  odds Odds?
+
+  // --- DATABASE INDEXES for PERFORMANCE ---
+  // Add indexes to columns that will be frequently queried or filtered.
+  @@index([leagueId])
+  @@index([startTime])
+  @@index([status])
+}
+
+model Odds {
+  id     String @id @default(cuid())
+  gameId String @unique
+  game   Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  // Moneyline Odds
+  moneylineHomeOdds Int
+  moneylineAwayOdds Int
+
+  // Spread Odds
+  spreadHomeLine Float
+  spreadHomeOdds Int
+  spreadAwayLine Float
+  spreadAwayOdds Int
+
+  // Total (Over/Under) Odds
+  totalLine      Float
+  totalOverOdds  Int
+  totalUnderOdds Int
 }
