@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useNavigationStore } from "@/store/navigationStore";
 import { useBetSlipStore } from "@/store/betSlipStore";
 import { motion } from "framer-motion";
@@ -6,8 +6,9 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 import { House } from "@phosphor-icons/react";
 
 export function BottomNav() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const navigation = useNavigationStore(state => state);
   const setMobilePanel = useNavigationStore(state => state.setMobilePanel);
   const betSlip = useBetSlipStore(state => state);
@@ -15,7 +16,7 @@ export function BottomNav() {
 
   const handleBetsClick = () => {
     setMobilePanel(null);
-    navigate("/my-bets");
+    router.push("/my-bets");
   };
 
   const handleSportsClick = () => {
@@ -29,23 +30,23 @@ export function BottomNav() {
     } else {
       // On desktop, navigate to games page
       setMobilePanel(null);
-      navigate("/games");
+      router.push("/games");
     }
   };
 
   const handleLiveClick = () => {
     setMobilePanel(null);
-    navigate("/live");
+    router.push("/live");
   };
 
   const handleOtherClick = () => {
     setMobilePanel(null);
-    navigate("/other");
+    router.push("/other");
   };
 
   const handleHomeClick = () => {
     setMobilePanel(null);
-    navigate("/");
+    router.push("/");
   };
 
   return (
@@ -54,7 +55,7 @@ export function BottomNav() {
       <motion.button
         onClick={handleSportsClick}
         className={`px-3 py-2 rounded-md transition-all duration-200 text-[15px] font-medium min-w-[48px] flex-1 flex items-center justify-center mx-1 ${
-          (location.pathname === "/games" && !isMobile) ||
+          (pathname === "/games" && !isMobile) ||
           navigation.mobilePanel === "navigation"
             ? "bg-accent text-accent-foreground"
             : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
@@ -70,7 +71,7 @@ export function BottomNav() {
       <motion.button
         onClick={handleLiveClick}
         className={`px-3 py-2 rounded-md transition-all duration-200 text-[15px] font-medium min-w-[48px] flex-1 flex items-center justify-center mx-1 ${
-          location.search.includes("filter=live")
+          searchParams.get("filter") === "live"
             ? "bg-accent text-accent-foreground"
             : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
         }`}
@@ -85,17 +86,17 @@ export function BottomNav() {
       <motion.button
         onClick={handleHomeClick}
         className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 mx-2 self-center ${
-          location.pathname === "/"
+          pathname === "/"
             ? "bg-accent text-accent-foreground shadow-lg scale-110"
             : "bg-secondary text-accent-foreground hover:bg-accent hover:text-accent-foreground shadow-md"
         }`}
-        whileHover={{ scale: location.pathname === "/" ? 1.15 : 1.05 }}
+        whileHover={{ scale: pathname === "/" ? 1.15 : 1.05 }}
         whileTap={{ scale: 0.95 }}
         type="button"
       >
           <House
             size={24}
-            weight={location.pathname === "/" ? "fill" : "regular"}
+            weight={pathname === "/" ? "fill" : "regular"}
             color="currentColor"
           />
       </motion.button>
@@ -104,7 +105,7 @@ export function BottomNav() {
       <motion.button
         onClick={handleBetsClick}
         className={`px-3 py-2 rounded-md transition-all duration-200 text-[15px] font-medium min-w-[48px] flex-1 flex items-center justify-center relative mx-1 ${
-          location.pathname === "/my-bets"
+          pathname === "/my-bets"
             ? "bg-accent text-accent-foreground"
             : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
         }`}
@@ -124,7 +125,7 @@ export function BottomNav() {
       <motion.button
         onClick={handleOtherClick}
         className={`px-3 py-2 rounded-md transition-all duration-200 text-[15px] font-medium min-w-[48px] flex-1 flex items-center justify-center mx-1 ${
-          location.pathname === "/other"
+          pathname === "/other"
             ? "bg-accent text-accent-foreground"
             : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
         }`}
