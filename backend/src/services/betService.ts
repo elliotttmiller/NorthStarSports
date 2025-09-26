@@ -1,31 +1,23 @@
-import { kvService, connectRedis } from "./kvService.js";
+import prisma from '../lib/prisma';
 
-connectRedis().catch(console.error);
+// ...existing code...
 
 export async function getBet(betId: string) {
   console.info("betService.getBet called", { betId });
-  return await kvService.getBet(betId);
+  return await prisma.bet.findUnique({ where: { id: betId } });
 }
 
 export async function setBet(betId: string, bet: Record<string, unknown>) {
   console.info("betService.setBet called", { betId });
-  return await kvService.setBet(betId, bet);
+  return await prisma.bet.update({ where: { id: betId }, data: bet });
 }
 
 export async function getUserBets(userId: string) {
   console.info("betService.getUserBets called", { userId });
-  const betslipIds = await kvService.getBetSlipHistory(userId, 100);
-  if (!betslipIds || betslipIds.length === 0) return [];
-  const bets = await Promise.all(
-    betslipIds.map(async (betId: string) => {
-      const bet = await kvService.getBet(betId);
-      return bet ? { ...bet, id: betId } : null;
-    })
-  );
-  const validBets = bets.filter(Boolean);
+  const bets = await prisma.bet.findMany({ where: { userId } });
   console.info("betService.getUserBets success", {
     userId,
-    count: validBets.length,
+    count: bets.length,
   });
-  return validBets;
+  return bets;
 }

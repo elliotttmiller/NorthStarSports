@@ -3,8 +3,8 @@ import cors from "cors";
 import userRoutes from "./routes/user.js";
 import betRoutes from "./routes/bet.js";
 import gameRoutes from "./routes/game.js";
-import kvRoutes from "./routes/kv.js";
-import redisRoutes from "./routes/redis.js";
+// ...existing code...
+// ...existing code...
 import errorHandler from "./middlewares/errorHandler.js";
 import { logInfo } from "./utils/logger";
 
@@ -57,8 +57,8 @@ const API_VERSION = "/api/v1";
 app.use(`${API_VERSION}/user`, userRoutes);
 app.use(`${API_VERSION}/bet`, betRoutes);
 app.use(`${API_VERSION}/game`, gameRoutes);
-app.use(`${API_VERSION}/kv`, kvRoutes);
-app.use(`${API_VERSION}/redis`, redisRoutes);
+// ...existing code...
+// ...existing code...
 
 // Health check endpoint
 app.get(`${API_VERSION}/health`, (req: Request, res: Response) => {
@@ -91,15 +91,7 @@ app.get(`${API_VERSION}/docs`, (req: Request, res: Response) => {
         get: "GET /api/v1/game/:id",
         update: "POST /api/v1/game/:id",
       },
-      kv: {
-        get: "GET /api/v1/kv/:key",
-        set: "POST /api/v1/kv/:key",
-      },
-      redis: {
-        get: "GET /api/v1/redis/:key",
-        set: "POST /api/v1/redis/:key",
-      },
-    },
+    }
   };
   res.json(apiDocs);
 });
