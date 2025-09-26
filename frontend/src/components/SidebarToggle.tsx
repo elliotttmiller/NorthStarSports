@@ -1,5 +1,7 @@
+"use client";
+
 import { motion, AnimatePresence } from "framer-motion";
-import { CaretLeft, CaretRight, List } from "@phosphor-icons/react";
+import { ChevronLeft, ChevronRight, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useBetSlipStore } from "@/store/betSlipStore";
@@ -12,6 +14,7 @@ interface SidebarToggleProps {
   className?: string;
 }
 
+// Use old UI SidebarToggle design
 export function SidebarToggle({
   side,
   isOpen,
@@ -47,6 +50,7 @@ export function SidebarToggle({
           variant="secondary"
           size="icon"
           onClick={onToggle}
+          aria-label={isOpen ? `Close ${isLeft ? 'sidebar' : 'betslip'}` : `Open ${isLeft ? 'sidebar' : 'betslip'}`}
           className={cn(
             "w-9 h-9 rounded-full shadow-lg border border-accent/70",
             "bg-card/80 hover:bg-accent/90 hover:border-accent/90",
@@ -71,25 +75,20 @@ export function SidebarToggle({
             >
               {isLeft ? (
                 isOpen ? (
-                  <CaretLeft size={18} />
+                  <ChevronLeft size={18} />
                 ) : (
-                  <CaretRight size={18} />
+                  <ChevronRight size={18} />
                 )
               ) : isOpen ? (
-                <CaretRight size={18} />
+                <ChevronRight size={18} />
               ) : (
-                <CaretLeft size={18} />
+                <ChevronLeft size={18} />
               )}
             </motion.div>
           </AnimatePresence>
         </Button>
         {showBetBadge && (
-          <span
-            className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center bg-[color:var(--color-accent)] text-[color:var(--color-accent-contrast)] text-xs font-bold shadow-md border-2 border-white z-2"
-            data-testid="desktop-betslip-badge"
-          >
-            {betCount}
-          </span>
+          <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full px-2 py-1 text-xs font-bold shadow" aria-label={`Betslip count: ${betCount}`}>{betCount}</span>
         )}
       </div>
     </motion.div>

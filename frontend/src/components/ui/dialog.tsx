@@ -9,6 +9,7 @@ function DialogOverlay(props: DialogOverlayProps) {
   return (
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
+      role="presentation"
       {...props}
     />
   );
@@ -30,6 +31,8 @@ function DialogContent({ className, children, ...props }: DialogContentProps) {
           "bg-background/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border border-border/50 p-6 shadow-2xl duration-300 sm:max-w-lg",
           className,
         )}
+        role="dialog"
+        aria-modal="true"
       >
         <DialogPrimitive.Content {...props} />
         {/* Visually hidden DialogTitle for accessibility if not present */}

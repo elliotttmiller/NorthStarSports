@@ -200,6 +200,7 @@ export const CompactMobileGameRow = memo(
                 whileTap={{ scale: 0.97 }}
               >
                 <Button
+                  aria-label={`Bet on ${game.awayTeam.name} to cover the spread of ${formatSpreadLine(game.odds.spread.away.line || 0)}`}
                   variant={
                     isBetInSlip("spread", "away") ? "default" : "outline"
                   }
@@ -226,6 +227,7 @@ export const CompactMobileGameRow = memo(
                 whileTap={{ scale: 0.97 }}
               >
                 <Button
+                  aria-label={`Bet on ${game.homeTeam.name} to cover the spread of ${formatSpreadLine(game.odds.spread.home.line || 0)}`}
                   variant={
                     isBetInSlip("spread", "home") ? "default" : "outline"
                   }
@@ -256,6 +258,7 @@ export const CompactMobileGameRow = memo(
                 whileTap={{ scale: 0.97 }}
               >
                 <Button
+                  aria-label={`Bet on the total to go over ${formatTotalLine(game.odds.total.over?.line || 0)}`}
                   variant={isBetInSlip("total", "over") ? "default" : "outline"}
                   size="sm"
                   onClick={(e) => handleBetClick("total", "over", e)}
@@ -280,6 +283,7 @@ export const CompactMobileGameRow = memo(
                 whileTap={{ scale: 0.97 }}
               >
                 <Button
+                  aria-label={`Bet on the total to go under ${formatTotalLine(game.odds.total.under?.line || 0)}`}
                   variant={
                     isBetInSlip("total", "under") ? "default" : "outline"
                   }
@@ -310,6 +314,7 @@ export const CompactMobileGameRow = memo(
                 whileTap={{ scale: 0.97 }}
               >
                 <Button
+                  aria-label={`Bet on ${game.awayTeam.name} to win with moneyline odds of ${formatOdds(game.odds.moneyline.away.odds)}`}
                   variant={
                     isBetInSlip("moneyline", "away") ? "default" : "outline"
                   }
@@ -333,6 +338,7 @@ export const CompactMobileGameRow = memo(
                 whileTap={{ scale: 0.97 }}
               >
                 <Button
+                  aria-label={`Bet on ${game.homeTeam.name} to win with moneyline odds of ${formatOdds(game.odds.moneyline.home.odds)}`}
                   variant={
                     isBetInSlip("moneyline", "home") ? "default" : "outline"
                   }

@@ -23,12 +23,13 @@ export const VirtualScrollContainer = memo(function VirtualScrollContainer<T>({
   return (
     <div
       ref={parentRef}
-      className={cn("overflow-auto professional-scroll", className)}
-      style={{
-        scrollBehavior,
-        WebkitOverflowScrolling: "touch",
-        overscrollBehavior: "contain",
-      }}
+      className={cn(
+        "overflow-auto professional-scroll scroll-smooth overscroll-contain",
+        className
+      )}
+      role="region"
+      aria-label="Virtual scroll container"
+      tabIndex={0}
     >
       <div className="space-y-2">
         {items.map((item, index) => (
@@ -68,29 +69,27 @@ export const SmoothScrollContainer = memo(function SmoothScrollContainer({
     ? "virtual-scrollbar"
     : "professional-scroll";
 
+  // Map maxHeight prop to Tailwind class
+  const maxHeightClass =
+    maxHeight === "100%"
+      ? "max-h-full"
+      : maxHeight === "screen"
+      ? "max-h-screen"
+      : typeof maxHeight === "string" && maxHeight.endsWith("px")
+      ? `max-h-[${maxHeight}]`
+      : "";
+
   return (
     <div
       ref={scrollRef}
-      className={cn("overflow-auto", scrollbarClass, className)}
-      style={{
-        maxHeight,
-        scrollBehavior: "smooth",
-        WebkitOverflowScrolling: "touch",
-        overscrollBehavior: "contain",
-        scrollbarWidth: "none",
-        msOverflowStyle: "none",
-      }}
+      className={cn(
+        "overflow-auto scroll-smooth overscroll-contain",
+        scrollbarClass,
+        maxHeightClass,
+        className
+      )}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.4,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-      >
-  {children}
-      </motion.div>
+      {children}
     </div>
   );
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useBetSlipStore } from "@/store/betSlipStore";
-import { Calculator } from "@phosphor-icons/react";
+import { Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -23,7 +23,7 @@ export const Header = () => {
             className="relative"
             // onClick={() => /* open bet slip modal logic here */}
           >
-            <Calculator size={20} />
+            <Calculator size={20} strokeWidth={2} color="currentColor" />
             <span className="ml-2 hidden sm:inline">Bet Slip</span>
             {betCount > 0 && (
               <Badge

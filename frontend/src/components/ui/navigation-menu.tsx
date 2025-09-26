@@ -21,6 +21,8 @@ function NavigationMenu({
         "group/navigation-menu relative flex max-w-max flex-1 items-center justify-center",
         className,
       )}
+      role="navigation"
+      aria-label="Main navigation menu"
       {...props}
     >
       {children}
@@ -40,6 +42,8 @@ function NavigationMenuList({
         "group flex flex-1 list-none items-center justify-center gap-1",
         className,
       )}
+      role="menubar"
+      aria-label="Navigation menu list"
       {...props}
     />
   );

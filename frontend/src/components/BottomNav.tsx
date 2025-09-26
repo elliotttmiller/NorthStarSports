@@ -1,18 +1,37 @@
+"use client";
+
+import { Suspense, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useNavigationStore } from "@/store/navigationStore";
 import { useBetSlipStore } from "@/store/betSlipStore";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { House } from "@phosphor-icons/react";
+import { Home } from "lucide-react";
 
 export function BottomNav() {
+  return (
+    <nav aria-label="Bottom navigation">
+      <Suspense>
+        <BottomNavContent />
+      </Suspense>
+    </nav>
+  );
+}
+
+function BottomNavContent() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const navigation = useNavigationStore(state => state);
-  const setMobilePanel = useNavigationStore(state => state.setMobilePanel);
-  const betSlip = useBetSlipStore(state => state);
+  const navigation = useNavigationStore((state) => state);
+  const setMobilePanel = useNavigationStore((state) => state.setMobilePanel);
+  const betSlip = useBetSlipStore((state) => state);
   const isMobile = useIsMobile();
+
+  if (!mounted) return null;
 
   const handleBetsClick = () => {
     setMobilePanel(null);
@@ -50,7 +69,7 @@ export function BottomNav() {
   };
 
   return (
-  <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-20 flex items-center justify-center px-2 w-full pt-[2px]">
+    <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-20 flex items-center justify-center px-2 w-full pt-[2px]">
       {/* Sports - Text Only */}
       <motion.button
         onClick={handleSportsClick}
@@ -94,11 +113,12 @@ export function BottomNav() {
         whileTap={{ scale: 0.95 }}
         type="button"
       >
-          <House
-            size={24}
-            weight={pathname === "/" ? "fill" : "regular"}
-            color="currentColor"
-          />
+        <Home
+          size={24}
+          strokeWidth={2}
+          color="currentColor"
+          fill={pathname === "/" ? "currentColor" : "none"}
+        />
       </motion.button>
 
       {/* Bets - Text Only with Badge */}
@@ -138,3 +158,4 @@ export function BottomNav() {
     </nav>
   );
 }
+// Use old UI BottomNav design

@@ -22,13 +22,15 @@ export function PlayerPropsSection({
   setExpandedCategories,
 }: PlayerPropsSectionProps) {
   return (
-    <PlayerPropsContainer
-      categories={categories}
-      game={game}
-      isLoading={isLoading}
-      compact={compact}
-      expandedCategories={expandedCategories}
-      setExpandedCategories={setExpandedCategories}
-    />
+    <section aria-label="Player Props Section">
+      <PlayerPropsContainer
+        categories={categories}
+        game={game}
+        isLoading={isLoading}
+        compact={compact}
+        expandedCategories={expandedCategories}
+        setExpandedCategories={setExpandedCategories}
+      />
+    </section>
   );
 }

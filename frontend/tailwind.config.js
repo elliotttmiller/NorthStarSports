@@ -1,11 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-/**
- * Tailwind CSS Design Tokens for NorthStar Sports
- * - All custom colors, border radius, and spacing tokens are centralized here
- * - Remove unused tokens for maintainability
- * - Reference CSS variables for dynamic theming
- */
-module.exports = {
+export default {
   content: [
     "./index.html",
     "./src/pages/**/*.{js,ts,jsx,tsx}",
@@ -13,77 +7,67 @@ module.exports = {
     "./src/layouts/**/*.{js,ts,jsx,tsx}",
     "./src/hooks/**/*.{js,ts,jsx,tsx}",
     "./src/context/**/*.{js,ts,jsx,tsx}",
-    "./src/app/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     container: {
       center: true,
       padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
     },
     extend: {
       colors: {
-        border: "var(--color-neutral-7)",
-        input: "var(--color-neutral-7)",
-        ring: "var(--color-accent-9)",
-        background: "var(--color-bg)",
-        foreground: "var(--color-fg)",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "var(--color-accent-9)",
-          foreground: "var(--color-accent-contrast)",
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "var(--color-neutral-11)",
-          foreground: "var(--color-fg-secondary)",
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
-          DEFAULT: "oklch(0.55 0.15 0)",
-          foreground: "var(--color-accent-contrast)",
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "var(--color-neutral-12)",
-          foreground: "var(--color-fg-secondary)",
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "var(--color-accent-9)",
-          foreground: "var(--color-accent-contrast)",
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
-          DEFAULT: "var(--color-bg-inset)",
-          foreground: "var(--color-fg)",
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
         card: {
-          DEFAULT: "var(--color-card)",
-          foreground: "var(--color-fg)",
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
-        win: "var(--color-accent-secondary-9)",
+        win: "var(--color-win)",
+        loss: "var(--color-loss)",
+        info: "var(--color-info)",
       },
       borderRadius: {
-        lg: "var(--radius-lg)",
-        md: "var(--radius-md)",
-        sm: "var(--radius-sm)",
-        xl: "var(--radius-xl)",
-        "2xl": "var(--radius-2xl)",
-        full: "var(--radius-full)",
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-        shimmer: {
-          '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(100%)' },
-        },
+      screens: {
+        coarse: { raw: "(pointer: coarse)" },
+        fine: { raw: "(pointer: fine)" },
+        pwa: { raw: "(display-mode: standalone)" },
       },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        shimmer: "shimmer 2s infinite",
-      },
+    },
+    fontFamily: {
+      sans: ['var(--font-sans)', 'Inter', 'sans-serif'],
     },
   },
   plugins: [

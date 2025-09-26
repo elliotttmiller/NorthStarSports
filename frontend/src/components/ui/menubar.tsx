@@ -17,6 +17,8 @@ function Menubar({
         "bg-background flex h-9 items-center gap-1 rounded-md border p-1 shadow-xs",
         className,
       )}
+      role="menubar"
+      aria-label="Application menu bar"
       {...props}
     />
   );
@@ -59,6 +61,8 @@ function MenubarTrigger({
         "focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none",
         className,
       )}
+      role="menuitem"
+      aria-haspopup="true"
       {...props}
     />
   );

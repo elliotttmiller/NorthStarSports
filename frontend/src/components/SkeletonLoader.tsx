@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 
 interface SkeletonLoaderProps {
   type: "games" | "navigation" | "betslip";
@@ -10,7 +10,7 @@ export const SkeletonLoader = ({ type, count = 3 }: SkeletonLoaderProps) => {
     return (
       <div className="p-4 space-y-4">
         {Array.from({ length: count }).map((_, i) => (
-          <Card key={i} className="overflow-hidden">
+          <Card key={i} className="overflow-hidden" aria-busy="true" aria-label="Loading game skeleton">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
@@ -21,7 +21,7 @@ export const SkeletonLoader = ({ type, count = 3 }: SkeletonLoaderProps) => {
                 <div className="w-20 h-6 bg-muted rounded animate-pulse" />
               </div>
             </CardHeader>
-            <CardContent>
+            <div className="px-6 py-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {Array.from({ length: 3 }).map((_, j) => (
                   <div key={j} className="space-y-2">
@@ -33,7 +33,7 @@ export const SkeletonLoader = ({ type, count = 3 }: SkeletonLoaderProps) => {
                   </div>
                 ))}
               </div>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>
@@ -70,7 +70,7 @@ export const SkeletonLoader = ({ type, count = 3 }: SkeletonLoaderProps) => {
                 <div className="w-12 h-4 bg-muted rounded animate-pulse" />
               </div>
             </CardHeader>
-            <CardContent className="pt-0">
+            <div className="pt-0 px-6 py-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="w-10 h-3 bg-muted rounded animate-pulse" />
@@ -81,7 +81,7 @@ export const SkeletonLoader = ({ type, count = 3 }: SkeletonLoaderProps) => {
                   <div className="w-14 h-3 bg-muted rounded animate-pulse" />
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>

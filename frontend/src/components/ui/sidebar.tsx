@@ -137,19 +137,9 @@ function SidebarProvider({
 
   return (
     <SidebarContext.Provider value={contextValue}>
-      <TooltipProvider delayDuration={0}>
-        <div
-          data-slot="sidebar-wrapper"
-          className={cn(
-            "w-[16rem]", // Use Tailwind for sidebar width
-            style ? "" : "",
-            "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full",
-            className,
-          )}
-        >
-          {children}
-        </div>
-      </TooltipProvider>
+      <aside role="complementary" aria-label="Sidebar navigation">
+        {children}
+      </aside>
     </SidebarContext.Provider>
   );
 }

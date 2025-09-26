@@ -18,6 +18,7 @@ export function OddsButton({
       variant={isSelected ? "default" : "outline"}
       onClick={onClick}
       className="flex-1"
+      aria-label={`Odds for ${team}: ${odds > 0 ? "+" : ""}${odds}`}
     >
       {team} {odds > 0 ? "+" : ""}
       {odds}

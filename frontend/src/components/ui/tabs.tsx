@@ -32,6 +32,8 @@ function Tabs({ className, children, style, value, defaultValue, onValueChange, 
       orientation={orientation}
       dir={dir}
       activationMode={activationMode}
+      role="tablist"
+      aria-label="Tabs navigation"
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   {...({} as any)}
     >
@@ -56,6 +58,8 @@ function TabsList({ className, children, style, ...props }: TabsListProps) {
         className,
       )}
       style={style}
+      role="tablist"
+      aria-label="Tabs list"
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   {...(props as any)}
     >
@@ -69,6 +73,7 @@ interface TabsTriggerProps extends ComponentProps<typeof TabsPrimitive.Trigger> 
   children?: ReactNode;
   className?: string;
   style?: CSSProperties;
+  value: string;
 }
 
 function TabsTrigger({ className, children, style, ...props }: TabsTriggerProps) {

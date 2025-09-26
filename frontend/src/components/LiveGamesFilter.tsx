@@ -20,6 +20,7 @@ export function LiveGamesFilter({
       <label htmlFor="sport-select" className="sr-only">Sport</label>
       <select
         id="sport-select"
+        aria-label="Select sport"
         value={selectedSport}
         onChange={e => {
           onSportChange(e.target.value);
@@ -36,6 +37,7 @@ export function LiveGamesFilter({
       <label htmlFor="league-select" className="sr-only">League</label>
       <select
         id="league-select"
+        aria-label="Select league"
         value={selectedLeague}
         onChange={e => onLeagueChange(e.target.value)}
         className="px-2 py-1 rounded border border-border bg-muted/20 text-sm"

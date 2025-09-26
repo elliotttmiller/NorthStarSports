@@ -17,7 +17,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Trash2, X } from "lucide-react";
 import { formatCurrency, formatOdds } from "@/lib/formatters";
 
-export const BetSlipModal = () => {
+interface BetSlipModalProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export const BetSlipModal = ({ open, onOpenChange }: BetSlipModalProps) => {
   const bets = useBetSlipStore((state) => state.bets);
   const removeBet = useBetSlipStore((state) => state.removeBet);
   const updateStake = useBetSlipStore((state) => state.updateStake);
@@ -31,19 +36,20 @@ export const BetSlipModal = () => {
 
   const handleParlayStakeChange = (value: string) => {
     const stake = parseFloat(value) || 0;
-    // In parlay, all bets share one stake
     if (bets.length > 0) {
       updateStake(bets[0].id, stake);
     }
   };
 
   return (
-    <Dialog open={true}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px] bg-card rounded-xl shadow-lg border border-border/60">
-        <DialogTitle className="text-2xl text-foreground">Bet Slip</DialogTitle>
-        <DialogDescription className="mb-4 text-muted-foreground">
-          Review your selections and place your bets.
-        </DialogDescription>
+        <DialogHeader>
+          <DialogTitle className="text-2xl text-foreground">Bet Slip</DialogTitle>
+          <DialogDescription className="mb-4 text-muted-foreground">
+            Review your selections and place your bets.
+          </DialogDescription>
+        </DialogHeader>
         <Tabs
           value={"single"}
           onValueChange={(value) => setBetType(value as "single" | "parlay")}

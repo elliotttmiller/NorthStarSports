@@ -58,10 +58,12 @@ export const TeamLogo = memo(function TeamLogo({
         className={cn(
           "flex items-center justify-center bg-muted rounded-full border text-muted-foreground",
           sizeMap[size],
-          className,
         )}
+        role="img"
+        aria-label="Team logo unavailable"
       >
-        <span className="text-xs font-medium">?</span>
+        {showAbbreviation && teamConfig?.abbreviation}
+        {showName && teamConfig?.name}
       </div>
     );
   }

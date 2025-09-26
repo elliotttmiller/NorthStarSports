@@ -59,7 +59,7 @@ function Carousel({
   className,
   children,
   ...props
-}: ComponentProps<"div"> & CarouselProps) {
+}: CarouselProps & ComponentProps<"div">) {
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
@@ -114,30 +114,38 @@ function Carousel({
   }, [api, onSelect]);
 
   return (
-    <CarouselContext.Provider
-      value={{
-        carouselRef,
-        api: api,
-        opts,
-        orientation:
-          orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
-        scrollPrev,
-        scrollNext,
-        canScrollPrev,
-        canScrollNext,
-      }}
+    <div
+      data-slot="carousel-root"
+      className={cn("relative w-full", className)}
+      role="region"
+      aria-label="Carousel"
+      {...props}
     >
-      <div
-        onKeyDownCapture={handleKeyDown}
-        className={cn("relative", className)}
-        role="region"
-        aria-roledescription="carousel"
-        data-slot="carousel"
-        {...props}
+      <CarouselContext.Provider
+        value={{
+          carouselRef,
+          api: api,
+          opts,
+          orientation:
+            orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
+          scrollPrev,
+          scrollNext,
+          canScrollPrev,
+          canScrollNext,
+        }}
       >
-        {children}
-      </div>
-    </CarouselContext.Provider>
+        <div
+          onKeyDownCapture={handleKeyDown}
+          className={cn("relative", className)}
+          role="region"
+          aria-roledescription="carousel"
+          data-slot="carousel"
+          {...props}
+        >
+          {children}
+        </div>
+      </CarouselContext.Provider>
+    </div>
   );
 }
 

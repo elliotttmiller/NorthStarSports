@@ -12,8 +12,11 @@ function Table({ className, ...props }: ComponentProps<"table">) {
       <table
         data-slot="table"
         className={cn("w-full caption-bottom text-sm", className)}
+        role="table"
         {...props}
-      />
+      >
+        {props.children}
+      </table>
     </div>
   );
 }
@@ -23,6 +26,7 @@ function TableHeader({ className, ...props }: ComponentProps<"thead">) {
     <thead
       data-slot="table-header"
       className={cn("[&_tr]:border-b", className)}
+      role="rowgroup"
       {...props}
     />
   );
@@ -33,6 +37,7 @@ function TableBody({ className, ...props }: ComponentProps<"tbody">) {
     <tbody
       data-slot="table-body"
       className={cn("[&_tr:last-child]:border-0", className)}
+      role="rowgroup"
       {...props}
     />
   );
@@ -51,7 +56,20 @@ function TableFooter({ className, ...props }: ComponentProps<"tfoot">) {
   );
 }
 
-function TableRow({ className, ...props }: ComponentProps<"tr">) {
+function TableRow({ className, children, ...props }: ComponentProps<"tr">) {
+  // Runtime ARIA compliance check (dev only)
+  if (
+    process.env.NODE_ENV === "development" &&
+    React.Children.toArray(children).some((child) => {
+      if (!React.isValidElement(child)) return false;
+      const type = child.type;
+      // Accept TableHead, TableCell, th, td
+      return !(type === TableHead || type === TableCell || type === "th" || type === "td");
+    })
+  ) {
+    // eslint-disable-next-line no-console
+    console.warn("[TableRow] ARIA error: TableRow must only contain TableHead or TableCell as direct children.");
+  }
   return (
     <tr
       data-slot="table-row"
@@ -59,12 +77,15 @@ function TableRow({ className, ...props }: ComponentProps<"tr">) {
         "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",
         className,
       )}
+      role="row"
       {...props}
-    />
+    >
+      {children}
+    </tr>
   );
 }
 
-function TableHead({ className, ...props }: ComponentProps<"th">) {
+function TableHead({ className, children, ...props }: ComponentProps<"th">) {
   return (
     <th
       data-slot="table-head"
@@ -72,21 +93,24 @@ function TableHead({ className, ...props }: ComponentProps<"th">) {
         "text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
+      role="columnheader"
       {...props}
-    />
+    >
+      {children}
+    </th>
   );
 }
 
-function TableCell({ className, ...props }: ComponentProps<"td">) {
+function TableCell({ className, children, ...props }: ComponentProps<"td">) {
   return (
     <td
       data-slot="table-cell"
-      className={cn(
-        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
-        className,
-      )}
+      className={cn("p-2 align-middle", className)}
+      role="cell"
       {...props}
-    />
+    >
+      {children}
+    </td>
   );
 }
 

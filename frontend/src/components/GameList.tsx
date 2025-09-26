@@ -1,24 +1,38 @@
 "use client";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { GameCard } from "@/components/GameCard";
 import { Game } from "@/types";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface GameListProps {
   games: Game[];
-  loading: boolean;
 }
 
-export const GameList = ({ games, loading }: GameListProps) => {
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        {[...Array(6)].map((_, i) => (<Skeleton key={i} className="h-[240px] w-full" />))}
-      </div>
-    );
+export const GameList = ({ games }: GameListProps) => {
+  if (games.length === 0) {
+    return <Skeleton className="h-8 w-2/3 rounded" aria-busy="true" aria-label="Loading games" />;
   }
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-      {games.map((game: Game) => (<GameCard key={game.id} game={game} />))}
-    </div>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Time</TableHead>
+          <TableHead>Teams</TableHead>
+          <TableHead>Spread</TableHead>
+          <TableHead>Total</TableHead>
+          <TableHead>Money Line</TableHead>
+          <TableHead>More</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {games.map((game) => (
+          <TableRow key={game.id}>
+            <TableCell colSpan={6} style={{ padding: 0 }}>
+              <GameCard game={game} />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };

@@ -43,10 +43,13 @@ export function ProgressiveLoader({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       className="flex flex-col items-center justify-center min-h-[200px] p-8"
+      role="status"
+      aria-live="polite"
+      aria-busy={showProgress}
     >
       {/* Main loader */}
-      <div className="relative mb-6">
-        <div className="w-16 h-16 border-3 border-accent/20 border-t-accent rounded-full animate-spin"></div>
+      <div className="relative mb-6" aria-label="Loading animation">
+        <div className="w-16 h-16 border-3 border-accent/20 border-t-accent rounded-full animate-spin" />
         <motion.div
           className="absolute inset-0 w-16 h-16 border-2 border-accent/10 rounded-full"
           animate={{ rotate: -360 }}
@@ -56,7 +59,7 @@ export function ProgressiveLoader({
 
       {/* Progress bar */}
       {showProgress && (
-        <div className="w-48 h-1 bg-muted/20 rounded-full overflow-hidden mb-4">
+        <div className="w-48 h-1 bg-muted/20 rounded-full overflow-hidden mb-4" aria-label="Loading progress">
           <motion.div
             className="h-full bg-accent rounded-full"
             initial={{ width: 0 }}

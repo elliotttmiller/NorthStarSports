@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { motion, useMotionValue } from "framer-motion";
-import { Receipt } from "@phosphor-icons/react";
+import { Receipt } from "lucide-react";
 import { useKV } from "@/hooks/useKV";
 import { useBetSlipStore } from "@/store/betSlipStore";
 import { useNavigationStore } from "@/store/navigationStore";
@@ -12,7 +14,11 @@ interface Position {
   y: number;
 }
 
-export function FloatingBetSlipButton() {
+interface FloatingBetSlipButtonProps {
+  onClick?: () => void;
+}
+
+export function FloatingBetSlipButton({ onClick }: FloatingBetSlipButtonProps) {
   const betSlip = useBetSlipStore(state => state);
   const navigation = useNavigationStore(state => state);
   const setMobilePanel = useNavigationStore(state => state.setMobilePanel);
@@ -117,66 +123,29 @@ export function FloatingBetSlipButton() {
     setSavedPosition(finalPos);
   };
 
-  // handleClick is no longer needed; click logic is handled inline in the onClick prop above.
-
   if (!isInitialized || !isMobile) return null;
 
   // Responsive sizing: use universal-responsive-container for spacing
   return (
-    <motion.div
-      className="fixed z-50 pointer-events-auto universal-responsive-container"
-      style={{
-        x,
-        y,
-        touchAction: "none",
-        width: "min(56px, 15vw)",
-        height: "min(56px, 15vw)",
-        minWidth: 44,
-        minHeight: 44,
-        maxWidth: 72,
-        maxHeight: 72,
-        boxSizing: "border-box",
-        padding: 0,
-      }}
+    <motion.button
+      aria-label={betSlip.bets.length > 0 ? `Open betslip (${betSlip.bets.length} bets)` : "Open betslip"}
+      className={cn(
+        "fixed z-50 bottom-20 right-4 w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg",
+        isDragging && "ring-2 ring-primary",
+      )}
+      style={{ x, y }}
       drag
       dragMomentum={false}
-      dragElastic={0}
-      onDragStart={handleDragStart}
-      onDrag={handleDrag}
-      onDragEnd={handleDragEnd}
-      whileHover={!isDragging ? { scale: 1.05 } : {}}
-      whileTap={!isDragging ? { scale: 0.95 } : {}}
-      onClick={() => {
-        setMobilePanel(navigation.mobilePanel === "betslip" ? null : "betslip");
-      }}
-      data-testid="floating-betslip-btn"
-      aria-label={navigation.mobilePanel === "betslip" ? "Close bet slip" : "Open bet slip"}
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={() => setIsDragging(false)}
+      onClick={onClick || (() => setMobilePanel("betslip"))}
+      tabIndex={0}
+      role="button"
     >
-      <div
-        className={cn(
-          "relative w-full h-full rounded-full flex items-center justify-center",
-          "shadow-lg transition-colors duration-200",
-          "cursor-pointer select-none",
-          isDragging && "cursor-grabbing scale-105",
-          navigation.mobilePanel === "betslip"
-            ? "bg-accent/90 border-accent"
-            : "bg-background/80 border-border",
-        )}
-        onMouseEnter={undefined}
-        onMouseLeave={undefined}
-      >
-        <Receipt
-          className="w-6 h-6 text-accent-foreground"
-          weight={navigation.mobilePanel === "betslip" ? "fill" : "regular"}
-        />
-        {betSlip.bets.length > 0 && (
-          <div
-            className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center bg-primary text-primary-foreground text-xs font-medium shadow-lg border-2 border-white z-[100]"
-          >
-            {betSlip.bets.length}
-          </div>
-        )}
-      </div>
-    </motion.div>
+      <Receipt className="w-6 h-6" aria-hidden="true" />
+      {betSlip.bets.length > 0 && (
+        <span className="absolute -top-2 -right-2 bg-accent text-white rounded-full px-2 py-1 text-xs font-bold shadow" aria-label={`Betslip count: ${betSlip.bets.length}`}>{betSlip.bets.length}</span>
+      )}
+    </motion.button>
   );
 }

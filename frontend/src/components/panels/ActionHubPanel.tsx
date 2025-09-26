@@ -3,24 +3,34 @@ import { useBetSlipStore } from "@/store/betSlipStore";
 import { formatCurrency, formatOdds } from "@/lib/formatters";
 import { Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Badge } from "../ui/badge";
+import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const ActionHubPanel = () => {
   const { bets, betType, totalStake, totalPayout, totalOdds, removeBet, updateStake, clearBetSlip, setBetType } = useBetSlipStore();
-  const handleStakeChange = (betId: string, value: string) => { const stake = parseFloat(value) || 0; updateStake(betId, stake); };
-  const handleParlayStakeChange = (value: string) => { const stake = parseFloat(value) || 0; if (bets.length > 0) { updateStake(bets[0].id, stake); } };
+  if (!bets) {
+    return <Skeleton className="h-24 w-full rounded-xl" />;
+  }
+  const handleStakeChange = (betId: string, value: string) => { const stake = parseFloat(value) || 0; updateStake(betId, stake); toast("Stake updated"); };
+  const handleParlayStakeChange = (value: string) => {
+    const stake = parseFloat(value) || 0;
+    if (bets.length > 0) {
+      updateStake(bets[0].id, stake); toast("Parlay stake updated");
+    }
+  };
 
   return (
     <div className="p-4 flex flex-col h-full">
-      <Card className="flex-1 flex flex-col bg-transparent border-0 shadow-none">
+      <Card className="flex-1 flex flex-col bg-background border rounded-xl shadow-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Bet Slip</CardTitle>
+          <CardTitle className="text-2xl font-bold">Bet Slip</CardTitle>
         </CardHeader>
-        <CardContent className="flex-1 flex flex-col p-0">
+        <div className="flex-1 flex flex-col p-0">
           <Tabs value={betType} onValueChange={(value) => setBetType(value as "single" | "parlay")} className="w-full flex-1 flex flex-col">
             <div className="px-6">
               <TabsList className="grid w-full grid-cols-2">
@@ -29,7 +39,7 @@ export const ActionHubPanel = () => {
               </TabsList>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {bets.length === 0 ? (<p className="text-muted-foreground text-center pt-16">Your bet slip is empty.</p>) : (bets.map((bet) => (
+              {bets.length === 0 ? (<p className="text-base text-muted-foreground text-center pt-16">Your bet slip is empty.</p>) : (bets.map((bet) => (
                 <div key={bet.id} className="flex items-start justify-between">
                   <div>
                     <p className="font-semibold text-foreground">{bet.selection} {bet.line && `(${bet.line})`}</p>
@@ -68,7 +78,7 @@ export const ActionHubPanel = () => {
               </div>
             )}
           </Tabs>
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

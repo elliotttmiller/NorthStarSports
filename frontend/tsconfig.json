@@ -21,7 +21,23 @@
     /* Linting */
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",
     "paths": {
+      "@/components/*": [
+        "src/components/*"
+      ],
+      "@/utils/*": [
+        "src/utils/*"
+      ],
+      "@/ui/*": [
+        "src/components/ui/*"
+      ],
+      "@/lib/*": [
+        "src/lib/*"
+      ],
+      "@/hooks/*": [
+        "src/hooks/*"
+      ],
       "@/*": [
         "./src/*"
       ]
@@ -39,11 +55,11 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "src",
     "app",
     "config",
-    ".next/types/**/*.ts",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    "src",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

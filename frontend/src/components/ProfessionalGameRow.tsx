@@ -201,6 +201,7 @@ export const ProfessionalGameRow = memo(
                     ? "bg-accent text-accent-foreground shadow-md ring-2 ring-accent/20"
                     : "hover:bg-accent hover:text-accent-foreground hover:shadow-sm",
                 )}
+                aria-label={`Bet on ${game.awayTeam.name} ${formatSpreadLine(game.odds.spread.away.line || 0)} ${formatOdds(game.odds.spread.away.odds)}`}
               >
                 {formatSpreadLine(game.odds.spread.away.line || 0)}{" "}
                 {formatOdds(game.odds.spread.away.odds)}
@@ -222,6 +223,7 @@ export const ProfessionalGameRow = memo(
                     ? "bg-accent text-accent-foreground shadow-md ring-2 ring-accent/20"
                     : "hover:bg-accent hover:text-accent-foreground hover:shadow-sm",
                 )}
+                aria-label={`Bet on ${game.homeTeam.name} ${formatSpreadLine(game.odds.spread.home.line || 0)} ${formatOdds(game.odds.spread.home.odds)}`}
               >
                 {formatSpreadLine(game.odds.spread.home.line || 0)}{" "}
                 {formatOdds(game.odds.spread.home.odds)}
@@ -247,6 +249,7 @@ export const ProfessionalGameRow = memo(
                     ? "bg-accent text-accent-foreground shadow-md ring-2 ring-accent/20"
                     : "hover:bg-accent hover:text-accent-foreground hover:shadow-sm",
                 )}
+                aria-label={`Bet on Over ${formatTotalLine(game.odds.total.over?.line || 0)} ${formatOdds(game.odds.total.over?.odds || 0)}`}
               >
                 O{formatTotalLine(game.odds.total.over?.line || 0)}{" "}
                 {formatOdds(game.odds.total.over?.odds || 0)}
@@ -268,6 +271,7 @@ export const ProfessionalGameRow = memo(
                     ? "bg-accent text-accent-foreground shadow-md ring-2 ring-accent/20"
                     : "hover:bg-accent hover:text-accent-foreground hover:shadow-sm",
                 )}
+                aria-label={`Bet on Under ${formatTotalLine(game.odds.total.under?.line || 0)} ${formatOdds(game.odds.total.under?.odds || 0)}`}
               >
                 U{formatTotalLine(game.odds.total.under?.line || 0)}{" "}
                 {formatOdds(game.odds.total.under?.odds || 0)}
@@ -295,6 +299,7 @@ export const ProfessionalGameRow = memo(
                     ? "bg-accent text-accent-foreground shadow-md ring-2 ring-accent/20"
                     : "hover:bg-accent hover:text-accent-foreground hover:shadow-sm",
                 )}
+                aria-label={`Bet on ${game.awayTeam.name} Moneyline ${formatOdds(game.odds.moneyline.away.odds)}`}
               >
                 {formatOdds(game.odds.moneyline.away.odds)}
               </Button>
@@ -317,6 +322,7 @@ export const ProfessionalGameRow = memo(
                     ? "bg-accent text-accent-foreground shadow-md ring-2 ring-accent/20"
                     : "hover:bg-accent hover:text-accent-foreground hover:shadow-sm",
                 )}
+                aria-label={`Bet on ${game.homeTeam.name} Moneyline ${formatOdds(game.odds.moneyline.home.odds)}`}
               >
                 {formatOdds(game.odds.moneyline.home.odds)}
               </Button>
@@ -334,7 +340,7 @@ export const ProfessionalGameRow = memo(
                 variant="ghost"
                 size="sm"
                 className="h-8 w-8 p-0 opacity-50 group-hover:opacity-100 transition-all duration-200 hover:bg-accent/20"
-                aria-label="Expand"
+                aria-label={`Expand game details for ${game.homeTeam.name} vs ${game.awayTeam.name}`}
               >
                 <Plus size={16} />
               </Button>

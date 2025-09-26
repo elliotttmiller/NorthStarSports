@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import type { Bet, Game } from "@/types";
 import { useBetSlipStore } from "@/store/betSlipStore";
@@ -6,7 +8,7 @@ import { useNavigationStore } from "@/store/navigationStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { formatBetDescription, formatMatchup } from "@/lib/betFormatters";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, TrendUp, Trash } from "@phosphor-icons/react";
+import { X, TrendingUp, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -15,8 +17,13 @@ import { Separator } from "@/components/ui/separator";
 import { formatOdds } from "@/lib/formatters";
 import { SmoothScrollContainer } from "@/components/VirtualScrolling";
 
+interface MobileBetSlipPanelProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
 // Minimal mobile betslip panel, can be styled further
-export function MobileBetSlipPanel() {
+export function MobileBetSlipPanel({ open, onOpenChange }: MobileBetSlipPanelProps) {
   const betSlip = useBetSlipStore(state => state);
   const addBet = useBetSlipStore(state => state.addBet);
   const removeBet = useBetSlipStore(state => state.removeBet);
@@ -31,7 +38,8 @@ export function MobileBetSlipPanel() {
   const [placing, setPlacing] = useState(false);
   const [toast, setToast] = useState<string>("");
 
-  const isOpen = navigation.mobilePanel === "betslip";
+  // Use open prop to control visibility
+  const isOpen = typeof open === "boolean" ? open : navigation.mobilePanel === "betslip";
 
   const showToast = (message: string) => {
     setToast(message);
@@ -95,6 +103,12 @@ export function MobileBetSlipPanel() {
     }
   };
 
+  // Use onOpenChange to close panel
+  const handleClose = () => {
+    if (onOpenChange) onOpenChange(false);
+    else setIsBetSlipOpen(null);
+  };
+
   if (!isMobile) return null;
 
   return (
@@ -120,7 +134,7 @@ export function MobileBetSlipPanel() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsBetSlipOpen(null)}
+              onClick={handleClose}
               className="h-8 w-8 p-0"
             >
               <X size={18} />
