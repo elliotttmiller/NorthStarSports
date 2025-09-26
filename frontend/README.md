@@ -18,7 +18,7 @@ frontend/
 ├── src/
 │   ├── components/   # React components
 │   ├── store/        # Zustand stores
-│   ├── services/     # ApiService, MockApiService, PrismaApiService
+│   ├── services/     # PrismaApiService
 │   ├── lib/          # Utility libraries
 │   ├── types/        # TypeScript types
 │   ├── mock/         # Mock data files

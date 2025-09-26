@@ -59,7 +59,7 @@ npm run test:frontend
 - Switch between sources using the `NEXT_PUBLIC_DATA_SOURCE` env variable
 
 ## Service Abstraction Layer
-All data operations use the `ApiService` contract. The factory selects either `MockApiService` or `PrismaApiService` based on environment configuration.
+All data operations use the PrismaApiService directly.
 
 ## Testing & CI/CD
 - Jest and React Testing Library are configured for comprehensive test coverage

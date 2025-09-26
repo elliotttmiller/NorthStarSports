@@ -1,7 +1,6 @@
-import type { ApiService } from './ApiService';
 import type { Bet, Game, User } from '@/types';
 
-export class PrismaApiService implements ApiService {
+export class PrismaApiService {
   async getBets(): Promise<Bet[]> {
     // Replace with actual API call to backend
     const res = await fetch('/api/bets');

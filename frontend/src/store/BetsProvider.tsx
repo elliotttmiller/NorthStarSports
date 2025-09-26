@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getApiService } from '@/services/ApiServiceFactory';
+import { PrismaApiService } from '@/services/PrismaApiService';
 import type { Bet, Game, User } from '@/types';
 
 interface BetsContextValue {
@@ -17,7 +17,7 @@ export const BetsProvider: React.FC<{ userId: string; children: React.ReactNode 
   const [bets, setBets] = useState<Bet[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
-  const apiService = getApiService();
+  const apiService = new PrismaApiService();
 
   const refresh = async () => {
     setLoading(true);
