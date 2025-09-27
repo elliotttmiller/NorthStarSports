@@ -1,82 +1,247 @@
-# NorthStar Sports
+# NorthStar Sports Betting Platform
 
 ## Overview
-NorthStar Sports is a modern, production-ready sports wagering platform built with a robust, scalable architecture. The codebase is fully optimized for maintainability, testability, and rapid development, supporting both mock and real data sources for seamless UI and backend integration.
+
+NorthStar Sports is a modern, professional sports betting platform built with Next.js, TypeScript, and Tailwind CSS. It provides users with real-time odds, comprehensive market coverage, and an intuitive betting experience.
+
+## Project Structure
+
+```
+northstar-sports/
+├── app/                  # Next.js App Router
+│   ├── (auth)/          # Authentication routes
+│   ├── (dashboard)/      # Dashboard routes
+│   ├── (markets)/       # Markets routes
+│   ├── (profile)/        # Profile routes
+│   ├── (sports)/         # Sports routes
+│   ├── layout.tsx        # Root layout
+│   ├── page.tsx          # Home page
+│   └── globals.css       # Global styles
+├── components/          # Reusable components
+│   ├── betting/          # Betting components
+│   ├── dashboard/        # Dashboard components
+│   ├── layout/           # Layout components
+│   ├── mobile/           # Mobile components
+│   ├── sections/         # Page sections
+│   ├── ui/               # UI components
+│   └── VirtualScrolling.tsx # Virtual scrolling implementation
+├── lib/                 # Utility libraries
+│   ├── constants.ts      # Constants
+│   ├── format.ts         # Formatting utilities
+│   ├── mockData.ts       # Mock data generators
+│   ├── prisma.ts        # Prisma client
+│   ├── supabase.ts       # Supabase client
+│   ├── types.ts          # TypeScript types
+│   └── utils.ts          # Utility functions
+├── prisma/              # Prisma schema
+│   └── schema.prisma     # Database schema
+├── public/              # Static assets
+├── store/               # Zustand stores
+│   ├── bet-slip.ts       # Bet slip store
+│   ├── mobile-state.ts   # Mobile state store
+│   └── ui-state.ts       # UI state store
+├── types/               # TypeScript types
+├── .env.local           # Environment variables
+├── next.config.js       # Next.js configuration
+├── package.json         # Project dependencies
+├── postcss.config.js    # PostCSS configuration
+├── tailwind.config.js   # Tailwind CSS configuration
+└── tsconfig.json        # TypeScript configuration
+```
 
 ## Features
-- **Next.js Frontend**: App Router, three-panel layout, responsive design
-- **State Management**: Zustand stores for user, bet slip, navigation, and bets
-- **Backend**: Node.js/Express with Prisma ORM for persistent data
-- **Service Abstraction Layer**: Pluggable data source (mock or Prisma) via environment variable
-- **Testing**: Jest and React Testing Library for unit and component tests
-- **Type Safety**: Comprehensive TypeScript usage across frontend and backend
-- **CI/CD Integration**: Automated tests and linting in GitHub Actions
 
-## Monorepo Structure
-```
-NorthStarSports/
-├── frontend/      # Next.js app, Zustand stores, services, tests
-├── backend/       # Node.js/Express API, Prisma schema, migrations
-├── scripts/       # Dev tools, automation scripts
-├── docs/          # API, deployment, and integration guides
-├── .github/       # CI/CD workflows
-```
+### Core Features
+
+- **Real-time Odds**: Live updates across all major sports and leagues
+- **Comprehensive Markets**: Wide range of betting options including spreads, totals, and moneylines
+- **User Accounts**: Secure authentication and profile management
+- **Bet Slip**: Easy bet management with single and accumulator options
+- **Live Betting**: Bet on games in progress with real-time odds updates
+- **Responsive Design**: Optimized for all device sizes
+
+### Technical Features
+
+- **Next.js App Router**: Modern routing system
+- **TypeScript**: Type-safe codebase
+- **Tailwind CSS**: Utility-first CSS framework
+- **Zustand**: Lightweight state management
+- **Prisma**: Database ORM
+- **Supabase**: Authentication and database services
+- **Virtual Scrolling**: Efficient rendering of large datasets
+- **Dark Mode**: Built-in dark theme support
 
 ## Getting Started
+
 ### Prerequisites
-- Node.js >= 18
-- npm >= 9
-- PostgreSQL (for production data)
+
+- Node.js (v18 or later)
+- npm or yarn
+- Supabase account (for database and authentication)
 
 ### Installation
-```sh
-npm install
-```
 
-### Development
-#### Frontend (Next.js)
-```sh
-npm run dev --workspace=@northstar/frontend
-```
-#### Backend (Node.js/Express)
-```sh
-npm run dev --workspace=@northstar/backend
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/northstar-sports.git
+   cd northstar-sports
+   ```
 
-### Testing
-Run all frontend tests:
-```sh
-npm run test:frontend
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env.local
+   ```
+   Update the `.env.local` file with your Supabase credentials.
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Configuration
 
 ### Environment Variables
-- `NEXT_PUBLIC_DATA_SOURCE`: `mock` (default) or `prisma` to switch data source
-- `NEXT_PUBLIC_API_BASE_URL`: Backend API URL for production
 
-### Data Layer
-- **Mock Data**: Used for rapid UI development and testing
-- **Prisma Data**: Connects to a real database for production
-- Switch between sources using the `NEXT_PUBLIC_DATA_SOURCE` env variable
+Create a `.env.local` file in the root directory with the following variables:
 
-## Service Abstraction Layer
-All data operations use the PrismaApiService directly.
+```env
+DATABASE_URL="your-supabase-database-url"
+NEXT_PUBLIC_SUPABASE_URL="your-supabase-project-url"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-supabase-service-role-key"
+```
 
-## Testing & CI/CD
-- Jest and React Testing Library are configured for comprehensive test coverage
-- GitHub Actions workflow runs lint, type-check, and tests on every push/PR
+### Database Setup
+
+1. Initialize Prisma:
+   ```bash
+   npx prisma generate
+   ```
+
+2. Apply database migrations:
+   ```bash
+   npx prisma migrate dev
+   ```
+
+## Development
+
+### Scripts
+
+- `npm run dev`: Start development server
+- `npm run build`: Build for production
+- `npm run start`: Start production server
+- `npm run lint`: Run ESLint
+- `npm run format`: Format code with Prettier
+
+### Code Structure
+
+#### Components
+
+- **Betting Components**: GameCard, GamesTable, BetSlip, LiveFeed
+- **Layout Components**: Header, Footer, Sidebar, MobileBottomNav
+- **UI Components**: Button, Card, Input, Badge, etc.
+- **Page Sections**: Hero, FeaturedGames, LiveBetting, Promotions
+
+#### Stores
+
+- **Bet Slip Store**: Manages bet selections and stakes
+- **UI State Store**: Manages UI state like sidebar visibility
+- **Mobile State Store**: Manages mobile-specific state
+
+#### Utilities
+
+- **Format Utilities**: Date, currency, and time formatting
+- **Mock Data Generators**: Generate mock data for development
+- **TypeScript Types**: Shared type definitions
+
+## Deployment
+
+### Production Deployment
+
+1. Build the application:
+   ```bash
+   npm run build
+   ```
+
+2. Start the production server:
+   ```bash
+   npm run start
+   ```
+
+### Docker Deployment
+
+1. Build the Docker image:
+   ```bash
+   docker build -t northstar-sports .
+   ```
+
+2. Run the container:
+   ```bash
+   docker run -p 3000:3000 northstar-sports
+   ```
 
 ## Contributing
-1. Fork the repo and create a feature branch
-2. Make changes and add tests
-3. Run `npm run lint` and `npm run test:frontend`
-4. Submit a pull request
+
+We welcome contributions to NorthStar Sports! Please follow these steps:
+
+1. Fork the repository
+2. Create a new branch for your feature or bug fix
+3. Make your changes
+4. Write tests for your changes
+5. Submit a pull request
 
 ## License
-MIT
 
-## Maintainers
-- [elliotttmiller](https://github.com/elliotttmiller)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Next.js team for the framework
+- Tailwind CSS team for the styling solution
+- Zustand team for the state management solution
+- Prisma team for the database toolkit
+- Supabase team for the backend services
+- Lucide team for the icon set
+- All contributors who have helped shape NorthStar Sports
+
+## Support
+
+For support, please contact our support team at support@northstarsports.com or visit our help center at [https://northstarsports.com/help](https://northstarsports.com/help).
+
+## Roadmap
+
+- [ ] Add more sports and leagues
+- [ ] Implement in-play betting
+- [ ] Add live chat support
+- [ ] Implement referral program
+- [ ] Add mobile app support
+- [ ] Implement advanced analytics dashboard
+
+## Changelog
+
+### [1.0.0] - 2024-01-15
+
+- Initial release of NorthStar Sports platform
+- Core betting functionality
+- User authentication
+- Basic UI components
+- Responsive design
+
+## Contact
+
+For any questions or feedback, please contact us at:
+
+- Email: info@northstarsports.com
+- Twitter: [@NorthStarSports](https://twitter.com/NorthStarSports)
+- Website: [https://northstarsports.com](https://northstarsports.com)
 
 ---
 
-For detailed API and deployment instructions, see the `docs/` folder.
+NorthStar Sports - Your premier destination for professional sports betting. Experience the thrill with industry-leading odds, instant payouts, and unmatched security.
