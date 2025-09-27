@@ -1,19 +1,7 @@
 import { Clock, Play, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
-interface Game {
-  id: string
-  homeTeam: string
-  awayTeam: string
-  homeScore: number | null
-  awayScore: number | null
-  startTime: string
-  league: string
-  spread: { home: number; away: number; odds: number }
-  moneyline: { home: number; away: number }
-  total: { over: number; under: number; odds: number }
-  status: 'scheduled' | 'live' | 'final'
-}
+import type { Game } from '@/types'
+import Image from 'next/image'
 
 interface GameCardProps {
   game: Game
@@ -26,38 +14,43 @@ const statusConfig = {
 }
 
 export default function GameCard({ game }: GameCardProps) {
-  const StatusIcon = statusConfig[game.status].icon
-  const formatTime = new Date(game.startTime).toLocaleTimeString([], { 
-    hour: '2-digit', 
-    minute: '2-digit' 
+  const statusRaw = game.details.status === 'Upcoming' ? 'scheduled' : game.details.status.toLowerCase()
+  const validStatuses = ['scheduled', 'live', 'final'] as const;
+  const statusKey: keyof typeof statusConfig = validStatuses.includes(statusRaw as keyof typeof statusConfig)
+    ? (statusRaw as keyof typeof statusConfig)
+    : 'scheduled'
+  const StatusIcon = statusConfig[statusKey].icon
+  const formatTime = new Date(game.startTime).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
   })
 
   return (
     <div className="@container bg-ns-card border border-ns-border rounded-lg overflow-hidden hover:border-ns-blue/50 transition-colors">
       {/* Header with status and league */}
       <div className="flex items-center justify-between p-fluid-base border-b border-ns-border">
-        <span className="text-fluid-sm font-medium text-ns-blue">{game.league}</span>
-        <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-fluid-xs ${statusConfig[game.status].bg}`}>
-          <StatusIcon className={`w-3 h-3 ${statusConfig[game.status].color}`} />
-          <span className={`capitalize ${statusConfig[game.status].color}`}>
-            {game.status === 'scheduled' ? formatTime : game.status}
-          </span>
+        <span className="text-fluid-sm font-medium text-ns-blue">{game.details.league}</span>
+        <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-fluid-xs ${statusConfig[statusKey].bg}`}> 
+          <StatusIcon className={`w-3 h-3 ${statusConfig[statusKey].color}`} />
+          <span className={`capitalize ${statusConfig[statusKey].color}`}>{formatTime}</span>
         </div>
       </div>
 
       {/* Teams and Scores */}
       <div className="p-fluid-base space-y-fluid-sm">
         <div className="flex items-center justify-between">
-          <span className="text-fluid-base font-medium line-clamp-1">{game.awayTeam}</span>
-          {game.awayScore !== null && (
-            <span className="text-fluid-lg font-bold">{game.awayScore}</span>
-          )}
+          <div className="flex items-center min-w-0">
+            <Image src={game.awayTeam.logo} alt={game.awayTeam.name} width={24} height={24} className="mr-2 align-middle object-contain" />
+            <span className="text-fluid-base font-medium line-clamp-1">{game.awayTeam.name}</span>
+          </div>
+          <span className="text-fluid-lg font-bold">{game.awayTeam.score}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-fluid-base font-medium line-clamp-1">{game.homeTeam}</span>
-          {game.homeScore !== null && (
-            <span className="text-fluid-lg font-bold">{game.homeScore}</span>
-          )}
+          <div className="flex items-center min-w-0">
+            <Image src={game.homeTeam.logo} alt={game.homeTeam.name} width={24} height={24} className="mr-2 align-middle object-contain" />
+            <span className="text-fluid-base font-medium line-clamp-1">{game.homeTeam.name}</span>
+          </div>
+          <span className="text-fluid-lg font-bold">{game.homeTeam.score}</span>
         </div>
       </div>
 
@@ -67,36 +60,22 @@ export default function GameCard({ game }: GameCardProps) {
           {/* Spread */}
           <div className="text-center">
             <p className="text-fluid-xs text-ns-muted mb-1">Spread</p>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full text-fluid-sm"
-            >
-              {game.spread.home > 0 ? '+' : ''}{game.spread.home}
+            <Button variant="outline" size="sm" className="w-full text-fluid-sm">
+              {game.odds.spread.home > 0 ? '+' : ''}{game.odds.spread.home}
             </Button>
           </div>
-
           {/* Moneyline */}
           <div className="text-center">
             <p className="text-fluid-xs text-ns-muted mb-1">Moneyline</p>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full text-fluid-sm"
-            >
-              {game.moneyline.home > 0 ? '+' : ''}{game.moneyline.home}
+            <Button variant="outline" size="sm" className="w-full text-fluid-sm">
+              {game.odds.moneyline.home > 0 ? '+' : ''}{game.odds.moneyline.home}
             </Button>
           </div>
-
           {/* Total */}
           <div className="text-center">
             <p className="text-fluid-xs text-ns-muted mb-1">Total</p>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full text-fluid-sm"
-            >
-              O {game.total.over}
+            <Button variant="outline" size="sm" className="w-full text-fluid-sm">
+              O {game.odds.total.line}
             </Button>
           </div>
         </div>

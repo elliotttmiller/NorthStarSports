@@ -23,48 +23,67 @@ const sports = [
 const mockGames = [
 	{
 		id: '1',
-		homeTeam: { name: 'Los Angeles Lakers', score: 95, logo: '/logos/lakers.svg' },
-		awayTeam: { name: 'Golden State Warriors', score: 101, logo: '/logos/warriors.svg' },
-		startTime: '2024-01-15T20:00:00',
-		league: 'NBA',
-		spread: { home: -3.5, away: +3.5, odds: -110 },
-		moneyline: { home: -150, away: +130 },
-		total: { over: 215.5, under: 215.5, odds: -110 },
-		status: 'scheduled' as 'scheduled',
-		featured: true,
+		homeTeam: { name: 'Cincinnati Bengals', score: 0, logo: '/logos/bengals.svg' },
+		awayTeam: { name: 'Baltimore Ravens', score: 0, logo: '/logos/ravens.svg' },
+		startTime: new Date('2024-09-26T15:47:00'),
+		odds: {
+			spread: { home: -5, away: +5, odds: -110 },
+			moneyline: { home: +160, away: -165 },
+			total: { line: 64.5, odds: -110 },
+		},
+		details: {
+			league: 'NFL',
+			status: 'scheduled',
+			venue: 'Stadium Name',
+		},
 	},
 	{
 		id: '2',
 		homeTeam: { name: 'Miami Heat', score: 78, logo: '/logos/heat.svg' },
 		awayTeam: { name: 'Boston Celtics', score: 82, logo: '/logos/celtics.svg' },
-		startTime: '2024-01-15T21:30:00',
-		league: 'NBA',
-		spread: { home: -2.5, away: +2.5, odds: -105 },
-		moneyline: { home: -120, away: +110 },
-		total: { over: 210.5, under: 210.5, odds: -110 },
-		status: 'live' as 'live',
+		startTime: new Date('2024-01-15T21:30:00'),
+		odds: {
+			spread: { home: -2.5, away: +2.5, odds: -105 },
+			moneyline: { home: -120, away: +110 },
+			total: { line: 210.5, odds: -110 },
+		},
+		details: {
+			league: 'NBA',
+			status: 'live',
+			venue: 'Arena Name',
+		},
 	},
 	{
 		id: '3',
 		homeTeam: { name: 'Kansas City Chiefs', score: 0, logo: '/logos/chiefs.svg' },
 		awayTeam: { name: 'Buffalo Bills', score: 0, logo: '/logos/bills.svg' },
-		startTime: '2024-01-16T13:00:00',
-		league: 'NFL',
-		spread: { home: -4.5, away: +4.5, odds: -110 },
-		moneyline: { home: -180, away: +160 },
-		total: { over: 48.5, under: 48.5, odds: -110 },
-		status: 'scheduled' as 'scheduled',
+		startTime: new Date('2024-01-16T13:00:00'),
+		odds: {
+			spread: { home: -4.5, away: +4.5, odds: -110 },
+			moneyline: { home: -180, away: +160 },
+			total: { line: 48.5, odds: -110 },
+		},
+		details: {
+			league: 'NFL',
+			status: 'scheduled',
+			venue: 'Stadium Name',
+		},
 	},
 	{
 		id: '4',
 		homeTeam: { name: 'New York Rangers', score: 0, logo: '/logos/rangers.svg' },
 		awayTeam: { name: 'Boston Bruins', score: 0, logo: '/logos/bruins.svg' },
-		startTime: '2024-01-15T19:00:00',
-		league: 'NHL',
-		spread: { home: -1.5, away: +1.5, odds: +120 },
-		moneyline: { home: +105, away: -125 },
-		total: { over: 5.5, under: 5.5, odds: -110 },
-		status: 'scheduled' as 'scheduled',
+		startTime: new Date('2024-01-15T19:00:00'),
+		odds: {
+			spread: { home: -1.5, away: +1.5, odds: +120 },
+			moneyline: { home: +105, away: -125 },
+			total: { line: 5.5, odds: -110 },
+		},
+		details: {
+			league: 'NHL',
+			status: 'scheduled',
+			venue: 'Arena Name',
+		},
 	},
 ]
 
@@ -83,7 +102,7 @@ export default function SportsPage() {
 	const filteredGames = mockGames
 		.filter((game) => {
 			if (selectedSport === 'all') return true
-			return game.league.toLowerCase() === selectedSport
+			return game.details.league.toLowerCase() === selectedSport
 		})
 		.filter((game) => {
 			if (!searchQuery) return true

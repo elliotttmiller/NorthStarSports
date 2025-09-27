@@ -4,6 +4,9 @@ import './globals.css'
 import Header from '@/components/layout/header'
 import MobileBetSheet from '@/components/mobile/MobileBetSheet'
 import { SITE_CONFIG } from '@/lib/constants'
+import SportsSidebar from '@/components/layout/SportsSidebar'
+import Footer from '@/components/layout/footer'
+import MobileBottomNav from '@/components/layout/MobileBottomNav'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -102,10 +105,13 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         <Header />
-        <main className="pt-16 min-h-screen">
+        <SportsSidebar />
+        <main className="pt-16 min-h-screen md:pl-[280px]">
           {children}
         </main>
+        <Footer />
         <MobileBetSheet />
+        <MobileBottomNav />
       </body>
     </html>
   )
