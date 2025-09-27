@@ -1,13 +1,11 @@
-// @ts-check
+import type { NextConfig } from 'next'
+import { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } from 'next/constants'
 
-const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require('next/constants')
-
-/** @type {import('next').NextConfig} */
-module.exports = async (phase) => {
+const nextConfig = async (phase: string): Promise<NextConfig> => {
   const isDev = phase === PHASE_DEVELOPMENT_SERVER
   const isProd = phase === PHASE_PRODUCTION_BUILD
 
-  const config = {
+  const config: NextConfig = {
     // TypeScript configuration
     typescript: {
       ignoreBuildErrors: false,
@@ -49,7 +47,7 @@ module.exports = async (phase) => {
     }),
 
     // Webpack customization
-    webpack: (config, { buildId, dev, webpack }) => {
+    webpack: (config, { buildId, dev, isServer, webpack }) => {
       // Custom webpack plugins for build info
       config.plugins.push(
         new webpack.DefinePlugin({
@@ -147,11 +145,27 @@ module.exports = async (phase) => {
     // React Strict Mode
     reactStrictMode: true,
 
+    // Logging configuration
+    logging: {
+      fetches: {
+        fullUrl: isDev,
+      },
+    },
+
     // Page extensions
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
 
-    // NO experimental features - keeping it stable for production
+    // Bundle analyzer (only in analyze mode)
+    ...(process.env.ANALYZE === 'true' && {
+      webpack: (config, options) => {
+        const { BundleAnalyzerPlugin } = require('@next/bundle-analyzer')()
+        config.plugins.push(new BundleAnalyzerPlugin())
+        return config
+      },
+    }),
   }
 
   return config
 }
+
+export default nextConfig

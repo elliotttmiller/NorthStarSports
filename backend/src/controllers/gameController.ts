@@ -5,6 +5,7 @@ import {
   setGame as setGameService,
 } from "../services/gameService.js";
 import { success, error } from "../utils/responseFormatter.js";
+import { GameSchema } from "../../../shared/types/zodSchemas";
 
 export async function getGame(
   req: Request,
@@ -25,8 +26,15 @@ export async function getGame(
       res.status(404).json(error("Game not found", 404));
       return;
     }
+    // Zod validation
+    const parsed = GameSchema.safeParse(game);
+    if (!parsed.success) {
+      logWarn("Game data validation failed", { errors: parsed.error.errors });
+      res.status(500).json(error("Game data validation failed", 500));
+      return;
+    }
     logInfo("getGame success", { gameId });
-    res.json(success(game));
+    res.json(success(parsed.data));
   } catch {
   }
 }
