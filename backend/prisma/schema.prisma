@@ -70,3 +70,18 @@ model Odds {
   totalOverOdds  Int
   totalUnderOdds Int
 }
+
+model User {
+  id        String @id @default(cuid())
+  name      String
+  email     String @unique
+  bets      Bet[]
+}
+
+model Bet {
+  id        String @id @default(cuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id])
+  amount    Float
+  createdAt DateTime @default(now())
+}

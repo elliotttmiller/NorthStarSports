@@ -1,105 +1,18 @@
+"use client";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
 
-interface ProgressiveLoaderProps {
-  text?: string;
-  showProgress?: boolean;
-  delay?: number;
-}
-
-export function ProgressiveLoader({
-  text = "Loading...",
-  showProgress = true,
-  delay = 0,
-}: ProgressiveLoaderProps) {
-  const [progress, setProgress] = useState(0);
-  const [visible, setVisible] = useState(delay === 0);
-
-  useEffect(() => {
-    if (delay > 0) {
-      const timer = setTimeout(() => setVisible(true), delay);
-      return () => clearTimeout(timer);
-    }
-  }, [delay]);
-
-  useEffect(() => {
-    if (!visible || !showProgress) return;
-
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 90) return prev;
-        return prev + Math.random() * 15;
-      });
-    }, 100);
-
-    return () => clearInterval(timer);
-  }, [visible, showProgress]);
-
-  if (!visible) return null;
-
+export function ProgressiveLoader({ text = "Loading..." }: { text?: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      className="flex flex-col items-center justify-center min-h-[200px] p-8"
-      role="status"
-      aria-live="polite"
-      aria-busy={showProgress}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex flex-col items-center justify-center p-8"
     >
-      {/* Main loader */}
-      <div className="relative mb-6" aria-label="Loading animation">
-        <div className="w-16 h-16 border-3 border-accent/20 border-t-accent rounded-full animate-spin" />
-        <motion.div
-          className="absolute inset-0 w-16 h-16 border-2 border-accent/10 rounded-full"
-          animate={{ rotate: -360 }}
-          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-        />
+      <div className="relative mb-6">
+        <div className="w-16 h-16 border-4 border-accent/20 border-t-accent rounded-full animate-spin"></div>
       </div>
-
-      {/* Progress bar */}
-      {showProgress && (
-        <div className="w-48 h-1 bg-muted/20 rounded-full overflow-hidden mb-4" aria-label="Loading progress">
-          <motion.div
-            className="h-full bg-accent rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-          />
-        </div>
-      )}
-
-      {/* Loading text */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="text-center space-y-2"
-      >
-        <p className="text-lg font-medium text-foreground">{text}</p>
-        <motion.div
-          className="flex justify-center space-x-1"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-        >
-          <motion.div
-            className="w-2 h-2 bg-accent rounded-full"
-            animate={{ y: [-2, 0, -2] }}
-            transition={{ duration: 1, repeat: Infinity, delay: 0 }}
-          />
-          <motion.div
-            className="w-2 h-2 bg-accent rounded-full"
-            animate={{ y: [-2, 0, -2] }}
-            transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
-          />
-          <motion.div
-            className="w-2 h-2 bg-accent rounded-full"
-            animate={{ y: [-2, 0, -2] }}
-            transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
-          />
-        </motion.div>
-      </motion.div>
+      <p className="text-lg font-medium text-foreground">{text}</p>
     </motion.div>
   );
 }

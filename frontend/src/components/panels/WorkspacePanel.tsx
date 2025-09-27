@@ -4,6 +4,7 @@ import { GameList } from "@/components/GameList";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Flame } from "lucide-react";
+import Link from "next/link";
 
 const StatCard = ({
   label,
@@ -22,7 +23,7 @@ const StatCard = ({
 
 export const WorkspacePanel = () => {
   return (
-    <div className="p-6" aria-label="Workspace panel" role="region">
+    <div className="p-6">
       {/* Welcome Section */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold tracking-tight text-foreground">
@@ -46,7 +47,9 @@ export const WorkspacePanel = () => {
         <GameList />
       </div>
       <div className="text-center">
-        <Button size="lg">View All Sports & Games</Button>
+        <Button asChild size="lg">
+          <Link href="/games">View All Sports & Games</Link>
+        </Button>
       </div>
     </div>
   );

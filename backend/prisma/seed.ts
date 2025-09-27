@@ -1,9 +1,16 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 // Import the new, schema-aligned mock data
-import { teams, games, odds } from './data/mock-data';
+import { teams, games as rawGames, odds } from './data/mock-data';
 
 const db = new PrismaClient();
+
+type GameStatus = 'UPCOMING' | 'LIVE' | 'FINISHED' | 'POSTPONED';
+// Map games to use GameStatus enum
+const games = rawGames.map(game => ({
+  ...game,
+  status: game.status as GameStatus,
+}));
 
 async function main() {
   console.log('Starting database seeding...');

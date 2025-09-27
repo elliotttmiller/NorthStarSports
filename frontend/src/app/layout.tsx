@@ -1,51 +1,21 @@
-import { Inter } from "next/font/google";
-import { ClientLayout } from "./ClientLayout";
-import "@/globals.css";
-import "@/index.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-import { AppShell } from "@/components/layout/AppShell";
+import type { Metadata } from "next";
+import { Inter as FontSans } from "next/font/google";
+import "../globals.css";
+import { cn } from "@/lib/utils";
 import { BetSlipModal } from "@/components/BetSlipModal";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "@/components/ui/sonner";
 
-const fontSans = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-sans",
-  display: "swap",
-});
+const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
+export const metadata: Metadata = { title: "NorthStar Sports", description: "Next-generation sports betting platform" };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={fontSans.variable}>
-      <head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>NSSPORTSCLUB - Professional Sports Betting</title>
-        <meta name="description" content="Professional sports betting platform" />
-        <link rel="manifest" href="/manifest.webmanifest" />
-        <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/pwa-192x192.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>
-        <SidebarProvider>
-          <AppSidebar aria-label="Sidebar navigation" role="complementary" />
-          <main aria-label="Main content" role="main">
-            <AppShell>{children}</AppShell>
-          </main>
-        </SidebarProvider>
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <body className={cn("min-h-screen bg-background font-sans antialiased overflow-hidden", fontSans.variable)}>
+        {/* The `children` here is your (main)/layout.tsx, which contains the three-panel shell */}
+        {children}
         <BetSlipModal />
-        <Toaster position="top-right" />
+        <Toaster richColors theme="dark" position="top-right" />
       </body>
     </html>
   );
