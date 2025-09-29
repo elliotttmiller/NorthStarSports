@@ -4,6 +4,7 @@ A modern, full-stack sports betting application built with React, TypeScript, No
 
 ## 🏗️ Architecture Overview
 
+
 ```
 NorthStar Sports/
 ├── backend/          # Node.js/Express API server
