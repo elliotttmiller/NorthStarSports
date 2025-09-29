@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -13,13 +17,33 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx",
-    "types": ["node", "jest"],
+    "jsx": "preserve",
+    "types": [
+      "node",
+      "jest"
+    ],
     "baseUrl": "./",
     "paths": {
-      "@/*": ["frontend/src/*", "src/*"]
-    }
+      "@/*": [
+        "frontend/src/*",
+        "src/*"
+      ]
+    },
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["frontend/src", "backend/src", "src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "backend/src",
+    "frontend/src",
+    "src",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
